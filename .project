@@ -38,6 +38,7 @@
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+<<<<<<< HEAD
 	<filteredResources>
 		<filter>
 			<id>1715219874906</id>
@@ -49,4 +50,6 @@
 			</matcher>
 		</filter>
 	</filteredResources>
+=======
+>>>>>>> d5d60ca4d1d209116eea86527ef35607c7154a0e
 </projectDescription>

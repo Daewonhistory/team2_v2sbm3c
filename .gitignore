@@ -1,6 +1,10 @@
 build/
 !gradle/wrapper/gradle-wrapper.jar
+<<<<<<< HEAD
 !**/src/main/**/build/
+=======
+
+>>>>>>> d5d60ca4d1d209116eea86527ef35607c7154a0e
 !**/src/test/**/build/
 
 ### STS ###
