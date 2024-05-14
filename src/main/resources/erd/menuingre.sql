@@ -10,8 +10,8 @@ DROP TABLE MENUINGRE CASCADE CONSTRAINTS;
 
 CREATE TABLE MENUINGRE(
 		menu_ingno                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		ingredno                      		NUMBER(10)		 NOT NULL,
-		menuno                        		NUMBER(10)		 NOT NULL,
+		ingredno                      		NUMBER(10)		 NOT NULL,       -- FK
+		menuno                        		NUMBER(10)		 NOT NULL,       -- FK
   FOREIGN KEY (ingredno) REFERENCES INGREDIENT (ingredno),
   FOREIGN KEY (menuno) REFERENCES MENU (menuno)
 );

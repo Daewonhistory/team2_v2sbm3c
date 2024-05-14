@@ -13,7 +13,7 @@ CREATE TABLE MENU(
 		menuno                        		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		name                          		VARCHAR2(30)		 NOT NULL,
 		price                         		NUMBER(10)		 NOT NULL,
-		restno                        		NUMBER(10)		 NULL ,
+		restno                        		NUMBER(10)		 NULL ,          -- FK
         image                         		VARCHAR2(30)		 NULL ,                        
   FOREIGN KEY (restno) REFERENCES RESTAURANT (restno)
 );
