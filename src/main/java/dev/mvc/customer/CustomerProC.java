@@ -23,6 +23,12 @@ public class CustomerProC implements CustomerProInter {
   }
 
   @Override
+  public int checkNickName(String nickname) {
+    int cnt = this.customerDAO.checkNickName(nickname);
+    return cnt;
+  }
+
+  @Override
   public int checkID(String id) {
     int cnt = this.customerDAO.checkID(id);
     return cnt;

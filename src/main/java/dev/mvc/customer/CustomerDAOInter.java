@@ -5,7 +5,18 @@ import java.util.HashMap;
 
 public interface CustomerDAOInter {
 
+  /**
+   * 중복아이디 체크
+   * @param nickname
+   * @return 추가한 레코드 갯수
+   */
+  public int checkNickName(String nickname);
 
+  /**
+   * 중복아이디 체크
+   * @param id
+   * @return 추가한 레코드 갯수
+   */
   public int checkID(String id);
 
   /**

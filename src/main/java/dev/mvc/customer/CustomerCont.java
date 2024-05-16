@@ -49,6 +49,18 @@ public class CustomerCont {
     return "{\"cnt\":" + cnt + "}";
   }
 
+  @PostMapping("/checkNickName")  //http:localhost:9091/meber/checkId?id=admin
+  @ResponseBody
+  public String checkNickname(String nickname) {
+    System.out.println("-> id  " + nickname);
+
+    int cnt = this.customerProc.checkNickName(nickname);
+
+    //{"cnt": cnt}
+    return "{\"cnt\":" + cnt + "}";
+  }
+
+
 
   @GetMapping("/create")
 
@@ -65,9 +77,6 @@ public class CustomerCont {
 
     int check_ID = this.customerProc.checkID(customerVO.getId());
 
-    if (customerVO.getTel() == null || customerVO.getTel().equals("")) {
-      customerVO.setTel("010-0000-0000");
-    }
 
 
     if (check_ID == 0) {
@@ -77,7 +86,7 @@ public class CustomerCont {
 
 
         rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", customerVO.getMname() + "님 회원가입 축하드립니다! ");
+        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 회원가입 축하드립니다! ");
         return "redirect:/customer/login";
       } else {
         rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");

@@ -12,20 +12,26 @@ public class CustomerVO {
 
 
   /*
-  memberno NUMBER(10) NOT NULL, -- 회원 번호, 레코드를 구분하는 컬럼
-  id         VARCHAR(30)   NOT NULL UNIQUE, -- 이메일(아이디), 중복 안됨, 레코드를 구분
-  passwd     VARCHAR(60)   NOT NULL, -- 패스워드, 영숫자 조합
-  mname      VARCHAR(30)   NOT NULL, -- 성명, 한글 10자 저장 가능
-  tel            VARCHAR(14)   NOT NULL, -- 전화번호
-  zipcode     VARCHAR(5)        NULL, -- 우편번호, 12345
-  address1    VARCHAR(80)       NULL, -- 주소 1
-  address2    VARCHAR(50)       NULL, -- 주소 2
-  mdate       DATE             NOT NULL, -- 가입일
-  grade        NUMBER(2)     NOT NULL, -- 등급(1~10: 관리자, 11~20: 회원, 40~49: 정지 회원, 99: 탈퇴 회원)
+ CREATE TABLE CUSTOMER(
+		CUSTNO                        		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+		ID                            		VARCHAR2(30)		 NOT NULL,
+		PASSWD                        		VARCHAR2(200)		 NOT NULL,
+		CNAME                          		VARCHAR2(30)		 NOT NULL,
+		NICKNAME                      		VARCHAR2(50)		 NOT NULL,
+		PHONE                         		VARCHAR2(14)		 NOT NULL,
+		ADDRESS1                      		VARCHAR2(50)		 NULL ,
+		ADDRESS2                      		VARCHAR2(50)		 NOT NULL,
+		SNS                           		NUMBER(1)		 NULL , -- 1 이면 기본 회원 2면 카카오 3번 구글 4번 애플 5번 네이버
+		GRADE                         		NUMBER(2)		 NOT NULL, -- 10이면 일반 회원 20 이면 정지 회원  99면 탈퇴 회원
+
+		gender                        		CHAR(1)		 NOT NULL,
+		image                         		VARCHAR2(30)		 NOT NULL,
+		REG_DATE                      		DATE		 NOT NULL
+
   */
 
     /** 회원 번호 */
-    private int memberno;
+    private int custno;
     /** 아이디(이메일) */
 
     private String id = "";
@@ -34,19 +40,29 @@ public class CustomerVO {
 
     private String passwd = "";
     /** 회원 성명 */
-    private String mname = "";
+    private String cname = "";
+
+    /** 회원 닉네임 */
+    private String nickname = "";
     /** 전화 번호 */
-    private String tel = "";
+    private String phone = "";
     /** 우편 번호 */
-    private String zipcode = " ";
+
     /** 주소 1 */
     private String address1 = " ";
     /** 주소 2 */
     private String address2 = " ";
-    /** 가입일 */
-    private String mdate = "";
-    /** 등급 */
+    /** SNS 가입여부 */
+    private int sns;
+
     private int grade;
+
+    private String gender="";
+    private String image ="";
+    /** 가입일 */
+    private String reg_date = "";
+    /** 등급 */
+
 
     /** 등록된 패스워드 */
     private String old_passwd = "";
