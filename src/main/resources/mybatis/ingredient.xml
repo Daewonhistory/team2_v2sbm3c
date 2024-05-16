@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.cate.CateDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+  <insert id="create" parameterType="String"> <!-- public int create(CateVO cateVO) {...-->
+  	INSERT INTO MENU(ingredientno, name)
+	VALUES (member_seq.nextval, #{name});
+  </insert>
+  
+  <!-- SQL -> IngredientVO -> ArrayList<IngredientVO> return -->
+  <select id="list_all" resultType="dev.mvc.ingredient.IngredientVO">
+    SELECT ingredientno, name
+	FROM ingredient
+	ORDER BY name ASC;
+  </select>
+  
+  <select id="list_search" parameterType="String" resultType="dev.mvc.ingredient.IngredientVO">
+    SELECT ingredno, name
+	FROM ingredient
+	WHERE name LIKE '%' || #{word} || '%'
+	ORDER BY name ASC;
+  </select>
+  
+  
+</mapper>
+
+
+

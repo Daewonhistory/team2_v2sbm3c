@@ -1,0 +1,31 @@
+<div th:fragment="list_all_fragment"> <!-- <div th:replace=...> -->
+  <table class="table table-hover">
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>    
+      <col style='width: 15%;'/>
+      <col style='width: 25%;'/>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th_bs">번호</th>
+        <th class="th_bs">재료명</th>
+        <th class="th_bs">순서 / 기타</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="ingredientVO, status : ${list}">
+      	<td class="td_bs" th:text="${ingredientVO.ingredno}"></td>
+        <td class="td_bs" th:text="${ingredientVO.name}"></td>
+        <td class="td_bs">
+          <a th:href="@{|/ingredient/update/${cateVO.cateno}?word=${word}|}"><img src="/cate/images/update.png" class="icon"></a>
+          <a th:href="@{|/ingredient/delete/${cateVO.cateno}?word=${word}|}"><img src="/cate/images/delete.png" class="icon"></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>  
+  <div class="Bottom_menu" th:utext="${paging}"></div>
+</div>
+
