@@ -1,6 +1,13 @@
 /**********************************/
 /* Table Name: 식당좋아요 */
 /**********************************/
+
+DROP TABLE restlike;
+
+-- 제약 조건과 함께 삭제(제약 조건이 있어도 삭제됨, 권장하지 않음.)
+
+DROP TABLE restlike CASCADE CONSTRAINTS;
+
 CREATE TABLE RESTLIKE(
 		likeno                        		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		custno                        		NUMBER(10)		 NULL ,          -- FK
