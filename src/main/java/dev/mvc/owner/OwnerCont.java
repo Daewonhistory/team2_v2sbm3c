@@ -1,40 +1,35 @@
-package dev.mvc.customer;
+package dev.mvc.owner;
 
+import dev.mvc.customer.CustomerVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 @Controller
-@RequestMapping("/customer")
-public class CustomerCont {
+@RequestMapping("/owner")
+public class OwnerCont {
 
 
   @Autowired
-  @Qualifier("dev.mvc.customer.CustomerProc")
-  private CustomerProInter customerProc;
+  @Qualifier("dev.mvc.owner.OwnerProc")
+  private OwnerProInter ownerProc;
 
 
   @Autowired
   private Security security;
 
-  public CustomerCont() {
+  public OwnerCont() {
 //    System.out.println("CustomerCont created");
   }
 
@@ -44,7 +39,7 @@ public class CustomerCont {
   public String checkId(String id) {
     System.out.println("-> id  " + id);
 
-    int cnt = this.customerProc.checkID(id);
+    int cnt = this.ownerProc.checkID(id);
 
     //{"cnt": cnt}
     return "{\"cnt\":" + cnt + "}";
@@ -55,7 +50,7 @@ public class CustomerCont {
   public String checkNickname(String nickname) {
     System.out.println("-> nickname  " + nickname);
 
-    int cnt = this.customerProc.checkNickName(nickname);
+    int cnt = this.ownerProc.checkNickName(nickname);
 
     //{"cnt": cnt}
     return "{\"cnt\":" + cnt + "}";
@@ -65,40 +60,42 @@ public class CustomerCont {
 
   @GetMapping("/create")
 
-  public String createForm(Model model, CustomerVO customerVO) {
+  public String createForm(Model model, OwnerVO ownerVO) {
 
 
-    return "/customer/create";
+    return "/owner/create";
   }
 
   @PostMapping("/create")
 
-  public String createcustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr) {
+  public String createowner(Model model, OwnerVO ownerVO, RedirectAttributes rrtr) {
 
 
-    int check_ID = this.customerProc.checkID(customerVO.getId());
+    int check_ID = this.ownerProc.checkID(ownerVO.getId());
 
 
     System.out.println("check_ID -> "+check_ID);
     if (check_ID == 0) {
       Random random = new Random();
       int randomNumber = random.nextInt(5) + 1; // 1부터 5까지의 랜덤한 숫자 생성
-      String imageName = "basic" + randomNumber + ".jpg";
-      customerVO.setImage(imageName);
-      int count = customerProc.create(customerVO);
+      String imageName = "ownerbasic" + randomNumber + ".jpg";
+      ownerVO.setImage(imageName);
+
+      ownerVO.setGrade(20);
+      int count = ownerProc.create(ownerVO);
       System.out.println("count -> "+count);
       if (count == 1) {
 
         rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 회원가입 축하드립니다! ");
-        return "redirect:/customer/login";
+        rrtr.addFlashAttribute("come", ownerVO.getCname() + "님 회원가입 축하드립니다! ");
+        return "redirect:/owner/login";
       } else {
         rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-        return "redirect:/customer/create";
+        return "redirect:/owner/create";
       }
     } else {
       rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/customer/create";
+      return "redirect:/owner/create";
     }
 
   }
@@ -158,7 +155,7 @@ public class CustomerCont {
 
       //-------------------------------------------------------------------
       // 쿠키 코드 종료
-      //-------------------------------------------------------------------
+      //--------------------------------------  -----------------------------
 
     }
 
@@ -193,24 +190,24 @@ public class CustomerCont {
       map.put("id", id);
       map.put("passwd", this.security.aesEncode(passwd));
 
-      int cnt = this.customerProc.login(map);
+      int cnt = this.ownerProc.login(map);
       System.out.println(cnt);
       if (cnt == 1) {
-        CustomerVO customerVO = this.customerProc.readById(id);
+        OwnerVO ownerVO = this.ownerProc.readById(id);
         // id를 이용하여 회원 정보 조회
-        session.setAttribute("customerno", customerVO.getCustno());
-        session.setAttribute("id", customerVO.getId());
-        session.setAttribute("cname", customerVO.getCname());
+        session.setAttribute("ownerno", ownerVO.getCustno());
+        session.setAttribute("id", ownerVO.getId());
+        session.setAttribute("cname", ownerVO.getCname());
         // session.setAttribute("grade", memverVO.getGrade());
 
-        if (customerVO.getGrade() >= 1 && customerVO.getGrade() <= 10) {
+        if (ownerVO.getGrade() >= 1 && ownerVO.getGrade() <= 10) {
           session.setAttribute("grade", "admin");
-        } else if (customerVO.getGrade() >= 11 && customerVO.getGrade() <= 20) {
-          session.setAttribute("grade", "customer");
-        } else if (customerVO.getGrade() >= 21) {
+        } else if (ownerVO.getGrade() >= 11 && ownerVO.getGrade() <= 20) {
+          session.setAttribute("grade", "owner");
+        } else if (ownerVO.getGrade() >= 21) {
           session.setAttribute("grade", "guest");
         }
-        rttr.addFlashAttribute("login", customerVO.getCname() + "님 안녕하세요");
+        rttr.addFlashAttribute("login", ownerVO.getCname() + "님 안녕하세요");
 
 
         // -------------------------------------------------------------------
@@ -261,7 +258,7 @@ public class CustomerCont {
 
       } else {
         rttr.addFlashAttribute("error", "아이디 또는 비밀번호 오류입니다.");
-        return "redirect:/customer/login";
+        return "redirect:/owner/login";
       }
 
 
@@ -269,14 +266,14 @@ public class CustomerCont {
 }
 
 //  @GetMapping("/list")
-//  public String list_customer(Model model, CustomerVO customerVO, HttpSession session, RedirectAttributes rttr) {
+//  public String list_owner(Model model, CustomerVO ownerVO, HttpSession session, RedirectAttributes rttr) {
 //
 //    String id = (String) session.getAttribute("id");
 //
-//    if (this.customerProc.isCustomerAdmin(session)) {
-//      ArrayList<CustomerVO> list = this.customerProc.list();
+//    if (this.ownerProc.isCustomerAdmin(session)) {
+//      ArrayList<CustomerVO> list = this.ownerProc.list();
 //      model.addAttribute("list", list);
-//      return "customer/customerList";
+//      return "owner/ownerList";
 //    } else {
 //      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
 //      return "redirect:/";
@@ -289,27 +286,27 @@ public class CustomerCont {
 //   * 조히
 //   *
 //   * @param model
-//   * @param customerno 회원 번호
+//   * @param ownerno 회원 번호
 //   * @return
 //   */
 //  @GetMapping("/read")
-//  public String read(Model model, @RequestParam(name = "customerno") Integer customerno, HttpSession session,
+//  public String read(Model model, @RequestParam(name = "ownerno") Integer ownerno, HttpSession session,
 //                     RedirectAttributes rttr) {
-//    System.out.println(customerno);
-//    CustomerVO read = this.customerProc.read(customerno);
+//    System.out.println(ownerno);
+//    CustomerVO read = this.ownerProc.read(ownerno);
 //
 //    String id = (String) session.getAttribute("id");
 //
 //
 //
-//    if (this.customerProc.isCustomerAdmin(session)) {
+//    if (this.ownerProc.isCustomerAdmin(session)) {
 //      if (read != null) {
 //
-//        model.addAttribute("customerVO", read);
-//        return "customer/read";
+//        model.addAttribute("ownerVO", read);
+//        return "owner/read";
 //      } else {
 //        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/customer/list";
+//        return "redirect:/owner/list";
 //      }
 //    }else{
 //        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
@@ -322,60 +319,60 @@ public class CustomerCont {
 //
 //    @PostMapping("/update")
 //
-//    public String updatecustomer (Model model, CustomerVO customerVO, RedirectAttributes rrtr,HttpSession session){
+//    public String updateowner (Model model, CustomerVO ownerVO, RedirectAttributes rrtr,HttpSession session){
 //
-//      if (this.customerProc.isCustomerAdmin(session)) {
-//        int check_ID = this.customerProc.checkID(customerVO.getId());
+//      if (this.ownerProc.isCustomerAdmin(session)) {
+//        int check_ID = this.ownerProc.checkID(ownerVO.getId());
 //
-//        if (customerVO.getTel() == null || customerVO.getTel().equals("")) {
-//          customerVO.setTel("010-0000-0000");
+//        if (ownerVO.getTel() == null || ownerVO.getTel().equals("")) {
+//          ownerVO.setTel("010-0000-0000");
 //        }
-//        int count = customerProc.update(customerVO);
+//        int count = ownerProc.update(ownerVO);
 //        System.out.println(check_ID);
-//        System.out.println(customerVO.getId());
+//        System.out.println(ownerVO.getId());
 //        if (check_ID == 1) {
 //          if (count == 1) {
 //
 //
 //            rrtr.addFlashAttribute("success", 1);
-//            rrtr.addFlashAttribute("come", customerVO.getMname() + "님 수정 완료 되었습니다! ");
+//            rrtr.addFlashAttribute("come", ownerVO.getMname() + "님 수정 완료 되었습니다! ");
 //
-//            return "redirect:/customer/read?customerno=" + customerVO.getCustomerno();
+//            return "redirect:/owner/read?ownerno=" + ownerVO.getCustomerno();
 //          } else {
 //            rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
 //
 //
-//            return "redirect:/customer/read?customerno=" + customerVO.getCustomerno();
+//            return "redirect:/owner/read?ownerno=" + ownerVO.getCustomerno();
 //          }
 //        } else {
 //          rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-//          return "redirect:/customer/create";
+//          return "redirect:/owner/create";
 //        }
 //      } else  {
 //        rrtr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/customer/list";
+//        return "redirect:/owner/list";
 //      }
 //
 //
 //    }
 //
 //    @PostMapping("/delete")
-//    public String delete (Model model, @RequestParam("customerno") Integer customerno,
+//    public String delete (Model model, @RequestParam("ownerno") Integer ownerno,
 //      @RequestParam("mname") String mname,HttpSession session,
 //      RedirectAttributes rttr){
-//      if (this.customerProc.isCustomerAdmin(session)) {
-//        int count = this.customerProc.delete(customerno);
+//      if (this.ownerProc.isCustomerAdmin(session)) {
+//        int count = this.ownerProc.delete(ownerno);
 //
 //
 //        if (count == 1) {
 //          rttr.addFlashAttribute("delete", mname + "'이 삭제되었습니다.");
-//          return "redirect:/customer/list";
+//          return "redirect:/owner/list";
 //        } else {
 //          rttr.addFlashAttribute("delete", "삭제 실패");
 //          return "redirect:/cate/search";
 //        }
 //      }else {
-//        return "redirect:/customer/login";
+//        return "redirect:/owner/login";
 //      }
 //    }
 //
@@ -383,7 +380,7 @@ public class CustomerCont {
 //     * 로그인 폼
 //     *
 //     * @param model
-//     * @param customerVO
+//     * @param ownerVO
 //     * @param session
 //     * @param request
 //     * @return
@@ -394,19 +391,19 @@ public class CustomerCont {
 //
 //    @GetMapping("/update_password")
 //    public String update_password (Model model, HttpSession session, RedirectAttributes rttr){
-//      Integer customerno = (Integer) session.getAttribute("customerno");
+//      Integer ownerno = (Integer) session.getAttribute("ownerno");
 //
-//      if (customerProc.isCustomer(session)) {
-//        CustomerVO read = this.customerProc.read(customerno);
+//      if (ownerProc.isCustomer(session)) {
+//        CustomerVO read = this.ownerProc.read(ownerno);
 //        if (read == null) {
-//          return "redirect:/customer/list";
+//          return "redirect:/owner/list";
 //        } else {
-//          model.addAttribute("customerVO", read);
-//          return "customer/update_password";
+//          model.addAttribute("ownerVO", read);
+//          return "owner/update_password";
 //        }
 //      } else {
 //        rttr.addFlashAttribute("Abnormal", "로그인이 필요합니다");
-//        return "redirect:/customer/login";
+//        return "redirect:/owner/login";
 //      }
 //
 //
@@ -418,12 +415,12 @@ public class CustomerCont {
 //      HashMap<String, Object> map = new HashMap<>();
 //      JSONObject src = new JSONObject(json_src);
 //      String pastpasswd = src.getString("pastpasswd");
-//      Integer customerno = (Integer) session.getAttribute("customerno");
+//      Integer ownerno = (Integer) session.getAttribute("ownerno");
 //
 //      map.put("passwd", this.security.aesEncode(pastpasswd));
-//      map.put("customerno", customerno);
+//      map.put("ownerno", ownerno);
 //
-//      int check = this.customerProc.passwd_check(map);
+//      int check = this.ownerProc.passwd_check(map);
 //
 //      Map<String, Object> result = new HashMap<>();
 //      result.put("check", check);
@@ -436,29 +433,29 @@ public class CustomerCont {
 //
 //
 //    @PostMapping("/update_password")
-//    public String updatepass (Model model, CustomerVO customerVO,
+//    public String updatepass (Model model, CustomerVO ownerVO,
 //      String pastpasswd,
 //      String passwd1,
 //      String passwd2,
 //      RedirectAttributes rrtr,
 //      HttpSession session
 //  ){
-//      if (this.customerProc.isCustomer(session)) {
+//      if (this.ownerProc.isCustomer(session)) {
 //        HashMap<String, Object> mapcheck = new HashMap<String, Object>();
 //
 //
 //        mapcheck.put("passwd", this.security.aesEncode(pastpasswd));
-//        mapcheck.put("customerno", customerVO.getCustomerno());
+//        mapcheck.put("ownerno", ownerVO.getCustomerno());
 //
 //
-//        int check_pass = this.customerProc.passwd_check(mapcheck);
+//        int check_pass = this.ownerProc.passwd_check(mapcheck);
 //
 //
 //        HashMap<String, Object> map = new HashMap<String, Object>();
 //
 //        map.put("passwd", this.security.aesEncode(passwd2));
-//        map.put("customerno", customerVO.getCustomerno());
-//        int count = customerProc.passwd_update(map);
+//        map.put("ownerno", ownerVO.getCustomerno());
+//        int count = ownerProc.passwd_update(map);
 //
 //
 //        if (check_pass == 1 && passwd1.equals(passwd2) &&
@@ -474,15 +471,15 @@ public class CustomerCont {
 //            return "redirect:/";
 //          } else {
 //            rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//            return "redirect:/customer/update_password";
+//            return "redirect:/owner/update_password";
 //          }
 //        } else {
 //          rrtr.addFlashAttribute("fail", "알수없는 오류 입니다. ");
-//          return "redirect:/customer/update_password";
+//          return "redirect:/owner/update_password";
 //        }
 //      } else {
 //        rrtr.addFlashAttribute("fail", "로그인이 필요합니다. ");
-//        return "redirect:/customer/login";
+//        return "redirect:/owner/login";
 //
 //      }
 //
@@ -492,13 +489,13 @@ public class CustomerCont {
 //    public String mypage (Model model, HttpSession session, RedirectAttributes rttr){
 //
 //
-//      if (this.customerProc.isCustomer(session)) {
+//      if (this.ownerProc.isCustomer(session)) {
 //        String id = (String) session.getAttribute("id");
-//        CustomerVO customerVO = this.customerProc.readById(id);
+//        CustomerVO ownerVO = this.ownerProc.readById(id);
 //
-//        model.addAttribute("customerVO", customerVO);
+//        model.addAttribute("ownerVO", ownerVO);
 //
-//        return "/customer/my_page";
+//        return "/owner/my_page";
 //
 //      } else {
 //        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
@@ -521,26 +518,26 @@ public class CustomerCont {
 //
 //
 //    @GetMapping("/update_grade")
-//    public String update_gradeForm (Model model, Integer customerno, HttpSession session, RedirectAttributes rttr){
+//    public String update_gradeForm (Model model, Integer ownerno, HttpSession session, RedirectAttributes rttr){
 //
-//      if (customerno == null) {
+//      if (ownerno == null) {
 //        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
 //        return "redirect:/";
 //      }
 //
-//      CustomerVO read = this.customerProc.read(customerno);
+//      CustomerVO read = this.ownerProc.read(ownerno);
 //      if (read == null) {
-//        return "redirect:/customer/list";
+//        return "redirect:/owner/list";
 //      } else {
-//        model.addAttribute("customerVO", read);
-//        return "customer/update_grade";
+//        model.addAttribute("ownerVO", read);
+//        return "owner/update_grade";
 //      }
 //
 //    }
 //
 //    @PostMapping("update_grade")
-//    public String updategrade (Model model, CustomerVO customerVO,
-//      Integer grade, Integer customerno,
+//    public String updategrade (Model model, CustomerVO ownerVO,
+//      Integer grade, Integer ownerno,
 //
 //      RedirectAttributes rrtr,
 //      HttpSession session
@@ -551,8 +548,8 @@ public class CustomerCont {
 //
 //
 //      map.put("grade", grade);
-//      map.put("customerno", customerno);
-//      int count = this.customerProc.update_grade(map);
+//      map.put("ownerno", ownerno);
+//      int count = this.ownerProc.update_grade(map);
 //
 //
 //      if (count == 1) {
@@ -561,10 +558,10 @@ public class CustomerCont {
 //        rrtr.addFlashAttribute("success", 1);
 //        rrtr.addFlashAttribute("update", "등급  수정이 완료되었습니다 ");
 //
-//        return "redirect:/customer/list";
+//        return "redirect:/owner/list";
 //      } else {
 //        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//        return "redirect:/customer/update_grade";
+//        return "redirect:/owner/update_grade";
 //      }
 //
 //    }
