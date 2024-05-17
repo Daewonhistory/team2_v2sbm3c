@@ -11,6 +11,13 @@ public interface IngredientProcInter {
 	public int create(IngredientVO ingredientVO);
 	
 	/**
+	 * 재료 읽기
+	 * @param ingredno
+	 * @return
+	 */
+	public IngredientVO read(int ingredno);
+	
+	/**
 	 * 모든 재료 출력
 	 * @return
 	 */
@@ -23,4 +30,18 @@ public interface IngredientProcInter {
 	 * @return
 	 */
 	public ArrayList<IngredientVO> list_search(String word);
+	
+	/**
+	 * 재료 삭제
+	 * @param ingredno
+	 * @return
+	 */
+	public int delete_by_ingredno(int ingredno);
+	
+	/**
+	 * 재료 수정
+	 * @param ingredientVO
+	 * @return
+	 */
+	public int update_by_ingredno(IngredientVO ingredientVO);
 }

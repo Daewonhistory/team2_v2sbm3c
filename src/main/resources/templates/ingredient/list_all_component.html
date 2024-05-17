@@ -1,4 +1,5 @@
-<div th:fragment="list_all_fragment"> <!-- <div th:replace=...> -->
+
+<div th:fragment="list_all_fragment">
   <table class="table table-hover">
     <colgroup>
       <col style='width: 10%;'/>
@@ -20,12 +21,39 @@
       	<td class="td_bs" th:text="${ingredientVO.ingredno}"></td>
         <td class="td_bs" th:text="${ingredientVO.name}"></td>
         <td class="td_bs">
-          <a th:href="@{|/ingredient/update/${cateVO.cateno}?word=${word}|}"><img src="/cate/images/update.png" class="icon"></a>
-          <a th:href="@{|/ingredient/delete/${cateVO.cateno}?word=${word}|}"><img src="/cate/images/delete.png" class="icon"></a>
+          <a><img src="/cate/images/update.png" class="icon"></a>
+          <a th:attr="onclick=|delete_check(${ingredientVO.ingredno}, '${word}')|"><img src="/cate/images/delete.png" class="icon"></a>
         </td>
       </tr>
     </tbody>
   </table>  
-  <div class="Bottom_menu" th:utext="${paging}"></div>
+  <script>
+  	function delete_check(ingredno, word){
+	  	if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+	  		let f = document.createElement('form');
+    
+		    let obj1;
+		    obj1 = document.createElement('input');
+		    obj1.type = 'hidden';
+		    obj1.name = 'ingredno';
+		    obj1.value = ingredno;
+		    
+			let obj2;
+			obj2 = document.createElement('input');
+		    obj2.type = 'hidden';
+		    obj2.name = 'word';
+		    obj2.value = word;
+		
+		    f.appendChild(obj1);
+		    f.appendChild(obj2);
+		    f.setAttribute('method', 'post');
+		    f.setAttribute('action', '/ingredient/delete');
+		    document.body.appendChild(f);
+		    f.submit();
+	  	}else{   //취소
+	      	return;
+	  	}
+	}
+  </script>
 </div>
 

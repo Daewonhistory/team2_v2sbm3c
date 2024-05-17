@@ -9,16 +9,16 @@
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
   
-  <div th:replace="~{cate/list_search_component::list_search_fragment}"></div>
+  <div th:replace="~{ingredient/list_search_component::list_search_fragment}"></div>
   
   <div class="menu_line"></div>
 
   <div style="width: 80%; margin: 0px auto;">
-    <form name="frm" th:object="${cateVO}" method="post" action="/cate/list_search">
+    <form name="frm" th:object="${ingredientVO}" method="post" action="/ingredient/list_search">
       <input type="hidden" name="word" th:value="${word}">
       <div style="margin-right: 5px; width: 26%; float: left;">
         <input type="text" name="name" value="" autofocus="autofocus"
-               class="form-control fom-control-sm" style="width: 100%;" th:field="*{name}" placeholder="새로 추가할 재료명을 입력해주세요.">
+               class="form-control fom-control-sm" style="width: 100%;" placeholder="새로 추가할 재료명을 입력해주세요.">
       </div>
       <div style="width: 25%; float: left; margin-top: 3px;">
         <button type="submit" class="btn btn-secondary btn-sm">등록</button>
@@ -28,6 +28,6 @@
   </div>
 
   <!-- /cate/list_all_component.html 파일의 list_all_fragment import -->
-  <div th:replace="~{cate/list_all_component::list_all_fragment}"></div>
+  <div th:replace="~{ingredient/list_all_component::list_all_fragment}"></div>
 </div>
 </html>
