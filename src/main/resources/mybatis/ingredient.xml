@@ -51,9 +51,7 @@
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
                           </when>
                           <otherwise>
-                            WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
-                                                        OR UPPER(name) LIKE '%' || UPPER(#{word}) || '%' 
-                                                        OR UPPER(name) LIKE '%' || UPPER(#{word}) || '%')
+                            WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
                           </otherwise>
                         </choose>
                         ORDER BY ingredno DESC
@@ -65,6 +63,19 @@
           2 page: WHERE r >= 11 AND r <= 20;
           3 page: WHERE r >= 21 AND r <= 30; -->
   </select>
+  
+  <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM ingredient
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+      </otherwise>
+    </choose>
+  </select>   
 </mapper>
 
 

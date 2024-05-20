@@ -48,21 +48,24 @@ public class IngredientCont {
 	    
 	    ArrayList<IngredientVO> list = this.ingredientProc.list_search_paging(hashMap);
 	    model.addAttribute("list", list);
-	    	    
-	    String paging = this.ingredientProc.pagingBox(now_page, word, "/ingredient/list_search_paging", list.size(), Ingredient.RECORD_PER_PAGE, Ingredient.PAGE_PER_BLOCK);
-	    model.addAttribute("paging", paging);
 	    
+	    int search_count = this.ingredientProc.list_search_count(word);
+	    model.addAttribute("search_count", search_count);
+	    String paging = this.ingredientProc.pagingBox(now_page, word, "/ingredient/list_search_paging", search_count, Ingredient.RECORD_PER_PAGE, Ingredient.PAGE_PER_BLOCK);
+	    model.addAttribute("paging", paging);
+	    System.out.println(paging);
 	    
 	    
 	    model.addAttribute("word",word);
 	    model.addAttribute("now_page", now_page);
-		return  "ingredient/list_search";
+		return  "ingredient/list_search_paging";
 	}
 	
 	// create
 	// https://localhost/ingredient/list_serarch
-	@PostMapping(value="/list_search")
-	public String create(Model model, @Valid IngredientVO ingredientVO, @RequestParam(name="word", defaultValue="") String word) {
+	@PostMapping(value="/list_search_paging")
+	public String create(Model model, @Valid IngredientVO ingredientVO, 
+			@RequestParam(name="word", defaultValue="") String word) {
 		System.out.println("check");
 		// 페이징 목록
 		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);    
@@ -72,7 +75,7 @@ public class IngredientCont {
 		
 		if (cnt == 1) { // 등록 성공
 		 
-		  return "redirect:/ingredient/list_search?word=" + Tool.encode(word); // /cate/list_all.html
+		  return "redirect:/ingredient/list_search_paging?word=" + Tool.encode(word) + "&now_page=1"; // /cate/list_all.html
 		 
 		} else { // 실패
 		  model.addAttribute("code", "create_fail");
@@ -81,7 +84,9 @@ public class IngredientCont {
 	}
 	
 	@GetMapping(value="update")
-	public String update(Model model, @RequestParam(name="ingredno") int ingredno, @RequestParam(name="word", defaultValue="") String word, @RequestParam(name="now_page", defaultValue="1") int now_page) {
+	public String update(Model model, @RequestParam(name="ingredno") int ingredno, 
+			@RequestParam(name="word", defaultValue="") String word, 
+			@RequestParam(name="now_page", defaultValue="1") int now_page) {
 		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);
 		model.addAttribute("list", list);
 		
@@ -93,11 +98,13 @@ public class IngredientCont {
 	}
 	
 	@PostMapping(value="update")
-	public String update(Model model, IngredientVO ingredientVO, @RequestParam(name="word", defaultValue="") String word) {
+	public String update(Model model, IngredientVO ingredientVO, 
+			@RequestParam(name="word", defaultValue="") String word,
+			int now_page) {
 		System.out.println(ingredientVO.getIngredno() + ingredientVO.getName());
 		int cnt = this.ingredientProc.update_by_ingredno(ingredientVO);
 		if(cnt == 1) {
-			return "redirect:/ingredient/list_search?word=" + Tool.encode(word);
+			return "redirect:/ingredient/list_search_paging?word=" + Tool.encode(word) + "&now_page=" + now_page;
 		}else {
 			model.addAttribute("code", "update_fail");
 			return "ingredient/msg"; // /templates/cate/msg.html
@@ -112,13 +119,21 @@ public class IngredientCont {
 	   * @return
 	   */
 	@PostMapping(value="/delete")
-	public String delete(Model model, @RequestParam(name = "ingredno", defaultValue = "0") int ingredno, @RequestParam(name = "word", defaultValue = "") String word) {
+	public String delete(Model model, @RequestParam(name = "ingredno", defaultValue = "0") int ingredno, 
+			@RequestParam(name = "word", defaultValue = "") String word,
+			int now_page) {
  
 		int cnt = this.ingredientProc.delete_by_ingredno(ingredno); // 삭제
 		System.out.println("-> cnt: " + cnt);
-
+		System.out.println(now_page);
 		if (cnt == 1) {
-			return "redirect:/ingredient/list_search?word=" + Tool.encode(word);
+			if (this.ingredientProc.list_search_count(word) % Ingredient.RECORD_PER_PAGE == 0) {
+			     now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
+			     if (now_page < 1) {
+			       now_page = 1; // 시작 페이지
+			     }
+			   }
+			return "redirect:/ingredient/list_search_paging?word=" + Tool.encode(word) + "&now_page=" + now_page;
 		} else {
 			model.addAttribute("code", "delete_fail");
 			return "ingredient/msg"; // /templates/cate/msg.html
