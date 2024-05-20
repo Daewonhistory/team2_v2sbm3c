@@ -85,6 +85,7 @@ public class CustomerCont {
       int randomNumber = random.nextInt(5) + 1; // 1부터 5까지의 랜덤한 숫자 생성
       String imageName = "basic" + randomNumber + ".jpg";
       customerVO.setImage(imageName);
+      customerVO.setGrade(1);
       int count = customerProc.create(customerVO);
       System.out.println("count -> "+count);
       if (count == 1) {

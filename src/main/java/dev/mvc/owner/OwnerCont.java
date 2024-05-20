@@ -87,7 +87,7 @@ public class OwnerCont {
       if (count == 1) {
 
         rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", ownerVO.getCname() + "님 회원가입 축하드립니다! ");
+        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 회원가입 축하드립니다! 사업자가 인증 완료되면 이용 가능합니다 ");
         return "redirect:/owner/login";
       } else {
         rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
@@ -148,7 +148,7 @@ public class OwnerCont {
       String id = (String) session.getAttribute("id");
 
       if (id == null) {
-        return "/customer/login_cookie";
+        return "/owner/login_cookie";
       } else {
         return "redirect:/";
       }
@@ -194,25 +194,6 @@ public class OwnerCont {
       System.out.println(cnt);
       if (cnt == 1) {
         OwnerVO ownerVO = this.ownerProc.readById(id);
-        // id를 이용하여 회원 정보 조회
-        session.setAttribute("ownerno", ownerVO.getCustno());
-        session.setAttribute("id", ownerVO.getId());
-        session.setAttribute("cname", ownerVO.getCname());
-        // session.setAttribute("grade", memverVO.getGrade());
-
-        if (ownerVO.getGrade() >= 1 && ownerVO.getGrade() <= 10) {
-          session.setAttribute("grade", "admin");
-        } else if (ownerVO.getGrade() >= 11 && ownerVO.getGrade() <= 20) {
-          session.setAttribute("grade", "owner");
-        } else if (ownerVO.getGrade() >= 21) {
-          session.setAttribute("grade", "guest");
-        }
-        rttr.addFlashAttribute("login", ownerVO.getCname() + "님 안녕하세요");
-
-
-        // -------------------------------------------------------------------
-        // id 관련 쿠기 저장
-        // -------------------------------------------------------------------
         if (id_save.equals("Y")) { // id를 저장할 경우, Checkbox를 체크한 경우
           Cookie ck_id = new Cookie("ck_id", id);
           ck_id.setPath("/");  // root 폴더에 쿠키를 기록함으로 모든 경로에서 쿠기 접근 가능
@@ -252,16 +233,35 @@ public class OwnerCont {
         ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
         response.addCookie(ck_passwd_save);
         // -------------------------------------------------------------------
+        // id를 이용하여 회원 정보 조회
 
-        return "redirect:/";
+        // session.setAttribute("grade", memverVO.getGrade());
 
+        if (ownerVO.getGrade() == 20) {
+          session.setAttribute("grade","NotCerti");
+          rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 컨텐츠에 접근할 수 있습니다");
 
+          return "redirect:/owner/certi";
+        } else  {
+          session.setAttribute("ownerno", ownerVO.getOwnerno());
+          session.setAttribute("id", ownerVO.getId());
+          session.setAttribute("oname", ownerVO.getOname());
+          return "redirect:/";
+        }
       } else {
         rttr.addFlashAttribute("error", "아이디 또는 비밀번호 오류입니다.");
         return "redirect:/owner/login";
       }
 
+    }
 
+
+    @GetMapping("/certi")
+    public String certi(OwnerVO ownerVO){
+
+
+
+      return "owner/certi";
     }
 }
 

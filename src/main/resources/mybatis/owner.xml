@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.owner.OwnerDAOInter">
+    <select id="checkID" resultType="int" parameterType="String">
+        SELECT COUNT(id) as cnt
+        FROM owner
+        WHERE id=#{id}
+    </select>
+
+
+
+
+    <insert id="create" parameterType="dev.mvc.owner.OwnerVO">
+        INSERT INTO owner(ownerno, id, passwd, oname,phone,tel, address1, address2, grade,
+                            image,reg_date)
+        VALUES (owner_seq.nextval, #{id}, #{passwd}, #{oname}, #{phone},
+                #{tel}, #{address1}, #{address2},  #{grade}, #{image}, sysdate)
+    </insert>
+
+<!--    <select id="list" resultType="dev.mvc.customer.CustomerVO">-->
+<!--        SELECT custno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade-->
+<!--        FROM customer-->
+<!--        ORDER BY grade ASC, id ASC-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; customerno로 회원 정보 조회 &ndash;&gt;-->
+<!--    <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">-->
+<!--        SELECT customerno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade-->
+<!--        FROM customer-->
+<!--        WHERE customerno = #{customerno}-->
+<!--    </select>-->
+
+    <!-- id(이메일)로 회원 정보 조회 -->
+    <select id="readById" resultType="dev.mvc.owner.OwnerVO" parameterType="String">
+        SELECT owner, id, passwd, oname
+        FROM owner
+        WHERE id = #{id}
+    </select>
+
+<!--    <update id="update" parameterType="dev.mvc.customer.CustomerVO">-->
+<!--        UPDATE customer-->
+<!--        SET  mname=#{mname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}-->
+<!--        WHERE id=#{id}-->
+<!--    </update>-->
+
+<!--    <delete id="delete" parameterType="int">-->
+<!--        update customer set  grade=99-->
+<!--        WHERE customerno=#{customerno}-->
+<!--    </delete>-->
+
+<!--    &lt;!&ndash; 로그인 &ndash;&gt;-->
+    <select id="login" resultType="int" parameterType="HashMap">
+    <![CDATA[
+        SELECT COUNT(owner) as cnt
+        FROM customer
+        WHERE id = #{id}
+          AND passwd = #{passwd}
+          AND grade <> 99
+        ]]>
+    </select>
+
+    <!--  현재 패스워드 검사 -->
+    <select id="passwd_check" parameterType="HashMap" resultType="int">
+        SELECT COUNT(ownerno) as cnt
+        FROM customer
+        WHERE ownerno=#{ownerno} AND passwd=#{passwd}
+    </select>
+
+    <!-- 패스워드 변경 -->
+    <update id="passwd_update" parameterType="HashMap">
+        UPDATE owner
+        SET passwd=#{passwd}
+        WHERE ownerno=#{ownerno}
+    </update>
+
+<!--    <update id="update_grade" >-->
+<!--        UPDATE customer-->
+<!--        SET grade=#{grade}-->
+<!--        WHERE customerno=#{customerno}-->
+<!--    </update>-->
+
+<!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
+<!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->
+<!--               file1, file1saved, thumb1, size1, mp4-->
+<!--        FROM contents-->
+<!--        WHERE cateno = #{cateno}-->
+<!--        ORDER BY contentsno DESC-->
+<!--    </select>-->
+</mapper>
