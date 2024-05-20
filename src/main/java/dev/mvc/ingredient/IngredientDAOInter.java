@@ -50,4 +50,7 @@ public interface IngredientDAOInter {
 	public int update_by_ingredno(IngredientVO ingredientVO);
 	
 	public ArrayList<IngredientVO> list_search_paging(HashMap<String, Object> map);
+	
+	public int list_search_count(String word);
+	
 }

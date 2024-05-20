@@ -101,7 +101,7 @@ public class IngredientProc implements IngredientProcInter {
 	    int total_grp = (int)(Math.ceil((double)total_page / page_per_block)); 
 	    // 현재 그룹 번호: (double)13/10 -> 1.3 -> 2 그룹
 	    int now_grp = (int)(Math.ceil((double)now_page / page_per_block));  
-	    
+	    System.out.println(search_count);
 	    // 1 group: 1, 2, 3 ... 9, 10
 	    // 2 group: 11, 12 ... 19, 20
 	    // 3 group: 21, 22 ... 29, 30
@@ -176,6 +176,11 @@ public class IngredientProc implements IngredientProcInter {
 	    str.append("</div>"); 
 	     
 	    return str.toString(); 
+	}
+	
+	public int list_search_count(String word) {
+		int cnt = this.ingredientDAO.list_search_count(word);
+		return cnt;
 	}
 	  
 }

@@ -8,9 +8,9 @@
     수정
   </div>
   <aside class="aside_right">
-    <a th:href="@{|/ingredient/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+    <a th:href="@{|/ingredient/list_search_paging?word=${word}&now_page=${now_page}|}">목록</a>
     <span class="menu_divide">┃</span>
-    <a href="/ingredient/list_search">등록</a>
+    <a href="/ingredient/list_search_paging?word=&now_page=1">등록</a>
     <span class="menu_divide">┃</span>
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
@@ -32,8 +32,9 @@
       <button type="submit" class="btn btn-secondary btn-sm">저장</button>
       <button type="button" th:attr="onclick=|location.href='/ingredient/list_search?word=${word}'|" class="btn btn-secondary btn-sm">취소</button>
     </div>
-    
+  
   </form>  
+  <div class="menu_line"></div>
   <!-- /ingredient/list_all_component파일의 list_all_fragment를 삽입 -->
   <div th:replace="~{ingredient/list_all_component::list_all_fragment}"></div>
 </div>
