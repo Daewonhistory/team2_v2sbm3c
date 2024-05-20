@@ -60,7 +60,7 @@ public class OwnerCont {
    */
   @GetMapping("/create")
 
-  public String createForm(Model model, CustomerVO onwerVO) {
+  public String createForm(Model model, OwnerVO onwerVO) {
 
 
     return "/owner/create";
