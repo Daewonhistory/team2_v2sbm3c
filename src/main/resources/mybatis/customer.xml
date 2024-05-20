@@ -23,11 +23,12 @@
                 #{address1}, #{address2}, #{sns}, #{grade}, #{gender} , #{image}, sysdate)
     </insert>
 
-<!--    <select id="list" resultType="dev.mvc.customer.CustomerVO">-->
-<!--        SELECT custno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade-->
-<!--        FROM customer-->
-<!--        ORDER BY grade ASC, id ASC-->
-<!--    </select>-->
+
+    <select id="list" resultType="dev.mvc.customer.CustomerVO">
+        SELECT custno, id, passwd, cname, phone, address1, address2, reg_date, grade
+        FROM customer
+        ORDER BY grade ASC, id ASC
+    </select>
 
 <!--    &lt;!&ndash; customerno로 회원 정보 조회 &ndash;&gt;-->
 <!--    <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">-->
@@ -38,16 +39,18 @@
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.customer.CustomerVO" parameterType="String">
-        SELECT custno, id, passwd, cname
+        SELECT custno, id, passwd, cname,grade,phone,address1,address2
         FROM customer
         WHERE id = #{id}
     </select>
 
-<!--    <update id="update" parameterType="dev.mvc.customer.CustomerVO">-->
-<!--        UPDATE customer-->
-<!--        SET  mname=#{mname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}-->
-<!--        WHERE id=#{id}-->
-<!--    </update>-->
+
+    <!-- 회원 정보 수정 -->
+    <update id="update" parameterType="dev.mvc.customer.CustomerVO">
+        UPDATE customer
+        SET  cname=#{cname}, phone=#{phone},  address1=#{address1}, address2=#{address2}
+        WHERE id=#{id}
+    </update>
 
 <!--    <delete id="delete" parameterType="int">-->
 <!--        update customer set  grade=99-->
