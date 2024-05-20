@@ -103,7 +103,7 @@ public class OwnerCont {
 
   @GetMapping("/login")
 
-    public String loginForm (Model model, CustomerVO customerVO, HttpSession session, HttpServletRequest request){
+    public String loginForm (Model model, OwnerVO ownerVO, HttpSession session, HttpServletRequest request){
 
       // Cookie 관련 ----------------------------------------------
       Cookie[] cookies = request.getCookies();
@@ -237,6 +237,8 @@ public class OwnerCont {
 
         // session.setAttribute("grade", memverVO.getGrade());
 
+
+        System.out.println("->" + ownerVO.getGrade());
         if (ownerVO.getGrade() == 20) {
           session.setAttribute("grade","NotCerti");
           rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 컨텐츠에 접근할 수 있습니다");

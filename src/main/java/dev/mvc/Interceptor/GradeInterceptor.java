@@ -29,6 +29,7 @@ public class GradeInterceptor implements HandlerInterceptor {
 
 
         OwnerVO ownerVO = (OwnerVO) session.getAttribute("ownerVO");
+
         if (ownerVO != null && ownerVO.getGrade() == 20) {
             session.setAttribute("grade", "NotCerti");
             request.setAttribute("grade", "NotCerti");

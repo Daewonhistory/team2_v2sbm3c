@@ -34,7 +34,7 @@
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.owner.OwnerVO" parameterType="String">
-        SELECT owner, id, passwd, oname
+        SELECT ownerno, id, passwd, oname,grade
         FROM owner
         WHERE id = #{id}
     </select>
@@ -53,8 +53,8 @@
 <!--    &lt;!&ndash; 로그인 &ndash;&gt;-->
     <select id="login" resultType="int" parameterType="HashMap">
     <![CDATA[
-        SELECT COUNT(owner) as cnt
-        FROM customer
+        SELECT COUNT(ownerno) as cnt
+        FROM owner
         WHERE id = #{id}
           AND passwd = #{passwd}
           AND grade <> 99
@@ -64,7 +64,7 @@
     <!--  현재 패스워드 검사 -->
     <select id="passwd_check" parameterType="HashMap" resultType="int">
         SELECT COUNT(ownerno) as cnt
-        FROM customer
+        FROM owner
         WHERE ownerno=#{ownerno} AND passwd=#{passwd}
     </select>
 
