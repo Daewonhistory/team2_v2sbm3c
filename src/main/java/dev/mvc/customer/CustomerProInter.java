@@ -37,11 +37,11 @@ public interface CustomerProInter {
   public ArrayList<CustomerVO> list();
 
   /**
-   * memberno로 회원 정보 조회
-   * @param memberno
+   * custno로 회원 정보 조회
+   * @param custno
    * @return
    */
-  public CustomerVO read(int memberno);
+  public CustomerVO read(int custno);
 
   /**
    * id로 회원 정보 조회
@@ -73,10 +73,10 @@ public interface CustomerProInter {
 
   /**
    * 회원 삭제 처리
-   * @param memberno
+   * @param custno
    * @return
    */
-  public int delete(int memberno);
+  public int delete(int custno);
 
   /**
    * 현재 패스워드 검사

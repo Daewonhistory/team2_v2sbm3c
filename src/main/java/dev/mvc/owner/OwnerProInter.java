@@ -25,10 +25,10 @@ public interface OwnerProInter {
 
   /**
    * 회원 가입
-   * @param memberVO
+   * @param onwerVO
    * @return
    */
-  public int create(OwnerVO memberVO);
+  public int create(OwnerVO onwerVO);
 
   /**
    * 회원 전체 목록
@@ -37,11 +37,11 @@ public interface OwnerProInter {
   public ArrayList<OwnerVO> list();
 
   /**
-   * memberno로 회원 정보 조회
-   * @param memberno
+   * onwerno로 회원 정보 조회
+   * @param onwerno
    * @return
    */
-  public OwnerVO read(int memberno);
+  public OwnerVO read(int onwerno);
 
   /**
    * id로 회원 정보 조회
@@ -66,17 +66,17 @@ public interface OwnerProInter {
 
   /**
    * 수정 처리
-   * @param memberVO
+   * @param onwerVO
    * @return
    */
-  public int update(OwnerVO memberVO);
+  public int update(OwnerVO onwerVO);
 
   /**
    * 회원 삭제 처리
-   * @param memberno
+   * @param onwerno
    * @return
    */
-  public int delete(int memberno);
+  public int delete(int onwerno);
 
   /**
    * 현재 패스워드 검사
@@ -97,6 +97,12 @@ public interface OwnerProInter {
    */
   public int login(HashMap<String, Object> map);
 
+  /**
+   *
+   * 등급 수정
+   * @param map
+   * @return
+   */
   public int update_grade(HashMap<String,Object> map);
 }
 

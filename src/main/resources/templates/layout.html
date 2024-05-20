@@ -18,12 +18,19 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link href="/images/css/style.css" rel="Stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="Stylesheet" type="text/css" />
     <!-- /static 기준 -->
   </head>
   <body>
     <div class="container_main">
+      <div class="navbar">
+        <div class="dropdown">포 데이즈</div>
+        <div th:if="${session.id == null}" class="auth-buttons">로그인 |  회원가입</div>
+        <div th:if="${session.id != null}"  th:text="${session.}" class="auth-buttons"></div>
+
+      </div>
       <div class="content_body">
+
         <script th:inline="javascript">
           /*<![CDATA[*/
           // 변수 come에 들어있는 값을 확인하고 널이 아니면 alert 창으로 표시합니다.

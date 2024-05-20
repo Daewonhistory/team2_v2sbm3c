@@ -6,7 +6,7 @@ import java.util.HashMap;
 public interface OwnerDAOInter {
 
   /**
-   * 회원 중복아이디 체크
+   * 사업자 중복이름 체크
    * @param nickname
    * @return 추가한 레코드 갯수
    */
@@ -20,14 +20,14 @@ public interface OwnerDAOInter {
   public int checkID(String id);
 
   /**
-   * 회원 가입
-   * @param customerVO
+   * 사업자 가입
+   * @param ownerVO
    * @return 추가한 레코드 갯수
    */
-  public int create(OwnerVO customerVO);
+  public int create(OwnerVO ownerVO);
 
   /**
-   * 회원 전체 목록
+   * 사업자 전체 목록
    * @return
    */
   public ArrayList<OwnerVO> list();
@@ -35,14 +35,14 @@ public interface OwnerDAOInter {
   public int update_grade(HashMap<String,Object> map);
 
   /**
-   * memberno로 회원 정보 조회
-   * @param memberno
+   * ownerno로 사업자 정보 조회
+   * @param ownerno
    * @return
    */
-  public OwnerVO read(int memberno);
+  public OwnerVO read(int ownerno);
 
   /**
-   * id로 회원 정보 조회
+   * id로 사업자 정보 조회
    * @param id
    * @return
    */
@@ -50,16 +50,16 @@ public interface OwnerDAOInter {
 
   /**
    * 수정 처리
-   * @param customerVO
+   * @param ownerVO
    * @return
    */
-  public int update(OwnerVO customerVO);
+  public int update(OwnerVO ownerVO);
   /**
-   * 회원 삭제 처리
-   * @param memberno
+   * 사업자 삭제 처리
+   * @param ownerno
    * @return
    */
-  public int delete(int memberno);
+  public int delete(int ownerno);
 
   /**
    * 현재 패스워드 검사
