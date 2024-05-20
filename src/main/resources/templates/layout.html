@@ -28,7 +28,20 @@
         <div th:if="${session.id == null}" class="auth-buttons">
           <a href="/register">로그인</a> | <a href="/sign-up">회원가입</a>
         </div>
-        <div th:if="${session.id != null}" class="auth-buttons"></div>
+        <div th:if="${session.cname != null}" class="auth-buttons">
+
+          <a  th:text="${session.cname}"  th:href="@{/customer/my_page}"></a>
+          |
+          <a th:href="@{/customer/logout}"> 로그아웃</a>
+
+        </div>
+
+        <div th:if="${session.oname != null}" class="auth-buttons">
+
+          <a  th:text="${session.oname}"  th:href="@{/owner/my_page}"></a>
+          <a th:href="@{/owner/logout}"> 로그아웃</a>
+
+        </div>
       </div>
       <div class="content_body">
 

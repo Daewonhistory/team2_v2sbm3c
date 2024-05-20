@@ -239,13 +239,11 @@ public class CustomerCont {
         session.setAttribute("id", customerVO.getId());
         session.setAttribute("cname", customerVO.getCname());
         // session.setAttribute("grade", memverVO.getGrade());
-
-        if (customerVO.getGrade() >= 1 && customerVO.getGrade() <= 10) {
-          session.setAttribute("grade", "admin");
-        } else if (customerVO.getGrade() >= 11 && customerVO.getGrade() <= 20) {
+        System.out.println("grade" +customerVO.getGrade());
+        if (customerVO.getGrade() == 1) {
           session.setAttribute("grade", "customer");
-        } else if (customerVO.getGrade() >= 21) {
-          session.setAttribute("grade", "guest");
+
+          System.out.println("grade ->"+session.getAttribute("grade"));
         }
         rttr.addFlashAttribute("login", customerVO.getCname() + "님 안녕하세요");
 
@@ -303,5 +301,83 @@ public class CustomerCont {
 
 
     }
+
+  @GetMapping("/my_page")
+  public String mypage (Model model, HttpSession session, RedirectAttributes rttr){
+
+
+    if (this.customerProc.isCustomer(session)) {
+      String id = (String) session.getAttribute("id");
+      CustomerVO customerVO = this.customerProc.readById(id);
+
+      model.addAttribute("customerVO", customerVO);
+
+      return "/customer/my_page";
+
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
+  }
+
+  @GetMapping("/logout")
+  public String logout (HttpSession session, RedirectAttributes redirectAttributes){
+    // 세션을 무효화합니다.
+    session.invalidate();
+
+    // 로그아웃 성공 메시지(선택 사항)
+    redirectAttributes.addFlashAttribute("logout", "로그아웃 되었습니다.");
+
+    // 홈 페이지로 리다이렉트합니다.
+    return "redirect:/";
+
+  }
+
+  @PostMapping("/update-mypage")
+
+  public String updatecustomer (Model model, CustomerVO customerVO, RedirectAttributes rrtr,HttpSession session){
+
+
+    int check_ID = this.customerProc.checkID(customerVO.getId());
+
+
+    int count = customerProc.update(customerVO);
+    System.out.println(check_ID);
+    System.out.println(customerVO.getId());
+    if (check_ID == 1) {
+      if (count == 1) {
+
+
+        rrtr.addFlashAttribute("success", 1);
+        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 수정 완료 되었습니다! ");
+
+        return "redirect:/customer/my_page";
+      } else {
+        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+
+        return "redirect:/customer/my_page";
+      }
+    } else {
+      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+      return "redirect:/customer/create";
+    }
+  }
+
+  @GetMapping("/list")
+  public String list_member(Model model, CustomerVO customerVO, HttpSession session, RedirectAttributes rttr) {
+
+    String id = (String) session.getAttribute("id");
+
+
+      ArrayList<CustomerVO> list = this.customerProc.list();
+      model.addAttribute("list", list);
+      return "customer/customerList";
+
+
+
+  }
+
+
+
 }
 
