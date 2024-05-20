@@ -28,4 +28,13 @@ public class HomeCont {
 
     return "/custowner/pubcreate";
   }
+
+
+  @GetMapping("/register")
+
+  public String publiclogin(Model model, CustomerVO customerVO) {
+
+
+    return "/custowner/register";
+  }
 }
