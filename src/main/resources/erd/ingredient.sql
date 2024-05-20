@@ -31,6 +31,12 @@ CREATE SEQUENCE ingredient_seq
 
 INSERT INTO INGREDIENT(ingredno, name)
 VALUES (ingredient_seq.nextval, '밀');
+INSERT INTO INGREDIENT(ingredno, name)
+VALUES (ingredient_seq.nextval, '갑각류');
+INSERT INTO INGREDIENT(ingredno, name)
+VALUES (ingredient_seq.nextval, '소고기');
+INSERT INTO INGREDIENT(ingredno, name)
+VALUES (ingredient_seq.nextval, '돼지고기');
 
 COMMIT;
 
@@ -45,7 +51,7 @@ ORDER BY name ASC;
 2.검색어를 통한 조회
 SELECT ingredno, name
 FROM ingredient
-WHERE name LIKE '%검색어%'
+WHERE name LIKE '%고기%'
 ORDER BY name ASC;
 
 -- UPDATE

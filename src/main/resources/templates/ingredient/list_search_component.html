@@ -1,0 +1,13 @@
+<div th:fragment="list_search_fragment"> <!-- <div th:replace=...> -->
+  <div style="text-align: right; clear:both;">
+    <form name="frm_search" method="get" action="/ingredient/list_search_paging">
+      <input type="text" name="word" id="word" th:value="${word}" >
+      <input type="text" name="now_page" id="now_page" value="1" >
+      <button type='submit' class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>
+      <span th:if="${word != null}">     
+        <button type='button' onclick="location.href='/ingredient/list_search'"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
+      </span>
+    </form>  
+  </div>
+</div>
+

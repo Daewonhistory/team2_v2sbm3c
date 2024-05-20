@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
@@ -32,29 +31,31 @@ public class Upload extends HttpServletRequestWrapper {
 
     private boolean multipart = false;
 
-    private HashMap parameterMap;  // 일반 <INPUT> 폼태그
-    private HashMap fileItemMap;   // 전송된 <FILE> 태그 객체가 저장
+    private HashMap parameterMap; // 일반 <INPUT> 폼태그
+    private HashMap fileItemMap; // 전송된 <FILE> 태그 객체가 저장
 
     /**
      * 기본 생성자
+     * 
      * @param request
      * @throws FileUploadException
      */
     public Upload(HttpServletRequest request)
-    throws FileUploadException{
+            throws FileUploadException {
         this(request, -1, -1, null);
     }
 
     /**
      * 생성자
-     * @param request HttpServletRequest 객체
-     * @param threshold 메모리에 저장할 최대크기
-     * @param max 업로드할 최대 파일크기
+     * 
+     * @param request        HttpServletRequest 객체
+     * @param threshold      메모리에 저장할 최대크기
+     * @param max            업로드할 최대 파일크기
      * @param repositoryPath 업로드 경로
      * @throws FileUploadException
      */
     public Upload(HttpServletRequest request,
-        int threshold, int max, String repositoryPath) throws FileUploadException {
+            int threshold, int max, String repositoryPath) throws FileUploadException {
         super(request);
 
         parsing(request, threshold, max, repositoryPath);
@@ -62,14 +63,15 @@ public class Upload extends HttpServletRequestWrapper {
 
     /**
      * 일반 입력 필드와 파일 필드를 MAP에 저장
-     * @param request HttpServletRequest 객체
-     * @param threshold 메모리에 저장할 최대크기
-     * @param max 업로드할 최대 파일크기
+     * 
+     * @param request        HttpServletRequest 객체
+     * @param threshold      메모리에 저장할 최대크기
+     * @param max            업로드할 최대 파일크기
      * @param repositoryPath 업로드 경로
      * @throws FileUploadException
      */
     private void parsing(HttpServletRequest request,
-        int threshold, int max, String repositoryPath) throws FileUploadException {
+            int threshold, int max, String repositoryPath) throws FileUploadException {
 
         if (FileUpload.isMultipartContent(request)) {
             multipart = true;
@@ -87,7 +89,7 @@ public class Upload extends HttpServletRequestWrapper {
             }
 
             java.util.List list = diskFileUpload.parseRequest(request);
-            for (int i = 0 ; i < list.size() ; i++) {
+            for (int i = 0; i < list.size(); i++) {
                 FileItem fileItem = (FileItem) list.get(i);
                 String name = fileItem.getFieldName();
 
@@ -116,6 +118,7 @@ public class Upload extends HttpServletRequestWrapper {
 
     /**
      * 파일을 전송하는 enctype="multipart/form-data"인경우 true리턴
+     * 
      * @return enctype="multipart/form-data"인경우 true리턴
      */
     public boolean isMultipartContent() {
@@ -127,8 +130,9 @@ public class Upload extends HttpServletRequestWrapper {
      */
     public String getParameter(String name) {
         if (multipart) {
-            String[] values = (String[])parameterMap.get(name);
-            if (values == null) return null;
+            String[] values = (String[]) parameterMap.get(name);
+            if (values == null)
+                return null;
             return values[0];
         } else
             return super.getParameter(name);
@@ -139,7 +143,7 @@ public class Upload extends HttpServletRequestWrapper {
      */
     public String[] getParameterValues(String name) {
         if (multipart)
-            return (String[])parameterMap.get(name);
+            return (String[]) parameterMap.get(name);
         else
             return super.getParameterValues(name);
     }
@@ -155,6 +159,7 @@ public class Upload extends HttpServletRequestWrapper {
                 public boolean hasMoreElements() {
                     return iter.hasNext();
                 }
+
                 public Object nextElement() {
                     return iter.next();
                 }
@@ -173,6 +178,7 @@ public class Upload extends HttpServletRequestWrapper {
 
     /**
      * 지정한 파라미터 이름과 관련된 FileItem을 리턴합니다.
+     * 
      * @param name
      * @return
      */
@@ -189,8 +195,8 @@ public class Upload extends HttpServletRequestWrapper {
     public void delete() {
         if (multipart) {
             Iterator fileItemIter = fileItemMap.values().iterator();
-            while( fileItemIter.hasNext()) {
-                FileItem fileItem = (FileItem)fileItemIter.next();
+            while (fileItemIter.hasNext()) {
+                FileItem fileItem = (FileItem) fileItemIter.next();
                 fileItem.delete();
             }
         }
@@ -205,17 +211,17 @@ public class Upload extends HttpServletRequestWrapper {
 
     /**
      * request 속성에 저장된 FileUploadRequestWrapper를 리턴합니다.
+     * 
      * @param request
      * @return
      */
-    public Upload
-                  getFrom(HttpServletRequest request) {
-        return (Upload)
-            request.getAttribute(Upload.class.getName());
+    public Upload getFrom(HttpServletRequest request) {
+        return (Upload) request.getAttribute(Upload.class.getName());
     }
 
     /**
      * 지정한 request가 래퍼를 속성으로 포함하고 있으면 true를 리턴합니다.
+     * 
      * @param request
      * @return
      */
@@ -231,19 +237,20 @@ public class Upload extends HttpServletRequestWrapper {
      * JSP 기반
      * 서버에 올라온 파일을 서버의 디스크에 저장
      * 중복 파일명 처리: data.txt -> data_1.txt -> data_2.txt...
+     * 
      * @param fileItem 저장할 파일 객체
-     * @param upDir 저장할 서버의 폴더
+     * @param upDir    저장할 서버의 폴더
      * @return 저장된 파일명
      */
-    public String saveFile(FileItem fileItem, String upDir){
+    public String saveFile(FileItem fileItem, String upDir) {
 
-        String filename = "";       //업로드 파일명
+        String filename = ""; // 업로드 파일명
 
         // 파일 태그
         // System.out.println("전송된 파일명: " + fileItem.getName());
 
         // 폴더 구분자 추출
-        int idx = fileItem.getName().lastIndexOf("\\"); //윈도우 기반
+        int idx = fileItem.getName().lastIndexOf("\\"); // 윈도우 기반
 
         if (idx == -1) { // 유닉스, 리눅스 기반
             idx = fileItem.getName().lastIndexOf("/");
@@ -252,25 +259,25 @@ public class Upload extends HttpServletRequestWrapper {
         // 순수 파일명 추출
         filename = fileItem.getName().substring(idx + 1);
         int ext_index = filename.lastIndexOf(".");
-        String only_filename = filename.substring(0,  ext_index); // 순수 파일명 추출, winter
+        String only_filename = filename.substring(0, ext_index); // 순수 파일명 추출, winter
         String ext_filename = filename.substring(ext_index); // 파일 확장자 추출, .jpg
 
         try {
-            //-----------------------------------------------
+            // -----------------------------------------------
             // 대상 폴더에 저장할 파일 객체 생성, 폴더 + 파일명
-            //-----------------------------------------------
+            // -----------------------------------------------
             File uploadedFile = new File(upDir, filename);
 
             // 올릴려는 파일과 같은 이름이 존재하면 중복파일 처리
-            if ( uploadedFile.exists() == true ){
-                for(int k=1; true; k++){
+            if (uploadedFile.exists() == true) {
+                for (int k = 1; true; k++) {
                     // 파일명 중복을 피하기 위한 일련 번호를 생성하여
                     // 파일명으로 조합
                     uploadedFile = new File(upDir, only_filename + "_" + k + ext_filename);
                     // 조합된 파일명이 존재하지 않는다면, 일련번호가 붙은 파일명 다시 생성
                     // 파일이 존재하지 않는 경우 리턴할 파일명을 산출
                     // 파일이 존재하지 않으면 for 문 탈출 -> 파일 저장
-                    if(uploadedFile.exists() == false){
+                    if (uploadedFile.exists() == false) {
                         filename = uploadedFile.getName();
                         break;
                     }
@@ -279,31 +286,30 @@ public class Upload extends HttpServletRequestWrapper {
 
             // storage 폴더에 파일명 저장
             fileItem.write(uploadedFile);
-        } catch(Exception e) {
-              System.out.println(e.toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
 
         return filename; // 업로드된 파일명 리턴
     }
-    //---------------------------------------------------------------
-    //Fileupload 콤포넌트 관련 코드 끝
-    //---------------------------------------------------------------
-
+    // ---------------------------------------------------------------
+    // Fileupload 콤포넌트 관련 코드 끝
+    // ---------------------------------------------------------------
 
     /**
      * 파일을 삭제합니다.
-    */
-    public boolean deleteFile(String folder, String fileName){
+     */
+    public boolean deleteFile(String folder, String fileName) {
         boolean ret = false;
 
-        try{
-            if ( fileName != null){ // 기존에 파일이 존재하는 경우 삭제
+        try {
+            if (fileName != null) { // 기존에 파일이 존재하는 경우 삭제
                 File file = new File(folder + "/" + fileName);
-                if (file.exists()){
-                  ret = file.delete();
+                if (file.exists()) {
+                    ret = file.delete();
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -320,40 +326,43 @@ public class Upload extends HttpServletRequestWrapper {
 
     /**
      * 전송받은 파일의 갯수를 리턴
+     * 
      * @return
      */
-    public int getFileCount(){
+    public int getFileCount() {
         return this.fileItemMap.size();
     }
 
     /**
      * FileUpload 1.2 한글 변환
+     * 
      * @param str
      * @return
      */
     public String encodeFileUpload12(String str) {
-      String corean = null;
-      try {
-        corean = new String(str.getBytes("ISO-8859-1"), "UTF-8");
-        // corean= new String(str.getBytes("ISO-8859-1"), "KSC5601");
-      } catch (Exception e) {
+        String corean = null;
+        try {
+            corean = new String(str.getBytes("ISO-8859-1"), "UTF-8");
+            // corean= new String(str.getBytes("ISO-8859-1"), "KSC5601");
+        } catch (Exception e) {
+            return corean;
+        }
         return corean;
-      }
-      return corean;
     }
 
     /**
      * Spring framework에서의 파일 업로드
      * 중복 파일명 처리: data.txt -> data_1.txt -> data_2.txt...
+     * 
      * @param multipartFile 전송하려는 파일 객체
-     * @param absPath 저장할 절대 경로
+     * @param absPath       저장할 절대 경로
      * @return
      */
     public static String saveFileSpring(MultipartFile multipartFile, String absPath) {
         // input form's parameter name
         String fileName = "";
         // 업로드 전 originalFileName: C:\kd1\sw_images_ai8\movie_drama\드라마_코미디\devil_01.jpg
-        String originalFileName = multipartFile.getOriginalFilename();  // 01.jpg
+        String originalFileName = multipartFile.getOriginalFilename(); // 01.jpg
         // file content type
         String contentType = multipartFile.getContentType();
         // file size
@@ -362,25 +371,25 @@ public class Upload extends HttpServletRequestWrapper {
         // System.out.println("fileSize: " + fileSize);
         // System.out.println("originalFileName: " + originalFileName);
 
-        // originalFileName =  Tool.getFname(originalFileName); // 파일명 추출
-        // System.out.println("-> originalFileName: " +  originalFileName);
+        // originalFileName = Tool.getFname(originalFileName); // 파일명 추출
+        // System.out.println("-> originalFileName: " + originalFileName);
 
         int ext_index = originalFileName.lastIndexOf("."); // 파일 구분자 "." 위치 추출
-        String only_filename = originalFileName.substring(0,  ext_index); // 순수 파일명 추출, winter
+        String only_filename = originalFileName.substring(0, ext_index); // 순수 파일명 추출, winter
         String ext_filename = originalFileName.substring(ext_index); // 파일 확장자 추출, .jpg
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
 
         try {
-            if( fileSize > 0 ) { // 파일이 존재한다면
+            if (fileSize > 0) { // 파일이 존재한다면
                 // 인풋 스트림을 얻는다.
                 inputStream = multipartFile.getInputStream();
 
                 File oldfile = new File(absPath, originalFileName); // 올릴 파일의 전체 경로 조합
 
-                if ( oldfile.exists()){  // 같은 파일명이 존재한다면, 파일명에 일련번호 추가 작업
-                    for(int k=1; true; k++){ // true: 무한루틴
+                if (oldfile.exists()) { // 같은 파일명이 존재한다면, 파일명에 일련번호 추가 작업
+                    for (int k = 1; true; k++) { // true: 무한루틴
                         // 파일명 중복을 피하기 위한 일련 번호를 생성하여
                         // 파일명으로 조합
                         // 중복 파일명 처리: data.txt -> data_1.txt -> data_2.txt -> data_3.txt...
@@ -388,37 +397,37 @@ public class Upload extends HttpServletRequestWrapper {
 
                         // 조합된 파일명이 존재하지 않는다면, 일련번호가
                         // 붙은 파일명 다시 생성
-                        if(oldfile.exists() == false){ //존재하지 않는 경우
+                        if (oldfile.exists() == false) { // 존재하지 않는 경우
                             fileName = oldfile.getName();
                             System.out.println("-> 중복되지 않는 fileName 발견: " + fileName);
                             break;
                         }
                     }
-                }else{
+                } else {
                     fileName = originalFileName; // 파일이 존재하지 않는 경우 추출된 파일명 그대로 사용
                 }
-                //make server full path to save
+                // make server full path to save
                 String serverFullPath = absPath + "/" + fileName;
 
                 System.out.println("-> 서버 저장 전 originalFileName: " + originalFileName);
                 System.out.println("-> 서버 저장 전 fileName: " + fileName);
                 System.out.println("-> 서버 저장 전 serverFullPath: " + serverFullPath);
 
-                outputStream = new FileOutputStream( serverFullPath );
+                outputStream = new FileOutputStream(serverFullPath);
 
                 // 버퍼를 만든다.
                 int readBytes = 0;
                 byte[] buffer = new byte[8192];
 
-                while((readBytes = inputStream.read(buffer, 0, 8192)) != -1 ) {
-                    outputStream.write( buffer, 0, readBytes );
+                while ((readBytes = inputStream.read(buffer, 0, 8192)) != -1) {
+                    outputStream.write(buffer, 0, readBytes);
                 }
                 outputStream.close();
                 inputStream.close();
 
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
@@ -430,9 +439,10 @@ public class Upload extends HttpServletRequestWrapper {
     /**
      * Spring framework에서의 파일 업로드
      * 중복 파일명 처리: data.txt -> data_1.txt -> data_2.txt...
+     * 
      * @param multipartFile 전송하려는 파일 객체
-     * @param absPath 저장할 절대 경로
-     * @param header 파일 종류 예) MP3, MP4, JPG...
+     * @param absPath       저장할 절대 경로
+     * @param header        파일 종류 예) MP3, MP4, JPG...
      * @return
      */
     public static String saveFileSpring_RND(MultipartFile multipartFile, String absPath, String header) {
@@ -448,14 +458,14 @@ public class Upload extends HttpServletRequestWrapper {
         // System.out.println("fileSize: " + fileSize);
         // System.out.println("originalFileName: " + originalFileName);
         int ext_index = originalFileName.lastIndexOf(".");
-        String only_filename = originalFileName.substring(0,  ext_index); // 순수 파일명 추출, winter
+        String only_filename = originalFileName.substring(0, ext_index); // 순수 파일명 추출, winter
         String ext_filename = originalFileName.substring(ext_index); // 파일 확장자 추출, .jpg
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
 
         try {
-            if( fileSize > 0 ) { // 파일이 존재한다면
+            if (fileSize > 0) { // 파일이 존재한다면
                 // 인풋 스트림을 얻는다.
                 inputStream = multipartFile.getInputStream();
 
@@ -464,29 +474,29 @@ public class Upload extends HttpServletRequestWrapper {
                 // 새로운 파일명 생성
                 fileName = Tool.getDate_rnd(header) + ext_filename;
 
-                //make server full path to save
+                // make server full path to save
                 String serverFullPath = absPath + "/" + fileName;
 
                 // System.out.println("업로드 후 fileName: " + fileName);
                 // System.out.println("업로드 후 serverFullPath: " + serverFullPath);
 
-                outputStream = new FileOutputStream( serverFullPath );
+                outputStream = new FileOutputStream(serverFullPath);
 
                 // 버퍼를 만든다.
                 int readBytes = 0;
                 byte[] buffer = new byte[8192];
 
-                while((readBytes = inputStream.read(buffer, 0, 8192)) != -1 ) {
-                    outputStream.write( buffer, 0, readBytes );
+                while ((readBytes = inputStream.read(buffer, 0, 8192)) != -1) {
+                    outputStream.write(buffer, 0, readBytes);
                 }
                 outputStream.close();
                 inputStream.close();
 
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
 
         }
 
@@ -494,4 +504,3 @@ public class Upload extends HttpServletRequestWrapper {
     }
 
 }
-
