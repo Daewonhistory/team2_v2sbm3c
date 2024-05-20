@@ -101,6 +101,14 @@ public class OwnerCont {
   }
 
 
+  /**
+   * 로그인 폼
+   * @param model
+   * @param ownerVO
+   * @param session
+   * @param request
+   * @return 로그인 경로
+   */
   @GetMapping("/login")
 
     public String loginForm (Model model, OwnerVO ownerVO, HttpSession session, HttpServletRequest request){
