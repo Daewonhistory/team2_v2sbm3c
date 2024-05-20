@@ -6,7 +6,7 @@ import java.util.HashMap;
 public interface OwnerDAOInter {
 
   /**
-   * 중복아이디 체크
+   * 회원 중복아이디 체크
    * @param nickname
    * @return 추가한 레코드 갯수
    */

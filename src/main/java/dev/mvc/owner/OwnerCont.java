@@ -34,6 +34,11 @@ public class OwnerCont {
   }
 
 
+  /**
+   * 사업자 ID 중복확인 메서드
+   * @param id
+   * @return cnt 성공여부
+   */
   @PostMapping("/checkID")  //http:localhost:9091/meber/checkId?id=admin
   @ResponseBody
   public String checkId(String id) {
@@ -45,19 +50,14 @@ public class OwnerCont {
     return "{\"cnt\":" + cnt + "}";
   }
 
-  @PostMapping("/checkNickName")  //http:localhost:9091/meber/checkId?id=admin
-  @ResponseBody
-  public String checkNickname(String nickname) {
-    System.out.println("-> nickname  " + nickname);
-
-    int cnt = this.ownerProc.checkNickName(nickname);
-
-    //{"cnt": cnt}
-    return "{\"cnt\":" + cnt + "}";
-  }
 
 
-
+  /**
+   * 회원 가입 폼 메서드
+   * @param model
+   * @param ownerVO
+   * @return
+   */
   @GetMapping("/create")
 
   public String createForm(Model model, OwnerVO ownerVO) {
@@ -66,6 +66,14 @@ public class OwnerCont {
     return "/owner/create";
   }
 
+  /**
+   *
+   * 사업자 회원가입 처리 메서드
+   * @param model
+   * @param ownerVO
+   * @param rrtr
+   * @return
+   */
   @PostMapping("/create")
 
   public String createowner(Model model, OwnerVO ownerVO, RedirectAttributes rrtr) {
@@ -265,8 +273,12 @@ public class OwnerCont {
 
     }
 
-
-    @GetMapping("/certi")
+  /**
+   * 사업자 인증 등록 폼 메서드
+   * @param ownerVO
+   * @return
+   */
+  @GetMapping("/certi")
     public String certi(OwnerVO ownerVO){
 
 
@@ -275,309 +287,5 @@ public class OwnerCont {
     }
 }
 
-//  @GetMapping("/list")
-//  public String list_owner(Model model, CustomerVO ownerVO, HttpSession session, RedirectAttributes rttr) {
-//
-//    String id = (String) session.getAttribute("id");
-//
-//    if (this.ownerProc.isCustomerAdmin(session)) {
-//      ArrayList<CustomerVO> list = this.ownerProc.list();
-//      model.addAttribute("list", list);
-//      return "owner/ownerList";
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
-//
-//
-//  }
-//
-//  /**
-//   * 조히
-//   *
-//   * @param model
-//   * @param ownerno 회원 번호
-//   * @return
-//   */
-//  @GetMapping("/read")
-//  public String read(Model model, @RequestParam(name = "ownerno") Integer ownerno, HttpSession session,
-//                     RedirectAttributes rttr) {
-//    System.out.println(ownerno);
-//    CustomerVO read = this.ownerProc.read(ownerno);
-//
-//    String id = (String) session.getAttribute("id");
-//
-//
-//
-//    if (this.ownerProc.isCustomerAdmin(session)) {
-//      if (read != null) {
-//
-//        model.addAttribute("ownerVO", read);
-//        return "owner/read";
-//      } else {
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/owner/list";
-//      }
-//    }else{
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/";
-//      }
-//
-//
-//    }
-//
-//
-//    @PostMapping("/update")
-//
-//    public String updateowner (Model model, CustomerVO ownerVO, RedirectAttributes rrtr,HttpSession session){
-//
-//      if (this.ownerProc.isCustomerAdmin(session)) {
-//        int check_ID = this.ownerProc.checkID(ownerVO.getId());
-//
-//        if (ownerVO.getTel() == null || ownerVO.getTel().equals("")) {
-//          ownerVO.setTel("010-0000-0000");
-//        }
-//        int count = ownerProc.update(ownerVO);
-//        System.out.println(check_ID);
-//        System.out.println(ownerVO.getId());
-//        if (check_ID == 1) {
-//          if (count == 1) {
-//
-//
-//            rrtr.addFlashAttribute("success", 1);
-//            rrtr.addFlashAttribute("come", ownerVO.getMname() + "님 수정 완료 되었습니다! ");
-//
-//            return "redirect:/owner/read?ownerno=" + ownerVO.getCustomerno();
-//          } else {
-//            rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//
-//
-//            return "redirect:/owner/read?ownerno=" + ownerVO.getCustomerno();
-//          }
-//        } else {
-//          rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-//          return "redirect:/owner/create";
-//        }
-//      } else  {
-//        rrtr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/owner/list";
-//      }
-//
-//
-//    }
-//
-//    @PostMapping("/delete")
-//    public String delete (Model model, @RequestParam("ownerno") Integer ownerno,
-//      @RequestParam("mname") String mname,HttpSession session,
-//      RedirectAttributes rttr){
-//      if (this.ownerProc.isCustomerAdmin(session)) {
-//        int count = this.ownerProc.delete(ownerno);
-//
-//
-//        if (count == 1) {
-//          rttr.addFlashAttribute("delete", mname + "'이 삭제되었습니다.");
-//          return "redirect:/owner/list";
-//        } else {
-//          rttr.addFlashAttribute("delete", "삭제 실패");
-//          return "redirect:/cate/search";
-//        }
-//      }else {
-//        return "redirect:/owner/login";
-//      }
-//    }
-//
-//    /**
-//     * 로그인 폼
-//     *
-//     * @param model
-//     * @param ownerVO
-//     * @param session
-//     * @param request
-//     * @return
-//     */
-//
-//
-//
-//
-//    @GetMapping("/update_password")
-//    public String update_password (Model model, HttpSession session, RedirectAttributes rttr){
-//      Integer ownerno = (Integer) session.getAttribute("ownerno");
-//
-//      if (ownerProc.isCustomer(session)) {
-//        CustomerVO read = this.ownerProc.read(ownerno);
-//        if (read == null) {
-//          return "redirect:/owner/list";
-//        } else {
-//          model.addAttribute("ownerVO", read);
-//          return "owner/update_password";
-//        }
-//      } else {
-//        rttr.addFlashAttribute("Abnormal", "로그인이 필요합니다");
-//        return "redirect:/owner/login";
-//      }
-//
-//
-//    }
-//
-//    @PostMapping("/checkpassword")
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> checkPassword (@RequestBody String json_src, HttpSession session){
-//      HashMap<String, Object> map = new HashMap<>();
-//      JSONObject src = new JSONObject(json_src);
-//      String pastpasswd = src.getString("pastpasswd");
-//      Integer ownerno = (Integer) session.getAttribute("ownerno");
-//
-//      map.put("passwd", this.security.aesEncode(pastpasswd));
-//      map.put("ownerno", ownerno);
-//
-//      int check = this.ownerProc.passwd_check(map);
-//
-//      Map<String, Object> result = new HashMap<>();
-//      result.put("check", check);
-//
-//      return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
-//
-//
-//    // 여기서 비밀번호 일치 여부를 확인하고 결과를 반환합니다.
-//
-//
-//    @PostMapping("/update_password")
-//    public String updatepass (Model model, CustomerVO ownerVO,
-//      String pastpasswd,
-//      String passwd1,
-//      String passwd2,
-//      RedirectAttributes rrtr,
-//      HttpSession session
-//  ){
-//      if (this.ownerProc.isCustomer(session)) {
-//        HashMap<String, Object> mapcheck = new HashMap<String, Object>();
-//
-//
-//        mapcheck.put("passwd", this.security.aesEncode(pastpasswd));
-//        mapcheck.put("ownerno", ownerVO.getCustomerno());
-//
-//
-//        int check_pass = this.ownerProc.passwd_check(mapcheck);
-//
-//
-//        HashMap<String, Object> map = new HashMap<String, Object>();
-//
-//        map.put("passwd", this.security.aesEncode(passwd2));
-//        map.put("ownerno", ownerVO.getCustomerno());
-//        int count = ownerProc.passwd_update(map);
-//
-//
-//        if (check_pass == 1 && passwd1.equals(passwd2) &&
-//          !pastpasswd.equals(passwd1) && !pastpasswd.equals(passwd2) &&
-//          passwd1.trim().length() > 3 && passwd2.trim().length() > 3) {
-//          if (count == 1) {
-//
-//
-//            String mname = (String) session.getAttribute("mname");
-//            rrtr.addFlashAttribute("success", 1);
-//            rrtr.addFlashAttribute("update", mname + "님 패스워드 수정이 완료되었습니다 ");
-//            session.invalidate();
-//            return "redirect:/";
-//          } else {
-//            rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//            return "redirect:/owner/update_password";
-//          }
-//        } else {
-//          rrtr.addFlashAttribute("fail", "알수없는 오류 입니다. ");
-//          return "redirect:/owner/update_password";
-//        }
-//      } else {
-//        rrtr.addFlashAttribute("fail", "로그인이 필요합니다. ");
-//        return "redirect:/owner/login";
-//
-//      }
-//
-//    }
-//
-//    @GetMapping("/my_page")
-//    public String mypage (Model model, HttpSession session, RedirectAttributes rttr){
-//
-//
-//      if (this.ownerProc.isCustomer(session)) {
-//        String id = (String) session.getAttribute("id");
-//        CustomerVO ownerVO = this.ownerProc.readById(id);
-//
-//        model.addAttribute("ownerVO", ownerVO);
-//
-//        return "/owner/my_page";
-//
-//      } else {
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/";
-//      }
-//    }
-//
-//    @GetMapping("/logout")
-//    public String logout (HttpSession session, RedirectAttributes redirectAttributes){
-//      // 세션을 무효화합니다.
-//      session.invalidate();
-//
-//      // 로그아웃 성공 메시지(선택 사항)
-//      redirectAttributes.addFlashAttribute("logout", "로그아웃 되었습니다.");
-//
-//      // 홈 페이지로 리다이렉트합니다.
-//      return "redirect:/";
-//
-//    }
-//
-//
-//    @GetMapping("/update_grade")
-//    public String update_gradeForm (Model model, Integer ownerno, HttpSession session, RedirectAttributes rttr){
-//
-//      if (ownerno == null) {
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/";
-//      }
-//
-//      CustomerVO read = this.ownerProc.read(ownerno);
-//      if (read == null) {
-//        return "redirect:/owner/list";
-//      } else {
-//        model.addAttribute("ownerVO", read);
-//        return "owner/update_grade";
-//      }
-//
-//    }
-//
-//    @PostMapping("update_grade")
-//    public String updategrade (Model model, CustomerVO ownerVO,
-//      Integer grade, Integer ownerno,
-//
-//      RedirectAttributes rrtr,
-//      HttpSession session
-//  ){
-//
-//
-//      HashMap<String, Object> map = new HashMap<String, Object>();
-//
-//
-//      map.put("grade", grade);
-//      map.put("ownerno", ownerno);
-//      int count = this.ownerProc.update_grade(map);
-//
-//
-//      if (count == 1) {
-//
-//
-//        rrtr.addFlashAttribute("success", 1);
-//        rrtr.addFlashAttribute("update", "등급  수정이 완료되었습니다 ");
-//
-//        return "redirect:/owner/list";
-//      } else {
-//        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//        return "redirect:/owner/update_grade";
-//      }
-//
-//    }
-//  }
 
-//-------------------------------------------------------------------
-// 코드 시작
-//-------------------------------------------------------------------
 
