@@ -86,6 +86,10 @@ public class CustomerCont {
     return "/customer/create";
   }
 
+
+
+
+
   /**
    * 회원가입 처리 메소드
    * @param model

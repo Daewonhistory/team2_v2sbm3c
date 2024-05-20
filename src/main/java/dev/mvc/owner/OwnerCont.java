@@ -55,12 +55,12 @@ public class OwnerCont {
   /**
    * 회원 가입 폼 메서드
    * @param model
-   * @param ownerVO
+   * @param onwerVO
    * @return
    */
   @GetMapping("/create")
 
-  public String createForm(Model model, OwnerVO ownerVO) {
+  public String createForm(Model model, CustomerVO onwerVO) {
 
 
     return "/owner/create";
