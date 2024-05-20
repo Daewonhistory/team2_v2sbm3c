@@ -48,4 +48,6 @@ public interface IngredientDAOInter {
 	 * @return
 	 */
 	public int update_by_ingredno(IngredientVO ingredientVO);
+	
+	public ArrayList<IngredientVO> list_search_paging(HashMap<String, Object> map);
 }

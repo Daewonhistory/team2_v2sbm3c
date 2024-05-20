@@ -21,7 +21,7 @@
       	<td class="td_bs" th:text="${ingredientVO.ingredno}"></td>
         <td class="td_bs" th:text="${ingredientVO.name}"></td>
         <td class="td_bs">
-          <a><img src="/cate/images/update.png" class="icon"></a>
+          <a th:href="@{|/ingredient/update?ingredno=${ingredientVO.ingredno}&word=${word}&now_page=1|}"><img src="/cate/images/update.png" class="icon"></a>
           <a th:attr="onclick=|delete_check(${ingredientVO.ingredno}, '${word}')|"><img src="/cate/images/delete.png" class="icon"></a>
         </td>
       </tr>

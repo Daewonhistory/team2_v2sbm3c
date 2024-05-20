@@ -1,6 +1,7 @@
 package dev.mvc.ingredient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +38,27 @@ public class IngredientCont {
 		return  "ingredient/list_search";
 	}
 	
+	@GetMapping(value="/list_search_paging")
+	public String list_search_paging(Model model, @Valid IngredientVO ingredientVO, 
+			@RequestParam(name="word", defaultValue="") String word, 
+			@RequestParam(name="now_page", defaultValue="1") int now_page) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+	    hashMap.put("word", word);
+	    hashMap.put("now_page", now_page);
+	    
+	    ArrayList<IngredientVO> list = this.ingredientProc.list_search_paging(hashMap);
+	    model.addAttribute("list", list);
+	    	    
+	    String paging = this.ingredientProc.pagingBox(now_page, word, "/ingredient/list_search_paging", list.size(), Ingredient.RECORD_PER_PAGE, Ingredient.PAGE_PER_BLOCK);
+	    model.addAttribute("paging", paging);
+	    
+	    
+	    
+	    model.addAttribute("word",word);
+	    model.addAttribute("now_page", now_page);
+		return  "ingredient/list_search";
+	}
+	
 	// create
 	// https://localhost/ingredient/list_serarch
 	@PostMapping(value="/list_search")
@@ -59,10 +81,27 @@ public class IngredientCont {
 	}
 	
 	@GetMapping(value="update")
-	public String update(Model model, int ingredno, String word) {
+	public String update(Model model, @RequestParam(name="ingredno") int ingredno, @RequestParam(name="word", defaultValue="") String word, @RequestParam(name="now_page", defaultValue="1") int now_page) {
+		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);
+		model.addAttribute("list", list);
+		
 		IngredientVO ingredientVo = this.ingredientProc.read(ingredno);
+		model.addAttribute("word", word);
+		model.addAttribute("now_page", now_page);
 		model.addAttribute("ingredientVO", ingredientVo);
 		return "ingredient/update";
+	}
+	
+	@PostMapping(value="update")
+	public String update(Model model, IngredientVO ingredientVO, @RequestParam(name="word", defaultValue="") String word) {
+		System.out.println(ingredientVO.getIngredno() + ingredientVO.getName());
+		int cnt = this.ingredientProc.update_by_ingredno(ingredientVO);
+		if(cnt == 1) {
+			return "redirect:/ingredient/list_search?word=" + Tool.encode(word);
+		}else {
+			model.addAttribute("code", "update_fail");
+			return "ingredient/msg"; // /templates/cate/msg.html
+		}
 	}
 	
 	/**

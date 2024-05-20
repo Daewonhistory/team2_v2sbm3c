@@ -24,6 +24,7 @@
   <select id="read" resultType="dev.mvc.ingredient.IngredientVO">
     SELECT ingredno, name
 	FROM ingredient
+	WHERE ingredno = #{ingredno}
 	ORDER BY name ASC
   </select>
   
@@ -35,8 +36,35 @@
   <update id="update_by_ingredno" parameterType="dev.mvc.ingredient.IngredientVO">
   	UPDATE ingredient
 	SET name = #{name}
-	WHERE ingredno = #{ingredno};
+	WHERE ingredno = #{ingredno}
   </update>
+  
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_search_paging" resultType="dev.mvc.ingredient.IngredientVO" parameterType="HashMap">
+   SELECT ingredno, name, r
+   FROM (
+              SELECT ingredno, name, rownum as r
+              FROM (
+                        SELECT ingredno, name
+                        FROM ingredient
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                          </when>
+                          <otherwise>
+                            WHERE (UPPER(title) LIKE '%' || UPPER(#{word}) || '%' 
+                                                        OR UPPER(name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                        OR UPPER(name) LIKE '%' || UPPER(#{word}) || '%')
+                          </otherwise>
+                        </choose>
+                        ORDER BY ingredno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
 </mapper>
 
 
