@@ -25,9 +25,10 @@
     <div class="container_main">
       <div class="navbar">
         <div class="dropdown">포 데이즈</div>
-        <div th:if="${session.id == null}" class="auth-buttons">로그인 |  회원가입</div>
-        <div th:if="${session.id != null}"  th:text="${session.}" class="auth-buttons"></div>
-
+        <div th:if="${session.id == null}" class="auth-buttons">
+          <a href="/register">로그인</a> | <a href="/sign-up">회원가입</a>
+        </div>
+        <div th:if="${session.id != null}" class="auth-buttons"></div>
       </div>
       <div class="content_body">
 
