@@ -173,6 +173,11 @@
     let id = document.getElementById('id');
     let id_msg = document.getElementById('id_msg');
 
+
+    let cname = document.getElementById('cname');
+    let cname_msg = document.getElementById('cname_msg');
+
+
     let nickname = document.getElementById('nickname');
     let nickname_msg = document.getElementById('nickname_msg');
     let address1 = document.getElementById('address1');
@@ -180,7 +185,11 @@
     let address2 = document.getElementById('address2');
     let address2_msg = document.getElementById('address2_msg');
 
+    let phone1 = document.getElementById('phone1').value;
+    let phone2 = document.getElementById('phone2').value;
+    let phone3 = document.getElementById('phone3').value;
 
+    let phone = phone1 +   phone2  + phone3; // 두 번째와 세 번째 번호를 합침
 
 
     if (id_msg.innerText.startsWith("이미")) {
@@ -210,7 +219,15 @@
       return false;  // 회원 가입 진행 중지
     }
 
+    if (cname.value.trim().length == 0) {
+      cname_msg.style.fontSize = "12px";
+      cname_msg.innerHTML = '이름이 누락되었습니다. 이름 입력은 필수 입니다.';
+      cname_msg.classList.add('span_warning');    // class 적용
+      cname.focus();
 
+      return false;  // 회원 가입 진행 중지
+
+    }
 
     if (!nickname_msg.innerText.startsWith("사용")) {
       alert('닉네임 중복 확인을 먼저 진행해주세요.');
@@ -269,16 +286,8 @@
       return false;  // 회원 가입 진행 중지
     }
 
-    let cname = document.getElementById('cname');
-    let cname_msg = document.getElementById('cname_msg');
 
-    if (cname.value.length == 0) {
-      cname_msg.innerHTML= '이름 입력은 필수입니다.';
-      cname_msg.classList.add('span_warning');    // class 적용
-      cname.focus();
 
-      return false;  // 회원 가입 진행 중지
-    }
 
     let gender = document.getElementById('gender');
     let gender_msg = document.getElementById('gender_msg');
@@ -290,6 +299,15 @@
 
       return false;  // 회원 가입 진행 중지
     }
+
+    if (phone2.trim().length == 0 || phone3.trim().length == 0 || phone2.length < 4 || phone3.length < 4) {
+      alert('전화번호 두 번째와 세 번째 자리는 공백 없이 4자리 이상이어야 합니다.');
+      return false;
+    }
+
+    // 폼에 전화번호 값 설정
+    document.getElementById('phone').value = phone;
+
 
     if (address1.value.length == 0) {
       address1_msg.innerHTML= '주소 입력은 필수입니다.';
@@ -306,7 +324,12 @@
 
       return false;  // 회원 가입 진행 중지
     }
-    document.getElementById('frm').submit(); // required="required" 작동 안됨.
+    document.getElementById('phone').value = phone;
+
+    document.getElementById('frm').submit(); // required="required" 작동 안됨
+
+
+    // .
   }
 </script>
 
@@ -380,15 +403,23 @@
       <button type='button' id="btn_nickname" onclick="checknickname()" class="btn btn-primary btn-sm"
               style="margin-left: 10px;">중복확인
       </button>
-    </div>
-    <span style="margin-top: 100px;" id='nickname_msg'></span>
-    <div class="form-group" style="margin-top: 10px;">
-      <label>전화 번호</label>
-      <input type='text' name='phone' id='phone' value=''
-             placeholder="전화번호" class="form-control form-control-sm" style="width: 27%;">
-      예) 010-0000-0000
-    </div>
+      <span style="margin-top: 100px;" id='nickname_msg'></span>
 
+    </div>
+    <label style="margin-top:1px;" >전화 번호 <span  class="required">*</span>  </label>
+    <div class="form-group" style="margin-top: 3px; display: flex; align-items: center;">
+
+      <select class="form-control form-control-sm" id="phone1" style="width: 15%; border: 1px solid black;">
+        <option value="010">010</option>
+      </select>
+      <span style="margin-left: 3px; margin-right: 3px; font-weight: bold">-</span>
+      <input type='text' id='phone2' value='' placeholder="" class="form-control form-control-sm" style="width: 15%;">
+      <span style="margin-left: 3px; margin-right: 3px; font-weight: bold">-</span>
+      <input type='text'  id='phone3' value='' placeholder="" class="form-control form-control-sm" style="width: 15%;">
+
+      <input type="hidden" name="phone" id="phone" value="">
+
+      </div>>
     <label style="margin-top: 10px;">우편 번호: </label>
     <div style="display: flex; align-items: center; ">
 

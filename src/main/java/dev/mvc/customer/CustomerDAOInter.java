@@ -6,14 +6,14 @@ import java.util.HashMap;
 public interface CustomerDAOInter {
 
   /**
-   * 중복아이디 체크
+   * 중복 닉네임 체크
    * @param nickname
    * @return 추가한 레코드 갯수
    */
   public int checkNickName(String nickname);
 
   /**
-   * 중복아이디 체크
+   * 중복 아이디 체크
    * @param id
    * @return 추가한 레코드 갯수
    */
@@ -32,14 +32,19 @@ public interface CustomerDAOInter {
    */
   public ArrayList<CustomerVO> list();
 
+  /**
+   * 등급 변경
+   * @param map
+   * @return
+   */
   public int update_grade(HashMap<String,Object> map);
 
   /**
-   * memberno로 회원 정보 조회
-   * @param memberno
+   * custno로 회원 정보 조회
+   * @param custno
    * @return
    */
-  public CustomerVO read(int memberno);
+  public CustomerVO read(int custno);
 
   /**
    * id로 회원 정보 조회
@@ -56,10 +61,10 @@ public interface CustomerDAOInter {
   public int update(CustomerVO customerVO);
   /**
    * 회원 삭제 처리
-   * @param memberno
+   * @param custno
    * @return
    */
-  public int delete(int memberno);
+  public int delete(int custno);
 
   /**
    * 현재 패스워드 검사

@@ -39,6 +39,11 @@ public class CustomerCont {
   }
 
 
+  /**
+   * 회원가입시 아이디 중복확인
+   * @param id
+   * @return
+   */
   @PostMapping("/checkID")  //http:localhost:9091/meber/checkId?id=admin
   @ResponseBody
   public String checkId(String id) {
@@ -50,6 +55,11 @@ public class CustomerCont {
     return "{\"cnt\":" + cnt + "}";
   }
 
+  /**
+   * 회원가입시 이름 중복확인
+   * @param nickname
+   * @return
+   */
   @PostMapping("/checkNickName")  //http:localhost:9091/meber/checkId?id=admin
   @ResponseBody
   public String checkNickname(String nickname) {
@@ -62,7 +72,12 @@ public class CustomerCont {
   }
 
 
-
+  /**
+   * 회원가입 폼 메서드
+   * @param model
+   * @param customerVO
+   * @return
+   */
   @GetMapping("/create")
 
   public String createForm(Model model, CustomerVO customerVO) {
@@ -70,6 +85,14 @@ public class CustomerCont {
 
     return "/customer/create";
   }
+
+  /**
+   * 회원가입 처리 메소드
+   * @param model
+   * @param customerVO
+   * @param rrtr
+   * @return
+   */
 
   @PostMapping("/create")
 
@@ -104,6 +127,15 @@ public class CustomerCont {
 
   }
 
+
+  /**
+   * 쿠키 로그인 폼 메소드
+   * @param model
+   * @param customerVO
+   * @param session
+   * @param request
+   * @return
+   */
 
   @GetMapping("/login")
 
@@ -268,310 +300,4 @@ public class CustomerCont {
 
     }
 }
-
-//  @GetMapping("/list")
-//  public String list_customer(Model model, CustomerVO customerVO, HttpSession session, RedirectAttributes rttr) {
-//
-//    String id = (String) session.getAttribute("id");
-//
-//    if (this.customerProc.isCustomerAdmin(session)) {
-//      ArrayList<CustomerVO> list = this.customerProc.list();
-//      model.addAttribute("list", list);
-//      return "customer/customerList";
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
-//
-//
-//  }
-//
-//  /**
-//   * 조히
-//   *
-//   * @param model
-//   * @param customerno 회원 번호
-//   * @return
-//   */
-//  @GetMapping("/read")
-//  public String read(Model model, @RequestParam(name = "customerno") Integer customerno, HttpSession session,
-//                     RedirectAttributes rttr) {
-//    System.out.println(customerno);
-//    CustomerVO read = this.customerProc.read(customerno);
-//
-//    String id = (String) session.getAttribute("id");
-//
-//
-//
-//    if (this.customerProc.isCustomerAdmin(session)) {
-//      if (read != null) {
-//
-//        model.addAttribute("customerVO", read);
-//        return "customer/read";
-//      } else {
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/customer/list";
-//      }
-//    }else{
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/";
-//      }
-//
-//
-//    }
-//
-//
-//    @PostMapping("/update")
-//
-//    public String updatecustomer (Model model, CustomerVO customerVO, RedirectAttributes rrtr,HttpSession session){
-//
-//      if (this.customerProc.isCustomerAdmin(session)) {
-//        int check_ID = this.customerProc.checkID(customerVO.getId());
-//
-//        if (customerVO.getTel() == null || customerVO.getTel().equals("")) {
-//          customerVO.setTel("010-0000-0000");
-//        }
-//        int count = customerProc.update(customerVO);
-//        System.out.println(check_ID);
-//        System.out.println(customerVO.getId());
-//        if (check_ID == 1) {
-//          if (count == 1) {
-//
-//
-//            rrtr.addFlashAttribute("success", 1);
-//            rrtr.addFlashAttribute("come", customerVO.getMname() + "님 수정 완료 되었습니다! ");
-//
-//            return "redirect:/customer/read?customerno=" + customerVO.getCustomerno();
-//          } else {
-//            rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//
-//
-//            return "redirect:/customer/read?customerno=" + customerVO.getCustomerno();
-//          }
-//        } else {
-//          rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-//          return "redirect:/customer/create";
-//        }
-//      } else  {
-//        rrtr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/customer/list";
-//      }
-//
-//
-//    }
-//
-//    @PostMapping("/delete")
-//    public String delete (Model model, @RequestParam("customerno") Integer customerno,
-//      @RequestParam("mname") String mname,HttpSession session,
-//      RedirectAttributes rttr){
-//      if (this.customerProc.isCustomerAdmin(session)) {
-//        int count = this.customerProc.delete(customerno);
-//
-//
-//        if (count == 1) {
-//          rttr.addFlashAttribute("delete", mname + "'이 삭제되었습니다.");
-//          return "redirect:/customer/list";
-//        } else {
-//          rttr.addFlashAttribute("delete", "삭제 실패");
-//          return "redirect:/cate/search";
-//        }
-//      }else {
-//        return "redirect:/customer/login";
-//      }
-//    }
-//
-//    /**
-//     * 로그인 폼
-//     *
-//     * @param model
-//     * @param customerVO
-//     * @param session
-//     * @param request
-//     * @return
-//     */
-//
-//
-//
-//
-//    @GetMapping("/update_password")
-//    public String update_password (Model model, HttpSession session, RedirectAttributes rttr){
-//      Integer customerno = (Integer) session.getAttribute("customerno");
-//
-//      if (customerProc.isCustomer(session)) {
-//        CustomerVO read = this.customerProc.read(customerno);
-//        if (read == null) {
-//          return "redirect:/customer/list";
-//        } else {
-//          model.addAttribute("customerVO", read);
-//          return "customer/update_password";
-//        }
-//      } else {
-//        rttr.addFlashAttribute("Abnormal", "로그인이 필요합니다");
-//        return "redirect:/customer/login";
-//      }
-//
-//
-//    }
-//
-//    @PostMapping("/checkpassword")
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> checkPassword (@RequestBody String json_src, HttpSession session){
-//      HashMap<String, Object> map = new HashMap<>();
-//      JSONObject src = new JSONObject(json_src);
-//      String pastpasswd = src.getString("pastpasswd");
-//      Integer customerno = (Integer) session.getAttribute("customerno");
-//
-//      map.put("passwd", this.security.aesEncode(pastpasswd));
-//      map.put("customerno", customerno);
-//
-//      int check = this.customerProc.passwd_check(map);
-//
-//      Map<String, Object> result = new HashMap<>();
-//      result.put("check", check);
-//
-//      return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
-//
-//
-//    // 여기서 비밀번호 일치 여부를 확인하고 결과를 반환합니다.
-//
-//
-//    @PostMapping("/update_password")
-//    public String updatepass (Model model, CustomerVO customerVO,
-//      String pastpasswd,
-//      String passwd1,
-//      String passwd2,
-//      RedirectAttributes rrtr,
-//      HttpSession session
-//  ){
-//      if (this.customerProc.isCustomer(session)) {
-//        HashMap<String, Object> mapcheck = new HashMap<String, Object>();
-//
-//
-//        mapcheck.put("passwd", this.security.aesEncode(pastpasswd));
-//        mapcheck.put("customerno", customerVO.getCustomerno());
-//
-//
-//        int check_pass = this.customerProc.passwd_check(mapcheck);
-//
-//
-//        HashMap<String, Object> map = new HashMap<String, Object>();
-//
-//        map.put("passwd", this.security.aesEncode(passwd2));
-//        map.put("customerno", customerVO.getCustomerno());
-//        int count = customerProc.passwd_update(map);
-//
-//
-//        if (check_pass == 1 && passwd1.equals(passwd2) &&
-//          !pastpasswd.equals(passwd1) && !pastpasswd.equals(passwd2) &&
-//          passwd1.trim().length() > 3 && passwd2.trim().length() > 3) {
-//          if (count == 1) {
-//
-//
-//            String mname = (String) session.getAttribute("mname");
-//            rrtr.addFlashAttribute("success", 1);
-//            rrtr.addFlashAttribute("update", mname + "님 패스워드 수정이 완료되었습니다 ");
-//            session.invalidate();
-//            return "redirect:/";
-//          } else {
-//            rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//            return "redirect:/customer/update_password";
-//          }
-//        } else {
-//          rrtr.addFlashAttribute("fail", "알수없는 오류 입니다. ");
-//          return "redirect:/customer/update_password";
-//        }
-//      } else {
-//        rrtr.addFlashAttribute("fail", "로그인이 필요합니다. ");
-//        return "redirect:/customer/login";
-//
-//      }
-//
-//    }
-//
-//    @GetMapping("/my_page")
-//    public String mypage (Model model, HttpSession session, RedirectAttributes rttr){
-//
-//
-//      if (this.customerProc.isCustomer(session)) {
-//        String id = (String) session.getAttribute("id");
-//        CustomerVO customerVO = this.customerProc.readById(id);
-//
-//        model.addAttribute("customerVO", customerVO);
-//
-//        return "/customer/my_page";
-//
-//      } else {
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/";
-//      }
-//    }
-//
-//    @GetMapping("/logout")
-//    public String logout (HttpSession session, RedirectAttributes redirectAttributes){
-//      // 세션을 무효화합니다.
-//      session.invalidate();
-//
-//      // 로그아웃 성공 메시지(선택 사항)
-//      redirectAttributes.addFlashAttribute("logout", "로그아웃 되었습니다.");
-//
-//      // 홈 페이지로 리다이렉트합니다.
-//      return "redirect:/";
-//
-//    }
-//
-//
-//    @GetMapping("/update_grade")
-//    public String update_gradeForm (Model model, Integer customerno, HttpSession session, RedirectAttributes rttr){
-//
-//      if (customerno == null) {
-//        rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//        return "redirect:/";
-//      }
-//
-//      CustomerVO read = this.customerProc.read(customerno);
-//      if (read == null) {
-//        return "redirect:/customer/list";
-//      } else {
-//        model.addAttribute("customerVO", read);
-//        return "customer/update_grade";
-//      }
-//
-//    }
-//
-//    @PostMapping("update_grade")
-//    public String updategrade (Model model, CustomerVO customerVO,
-//      Integer grade, Integer customerno,
-//
-//      RedirectAttributes rrtr,
-//      HttpSession session
-//  ){
-//
-//
-//      HashMap<String, Object> map = new HashMap<String, Object>();
-//
-//
-//      map.put("grade", grade);
-//      map.put("customerno", customerno);
-//      int count = this.customerProc.update_grade(map);
-//
-//
-//      if (count == 1) {
-//
-//
-//        rrtr.addFlashAttribute("success", 1);
-//        rrtr.addFlashAttribute("update", "등급  수정이 완료되었습니다 ");
-//
-//        return "redirect:/customer/list";
-//      } else {
-//        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-//        return "redirect:/customer/update_grade";
-//      }
-//
-//    }
-//  }
-
-//-------------------------------------------------------------------
-// 코드 시작
-//-------------------------------------------------------------------
 
