@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+ 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span th:text="${menuVO?.name}" class="title_line_text"></span> 
+    <div th:if="${word.length() > 0}" class='title_line' th:text="|> 「${word}」 검색 ${search_count} 건|"></div>
+  </div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+  </aside> 
+  <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
+   	
+   
+  <div class='menu_line'>   </div>
+    
+   
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 90%;'/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <th class='th_bs'>이미지</th>
+        <th class='th_bs'>식당명</th>
+        <th class='th_bs'>메뉴명</th>
+        <th class='th_bs'>가격</th>
+      </tr>
+    
+    <tr th:if="${list.size()>0}" th:each="menuVO, status : ${list}" th:attr="onclick=|location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'|" 
+          style="cursor: pointer; height: 90px;">
+      <td class="td_basic">
+        <div>
+          <img src="/menu/images/none1.png" style="width: 120px; height: 90px;">
+        </div>
+      </td>
+      <td class="td_basic">
+      	<span th:text="${menuVO.restname}"></span>
+      </td>
+      <td class="td_basic">
+      	<span th:text="${menuVO.name}"></span>
+      </td>
+      <td class="td_basic">
+      	<span th:text="${menuVO.price}"></
+      </td>
+    </tr> 
+    <tr th:if="${list.size()==0}">
+      <td colspan="2" style="text-align: center; padding: 50px 0px;">관련 글이 등록되지 않았습니다.</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="bottom_menu" th:utext="${paging}"></div>
+
+
+
+</div> 
+</html>

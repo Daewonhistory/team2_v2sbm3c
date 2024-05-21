@@ -37,11 +37,7 @@ CREATE SEQUENCE menu_seq
 -- CREATE
 
 INSERT INTO MENU(menuno, name, price, restno, image)
-VALUES (menu_seq.nextval, '오리구이', 70000, 1, 'rest1_menu1.jpg');
-INSERT INTO MENU(menuno, name, price, restno, image)
-VALUES (menu_seq.nextval, '오리찜', 90000, 1, 'rest1_menu2.jpg');
-
-commit;
+VALUES (menu_seq.nextval, '오리구이', 70000, '1', 'rest1_menu1.jpg');
 menu1_t.jpg
 
 review2_1.jpg/review2_2.jpg

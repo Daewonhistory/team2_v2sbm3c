@@ -17,4 +17,7 @@ public class MenuVO {
 	private int menuno;
 	private String name;
 	private int price;
+	private int restno;
+	private String image;
+	private String restname = "";
 }
