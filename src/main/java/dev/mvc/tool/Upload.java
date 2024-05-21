@@ -358,9 +358,8 @@ public class Upload extends HttpServletRequestWrapper {
      * @param absPath       저장할 절대 경로
      * @return
      */
-    public static String saveFileSpring(MultipartFile multipartFile, String absPath) {
+    public static String saveFileSpring(MultipartFile multipartFile, String absPath, String fileName) {
         // input form's parameter name
-        String fileName = "";
         // 업로드 전 originalFileName: C:\kd1\sw_images_ai8\movie_drama\드라마_코미디\devil_01.jpg
         String originalFileName = multipartFile.getOriginalFilename(); // 01.jpg
         // file content type
@@ -404,7 +403,7 @@ public class Upload extends HttpServletRequestWrapper {
                         }
                     }
                 } else {
-                    fileName = originalFileName; // 파일이 존재하지 않는 경우 추출된 파일명 그대로 사용
+//                    fileName = originalFileName; // 파일이 존재하지 않는 경우 추출된 파일명 그대로 사용
                 }
                 // make server full path to save
                 String serverFullPath = absPath + "/" + fileName;

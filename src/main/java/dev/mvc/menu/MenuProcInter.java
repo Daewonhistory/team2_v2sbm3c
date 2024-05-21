@@ -46,6 +46,13 @@ public interface MenuProcInter {
 	 */
 	public int list_search_count(String word);
 	
+	/**
+	 * 식당의 메뉴 갯수
+	 * @param restno
+	 * @return
+	 */
+	public int list_by_restno_count(int restno);
+	
 	/** 
 	   * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
 	   * 현재 페이지: 11 / 22   [이전] 11 12 13 14 15 16 17 18 19 20 [다음] 

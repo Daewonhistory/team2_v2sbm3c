@@ -17,7 +17,7 @@
   <form name='frm' method='post' th:object="${menuVO}" action='./create' enctype="multipart/form-data">
     <input type="hidden" name="word" th:value="${word}">
     <input type="hidden" name="now_page" th:value="${now_page}">
-    <input type="hidden" name="restno" value="1">
+    <input type="hidden" name="restno" th:value="${restno}">
     
     <div>
        <label>메뉴명</label>

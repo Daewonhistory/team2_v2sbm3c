@@ -70,6 +70,10 @@ FROM menu
 WHERE restno = 1
 ORDER BY name ASC;
 
+3. 가게별 메뉴 갯수
+SELECT COUNT(*)
+FROM menu
+WHERE restno = 1;
 
 -- UPDATE
 

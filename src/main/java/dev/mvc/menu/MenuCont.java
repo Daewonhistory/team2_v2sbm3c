@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dev.mvc.contents.Contents;
 import dev.mvc.ingredient.Ingredient;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -57,7 +56,7 @@ public class MenuCont {
 //			session.getAtadfa("ownerno")
 //		}else{}
 		
-		model.addAttribute("restno", 1);
+		model.addAttribute("restno", 4);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
 		
@@ -99,6 +98,7 @@ public class MenuCont {
       //           value='' placeholder="파일 선택">
       MultipartFile mf = menuVO.getFile1MF();
       
+      
       file1 = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
       System.out.println("-> 원본 파일명 산출 file1: " + file1);
       
@@ -108,7 +108,12 @@ public class MenuCont {
           
           if (size1 > 0) { // 파일 크기 체크
             // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
-            file1saved = Upload.saveFileSpring(mf, upDir); 
+        	int menu_cnt = this.menuProc.list_by_restno_count(menuVO.getRestno());
+        	System.out.println("-> 원본 파일명 산출 file1: " + file1);
+        	String exe = file1.split("\\.")[1];
+        	
+        	String new_file_name = "rest" + menuVO.getRestno() + "_" + (menu_cnt + 1) + "." + exe;
+            file1saved = Upload.saveFileSpring(mf, upDir, new_file_name); 
             
             if (Tool.isImage(file1saved)) { // 이미지인지 검사
               // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
@@ -150,7 +155,16 @@ public class MenuCont {
     
 	}
 	
-
+	
+	@GetMapping("read")
+	public String read(Model model, String word, int now_page, int menuno) {
+		MenuVO menuVO = this.menuProc.read(menuno);
+		model.addAttribute("menuVO", menuVO);
+		
+		model.addAttribute(word, word);
+		model.addAttribute("now_page", now_page);
+		return "menu/read";
+	}
 	
 	//http://localhost:9093/menu/list_search_paging
 	@GetMapping("list_search_paging")
@@ -176,29 +190,46 @@ public class MenuCont {
 		return "menu/list_search_paging";
 	}
 	
+	/**
+	 * 메뉴 수정 GET
+	 * @param model
+	 * @param menuno
+	 * @param word
+	 * @param now_page
+	 * @return
+	 */
 	@GetMapping("update")
 	public String update(Model model, int menuno, String word, int now_page) {
+		System.out.println(menuno);
 		MenuVO menuVO = this.menuProc.read(menuno);
 		model.addAttribute(menuVO);
 		
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
-		return "menu/delete";
+		return "menu/update";
 	}
 	
+	/**
+	 * 메뉴 수정 (내용, 이미지)POST
+	 * @param model
+	 * @param ra
+	 * @param word
+	 * @param now_page
+	 * @param menuVO
+	 * @return
+	 */
 	@PostMapping("update")
 	public String update(Model model, RedirectAttributes ra, String word, int now_page, MenuVO menuVO) {
+		MenuVO menuVO_old = this.menuProc.read(menuVO.getMenuno());
 		// -------------------------------------------------------------------
 		 // 파일 삭제 시작
 		 // -------------------------------------------------------------------
-		 String file1saved = contentsVO_old.getFile1saved();  // 실제 저장된 파일명
-		 String thumb1 = contentsVO_old.getThumb1();       // 실제 저장된 preview 이미지 파일명
+		 String file1saved = menuVO_old.getImage();  // 실제 저장된 파일명
 		 long size1 = 0;
 		    
-		 String upDir =  Contents.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
+		 String upDir =  Menu.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
 		 
 		 Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
-		 Tool.deleteFile(upDir, thumb1);     // preview 이미지 삭제
 		 // -------------------------------------------------------------------
 		 // 파일 삭제 종료
 		 // -------------------------------------------------------------------
@@ -212,21 +243,18 @@ public class MenuCont {
 	      //           value='' placeholder="파일 선택">
 	      MultipartFile mf = menuVO.getFile1MF();
 	      
-	      file1 = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+	      String file1 = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
+	      size1 = mf.getSize();
 	      System.out.println("-> 원본 파일명 산출 file1: " + file1);
+	      System.out.println("-> 원본 파일명 산출 size1: " + size1);
 	      
 	      if(!file1.isEmpty()) {
 	        if (Tool.checkUploadFile(file1) == true) { // 업로드 가능한 파일인지 검사
-	          long size1 = mf.getSize();  // 파일 크기
+
 	          
 	          if (size1 > 0) { // 파일 크기 체크
 	            // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
-	            file1saved = Upload.saveFileSpring(mf, upDir); 
-	            
-	            if (Tool.isImage(file1saved)) { // 이미지인지 검사
-	              // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
-	              thumb1 = Tool.preview(upDir, file1saved, 200, 150); 
-	            }
+	            file1saved = Upload.saveFileSpring(mf, upDir, file1saved);
 	          }
 	          System.out.println("file1saved" + file1saved);
 	          menuVO.setImage(file1saved);   // 저장본 파일명
@@ -241,11 +269,11 @@ public class MenuCont {
 	        }
 	        
 	      }
-	      int cnt = this.menuProc.create(menuVO); 
+	      int cnt = this.menuProc.update_by_menuno(menuVO); 
 	      
 	      if(cnt == 0) {
 	        model.addAttribute("cnt", cnt);
-	        model.addAttribute("code", "create_fail");
+	        model.addAttribute("code", "update_fail");
 	        return "content/msg";
 	      }
 	      

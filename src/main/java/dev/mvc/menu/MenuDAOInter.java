@@ -47,4 +47,11 @@ public interface MenuDAOInter {
 	 */
 	public int list_search_count(String word);
 	
+	/**
+	 * 식당의 메뉴 갯수
+	 * @param restno
+	 * @return
+	 */
+	public int list_by_restno_count(int restno);
+	
 }

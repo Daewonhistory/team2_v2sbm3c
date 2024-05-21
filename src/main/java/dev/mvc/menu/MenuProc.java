@@ -23,7 +23,7 @@ public class MenuProc implements MenuProcInter {
 
 	@Override
 	public MenuVO read(int menuno) {
-		MenuVO menuVO = this.read(menuno);
+		MenuVO menuVO = this.menuDAO.read(menuno);
 		return menuVO;
 	}
 
@@ -172,6 +172,12 @@ public class MenuProc implements MenuProcInter {
 	    str.append("</div>"); 
 	     
 	    return str.toString(); 
+	}
+
+	@Override
+	public int list_by_restno_count(int restno) {
+		int cnt = this.menuDAO.list_by_restno_count(restno);
+		return cnt;
 	}
 
 }
