@@ -1,5 +1,7 @@
 package dev.mvc.menu;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,4 +22,5 @@ public class MenuVO {
 	private int restno;
 	private String image;
 	private String restname = "";
+	private MultipartFile file1MF;
 }

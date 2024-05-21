@@ -11,6 +11,7 @@
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide' >│</span>
+    <a th:href="@{|/menu/create?word=${word}&now_page=${now_page}|}">등록</a>
   </aside> 
   <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
    	
@@ -20,8 +21,11 @@
    
   <table class="table table-striped" style='width: 100%;'>
     <colgroup>
+      <col style='width: 20%;'/>
+      <col style='width: 30%;'/>
+      <col style='width: 30%;'/>
       <col style='width: 10%;'/>
-      <col style='width: 90%;'/>
+      <col style='width: 10%;'/>
     </colgroup>
     <tbody>
       <tr>
@@ -29,24 +33,33 @@
         <th class='th_bs'>식당명</th>
         <th class='th_bs'>메뉴명</th>
         <th class='th_bs'>가격</th>
+        <th class='th_bs'>수정 / 삭제</th>
       </tr>
     
-    <tr th:if="${list.size()>0}" th:each="menuVO, status : ${list}" th:attr="onclick=|location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'|" 
-          style="cursor: pointer; height: 90px;">
-      <td class="td_basic">
-        <div>
-          <img src="/menu/images/none1.png" style="width: 120px; height: 90px;">
+    <tr th:if="${list.size()>0}" th:each="menuVO, status : ${list}">
+      <td class="td_basic" th:attr="onclick=|location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
+      	<div th:if="${menuVO.image.endsWith('jpg') || menuVO.image.endsWith('JPG') || menuVO.image.endsWith('png') || menuVO.image.endsWith('PNG') || menuVO.image.endsWith('gif')}">
+          <img th:src="@{|/menu/storage/${menuVO.image}|}" style="width: 120px; height: 90px;">
         </div>
       </td>
-      <td class="td_basic">
+      <td class="td_basic" th:attr="onclick=|location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
       	<span th:text="${menuVO.restname}"></span>
       </td>
-      <td class="td_basic">
+      <td class="td_basic" th:attr="onclick=|location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
       	<span th:text="${menuVO.name}"></span>
       </td>
-      <td class="td_basic">
-      	<span th:text="${menuVO.price}"></
+      <td class="td_basic" th:attr="onclick=|location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
+      	<span th:text="${menuVO.price}"></span>
       </td>
+      <td class="td_bs">
+          <a th:href="@{|/menu/update?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}|}"><img src="/cate/images/update.png" class="icon"></a>
+          <a th:attr="onclick=|delete_check(${menuVO.menuno}, '${word}', ${now_page})|"><img src="/cate/images/delete.png" class="icon"></a>
+          <a th:attr="onclick=|delete_check(${menuVO.menuno}, '${word}', ${now_page})|">
+        </td>
     </tr> 
     <tr th:if="${list.size()==0}">
       <td colspan="2" style="text-align: center; padding: 50px 0px;">관련 글이 등록되지 않았습니다.</td>
@@ -56,6 +69,41 @@
   <div class="bottom_menu" th:utext="${paging}"></div>
 
 
+<script>
+  	function delete_check(menuno, word, now_page){
+	  	if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+	  		let f = document.createElement('form');
+    
+		    let obj1;
+		    obj1 = document.createElement('input');
+		    obj1.type = 'hidden';
+		    obj1.name = 'menuno';
+		    obj1.value = menuno;
+		    
+			let obj2;
+			obj2 = document.createElement('input');
+		    obj2.type = 'hidden';
+		    obj2.name = 'word';
+		    obj2.value = word;
+			
+			let obj3;
+			obj3 = document.createElement('input');
+		    obj3.type = 'hidden';
+		    obj3.name = 'now_page';
+		    obj3.value = now_page;
+		
+		    f.appendChild(obj1);
+		    f.appendChild(obj2);
+		    f.appendChild(obj3);
+		    f.setAttribute('method', 'post');
+		    f.setAttribute('action', '/menu/delete');
+		    document.body.appendChild(f);
+		    f.submit();
+	  	}else{   //취소
+	      	return;
+	  	}
+	}
+</script> 
+</div>
 
-</div> 
 </html>

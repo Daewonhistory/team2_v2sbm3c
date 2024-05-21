@@ -4,7 +4,7 @@
 <mapper namespace="dev.mvc.menu.MenuDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
   <insert id="create" parameterType="dev.mvc.ingredient.IngredientVO"> <!-- public int create(CateVO cateVO) {...-->
   	INSERT INTO MENU(menuno, name, price, restno, image)
-	VALUES (menu_seq.nextval, #{name}, #{price}, 1, #{image})
+	VALUES (menu_seq.nextval, #{name}, #{price}, #{restno}, #{image})
   </insert>
   
   <select id="read" resultType="dev.mvc.menu.MenuVO">
