@@ -14,7 +14,7 @@
 
 <div style="width: 60%; margin: 0px auto ">
   <div class="title_line">사업자 인증 절차  (<span class="required">* </span>는 필수 )</div>
-  <form   id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/certifi">
+  <form   id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/certifi"  enctype="multipart/form-data">
 
 
 
@@ -22,7 +22,7 @@
 
     <div style="align-items: center;">
 
-      <input class="form-control form-control-sm"  id="ownerno" name="ownerno" th:value="${ownerVO.ownerno}" style=" width: 27%;" readonly></input>
+      <input class="form-control form-control-sm"  id="ownerno" name="ownerno"  th:value="${ownerVO.ownerno}" style=" width: 27%;" readonly></input>
 
     </div>
 
@@ -37,12 +37,12 @@
     </div>
     <div class="form-group" style="margin-top: 10px;">
       <label>사업자 등록증 이미지</label>
-      <input type='text' class="form-control" name='certifi_image' id='certifi_image' value='' placeholder="파일 선택">
+      <input type='file' class="form-control" name='certifi_image' id='certifi_image' value='' placeholder="파일 선택">
     </div>
 
     <div class="form-group" style="margin-top: 10px;">
       <label>신분증 이미지</label>
-      <input type='text' class="form-control" name='identi_card_image' id='identi_card_image' value='' placeholder="파일 선택">
+      <input type='file' class="form-control" name='identi_card_image' id='identi_card_image' value='' placeholder="파일 선택">
     </div>
 
 

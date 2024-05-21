@@ -114,11 +114,11 @@ public class MenuCont {
 				if (size1 > 0) { // 파일 크기 체크
 					// 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
 					int menu_cnt = this.menuProc.list_by_restno_count(menuVO.getRestno());
-		        	System.out.println("-> 원본 파일명 산출 file1: " + file1);
-		        	String exe = file1.split("\\.")[1];
+					System.out.println("-> 원본 파일명 산출 file1: " + file1);
+					String exe = file1.split("\\.")[1];
 
-		        	String new_file_name = "rest" + menuVO.getRestno() + "_" + (menu_cnt + 1) + "." + exe;
-		            file1saved = Upload.saveFileSpring(mf, upDir, new_file_name); 
+					String new_file_name = "rest" + menuVO.getRestno() + "_" + (menu_cnt + 1) + "." + exe;
+					file1saved = Upload.saveFileSpring(mf, upDir, new_file_name);
 
 				}
 				System.out.println("file1saved" + file1saved);
@@ -157,7 +157,7 @@ public class MenuCont {
 		return "redirect:/menu/list_search_paging"; // ra.addAttribute 사용시 url에 직접 작성 안함
 
 	}
-	
+
 	@GetMapping("read")
 	public String read(Model model, String word, int now_page, int menuno) {
 		MenuVO menuVO = this.menuProc.read(menuno);
@@ -167,7 +167,7 @@ public class MenuCont {
 		model.addAttribute("now_page", now_page);
 		return "menu/read";
 	}
-	
+
 	// http://localhost:9093/menu/list_search_paging
 	@GetMapping("list_search_paging")
 	public String list_search_paging(Model model,
@@ -192,9 +192,10 @@ public class MenuCont {
 
 		return "menu/list_search_paging";
 	}
-	
+
 	/**
 	 * 메뉴 수정 GET
+	 * 
 	 * @param model
 	 * @param menuno
 	 * @param word
@@ -210,9 +211,10 @@ public class MenuCont {
 		model.addAttribute("now_page", now_page);
 		return "menu/update";
 	}
-	
+
 	/**
 	 * 메뉴 수정 (내용, 이미지)POST
+	 * 
 	 * @param model
 	 * @param ra
 	 * @param word
@@ -226,10 +228,10 @@ public class MenuCont {
 		// -------------------------------------------------------------------
 		// 파일 삭제 시작
 		// -------------------------------------------------------------------
-		String file1saved = menuVO_old.getImage();  // 실제 저장된 파일명
+		String file1saved = menuVO_old.getImage(); // 실제 저장된 파일명
 		long size1 = 0;
 
-		String upDir =  Menu.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
+		String upDir = Menu.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
 		Tool.deleteFile(upDir, file1saved); // 실제 저장된 파일삭제
 		// -------------------------------------------------------------------
 		// 파일 삭제 종료
@@ -245,7 +247,7 @@ public class MenuCont {
 		MultipartFile mf = menuVO.getFile1MF();
 
 		String file1 = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
-	    size1 = mf.getSize();
+		size1 = mf.getSize();
 		System.out.println("-> 원본 파일명 산출 file1: " + file1);
 
 		if (!file1.isEmpty()) {
@@ -268,7 +270,7 @@ public class MenuCont {
 			}
 
 		}
-		int cnt = this.menuProc.update_by_menuno(menuVO); 
+		int cnt = this.menuProc.update_by_menuno(menuVO);
 
 		if (cnt == 0) {
 			model.addAttribute("cnt", cnt);
