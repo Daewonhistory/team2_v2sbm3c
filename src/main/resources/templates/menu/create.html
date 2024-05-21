@@ -28,7 +28,15 @@
        <label>가격</label>
        <input type="number" name='price' value='10000' required="required" class="form-control" style='width: 100%;'></input>
     </div>
-
+	<div id="ingredients">
+            <label>재료:</label>
+            <div class="ingredient">
+                <input type="" name="ingredients[]" required>
+                <button type="button" onclick="removeIngredient(this)">삭제</button>
+            </div>
+        </div>
+        
+        <button type="button" onclick="addIngredient()">재료 추가</button><br><br>
     <div>
        <label>이미지</label>
        <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
@@ -39,8 +47,36 @@
     </div>
   
   </form>
-
+	<script>
+		function addIngredient() {
+		    const ingredientDiv = document.createElement('div');
+		    ingredientDiv.classList.add('ingredient');
+		    
+		    const ingredientInput = document.createElement('input');
+		    ingredientInput.type = 'text';
+		    ingredientInput.name = 'ingredients[]';
+		    ingredientInput.required = true;
+		    
+		    const removeButton = document.createElement('button');
+		    removeButton.type = 'button';
+		    removeButton.innerText = '삭제';
+		    removeButton.onclick = function() {
+		        removeIngredient(removeButton);
+		    };
+		    
+		    ingredientDiv.appendChild(ingredientInput);
+		    ingredientDiv.appendChild(removeButton);
+		    
+		    document.getElementById('ingredients').appendChild(ingredientDiv);
+		}
+		
+		// 재료 입력 필드를 제거하는 함수
+		function removeIngredient(button) {
+		    const ingredientDiv = button.parentElement;
+		    document.getElementById('ingredients').removeChild(ingredientDiv);
+		}
+	</script>
 </div>
-
+</html>
 
   
