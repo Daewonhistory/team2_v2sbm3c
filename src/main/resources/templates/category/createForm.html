@@ -1,0 +1,41 @@
+<div th:fragment="createFragment">
+
+
+  <div style="width: 80%; margin: 0px auto;">
+    <form name="frm" th:object="${categoryVO}" method="post" action="/category/create">
+
+      <div style="margin-right: 5px; width: 30%; float:left">
+        <input type="text" name="name" value="" autofocus="autofocus"
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{name}" placeholder="중분류 입력하세요.">
+        <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('name'))}" th:text="${err}"></div>
+        </div>
+
+        <div hidden="hidden">
+          <input type="text"  name="now_page"th:value="${now_page}">
+        </div>
+
+      </div>
+      <div style="margin-right: 5px; width: 30%; float:left">
+
+
+
+
+
+      </div>
+
+      <div style="width: 10%; float: left; margin-top: 3px">
+        <button type="submit" style="height: 34px" class="btn btn-primary btn-sm">등록</button>
+        <button type="button" class="btn btn-secondary btn-sm" th:attr="data-url=@{'/cate/search?word=' + ${word} + '&type=' + ${type} + '&now_page=' + ${now_page}}"
+                onclick="location.href=this.getAttribute('data-url')"
+                style="height: 34px">취소</button>
+
+      </div>
+
+      <div hidden="hidden">
+        <input type="text" name="word" th:value="${word}">
+
+      </div>
+    </form>
+  </div>
+</div>

@@ -39,11 +39,11 @@
         WHERE id = #{id}
     </select>
 
-<!--    <update id="update" parameterType="dev.mvc.owner.OwnerVO">-->
-<!--        UPDATE owner-->
-<!--        SET  oname=#{oname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}-->
-<!--        WHERE id=#{id}-->
-<!--    </update>-->
+    <update id="update" parameterType="dev.mvc.owner.OwnerVO">
+        UPDATE owner
+        SET  oname=#{oname}, phone=#{phone}, address1=#{address1}, address2=#{address2}
+        WHERE id=#{id}
+    </update>
 
 <!--    <delete id="delete" parameterType="int">-->
 <!--        update owner set  grade=99-->

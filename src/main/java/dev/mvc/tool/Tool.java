@@ -454,6 +454,22 @@ public class Tool {
     return sb.toString();
   }
 
+  public static synchronized String wordcheckNull(Object obj) {
+    if (obj == null || obj.equals("null") || obj.toString().trim().isEmpty()) {
+      return "";
+    } else {
+      return (String) obj;
+    }
+  }
+
+  public static synchronized String typecheckNull(Object obj) {
+    if (obj == null || obj.equals("null") || obj.toString().trim().isEmpty() || obj.equals("")) {
+      return "100";
+    } else {
+      return (String) obj;
+    }
+  }
+
   /**
    * 한글 -> 16진수 UTF-8 문자코드로 변환
    * 

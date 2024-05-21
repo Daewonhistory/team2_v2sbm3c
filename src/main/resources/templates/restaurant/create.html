@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div th:text="${fail}">
+
+  </div>
+  <script>
+
+    function send() { // 회원 가입 처리
+
+      document.getElementById('frm').submit(); // required="required" 작동 안됨.
+    }
+
+    fetch("/category/catelist", {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(rdata => {
+        const selectElement = document.getElementById('categoryno');
+
+        // 받은 데이터에서 categoryno 값을 옵션으로 추가
+        rdata.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.categoryno;
+          option.text = item.name; // 이 부분을 변경하셔서 원하는 텍스트로 설정하세요.
+          selectElement.appendChild(option);
+        });
+      });
+
+  </script>
+
+
+  <div class='menu_line'></div>
+
+  <div style="width: 60%; margin: 0px auto ">
+    <div class="title_line">식당 등록(<span class="required">* </span>는 필수 )</div>
+    <form id="frm" name="frm" th:object="${restaurantVO}" enctype="multipart/form-data" method="post"
+          action="/restaurant/create">
+
+
+      <div class="form-group" style="margin-top: 10px;">
+        <label>식당 이미지</label>
+        <input type='text' class="form-control" name='imagefile' id='imagefile' value='' placeholder="파일 선택">
+      </div>
+      <div class="form-group" style="margin-top: 10px;">
+        <label>식당 이름</label>
+        <input type='text' class="form-control" name='name' id='name' value='' placeholder="식당이름">
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <label>식당 카테고리</label>
+        <select style="border: black 1px solid;" class="form-control" name='categoryno' id='categoryno' placeholder="파일 선택">
+
+        </select>
+      </div>
+
+
+        <input type="hidden" style="border: black 1px solid;" class="form-control" name='ownerno' id='ownerno' th:value="${session.ownerno}" placeholder="파일 선택">
+
+
+
+      <div class="form-group" style="margin-top: 10px;">
+        <label>식당 전화번호</label>
+        <input type="text" style="border: black 1px solid;" class="form-control" name='tel' id='tel'  placeholder="파일 선택">
+
+
+      </div>
+
+
+
+      <div class="form-group" style="margin-top: 10px;">
+        <button type="button" class="btn btn-primary" onclick="return send()" id="btn_send">회원가입</button>
+        <button type="button" class="btn btn-primary" onclick="location.href = '/';" id="btn_cancel">취소</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</html>
+
+
+
+

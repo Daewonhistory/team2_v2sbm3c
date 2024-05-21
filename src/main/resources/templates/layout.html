@@ -39,7 +39,8 @@
         </div>
 
         <div th:if="${session.oname != null}" class="auth-buttons">
-
+          <a   th:href="@{/restaurant/create}">식당 등록</a>
+          |
           <a  th:text="${session.oname}"  th:href="@{/owner/my_page}"></a>
           |
           <a th:href="@{/owner/logout}"> 로그아웃</a>
