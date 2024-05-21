@@ -5,19 +5,18 @@
 <mapper namespace="dev.mvc.certifi.CertifiDAOInter">
 
 
-
+     <!--   사업자 등록증 신분증 등록-->
     <insert id="createCertifi" parameterType="dev.mvc.owner.OwnerVO">
         INSERT INTO CERTIFI(CERTIFINO, ownerno, businessno, certifi_image,identi_card_image
                           ,reg_date)
         VALUES (certifi_seq.nextval, #{ownerno}, #{businessno}, #{certifi_image}, #{identi_card_image},
                  sysdate)
     </insert>
+    <!--  사업자 신분증,등록증 조회-->
+    <select id="findByOnwer"  parameterType="int">
+        SELECT businessno, certifi_image, identi_card_image, reg_date
+        FROM certifi
+        WHERE ownerno = #{ownerno}
 
-<!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
-<!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->
-<!--               file1, file1saved, thumb1, size1, mp4-->
-<!--        FROM contents-->
-<!--        WHERE cateno = #{cateno}-->
-<!--        ORDER BY contentsno DESC-->
-<!--    </select>-->
+    </select>
 </mapper>

@@ -9,6 +9,9 @@ import java.util.HashMap;
 public interface CertifiProInter {
 
   public int createCertifi(CertifiVO certifiVO);
+
+  public ArrayList<CertifiVO> findByOnwer(int ownerno);
+
 }
 
 

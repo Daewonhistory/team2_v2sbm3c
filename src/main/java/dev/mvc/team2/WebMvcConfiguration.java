@@ -1,5 +1,6 @@
 package dev.mvc.team2;
 
+import dev.mvc.certifi.Certifi;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,7 +20,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
       
         // JSP 인식되는 경로: http://localhost:9091/contents/storage";
         registry.addResourceHandler("/menu/storage/**").addResourceLocations("file:///" +  Menu.getUploadDir());
-        
+        registry.addResourceHandler("/certifi/storage/**").addResourceLocations("file:///" +  Certifi.getUploadDir());
+
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");
         

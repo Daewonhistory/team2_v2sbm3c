@@ -2,6 +2,7 @@ package dev.mvc.certifi;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -58,7 +59,8 @@ CREATE TABLE CERTIFI(
 
 
 
-
+  private MultipartFile file1MF;
+  private MultipartFile file2MF;
 }
 
 
