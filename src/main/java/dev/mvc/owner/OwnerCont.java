@@ -1,10 +1,7 @@
 package dev.mvc.owner;
 
-import dev.mvc.certifi.CertifiDAOInter;
-import dev.mvc.certifi.CertifiProC;
 import dev.mvc.certifi.CertifiProInter;
 import dev.mvc.certifi.CertifiVO;
-import dev.mvc.customer.CustomerVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,16 +39,7 @@ public class OwnerCont {
 //    System.out.println("CustomerCont created");
   }
 
-  @GetMapping(value = "/*")
-  public String redirectToCertiPage(OwnerVO ownerVO) {
-    System.out.println("onwerVO -> " + ownerVO.getGrade());
-    if (ownerVO.getGrade() == 20) {
-      return "redirect:/owner/certi";
-    } else {
-      return "redirect:/other/page";
-    }
 
-  }
   /*
    * 사업자 ID 중복확인 메서드
    * @param id
@@ -276,6 +264,7 @@ public class OwnerCont {
 
 
         if (ownerVO.getGrade() == 1) {
+          session.setAttribute("type","owner");
           session.setAttribute("ownerno", ownerVO.getOwnerno());
           session.setAttribute("id", ownerVO.getId());
           session.setAttribute("oname", ownerVO.getOname());
@@ -291,7 +280,7 @@ public class OwnerCont {
           session.setAttribute("ownerVO",ownerVO);
           rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 컨텐츠에 접근할 수 있습니다");
 
-          return "redirect:/owner/certi";
+          return "redirect:/owner/certifi";
         }
       } else {
         rttr.addFlashAttribute("error", "아이디 또는 비밀번호 오류입니다.");
@@ -307,13 +296,25 @@ public class OwnerCont {
 
 
       String id = (String) session.getAttribute("id");
-      OwnerVO ownerVO = this.ownerProc.readById(id);
+      System.out.println(id);
+
+      if (id ==null) {
+        return "redirect:/";
+      } else {
+        OwnerVO ownerVO = this.ownerProc.readById(id);
+        if (ownerVO == null) {
+          return "redirect:/";
+        } else {
+          model.addAttribute("ownerVO", ownerVO);
+
+          return "/owner/my_page";
+        }
+
+
+      }
 
 
 
-      model.addAttribute("ownerVO", ownerVO);
-
-      return "/owner/my_page";
 
 
   }
@@ -519,7 +520,7 @@ public class OwnerCont {
    * @param ownerVO
    * @return
    */
-  @GetMapping("/certi")
+  @GetMapping("/certifi")
     public String certi(HttpSession session, OwnerVO ownerVO,Model model){
 
 
@@ -529,7 +530,7 @@ public class OwnerCont {
       OwnerVO read = this.ownerProc.read(ownerVO1.getOwnerno());
       if (read != null) {
         model.addAttribute("ownerVO",read);
-        return "owner/certi";
+        return "owner/certifi";
       } else {
         return "redirect:/";
 
@@ -543,7 +544,7 @@ public class OwnerCont {
 
     }
 
-    @PostMapping("/certi")
+    @PostMapping("/certifi")
 
     public  String certicreate(Model model, CertifiVO certifiVO, RedirectAttributes rrtr) {
 

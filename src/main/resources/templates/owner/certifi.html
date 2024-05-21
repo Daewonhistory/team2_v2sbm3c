@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+<div th:text="${fail}">
+
+</div>
+
+
+
+
+
+
+<div class='menu_line'></div>
+
+<div style="width: 60%; margin: 0px auto ">
+  <div class="title_line">사업자 인증 절차  (<span class="required">* </span>는 필수 )</div>
+  <form   id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/certifi">
+
+
+
+
+
+    <div style="align-items: center;">
+
+      <input class="form-control form-control-sm"  id="ownerno" name="ownerno" th:value="${ownerVO.ownerno}" style=" width: 27%;" readonly></input>
+
+    </div>
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>사업자 번호</label>
+      <input type='text' name='businessno' id='businessno' value=''
+             placeholder="전화번호" class="form-control form-control-sm" style="width: 27%;">
+
+
+      <span id="businessno_msg">사업자 번호는 필수 입니다?</span>
+    </div>
+    <div class="form-group" style="margin-top: 10px;">
+      <label>사업자 등록증 이미지</label>
+      <input type='text' class="form-control" name='certifi_image' id='certifi_image' value='' placeholder="파일 선택">
+    </div>
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>신분증 이미지</label>
+      <input type='text' class="form-control" name='identi_card_image' id='identi_card_image' value='' placeholder="파일 선택">
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <button type="submit" class="btn btn-primary"  id="btn_send">사업자 등록증 완료</button>
+      <button type="button" class="btn btn-primary" onclick="location.href = '/';" id="btn_cancel">취소</button>
+    </div>
+
+  </form>
+</div>
+</div>
+</html>
+
+
+
+

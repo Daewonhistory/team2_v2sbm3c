@@ -28,9 +28,10 @@ public class MyInterceptor implements HandlerInterceptor {
     Boolean isRedirected = (Boolean) session.getAttribute("isRedirected");
 
     // 요청 경로가 /owner/logout이 아니고, 리다이렉트 되지 않은 상태라면 /owner/certi로 리다이렉트합니다.
-    if (ownerVO != null && ownerVO.getGrade() == 20 && !request.getRequestURI().endsWith("/owner/logout") && (isRedirected == null || !isRedirected)) {
+    if (ownerVO != null && ownerVO.getGrade() == 20 && !request.getRequestURI().endsWith("/owner/logout") &&  !request.getMethod().equals("POST") && !request.getRequestURI().endsWith("/owner/certifi")  & (isRedirected == null || !isRedirected)) {
       session.setAttribute("isRedirected", true); // 리다이렉트 했음을 세션에 기록합니다.
-      response.sendRedirect("/owner/certi");
+
+      response.sendRedirect("/owner/certifi");
       return false; // 컨트롤러 실행을 중지합니다.
     } else if (ownerVO == null ) {
       if (customerVO != null) {
