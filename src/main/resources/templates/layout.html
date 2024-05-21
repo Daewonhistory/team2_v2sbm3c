@@ -39,11 +39,21 @@
         </div>
 
         <div th:if="${session.oname != null}" class="auth-buttons">
+          |
+          <a th:href="@{/customer/list}"> 회원 리스트</a>
+          |
+          <a th:href="@{/owner/list}"> 사업자 리스트</a>
+          |
+          <a th:href="@{/menu/list_search_paging}"> 메뉴 리스트</a>
+          |
+          <a th:href="@{/ingredient/list_search_paging}"> 메뉴 재료 리스트</a>
+          |
           <a   th:href="@{/restaurant/create}">식당 등록</a>
           |
           <a  th:text="${session.oname}"  th:href="@{/owner/my_page}"></a>
           |
           <a th:href="@{/owner/logout}"> 로그아웃</a>
+
 
         </div>
       </div>
