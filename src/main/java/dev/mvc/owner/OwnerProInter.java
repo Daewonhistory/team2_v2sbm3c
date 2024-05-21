@@ -55,14 +55,14 @@ public interface OwnerProInter {
    * @param session
    * @return true: 사용자
    */
-  public boolean isCustomer(HttpSession session);
+  public boolean isOwner(HttpSession session);
 
   /**
    * 로그인된 회원 관리자 계정인지 검사합니다.
    * @param session
    * @return true: 사용자
    */
-  public boolean isCustomerAdmin(HttpSession session);
+  public boolean isOwnerAdmin(HttpSession session);
 
   /**
    * 수정 처리

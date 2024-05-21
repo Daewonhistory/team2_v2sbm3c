@@ -12,16 +12,16 @@
 
 
 
-      document.querySelector('#mname').addEventListener('keypress', (event) => {
-        let mname = document.getElementById('mname').value.trim();
-        if (mname !== "" && event.key === 'Enter') {
-          document.getElementById('tel').focus();
-        } else if (mname === "" && event.key === 'Enter') {
-          document.getElementById('mname').focus();
+      document.querySelector('#cname').addEventListener('keypress', (event) => {
+        let cname = document.getElementById('cname').value.trim();
+        if (cname !== "" && event.key === 'Enter') {
+          document.getElementById('phone').focus();
+        } else if (cname === "" && event.key === 'Enter') {
+          document.getElementById('cname').focus();
         }
       });
 
-      document.querySelector('#tel').addEventListener('keypress', (event) => {
+      document.querySelector('#phone').addEventListener('keypress', (event) => {
         if(event.key === 'Enter') {
           document.getElementById('btn_DaumPostcode').focus();
         }
@@ -46,15 +46,15 @@
       // 패스워드를 정상적으로 2번 입력했는지 확인
 
 
-      let mname = document.getElementById('mname');
-      let mname_msg = document.getElementById('mname_msg');
-      let memberno = document.getElementById('memberno');
+      let cname = document.getElementById('cname');
+      let cname_msg = document.getElementById('cname_msg');
+      let custno = document.getElementById('custno');
 
 
-      if (mname.value.length == 0) {
-        mname_msg.innerHTML= '이름 입력은 필수입니다.';
-        mname_msg.classList.add('span_warning');    // class 적용
-        mname.focus();
+      if (cname.value.length == 0) {
+        cname_msg.innerHTML= '이름 입력은 필수입니다.';
+        cname_msg.classList.add('span_warning');    // class 적용
+        cname.focus();
 
         return false;  // 회원 가입 진행 중지
       }
@@ -75,10 +75,10 @@
 
   <div style="width: 60%; margin: 0px auto ">
     <div class="title_line">회원 정보 조회 수정 (*는 필수)</div>
-    <form   id="frm" name="frm" th:object="${memberVO}" method="post" action="/member/update">
+    <form   id="frm" name="frm" th:object="${customerVO}" method="post" action="/customer/update">
       <div style="align-items: center; display: none;">
 
-        <input class="form-control form-control-sm"  id="memberno" name="memberno" th:value="${memberVO.memberno}" style=" width: 27%;" readonly></input>
+        <input class="form-control form-control-sm"  id="custno" name="custno" th:value="${customerVO.custno}" style=" width: 27%;" readonly></input>
 
       </div>
 
@@ -86,7 +86,7 @@
 
       <div style="display: flex; align-items: center;">
 
-        <input class="form-control form-control-sm"  name="id" th:value="${memberVO.id}" style=" width: 27%;" id='id_msg' readonly></input>
+        <input class="form-control form-control-sm"  name="id" th:value="${customerVO.id}" style=" width: 27%;" id='id_msg' readonly></input>
 
       </div>
 
@@ -96,14 +96,14 @@
 
       <div class="form-group" style="margin-top: 10px;">
         <label>성명*</label>
-        <input type='text' name='mname' th:value="${memberVO.mname}" id='mname' value='' required="required"
+        <input type='text' name='cname' th:value="${customerVO.cname}" id='cname' value='' required="required"
                placeholder="성명" class="form-control form-control-sm" style="width: 27%;">
-        <span id='mname_msg'></span>
+        <span id='cname_msg'></span>
       </div>
 
       <div class="form-group" style="margin-top: 10px;">
         <label>전화 번호</label>
-        <input type='text' name='tel'  th:value="${memberVO.tel}" id='tel' value=''
+        <input type='text' name='phone'  th:value="${customerVO.phone}" id='phone' value=''
                placeholder="전화번호" class="form-control form-control-sm" style="width: 27%;">
         예) 010-0000-0000
       </div>
@@ -111,7 +111,7 @@
       <label style="margin-top: 10px;">우편 번호: </label>
       <div style="display: flex; align-items: center; ">
 
-        <input type='text' class="form-control form-control-sm" name='zipcode' th:value="${memberVO.zipcode}" id='zipcode' style="width: 27%" value=''
+        <input type='text' class="form-control form-control-sm" name='zipcode'  id='zipcode' style="width: 27%" value=''
                placeholder="우편번호" readonly>
 
         <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" style="margin-left: 10px;"
@@ -213,10 +213,10 @@
 
       <div class="form-group" style="margin-top: 10px;">
         <label style="width: 100%;">주소:</label>
-        <input type='text' class="form-control form-control-sm" name='address1' th:value="${memberVO.address1}" id='address1' value=''
+        <input type='text' class="form-control form-control-sm" name='address1' th:value="${customerVO.address1}" id='address1' value=''
                placeholder="주소1"
                style="width: 70%" readonly>
-        <input type='text' class="form-control form-control-sm" name='address2' th:value="${memberVO.address2}" id='address2' value=''
+        <input type='text' class="form-control form-control-sm" name='address2' th:value="${customerVO.address2}" id='address2' value=''
                placeholder="주소2"
                style="width: 70%; margin-top: 5px;">
       </div>

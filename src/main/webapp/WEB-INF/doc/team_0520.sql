@@ -230,8 +230,8 @@ COMMENT ON COLUMN RESERVE.restno is '식당번호';
 /**********************************/
 CREATE TABLE CERTIFI(
 		CERTIFINO                     		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		BUSINESSNO                    		VARCHAR2(30)		 NOT NULL,
 		OWNERNO                       		NUMBER(10)		 NOT NULL,
+        BUSINESSNO                    		VARCHAR2(30)		 NOT NULL,
 		REG_DATE                      		DATE		 NOT NULL,
 		certifi_image                 		VARCHAR2(30)		 NOT NULL,
 		identi_card_image             		VARCHAR2(30)		 NOT NULL,

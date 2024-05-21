@@ -30,12 +30,12 @@
         ORDER BY grade ASC, id ASC
     </select>
 
-<!--    &lt;!&ndash; customerno로 회원 정보 조회 &ndash;&gt;-->
-<!--    <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">-->
-<!--        SELECT customerno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade-->
-<!--        FROM customer-->
-<!--        WHERE customerno = #{customerno}-->
-<!--    </select>-->
+    <!-- customerno로 회원 정보 조회 -->
+    <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">
+        SELECT custno, id, passwd, cname, phone, address1, address2, reg_date, grade,sns
+        FROM customer
+        WHERE custno = #{custno}
+    </select>
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.customer.CustomerVO" parameterType="String">
@@ -52,10 +52,10 @@
         WHERE id=#{id}
     </update>
 
-<!--    <delete id="delete" parameterType="int">-->
-<!--        update customer set  grade=99-->
-<!--        WHERE customerno=#{customerno}-->
-<!--    </delete>-->
+    <delete id="delete" parameterType="int">
+        update customer set  grade=99
+        WHERE custno=#{custno}
+    </delete>
 
 <!--    &lt;!&ndash; 로그인 &ndash;&gt;-->
     <select id="login" resultType="int" parameterType="HashMap">
@@ -82,11 +82,11 @@
         WHERE customerno=#{customerno}
     </update>
 
-<!--    <update id="update_grade" >-->
-<!--        UPDATE customer-->
-<!--        SET grade=#{grade}-->
-<!--        WHERE customerno=#{customerno}-->
-<!--    </update>-->
+    <update id="update_grade" parameterType="HashMap"  >
+        UPDATE customer
+        SET grade=#{grade}
+        WHERE custno=#{custno}
+    </update>
 
 <!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
 <!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->

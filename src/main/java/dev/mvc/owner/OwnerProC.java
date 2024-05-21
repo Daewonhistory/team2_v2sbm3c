@@ -94,7 +94,7 @@ public class OwnerProC implements OwnerProInter {
 
 
   @Override
-  public boolean isCustomer(HttpSession session) {
+  public boolean isOwner(HttpSession session) {
     boolean sw = false; // 로그인하지 않은 것으로 초기화
     String grade = (String) session.getAttribute("grade");
 //    System.out.println(grade);
@@ -108,7 +108,7 @@ public class OwnerProC implements OwnerProInter {
   }
 
   @Override
-  public boolean isCustomerAdmin(HttpSession session) {
+  public boolean isOwnerAdmin(HttpSession session) {
     boolean sw = false; // 로그인하지 않은 것으로 초기화
     String grade = (String) session.getAttribute("grade");
     if (grade != null) {

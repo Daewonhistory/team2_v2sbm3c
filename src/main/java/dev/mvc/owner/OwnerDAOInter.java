@@ -30,6 +30,13 @@ public interface OwnerDAOInter {
    * 사업자 전체 목록
    * @return
    */
+
+  /**
+   * 사업자 등록정보 기입
+   * @param ownerVO
+   * @return 추가한 레코드 갯수
+   */
+  public int createCertifi(OwnerVO ownerVO);
   public ArrayList<OwnerVO> list();
 
   public int update_grade(HashMap<String,Object> map);

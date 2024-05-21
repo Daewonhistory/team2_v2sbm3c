@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.certifi.CertifiDAOInter">
+
+
+
+    <insert id="createCertifi" parameterType="dev.mvc.owner.OwnerVO">
+        INSERT INTO CERTIFI(CERTIFINO, ownerno, businessno, certifi_image,identi_card_image
+                          ,reg_date)
+        VALUES (certifi_seq.nextval, #{ownerno}, #{businessno}, #{certifi_image}, #{identi_card_image},
+                 sysdate)
+    </insert>
+
+<!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
+<!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->
+<!--               file1, file1saved, thumb1, size1, mp4-->
+<!--        FROM contents-->
+<!--        WHERE cateno = #{cateno}-->
+<!--        ORDER BY contentsno DESC-->
+<!--    </select>-->
+</mapper>

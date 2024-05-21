@@ -19,35 +19,35 @@
                 #{tel}, #{address1}, #{address2},  #{grade}, #{image}, sysdate)
     </insert>
 
-<!--    <select id="list" resultType="dev.mvc.customer.CustomerVO">-->
-<!--        SELECT custno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade-->
-<!--        FROM customer-->
-<!--        ORDER BY grade ASC, id ASC-->
-<!--    </select>-->
+    <select id="list" resultType="dev.mvc.owner.OwnerVO">
+        SELECT ownerno, id, passwd, oname, tel, phone, address1, address2, reg_date, grade
+        FROM owner
+        ORDER BY grade ASC, id ASC
+    </select>
 
-<!--    &lt;!&ndash; customerno로 회원 정보 조회 &ndash;&gt;-->
-<!--    <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">-->
-<!--        SELECT customerno, id, passwd, mname, tel, zipcode, address1, address2, mdate, grade-->
-<!--        FROM customer-->
-<!--        WHERE customerno = #{customerno}-->
-<!--    </select>-->
+<!--    &lt;!&ndash; ownerno로 회원 정보 조회 &ndash;&gt;-->
+    <select id="read" resultType="dev.mvc.owner.OwnerVO" parameterType="int">
+        SELECT ownerno, id, passwd, oname, tel,phone , address1, address2, reg_date, grade
+        FROM owner
+        WHERE ownerno = #{ownerno}
+    </select>
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.owner.OwnerVO" parameterType="String">
-        SELECT ownerno, id, passwd, oname,grade
+        SELECT ownerno, id, passwd, oname, tel,phone , address1, address2, reg_date, grade
         FROM owner
         WHERE id = #{id}
     </select>
 
-<!--    <update id="update" parameterType="dev.mvc.customer.CustomerVO">-->
-<!--        UPDATE customer-->
-<!--        SET  mname=#{mname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}-->
+<!--    <update id="update" parameterType="dev.mvc.owner.OwnerVO">-->
+<!--        UPDATE owner-->
+<!--        SET  oname=#{oname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}-->
 <!--        WHERE id=#{id}-->
 <!--    </update>-->
 
 <!--    <delete id="delete" parameterType="int">-->
-<!--        update customer set  grade=99-->
-<!--        WHERE customerno=#{customerno}-->
+<!--        update owner set  grade=99-->
+<!--        WHERE ownerno=#{ownerno}-->
 <!--    </delete>-->
 
 <!--    &lt;!&ndash; 로그인 &ndash;&gt;-->
@@ -75,11 +75,19 @@
         WHERE ownerno=#{ownerno}
     </update>
 
-<!--    <update id="update_grade" >-->
-<!--        UPDATE customer-->
-<!--        SET grade=#{grade}-->
-<!--        WHERE customerno=#{customerno}-->
-<!--    </update>-->
+    <update id="update_grade" >
+        UPDATE owner
+        SET grade=#{grade}
+        WHERE ownerno=#{ownerno}
+    </update>
+
+
+    <insert id="createCertifi" parameterType="dev.mvc.owner.OwnerVO">
+        INSERT INTO CERTIFI(CERTIFINO, ownerno, businessno, certifi_image,identi_card_image
+                          ,reg_date)
+        VALUES (certifi_seq.nextval, #{ownerno}, #{businessno}, #{certifi_image}, #{identi_card_image},
+                 sysdate)
+    </insert>
 
 <!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
 <!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->

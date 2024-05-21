@@ -62,127 +62,30 @@
 
   <div style="width: 60%; margin: 0px auto ">
     <div class="title_line">회원 정보 조회 수정 (*는 필수)</div>
-    <form id="frm" name="frm" th:object="${memberVO}" method="post" action="/member/update_grade">
+    <form id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/update_grade">
       <div style="align-items: center; display:none;">
-        <input type="hidden" id="memberGrade" th:value="${memberVO.grade}">
+        <input type="hidden" id="customerGrade" th:value="${ownerVO.grade}">
 
-        <input class="form-control form-control-sm"  id="memberno" name="memberno" th:value="${memberVO.memberno}" style=" width: 27%;" readonly></input>
+        <input class="form-control form-control-sm"  id="ownerno" name="ownerno" th:value="${ownerVO.ownerno}" style=" width: 27%;" readonly></input>
 
 
       </div>
       <div>
         <!-- 첫 번째 select: 등급을 선택 -->
         <label for="gradeSelect">회원 등급:</label>
-        <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="gradeSelect"
-                onchange="gradeChanged()">
-          <option value="none">등급을 선택해주세요</option>
-          <option value="admin">관리자</option>
-          <option value="member">회원</option>
-          <option value="stopmember">정지 회원</option>
-          <option value="deletemember">탈퇴 회원</option>
+        <select name="grade" style="border: 1px solid black;" class="form-select form-select-lg mb-3" aria-label="Large select example" id="gradeSelect">
+          <option th:selected="${ownerVO.grade == 1}" value="1">일반 회원</option>
+          <option th:selected="${ownerVO.grade == 20}" value="10">미인증 회원</option>
+          <option th:selected="${ownerVO.grade == 99}" value="99">탈퇴 회원</option>
         </select>
-        <span id="grade_msg" style="color: red">등급은 필수 입니다</span>
-      </div>
-      <div>
-        <label for="RangeSelect" id="rangelabel" style="display:none;">범위 선택:</label>
-        <select name="grade" class="form-select form-select-lg mb-3" aria-label="Large select example" id="RangeSelect"
-                style="display:none;"></select>
+        <span id="grade_msg"></span>
 
       </div>
-      <script>
-        // 페이지가 로드될 때 실행되는 함수를 addEventListener를 사용하여 설정
-        window.addEventListener('load', function() {
-          let memberGrade = document.getElementById('memberGrade').value;
-          setupSelectOptions(memberGrade);
-          gradeChanged(true);
-        });
-
-        // memberGrade 값에 따라 셀렉트 옵션을 설정하는 함수
-        function setupSelectOptions(memberGrade) {
-          
-          let gradeSelect = document.getElementById('gradeSelect');
-          let RangeSelect = document.getElementById('RangeSelect');
-
-
-          if (memberGrade >= 1 && memberGrade <= 10) {
-            gradeSelect.value = 'admin';
-          } else if (memberGrade >= 11 && memberGrade <= 20) {
-            gradeSelect.value = 'member';
-          } else if (memberGrade >= 40 && memberGrade <= 49) {
-            gradeSelect.value = 'stopmember';
-          } else if (memberGrade == 99) {
-            gradeSelect.value = 'deletemember';
-          }
-          gradeChanged(true); // true를 전달하여 초기 설정을 나타냄
-        }
-
-        // gradeSelect 값이 변경될 때 실행될 함수를 addEventListener를 사용하여 설정
-        document.getElementById('gradeSelect').addEventListener('change', function() {
-          gradeChanged();
-        });
-
-        // 등급이 변경될 때 실행되는 함수
-        function gradeChanged(isInitialSetup = false) {
-          let gradeSelect = document.getElementById('gradeSelect').value;
-          let RangeSelect = document.getElementById('RangeSelect');
-          let memberGrade = document.getElementById('memberGrade').value;
-          let grade_msg = document.getElementById('grade_msg');
-          let Rangelabel = document.getElementById('rangelabel');
-
-          switch (gradeSelect) {
-            case 'admin':
-              displayAndFillRangeSelect(1, 10, memberGrade, isInitialSetup);
-
-              Rangelabel.style.display = "block"
-              grade_msg.innerText = "";
-              break;
-            case 'member':
-              displayAndFillRangeSelect(11, 20, memberGrade, isInitialSetup);
-
-              Rangelabel.style.display = "block"
-              grade_msg.innerText = "";
-              break;
-            case 'stopmember':
-              displayAndFillRangeSelect(40, 49, memberGrade, isInitialSetup);
-
-              Rangelabel.style.display = "block"
-              grade_msg.innerText = "";
-              break;
-            case 'deletemember':
-              displayAndFillRangeSelect(99, 99, memberGrade, isInitialSetup);
-              Rangelabel.style.display = "block"
-              grade_msg.innerText = "";
-              break;
-            default:
-              Rangelabel.style.display = "none"
-              grade_msg.innerText = "등급은 필수입니다";
-              RangeSelect.style.display = 'none';
-              break;
-          }
-        }
-
-        // 범위 선택 select 요소를 동적으로 채우고 표시하는 함수
-        function displayAndFillRangeSelect(start, end, memberGrade, isInitialSetup) {
-          let RangeSelect = document.getElementById('RangeSelect');
-
-
-          RangeSelect.style.display = 'block';
-
-          RangeSelect.innerHTML = ''; // 기존 옵션 초기화
 
 
 
-          for (let i = start; i <= end; i++) {
-            let option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            if (isInitialSetup && i == memberGrade) {
-              option.selected = true;
-            }
-            RangeSelect.appendChild(option);
-          }
-        }
-      </script>
+
+
 
 
       <div class="form-group" style="margin-top: 10px;">

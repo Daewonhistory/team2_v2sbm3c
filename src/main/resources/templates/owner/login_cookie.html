@@ -100,15 +100,16 @@
   <div class='menu_line'></div>
 
   <div style="width: 60%; margin: 0px auto ">A
-    <div class="title_line">회원가입 (*는 필수 )</div>
+    <div class="title_line">사업자 로그인</div>
     <form id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/login">
       <label>아이디(이메일)* </label>
 
       <div >
 
-        <input type="text" name="id" id="id" value="" autofocus="autofocus"
-               class="form-control form-control-sm" style="width: 27%;" th:value="${ck_id}" required>
+        <input type="text" name="id" id="id" value="bdaystest7000" autofocus="autofocus"
+               class="form-control form-control-sm" style="width: 27%;"  required>
 
+<!--        th:value="${ck_id}"-->
         <label style="margin-top: 5px;">
 
 
@@ -122,10 +123,10 @@
 
       <div class="form-group" style="margin-top: 10px;">
         <label>비밀번호* </label>
-        <input type="password" name="passwd" id="passwd" value="" autofocus="autofocus"
-               class="form-control form-control-sm" style="width: 27%;" required   th:value="${ck_passwd}">
+        <input type="password" name="passwd" id="passwd" value="69017000" autofocus="autofocus"
+               class="form-control form-control-sm" style="width: 27%;" required   >
         <label>
-
+<!--          th:value="${ck_passwd}"-->
 
           <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"/> 저장
            </label>
