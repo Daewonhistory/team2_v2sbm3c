@@ -9,7 +9,7 @@
   
   <select id="read" resultType="dev.mvc.menu.MenuVO">
     SELECT menuno, name, price, restno, image
-	FROM menuno
+	FROM menu
 	WHERE menuno = #{menuno}
   </select>
   
@@ -62,4 +62,10 @@
       </otherwise>
     </choose>
   </select>   
+  
+  <select id="list_by_restno_count" resultType="int" parameterType="int">
+  	SELECT COUNT(*)
+	FROM menu
+	WHERE restno = #{restno}
+  </select>
 </mapper>
