@@ -143,21 +143,17 @@ public class MenuCont {
 			model.addAttribute("cnt", cnt);
 			model.addAttribute("code", "create_fail");
 			return "content/msg";
+		}else {
+			for(int ingredient : ingredno) {
+				
+			}
+			
+			ra.addAttribute("word", word);
+			ra.addAttribute("now_page", now_page);
+			return "redirect:/menu/list_search_paging"; // ra.addAttribute 사용시 url에 직접 작성 안함
 		}
 
-		// ------------------------------------------------------------------------------
-		// PK의 return
-		// ------------------------------------------------------------------------------
-		// System.out.println("--> contentsno: " + contentsVO.getContentsno());
-		// mav.addObject("contentsno", contentsVO.getContentsno()); // redirect
-		// parameter 적용
-		// ------------------------------------------------------------------------------
-
-		// return "redirect:/contents/list_by_cateno?cateno=" + contentsVO.getCateno();
-		// // 직접 변수 선언
-		ra.addAttribute("word", word);
-		ra.addAttribute("now_page", now_page);
-		return "redirect:/menu/list_search_paging"; // ra.addAttribute 사용시 url에 직접 작성 안함
+		
 
 	}
 
