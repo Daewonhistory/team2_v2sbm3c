@@ -37,7 +37,7 @@ CREATE TABLE CERTIFI(
   /**
    * 사업자 등록번호
    */
-  private String it  = "";
+  private String businessno  = "";
 
   /**
    * 사업자 등록증 이미지

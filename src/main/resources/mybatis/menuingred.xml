@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.menuingred.MenuIngredDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <insert id="create" parameterType="dev.mvc.menuingred.MenuIngredVO">
+  	INSERT INTO MENUINGRED(menuingredno, ingredno, menuno)
+	VALUES (menuingred_seq.nextval, #{ingredno}, #{menuno})
+  </insert>
+  
+  <select id="list_by_menuno" resultType="dev.mvc.menuingred.MenuIngredVO" parameterType="int">
+  	SELECT menuingredno, menuno, ingredno
+	FROM menuingred
+	WHERE menuno = #{menuno}
+	ORDER BY ingredno ASC
+  </select>
+  
+  <select id="search_by_ingredno" parameterType="int">
+  	SELECT menuingredno, menuno, ingredno
+  	FROM menuingred
+	WHERE ingredno = #{ingredno}
+	ORDER BY ingredno ASC
+  </select>
+  
+  <select id="search_by_ingredno_menuno" resultType="dev.mvc.menuingred.MenuIngredVO" parameterType="HashMap">
+  	SELECT menuingredno, menuno, ingredno
+  	FROM menuingred
+	WHERE ingredno = #{ingredno} AND menuno = #{menuno}
+	ORDER BY ingredno ASC
+  </select>
+  
+  <delete id="delete_by_menuingredno" parameterType="int">
+  	DELETE FROM menuingred
+	WHERE menuingredno = #{menuingredno}
+  </delete>
+  
+  <delete id="delete_by_menuno" parameterType="int">
+  	DELETE FROM menuingred
+	WHERE menuno = #{menuno}
+  </delete>
+</mapper>

@@ -29,15 +29,15 @@
        <input type="number" name='price' value='10000' required="required" class="form-control" style='width: 100%;'></input>
     </div>
 	<div id="ingredients">
-            <label>재료:</label>
-            <select id="show" onchange="handleSelectChange(this)">
-        		<option th:each="ingredientVO, status : ${list}" th:value="${ingredientVO.ingredno}" th:text="${ingredientVO.name}"></option>
-    		</select>
+        <label>재료:</label>
+        <select id="show" onchange="handleSelectChange(this)">
+    		<option th:each="ingredientVO, status : ${list}" th:value="${ingredientVO.ingredno}" th:text="${ingredientVO.name}"></option>
+		</select>
 
-        </div>
+    </div>
     <div>
        <label>이미지</label>
-       <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
+       <input type='file' class="form-control" name='file1MF' id='file1MF' value=''required="required" placeholder="파일 선택">
     </div>     
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">등록</button>

@@ -68,4 +68,14 @@
 	FROM menu
 	WHERE restno = #{restno}
   </select>
+  
+  <select id="last_menu_by_restno" resultType="dev.mvc.menu.MenuVO" parameterType="int">
+  	SELECT menuno, name, price, restno, image
+	FROM(
+	    SELECT menuno, name, price, restno, image, ROWNUM
+	    FROM menu
+	    WHERE restno = #{restno}
+	    ORDER BY ROWNUM DESC)
+	WHERE ROWNUM = 1
+  </select>
 </mapper>

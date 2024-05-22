@@ -75,6 +75,14 @@ SELECT COUNT(*)
 FROM menu
 WHERE restno = 1;
 
+4. 
+SELECT menuno, name, price, restno, image
+FROM(
+    SELECT menuno, name, price, restno, image, ROWNUM
+    FROM menu
+    WHERE restno = 4
+    ORDER BY ROWNUM DESC)
+WHERE ROWNUM = 1
 -- UPDATE
 
 1. 전체 변경

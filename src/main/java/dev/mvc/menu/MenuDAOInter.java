@@ -54,4 +54,11 @@ public interface MenuDAOInter {
 	 */
 	public int list_by_restno_count(int restno);
 	
+	/**
+	 * 식당의 마지막에 추가된 메뉴 조회
+	 * @param restno
+	 * @return
+	 */
+	public MenuVO last_menu_by_restno(int restno);
+	
 }

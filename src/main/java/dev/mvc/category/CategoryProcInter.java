@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * 카테고리 작업을 처리하는 인터페이스입니다.
  */
-public interface CategoryProInter {
+public interface CategoryProcInter {
 
   /**
    * 기능:새로운 카테고리를 생성합니다.
