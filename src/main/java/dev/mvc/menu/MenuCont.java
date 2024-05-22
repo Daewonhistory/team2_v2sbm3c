@@ -6,21 +6,27 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.category.CategoryVO;
 import dev.mvc.ingredient.Ingredient;
 import dev.mvc.ingredient.IngredientProcInter;
 import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.menuingred.MenuIngredProcInter;
 import dev.mvc.menuingred.MenuIngredVO;
 import dev.mvc.restaurant.RestaurantProInter;
+import dev.mvc.restaurant.RestaurantVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -207,13 +213,16 @@ public class MenuCont {
 			@RequestParam(defaultValue = "1") int now_page) {
 		String type = (String)session.getAttribute("type");
 		int restno = 0;
-		if(type.equals("admin")) {
-			restno = 0;
-		}else {
+		if(type == null) {
+			restno = 8;
+		}else if(type.equals("owner")) {
+			
 			int ownerno = (int)session.getAttribute("ownerno");
-//			ArrayList<RestaurantVO> list = this.restaurantProc.find
+			ArrayList<RestaurantVO> ownersRestList = this.restaurantProc.findByOwnerR(ownerno);
+			model.addAttribute("ownerRestList", ownersRestList);
+			restno = ownersRestList.get(0).getRestno();
 		}
-		
+		System.out.println("restno:"+restno);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("word", word);
 		map.put("now_page", now_page);
@@ -388,4 +397,16 @@ public class MenuCont {
 			return "redirect:/menu/msg";
 		}
 	}
+	
+	@GetMapping("/menulist")
+	@ResponseBody
+	  public ResponseEntity<ArrayList<MenuVO>> menulist(@RequestBody MenuInputVO menuInputVO) {
+		System.out.println(menuInputVO.getWord() + menuInputVO.getRestno());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("word", menuInputVO.getWord());
+		map.put("restno", menuInputVO.getRestno());
+		
+	    ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
+	    return new ResponseEntity<>(list, HttpStatus.OK);
+	  }
 }
