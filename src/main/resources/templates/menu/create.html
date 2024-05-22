@@ -30,13 +30,11 @@
     </div>
 	<div id="ingredients">
             <label>재료:</label>
-            <div class="ingredient">
-                <input type="" name="ingredients[]" required>
-                <button type="button" onclick="removeIngredient(this)">삭제</button>
-            </div>
+            <select id="show" onchange="addIngredient(this.value, this.text)">
+        		<option th:each="ingredientVO, status : ${list}" th:value="${ingredientVO.ingredno}" th:text="${ingredientVO.name}"></option>
+    		</select>
+
         </div>
-        
-        <button type="button" onclick="addIngredient()">재료 추가</button><br><br>
     <div>
        <label>이미지</label>
        <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
@@ -48,15 +46,20 @@
   
   </form>
 	<script>
-		function addIngredient() {
+		function addIngredient(ingredno ,name) {
 		    const ingredientDiv = document.createElement('div');
 		    ingredientDiv.classList.add('ingredient');
-		    
+		    ingredientDiv.style = "background-color: gray; border-radius: 50%; width:150px";
+		     
 		    const ingredientInput = document.createElement('input');
-		    ingredientInput.type = 'text';
+		    ingredientInput.type = 'hidden';
 		    ingredientInput.name = 'ingredients[]';
+		    ingredientInput.value = ingredno;
 		    ingredientInput.required = true;
 		    
+		    const ingredientText = document.createElement('span');
+		    ingredientText.innerText = name;
+		     
 		    const removeButton = document.createElement('button');
 		    removeButton.type = 'button';
 		    removeButton.innerText = '삭제';
@@ -66,6 +69,7 @@
 		    
 		    ingredientDiv.appendChild(ingredientInput);
 		    ingredientDiv.appendChild(removeButton);
+		    ingredientDiv.appendChild(ingredientText);
 		    
 		    document.getElementById('ingredients').appendChild(ingredientDiv);
 		}

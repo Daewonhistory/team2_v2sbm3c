@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.ingredient.Ingredient;
+import dev.mvc.ingredient.IngredientProcInter;
+import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +30,9 @@ public class MenuCont {
 	@Autowired
 	@Qualifier("dev.mvc.menu.MenuProc")
 	private MenuProcInter menuProc;
+	@Autowired
+	@Qualifier("dev.mvc.ingredient.IngredientProc")
+	private IngredientProcInter ingredientProc;
 
 	public MenuCont() {
 		System.out.println("-> MenuCont Created.");
@@ -55,7 +60,10 @@ public class MenuCont {
 		// if(user_type.equals("owner")) {
 		// session.getAtadfa("ownerno")
 		// }else{}
-
+		
+		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
+		model.addAttribute("list", list);
+		
 		model.addAttribute("restno", 4);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
@@ -87,7 +95,6 @@ public class MenuCont {
 		// ------------------------------------------------------------------------------
 		String file1 = ""; // 원본 파일명 image
 		String file1saved = ""; // 저장된 파일명, image
-		String thumb1 = ""; // preview image
 
 		String upDir = Menu.getUploadDir(); // 파일을 업로드할 폴더 준비
 		System.out.println("-> upDir: " + upDir);
@@ -113,10 +120,6 @@ public class MenuCont {
 					String new_file_name = "rest" + menuVO.getRestno() + "_" + (menu_cnt + 1) + "." + exe;
 					file1saved = Upload.saveFileSpring(mf, upDir, new_file_name);
 
-					if (Tool.isImage(file1saved)) { // 이미지인지 검사
-						// thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
-						thumb1 = Tool.preview(upDir, file1saved, 200, 150);
-					}
 				}
 				System.out.println("file1saved" + file1saved);
 				menuVO.setImage(file1saved); // 저장본 파일명
