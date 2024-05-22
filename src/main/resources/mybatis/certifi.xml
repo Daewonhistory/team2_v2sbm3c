@@ -7,7 +7,7 @@
 
      <!--   사업자 등록증 신분증 등록-->
     <insert id="createCertifi" parameterType="dev.mvc.owner.OwnerVO">
-        INSERT INTO CERTIFI(CERTIFINO, ownerno, businessno, certifi_image,identi_card_image
+        INSERT INTO certifi(certifi, ownerno, businessno, certifi_image,identi_card_image
                           ,reg_date)
         VALUES (certifi_seq.nextval, #{ownerno}, #{businessno}, #{certifi_image}, #{identi_card_image},
                  sysdate)
@@ -19,4 +19,61 @@
         WHERE ownerno = #{ownerno}
 
     </select>
+
+
+    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.certifi.CertifiVO">
+
+        <if test="word == null or word == ''">
+            <!-- 전체 결과를 가져오는 쿼리 -->
+            <![CDATA[
+        SELECT categoryno, name, r
+        FROM (
+                 SELECT categoryno, name, ROWNUM as r
+                 FROM (
+                          SELECT categoryno, name
+                          FROM category
+
+                      )
+                 WHERE ROWNUM <= #{end_num}
+             )
+        WHERE r >= #{start_num} ]]>
+        </if>
+        <if test="word != null and word != ''">
+            <!-- name으로 조회 -->
+            <![CDATA[
+        SELECT categoryno, name, r
+        FROM (
+                 SELECT categoryno, name, ROWNUM as r
+                 FROM (
+                          SELECT categoryno, name
+                          FROM category
+                          WHERE name LIKE '%' || #{word} || '%'
+
+                      )
+                 WHERE ROWNUM <= #{end_num}
+             )
+        WHERE r >= #{start_num} ]]>
+        </if>
+
+    </select>
+
+
+
+
+    <select id="list_search_count" parameterType="java.util.Map" resultType="int">
+        <if test="word == null or word == ''">
+            <!-- 전체 결과를 가져오는 쿼리 -->
+            SELECT count(*) as cnt
+            FROM category
+
+        </if>
+        <if test="word != null and word != ''">
+            <!-- name으로 조회 -->
+            SELECT count(*) as cnt
+            FROM category
+            WHERE name LIKE '%' || #{word} || '%'
+
+        </if>
+    </select>
+
 </mapper>

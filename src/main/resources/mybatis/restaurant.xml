@@ -17,10 +17,107 @@
         VALUES (restaurant_seq.nextval, #{name},#{tel}, #{ownerno}, #{categoryno})
     </insert>
 
-    <insert id="createImg" parameterType="dev.mvc.restimg.RestimgVO">
-        INSERT INTO rest_img(rest_imgno, imagefile, thumbfile,restno,cateno)
-        VALUES (restaurant_seq.nextval, #{name}, #{ownerno}, #{cateno})
-    </insert>
+
+
+    <select id="nextval" resultType="int">
+        SELECT restaurant_seq.nextval AS restno FROM dual
+    </select>
+
+	
+    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.restaurant.RestaurantVO">
+        <if test="type == 100">
+            <if test="word == null or word == ''">
+                <!-- 전체 결과를 가져오는 쿼리 -->
+                <![CDATA[
+            SELECT restno, name, tel, ownerno, categoryno, r
+            FROM (
+                     SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
+                     FROM (
+                              SELECT restno, name, tel, ownerno, categoryno
+                              FROM restaurant
+                          )
+                     WHERE ROWNUM <= #{end_num}
+                 )
+            WHERE r >= #{start_num} ]]>
+            </if>
+            <if test="word != null and word != ''">
+                <!-- name으로 조회 -->
+                <![CDATA[
+            SELECT restno, name, tel, ownerno, categoryno, r
+            FROM (
+                     SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
+                     FROM (
+                              SELECT restno, name, tel, ownerno, categoryno
+                              FROM restaurant
+                              WHERE name LIKE '%' || #{word} || '%'
+                          )
+                     WHERE ROWNUM <= #{end_num}
+                 )
+            WHERE r >= #{start_num} ]]>
+            </if>
+        </if>
+        <if test="type == 200">
+            <if test="word == null or word == ''">
+                <!-- 전체 결과를 가져오는 쿼리 -->
+                <![CDATA[
+            SELECT restno, name, tel, ownerno, categoryno, r
+            FROM (
+                     SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
+                     FROM (
+                              SELECT restno, name, tel, ownerno, categoryno
+                              FROM restaurant
+                          )
+                     WHERE ROWNUM <= #{end_num}
+                 )
+            WHERE r >= #{start_num} ]]>
+            </if>
+            <if test="word != null and word != ''">
+                <!-- ownerno으로 조회 -->
+                <![CDATA[
+            SELECT restno, name, tel, ownerno, categoryno, r
+            FROM (
+                     SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
+                     FROM (
+                              SELECT restno, name, tel, ownerno, categoryno
+                              FROM restaurant
+                              WHERE ownerno LIKE '%' || #{word} || '%'
+                          )
+                     WHERE ROWNUM <= #{end_num}
+                 )
+            WHERE r >= #{start_num} ]]>
+            </if>
+        </if>
+    </select>
+
+    <select id="list_search_count" parameterType="java.util.Map" resultType="int">
+        <if test="type == 100">
+            <if test="word == null or word == ''">
+                <!-- 전체 결과를 가져오는 쿼리 -->
+                SELECT count(*) as cnt
+                FROM restaurant
+            </if>
+            <if test="word != null and word != ''">
+                <!-- name으로 조회 -->
+                SELECT count(*) as cnt
+                FROM restaurant
+                WHERE name LIKE '%' || #{word} || '%'
+            </if>
+        </if>
+        <if test="type == 200">
+            <if test="word == null or word == ''">
+                <!-- 전체 결과를 가져오는 쿼리 -->
+                SELECT count(*) as cnt
+                FROM restaurant
+            </if>
+            <if test="word != null and word != ''">
+                <!-- ownerno으로 조회 -->
+                SELECT count(*) as cnt
+                FROM restaurant
+                WHERE ownerno LIKE '%' || #{word} || '%'
+            </if>
+        </if>
+    </select>
+
 
 
 </mapper>

@@ -20,6 +20,7 @@ import dev.mvc.ingredient.IngredientProcInter;
 import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.menuingred.MenuIngredProcInter;
 import dev.mvc.menuingred.MenuIngredVO;
+import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +40,10 @@ public class MenuCont {
 	@Autowired
 	@Qualifier("dev.mvc.menuingred.MenuIngredProc")
 	private MenuIngredProcInter menuIngredProc;
-
+	@Autowired
+	@Qualifier("dev.mvc.restaurant.RestaurantProc")
+	private RestaurantProInter restaurantProc;
+	
 	public MenuCont() {
 		System.out.println("-> MenuCont Created.");
 	}
@@ -198,12 +202,22 @@ public class MenuCont {
 	// http://localhost:9093/menu/list_search_paging
 	@GetMapping("list_search_paging")
 	public String list_search_paging(Model model,
+			HttpSession session,
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
+		String type = (String)session.getAttribute("type");
+		int restno = 0;
+		if(type.equals("admin")) {
+			restno = 0;
+		}else {
+			int ownerno = (int)session.getAttribute("ownerno");
+//			ArrayList<RestaurantVO> list = this.restaurantProc.find
+		}
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("word", word);
 		map.put("now_page", now_page);
-		map.put("restno", 0);
+		map.put("restno", restno);
 
 		ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
 		model.addAttribute("list", list);
@@ -268,8 +282,8 @@ public class MenuCont {
 			@RequestParam(defaultValue = "") String word, 
 			int now_page, 
 			MenuVO menuVO,
-			@RequestParam(name = "ingredno", defaultValue = "") int[] ingredno,
-			@RequestParam(name = "deleteIngredno", defaultValue = "") int[] deleteIngredno) {
+			@RequestParam(name = "ingredno[]", defaultValue = "") int[] ingredno,
+			@RequestParam(name = "deleteIngredno[]", defaultValue = "") int[] deleteIngredno) {
 		MenuVO menuVO_old = this.menuProc.read(menuVO.getMenuno());
 		// -------------------------------------------------------------------
 		// 파일 삭제 시작

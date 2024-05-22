@@ -2,6 +2,7 @@ package dev.mvc.restimg;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -36,7 +37,9 @@ CREATE TABLE RESTIMAGE(
     private int cateno;
 
 
-
+    private MultipartFile file1MF;
+    private MultipartFile file2MF;
+    private MultipartFile file3MF;
 
   }
 
