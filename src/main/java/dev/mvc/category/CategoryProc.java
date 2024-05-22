@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component("dev.mvc.category.CategoryProc")
-public class CategoryProc implements CategoryProInter {
+public class CategoryProc implements CategoryProcInter {
 
 
   @Autowired

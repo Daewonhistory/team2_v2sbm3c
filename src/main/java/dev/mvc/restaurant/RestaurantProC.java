@@ -182,7 +182,7 @@ public class RestaurantProC implements RestaurantProInter {
    */
   @Override
   public ArrayList<RestaurantVO> findByOwnerR(int onwerno) {
-    return this.findByOwnerR(onwerno);
+    return this.restDAO.findByOwnerR(onwerno);
   }
 }
 

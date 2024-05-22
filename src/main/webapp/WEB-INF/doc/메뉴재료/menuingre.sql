@@ -8,22 +8,22 @@ DROP TABLE MENUINGRE;
 
 DROP TABLE MENUINGRE CASCADE CONSTRAINTS;
 
-CREATE TABLE MENUINGRE(
-		menu_ingno                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+CREATE TABLE MENUINGRED(
+		menuingredno                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		ingredno                      		NUMBER(10)		 NOT NULL,       -- FK
 		menuno                        		NUMBER(10)		 NOT NULL,       -- FK
   FOREIGN KEY (ingredno) REFERENCES INGREDIENT (ingredno),
   FOREIGN KEY (menuno) REFERENCES MENU (menuno)
 );
 
-COMMENT ON TABLE MENUINGRE is '메뉴재료';
-COMMENT ON COLUMN MENUINGRE.menu_ingno is '메뉴재료번호';
-COMMENT ON COLUMN MENUINGRE.ingredno is '식재료번호';
-COMMENT ON COLUMN MENUINGRE.menuno is '메뉴번호';
+COMMENT ON TABLE MENUINGRED is '메뉴재료';
+COMMENT ON COLUMN MENUINGRED.menuingredno is '메뉴재료번호';
+COMMENT ON COLUMN MENUINGRED.ingredno is '식재료번호';
+COMMENT ON COLUMN MENUINGRED.menuno is '메뉴번호';
 
-DROP SEQUENCE menuingre_seq;
+DROP SEQUENCE menuingred_seq;
 
-CREATE SEQUENCE menuingre_seq
+CREATE SEQUENCE menuingred_seq
     START WITH 1              -- 시작 번호
     INCREMENT BY 1          -- 증가값
     MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
@@ -32,8 +32,8 @@ CREATE SEQUENCE menuingre_seq
   
   -- CREATE
 
-INSERT INTO INGREDIENT(menu_ingno, ingredno, menuno)
-VALUES (menuingre_seq.nextval, 1, 1);
+INSERT INTO MENUINGRED(menuingredno, ingredno, menuno)
+VALUES (menuingred_seq.nextval, 1, 1);
 
 COMMIT;
 
@@ -41,37 +41,37 @@ COMMIT;
 -- READ
 
 1. 전체 조회
-SELECT menu_ingno, menuno, ingredno
-FROM menuingre
+SELECT menuingredno, menuno, ingredno
+FROM menuingred
 ORDER BY menuno ASC, ingredno ASC;
 
 2.메뉴의 재료 조회
-SELECT menu_ingno, menuno, ingredno
-FROM menuingre
+SELECT menuingredno, menuno, ingredno
+FROM menuingred
 WHERE menu = 1
 ORDER BY ingredno ASC;
 
 -- UPDATE
 1. 전체 변경
-UPDATE ingredient
+UPDATE menuingred
 SET menuno = 2, ingredno = 2;
-WHERE menu_ingno = 1;
+WHERE menuingredno = 1;
 
 1. 메뉴 식재료 변경
-UPDATE ingredient
+UPDATE menuingred
 SET ingredno = 2;
-WHERE menu_ingno = 1;
+WHERE menuingredno = 1;
 
 COMMIT;
 
 -- DELETE
 1. 전체 삭제
-DELETE FROM menuingre;
+DELETE FROM menuingred;
 
 COMMIT;
 
 2. 특정 재료 삭제
-DELETE FROM menuingre
-WHERE menu_ingno;
+DELETE FROM menuingred
+WHERE menuingredno;
 
 COMMIT;

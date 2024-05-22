@@ -180,4 +180,10 @@ public class MenuProc implements MenuProcInter {
 		return cnt;
 	}
 
+	@Override
+	public MenuVO last_menu_by_restno(int restno) {
+		MenuVO menuVO = this.menuDAO.last_menu_by_restno(restno);
+		return menuVO;
+	}
+
 }

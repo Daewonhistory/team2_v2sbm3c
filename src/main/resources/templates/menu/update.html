@@ -9,7 +9,7 @@
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|./list_seach_paging?word=&now_page=1|}">목록</a>    
+    <a th:href="@{|./list_search_paging?word=${word}&now_page=${now_page}|}">목록</a>    
   </aside>
   
   <div class='menu_line'></div>
@@ -28,7 +28,19 @@
        <label>가격</label>
        <input type="number" name='price' th:value='${menuVO.price}' required="required" class="form-control" style='width: 100%;'></input>
     </div>
-
+	
+	<div id="ingredients">
+        <label>재료:</label>
+        <select id="show" onchange="handleSelectChange(this)">
+    		<option th:each="ingredientVO, status : ${list}" th:value="${ingredientVO.ingredno}" th:text="${ingredientVO.name}"></option>
+		</select>
+		<div style = "background-color: gray; border-radius: 50%;  text-align: center;width:150px" th:each="ingredVO, status : ${IngredNameList}">
+			<input type="hidden" name="ingredno[]" th:value="${ingredVO.ingredno}">
+	  		<span th:text="${ingredVO.name}" style="color: white;"></span>
+	  		<button type="button" onclick="removeIngredient(this)">삭제</button>
+	  	</div>
+    </div>
+	
     <div>
        <label>이미지</label>
        <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
@@ -39,7 +51,56 @@
     </div>
   
   </form>
+  <script>
+		function handleSelectChange(selectElement) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            addIngredient(selectedOption.value, selectedOption.text);
+        }
+		function addIngredient(ingredno ,name) {
+		    const ingredientDiv = document.createElement('div');
+		    ingredientDiv.classList.add('ingredient');
+		    ingredientDiv.style = "background-color: gray; border-radius: 50%; text-align: center; width:150px";
+		     
+		    const ingredientInput = document.createElement('input');
+		    ingredientInput.type = 'hidden';
+		    ingredientInput.name = 'ingredno[]';
+		    ingredientInput.value = ingredno;
+		    ingredientInput.required = true;
+		    
+		    const ingredientText = document.createElement('span');
+		    ingredientText.style="color: white;"
+		    ingredientText.innerText = name;
 
+		     
+		    const removeButton = document.createElement('button');
+		    removeButton.type = 'button';
+		    removeButton.innerText = '삭제';
+
+		    removeButton.onclick = function() {
+		        removeIngredient(removeButton);
+		    };
+		    
+		    ingredientDiv.appendChild(ingredientInput);
+		    ingredientDiv.appendChild(ingredientText);
+		    ingredientDiv.appendChild(removeButton);
+		    
+		    
+		    document.getElementById('ingredients').appendChild(ingredientDiv);
+		}
+		
+		// 재료 입력 필드를 제거하는 함수
+		function removeIngredient(element) {
+		    const ingredientDiv = element.parentElement;
+		    const deleteIngredientInput = document.createElement('input');
+		    deleteIngredientInput.type = "text";
+		    deleteIngredientInput.name = 'deleteIngredno[]';
+		   	const ingredientInput = ingredientDiv.querySelector('input[type="hidden"]');
+		   	deleteIngredientInput.value = ingredientInput.value;
+		    ingredientDiv.parentElement.appendChild(deleteIngredientInput);
+		    
+		    document.getElementById('ingredients').removeChild(ingredientDiv);
+		}
+	</script>
 </div>
 
 

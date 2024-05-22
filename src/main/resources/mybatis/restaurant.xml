@@ -23,8 +23,8 @@
         SELECT restaurant_seq.nextval AS restno FROM dual
     </select>
 
-
-    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.dto.restDTO">
+	
+    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.restaurant.RestaurantVO">
         <if test="type == 100">
             <if test="word == null or word == ''">
                 <!-- 전체 결과를 가져오는 쿼리 -->
@@ -118,6 +118,17 @@
     </select>
 
 
+<<<<<<< HEAD
+=======
+    <select id="findByOwnerR" parameterType="int" resultType="dev.mvc.restaurant.RestaurantVO">
+
+     SELECT *
+     FROM restaurant WHERE ownerno = #{ownerno}
+
+
+    </select>
+
+>>>>>>> e20017d94b75edbb7c12667563e425b7f79ad05b
     <select id="list_search_count" parameterType="java.util.Map" resultType="int">
         <if test="type == 100">
             <if test="word == null or word == ''">

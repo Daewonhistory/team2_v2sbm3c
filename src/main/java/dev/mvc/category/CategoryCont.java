@@ -26,7 +26,7 @@ import java.util.*;
 public class CategoryCont {
   @Autowired
   @Qualifier("dev.mvc.category.CategoryProc")
-  private CategoryProInter categoryProc;
+  private CategoryProcInter categoryProc;
 
   /**
    * 페이지당 출력할 레코드 개수
