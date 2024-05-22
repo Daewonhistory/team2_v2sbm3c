@@ -61,7 +61,7 @@
   <div class='menu_line'></div>
 
   <div style="width: 60%; margin: 0px auto ">
-    <div class="title_line">회원 정보 조회 수정 (*는 필수)</div>
+    <div class="title_line">사업자 정보 조회 수정 (*는 필수)</div>
     <form id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/update_grade">
       <div style="align-items: center; display:none;">
         <input type="hidden" id="customerGrade" th:value="${ownerVO.grade}">
@@ -94,5 +94,47 @@
       </div>
 
     </form>
+    <table class="table table-striped" style='width: 100%;'>
+      <colgroup>
+        <col style='width: 5%;'/>
+        <col style='width: 10%;'/>
+        <col style='width: 7%;'/>
+        <col style='width: 13%;'/>
+        <col style='width: 13%;'/>
+        <col style='width: 30%;'/>
+        <col style='width: 15%;'/>
+        <col style='width: 13%;'/>
+      </colgroup>
+      <tr>
+        <th class='th_bs'></th>
+        <th class='th_bs'>ID</th>
+        <th class='th_bs'>성명</th>
+        <th class='th_bs'>휴대폰번호</th>
+        <th class='th_bs'>회사번호</th>
+        <th class='th_bs'>주소</th>
+        <th class='th_bs'>등록일</th>
+        <th class='th_bs'></th>
+      </tr>
+
+      <tr th:each="certifiVO, status:${list}">
+        <td class='td_basic' th:text="${certifiVO.businessno}"></td>
+
+        <td th:if="${certifiVO.certifi_image.endsWith('jpg') || certifiVO.certifi_image.endsWith('JPG') || certifiVO.certifi_image.endsWith('png') ||certifiVO.certifi_image.endsWith('PNG') || certifiVO.certifi_image.endsWith('gif')}">
+          <!--/*@thymesVar id="certifi_image" type=""*/-->
+          <img th:src="@{|/certifi/storage/${certifiVO.certifi_image}|}" style="width: 120px; height: 90px;">
+        </td>
+
+        <td th:if="${certifiVO.identi_card_image.endsWith('jpg') || certifiVO.identi_card_image.endsWith('JPG') || certifiVO.identi_card_image.endsWith('png') ||certifiVO.identi_card_image.endsWith('PNG') || certifiVO.identi_card_image.endsWith('gif')}">
+          <img th:src="@{|/certifi/storage/${certifiVO.identi_card_image}|}" style="width: 120px; height: 90px;">
+        </td>
+
+        <td class='td_basic' th:text="${certifiVO.reg_date.substring(0, 10)}"></td>
+        <td class='td_basic'>
+          <a th:href="@{|./read?ownerno=${certifiVO.ownerno}|}"><img src='/member/images/update.png' title='수정' class="icon"></a>
+          <a th:attr="onclick=|deletecustomer('${certifiVO.ownerno}')|"><img src='/member/images/delete.png' title='삭제' class="icon"></a>
+          <a th:href="@{|./update_grade?ownerno=${certifiVO.ownerno}|}"><img src='/member/images/grade.png' title='등급 수정' class="icon"></a>
+        </td>
+      </tr>
+    </table>
   </div>
 </div>

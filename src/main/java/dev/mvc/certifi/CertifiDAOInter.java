@@ -9,5 +9,5 @@ public interface CertifiDAOInter {
 
    public int createCertifi(CertifiVO certifiVO);
 
-
+   public ArrayList<CertifiVO> findByOnwer(int ownerno);
 }

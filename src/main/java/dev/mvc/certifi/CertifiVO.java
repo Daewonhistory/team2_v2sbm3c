@@ -2,6 +2,7 @@ package dev.mvc.certifi;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -36,7 +37,7 @@ CREATE TABLE CERTIFI(
   /**
    * 사업자 등록번호
    */
-  private String businessno = "";
+  private String it  = "";
 
   /**
    * 사업자 등록증 이미지
@@ -58,7 +59,8 @@ CREATE TABLE CERTIFI(
 
 
 
-
+  private MultipartFile file1MF;
+  private MultipartFile file2MF;
 }
 
 
