@@ -40,12 +40,19 @@
       <td class="td_bs"><a th:href="@{|/cate/read/${restDTO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
                            th:text="${restDTO.name}"></a></td>
 
-
-      <td th:if="${restDTO.thumbfile.endsWith('jpg') || restDTO.thumbfile.endsWith('JPG') || restDTO.thumbfile.endsWith('png') ||restDTO.thumbfile.endsWith('PNG') || restDTO.thumbfile.endsWith('gif')}">
+      <td th:if="${restDTO.image1 != null and (restDTO.image1.endsWith('jpg') or restDTO.image1.endsWith('JPG') or restDTO.image1.endsWith('png') or restDTO.image1.endsWith('PNG') or restDTO.image1.endsWith('gif'))}">
         <!--/*@thymesVar id="certifi_image" type=""*/-->
-        <img th:src="@{|/restaurant/storage/${restDTO.thumbfile}|}" style="width: 120px; height: 90px;">
+        <img th:src="@{|/restaurant/storage/${restDTO.image1}|}" style="width: 120px; height: 90px;">
       </td>
 
+      <td th:if="${restDTO.image2 != null and (restDTO.image2.endsWith('jpg') or restDTO.image2.endsWith('JPG') or restDTO.image2.endsWith('png') or restDTO.image2.endsWith('PNG') or restDTO.image2.endsWith('gif'))}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img th:src="@{|/restaurant/storage/${restDTO.image2}|}" style="width: 120px; height: 90px;">
+      </td>
+      <td th:if="${restDTO.image3 != null and (restDTO.image3.endsWith('jpg') or restDTO.image3.endsWith('JPG') or restDTO.image3.endsWith('png') or restDTO.image3.endsWith('PNG') or restDTO.image3.endsWith('gif'))}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img th:src="@{|/restaurant/storage/${restDTO.image3}|}" style="width: 120px; height: 90px;">
+      </td>
       <td class="td_bs">
 
 

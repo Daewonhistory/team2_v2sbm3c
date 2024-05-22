@@ -23,4 +23,11 @@ public class restDTO {
   private int categoryno;
 
   private String thumbfile;
+
+  private String image1;
+
+  private String image2;
+
+  private String image3;
+
 }
