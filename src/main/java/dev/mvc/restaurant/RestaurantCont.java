@@ -80,7 +80,7 @@ public class RestaurantCont {
 
     if (count == 1) {
       int nextval = this.restaurantProc.nextval() - 1;
-      String upDir = Certifi.getUploadDir(); // 파일을 업로드할 폴더 준비
+      String upDir = Restaurant.getUploadDir(); // 파일을 업로드할 폴더 준비
       System.out.println("-> upDir: " + upDir);
 
       MultipartFile mf1 = restimgVO.getFile1MF();

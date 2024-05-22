@@ -30,40 +30,45 @@
 
 
     <!-- Iterate over your data -->
-    <tr th:each="restaurantVO,status : ${searchlist}">
-      <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${restaurantVO.categoryno}"></td>
+    <tr th:each="restDTO,status : ${searchlist}">
+
+      <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${restDTO.categoryno}"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
-      <td class="td_bs"  th:text="${restaurantVO.categoryno}" id="categoryno"></td>
-      <td class="td_bs"  th:text="${restaurantVO.ownerno}" id="ownerno"></td>
+      <td class="td_bs"  th:text="${restDTO.categoryno}" id="categoryno"></td>
+      <td class="td_bs"  th:text="${restDTO.ownerno}" id="ownerno"></td>
 
-      <td class="td_bs"><a th:href="@{|/cate/read/${restaurantVO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
-                           th:text="${restaurantVO.name}"></a></td>
+      <td class="td_bs"><a th:href="@{|/cate/read/${restDTO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
+                           th:text="${restDTO.name}"></a></td>
 
-    
+
+      <td th:if="${restDTO.thumbfile.endsWith('jpg') || restDTO.thumbfile.endsWith('JPG') || restDTO.thumbfile.endsWith('png') ||restDTO.thumbfile.endsWith('PNG') || restDTO.thumbfile.endsWith('gif')}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img th:src="@{|/restaurant/storage/${restDTO.thumbfile}|}" style="width: 120px; height: 90px;">
+      </td>
 
       <td class="td_bs">
 
 
         <a href="#" style="text-decoration: none" class="animate__slideOutDown"
-           th:attr="onclick=|upbackward('${restaurantVO.categoryno}','${restaurantVO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+           th:attr="onclick=|upbackward('${restDTO.categoryno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/cate/images/decrease.png" class="icon">
 
         </a>
 
 
-        <a style="text-decoration: none" href="#" th:attr="onclick=|upforward('${restaurantVO.categoryno}','${restaurantVO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+        <a style="text-decoration: none" href="#" th:attr="onclick=|upforward('${restDTO.categoryno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/cate/images/increase.png" class="icon">
         </a>
-        <a style="text-decoration: none" th:href="@{'/cate/update/' + ${restaurantVO.categoryno}+ '?word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
+        <a style="text-decoration: none" th:href="@{'/cate/update/' + ${restDTO.categoryno}+ '?word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
           <img src="/cate/images/update.png" class="icon">
         </a>
 
-        <a style="text-decoration: none" href="#" th:attr="onclick=|deletecate('${restaurantVO.categoryno}','${restaurantVO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+        <a style="text-decoration: none" href="#" th:attr="onclick=|deletecate('${restDTO.categoryno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/cate/images/delete.png" class="icon">
         </a>
         <script>
             function deletecate(categoryno, catename, word, type,now_page,num) {
-                var name = catename; // restaurantVO.name 값 가져오기
+                var name = catename; // restDTO.name 값 가져오기
 
                 if (confirm(num + "번의 " + name + " 중분류를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
                     var form = document.createElement('form');
@@ -104,7 +109,7 @@
         </script>
         <script>
             function upforward(categoryno, catename, word, type,now_page,num) {
-                var name = catename; // restaurantVO.name 값 가져오기
+                var name = catename; // restDTO.name 값 가져오기
 
                 if (confirm(num + "번의 " + name + " 중분류의 순서를 하나 올리겠습니까?")) {
                     var form = document.createElement('form');
@@ -147,7 +152,7 @@
 
         <script>
             function upbackward(categoryno, catename, word, type,now_page,num) {
-                var name = catename; // restaurantVO.name 값 가져오기
+                var name = catename; // restDTO.name 값 가져오기
 
                 if (confirm(num + "번의 " + name + " 중분류의 순서를 하나 내리겠습니까?")) {
                     var form = document.createElement('form');
@@ -191,7 +196,7 @@
 
         <script>
             function show(categoryno, catename, word, type,now_page,num) {
-                var name = catename; // restaurantVO.name 값 가져오기
+                var name = catename; // restDTO.name 값 가져오기
 
                 if (confirm(num + "번의 " + name + " 중분류의 공개 처리 하겠습니까?")) {
                     var form = document.createElement('form');
@@ -235,7 +240,7 @@
         <script>
             function hide(categoryno, catename, word, type,now_page,num) {
 
-                var name = catename; // restaurantVO.name 값 가져오기
+                var name = catename; // restDTO.name 값 가져오기
 
                 if (confirm(num + "번의 " + name + " 중분류의 숨김 처리 하겠습니까?")) {
                     var form = document.createElement('form');

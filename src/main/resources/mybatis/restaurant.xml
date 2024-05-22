@@ -24,21 +24,21 @@
     </select>
 
 
-    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.restaurant.RestaurantVO">
+    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.dto.restDTO">
         <if test="type == 100">
             <if test="word == null or word == ''">
                 <!-- 전체 결과를 가져오는 쿼리 -->
                 <![CDATA[
-            SELECT restno, name, tel, ownerno, categoryno, r
+            SELECT restno, name, tel, ownerno, categoryno,thumbfile, r
             FROM (
-                     SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
+                     SELECT restno, name, tel, ownerno, categoryno,thumbfile,ROWNUM as r
                      FROM (
-                              SELECT restno, name, tel, ownerno, categoryno
-                              FROM restaurant
+                              SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno ,i.thumbfile
+                              FROM restaurant s INNER JOIN restimage i ON s.restno = i.restno
                           )
-                     WHERE ROWNUM <= #{end_num}
+
                  )
-            WHERE r >= #{start_num} ]]>
+            WHERE  r >= #{start_num} AND ROWNUM <= #{end_num} ]]>
             </if>
             <if test="word != null and word != ''">
                 <!-- name으로 조회 -->
@@ -48,12 +48,12 @@
                      SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
                      FROM (
                               SELECT restno, name, tel, ownerno, categoryno
-                              FROM restaurant
+                              FROM restaurant INNER JOIN restimage ON restaurant.restno = restimage.restno
                               WHERE name LIKE '%' || #{word} || '%'
                           )
-                     WHERE ROWNUM <= #{end_num}
+
                  )
-            WHERE r >= #{start_num} ]]>
+            WHERE r >= #{start_num} AND r <= #{end_num} ]]>
             </if>
         </if>
         <if test="type == 200">
@@ -64,8 +64,8 @@
             FROM (
                      SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
                      FROM (
-                              SELECT restno, name, tel, ownerno, categoryno
-                              FROM restaurant
+                              SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno
+                              FROM restaurant s INNER JOIN restimage i ON s.restno = i.restno
                           )
                      WHERE ROWNUM <= #{end_num}
                  )
@@ -78,8 +78,8 @@
             FROM (
                      SELECT restno, name, tel, ownerno, categoryno, ROWNUM as r
                      FROM (
-                              SELECT restno, name, tel, ownerno, categoryno
-                              FROM restaurant
+                              SELECT r.restno, r.name, r.tel, r.ownerno, r.categoryno
+                              FROM restaurant  r INNER JOIN restimage i ON restaurant.restno = restimage.restno
                               WHERE ownerno LIKE '%' || #{word} || '%'
                           )
                      WHERE ROWNUM <= #{end_num}
@@ -87,6 +87,15 @@
             WHERE r >= #{start_num} ]]>
             </if>
         </if>
+    </select>
+
+
+    <select id="findByOwnerR" parameterType="int" resultType="dev.mvc.restaurant.RestaurantVO">
+
+     SELECT *
+     FROM WHERE ownerno = #{ownerno}
+
+
     </select>
 
     <select id="list_search_count" parameterType="java.util.Map" resultType="int">

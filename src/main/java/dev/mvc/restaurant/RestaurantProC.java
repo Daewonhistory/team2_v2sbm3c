@@ -174,6 +174,16 @@ public class RestaurantProC implements RestaurantProInter {
   public int nextval() {
     return this.restDAO.nextval();
   }
+
+  /**
+   * 사업자 세션 으로 식당 리스트 출력
+   * @param onwerno
+   * @return
+   */
+  @Override
+  public ArrayList<RestaurantVO> findByOwnerR(int onwerno) {
+    return this.findByOwnerR(onwerno);
+  }
 }
 
 

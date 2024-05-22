@@ -17,6 +17,11 @@
         SELECT categoryno, name
         FROM category
     </select>
+
+    <select id="listbycate" resultType="dev.mvc.category.CategoryVO">
+        SELECT  name
+        FROM category where #{categoryno}
+    </select>
     <!-- R - 리스트 단일   -->
     <select id="read" parameterType="Integer" resultType="dev.mvc.category.CategoryVO">
         SELECT cateno, name, namesub, cnt, rdate, seqno, visible
