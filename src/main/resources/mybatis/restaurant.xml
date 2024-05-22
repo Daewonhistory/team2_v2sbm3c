@@ -93,7 +93,7 @@
     <select id="findByOwnerR" parameterType="int" resultType="dev.mvc.restaurant.RestaurantVO">
 
      SELECT *
-     FROM WHERE ownerno = #{ownerno}
+     FROM restaurant WHERE ownerno = #{ownerno}
 
 
     </select>
