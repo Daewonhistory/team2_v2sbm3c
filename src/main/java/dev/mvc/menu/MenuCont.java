@@ -88,8 +88,11 @@ public class MenuCont {
 			@Valid MenuVO menuVO,
 			String word,
 			int now_page,
+			@RequestParam("ingredno[]") int[] ingredno,
 			RedirectAttributes ra) {
-
+		for(int no: ingredno) {
+			System.out.println(no);
+		}
 		// ------------------------------------------------------------------------------
 		// 파일 전송 코드 시작
 		// ------------------------------------------------------------------------------
