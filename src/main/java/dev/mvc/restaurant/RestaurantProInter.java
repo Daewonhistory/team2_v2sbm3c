@@ -51,6 +51,14 @@ public interface RestaurantProInter {
 
 
   public int nextval();
+
+  /**
+   * 사업자 세션 으로 식당 리스트 출력
+   * @param onwerno
+   * @return
+   */
+  public ArrayList<RestaurantVO> findByOwnerR(int onwerno);
+
 }
 
 
