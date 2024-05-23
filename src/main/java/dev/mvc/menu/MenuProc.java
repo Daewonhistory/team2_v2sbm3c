@@ -52,7 +52,7 @@ public class MenuProc implements MenuProcInter {
 			2 페이지 시작 rownum: now_page = 2, (2 - 1) * 10 --> 10
 			3 페이지 시작 rownum: now_page = 3, (3 - 1) * 10 --> 20
 			*/
-			int begin_of_page = ((int) map.get("now_page") - 1) * Ingredient.RECORD_PER_PAGE;
+			int begin_of_page = ((int) map.get("now_page") - 1) * Menu.RECORD_PER_PAGE;
 			   
 			    // 시작 rownum 결정
 			// 1 페이지 = 0 + 1: 1
@@ -64,7 +64,7 @@ public class MenuProc implements MenuProcInter {
 			// 1 페이지 = 0 + 10: 10
 			// 2 페이지 = 10 + 10: 20
 			// 3 페이지 = 20 + 10: 30
-			int end_num = begin_of_page + Ingredient.RECORD_PER_PAGE;   
+			int end_num = begin_of_page + Menu.RECORD_PER_PAGE;   
 			/*
 			1 페이지: WHERE r >= 1 AND r <= 10
 			2 페이지: WHERE r >= 11 AND r <= 20
@@ -154,9 +154,9 @@ public class MenuProc implements MenuProcInter {
 	      } 
 	  
 	      if (now_page == i){ // 목록에 출력하는 페이지가 현재페이지와 같다면 CSS 강조(차별을 둠)
-	        str.append("<span class='span_box_2'>"+i+"</span>"); // 현재 페이지, 강조 
+	        str.append("<span class='span_box_2' id='now_page'>"+i+"</span>"); // 현재 페이지, 강조 
 	      }else{
-	          str.append("<span class='span_box_1'><a href='"+list_file+"?word="+word+"&now_page="+i+"'>"+i+"</a></span>");
+	          str.append("<span class='span_box_1'><a onclick='pageMove(this)'>"+i+"</a></span>");
 	      } 
 	    } 
 	 
@@ -184,6 +184,12 @@ public class MenuProc implements MenuProcInter {
 	public MenuVO last_menu_by_restno(int restno) {
 		MenuVO menuVO = this.menuDAO.last_menu_by_restno(restno);
 		return menuVO;
+	}
+
+	@Override
+	public int list_by_restno_search_count(HashMap<String, Object> map) {
+		int cnt = this.menuDAO.list_by_restno_search_count(map);
+		return cnt;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dev.mvc.category.CategoryVO;
-import dev.mvc.ingredient.Ingredient;
 import dev.mvc.ingredient.IngredientProcInter;
 import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.menuingred.MenuIngredProcInter;
@@ -70,12 +69,16 @@ public class MenuCont {
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
 
-		String user_type = (String) session.getAttribute("type");
-		// 관리자, 사업자 구분처리(사업자는 본인 식당만 생성, 관리자는 모두 생성가능)
-		// model.addAttribute(user_type)
-		// if(user_type.equals("owner")) {
-		// session.getAtadfa("ownerno")
-		// }else{}
+		String type = (String)session.getAttribute("type");
+		int restno = 0;
+		if(type == null) {
+			restno = 0;
+		}else if(type.equals("owner")) {
+			
+			int ownerno = (int)session.getAttribute("ownerno");
+			ArrayList<RestaurantVO> ownersRestList = this.restaurantProc.findByOwnerR(ownerno);
+			model.addAttribute("ownerRestList", ownersRestList);
+		}
 		
 		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
 		model.addAttribute("list", list);
@@ -213,15 +216,18 @@ public class MenuCont {
 			@RequestParam(defaultValue = "1") int now_page) {
 		String type = (String)session.getAttribute("type");
 		int restno = 0;
+		ArrayList<RestaurantVO> RestList = null;
 		if(type == null) {
-			restno = 8;
+			restno = 0;
+			RestList = this.restaurantProc.list_all();
+			
 		}else if(type.equals("owner")) {
 			
 			int ownerno = (int)session.getAttribute("ownerno");
-			ArrayList<RestaurantVO> ownersRestList = this.restaurantProc.findByOwnerR(ownerno);
-			model.addAttribute("ownerRestList", ownersRestList);
-			restno = ownersRestList.get(0).getRestno();
+			RestList = this.restaurantProc.findByOwnerR(ownerno);
+			restno = 0;
 		}
+		model.addAttribute("ownerRestList", RestList);
 		System.out.println("restno:"+restno);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("word", word);
@@ -398,15 +404,25 @@ public class MenuCont {
 		}
 	}
 	
-	@GetMapping("/menulist")
-	@ResponseBody
-	  public ResponseEntity<ArrayList<MenuVO>> menulist(@RequestBody MenuInputVO menuInputVO) {
-		System.out.println(menuInputVO.getWord() + menuInputVO.getRestno());
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("word", menuInputVO.getWord());
-		map.put("restno", menuInputVO.getRestno());
-		
+	@GetMapping(value="/menulist") // http://localhost:9091/member/checkId?id=admin
+	  @ResponseBody
+	  public ResponseEntity<MenuResponse> menulist(String word, int restno, int now_page) {
+	    System.out.println("-> word: " + word);
+	    System.out.println("-> restno: " + restno);
+	    System.out.println("-> now_page: " + now_page);
+	    HashMap<String, Object> map = new HashMap<String, Object>();
+	    map.put("word", word);
+	    map.put("restno", restno);
+	    map.put("now_page", now_page);
 	    ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
-	    return new ResponseEntity<>(list, HttpStatus.OK);
+	    
+	    int search_count = this.menuProc.list_by_restno_search_count(map);
+	    
+	    MenuResponse response = new MenuResponse();
+	    String paging = this.menuProc.pagingBox(now_page, word, word, search_count, Menu.RECORD_PER_PAGE, Menu.PAGE_PER_BLOCK);
+	    response.setMenuList(list);
+	    response.setPaging(paging);
+	    System.out.println(search_count);
+	    return new ResponseEntity<>(response, HttpStatus.OK);
 	  }
 }

@@ -58,7 +58,12 @@ public interface RestaurantProInter {
    * @return
    */
   public ArrayList<RestaurantVO> findByOwnerR(int onwerno);
-
+  
+  /**
+   * 모든 식당 리스트 출력
+   * @return
+   */
+  public ArrayList<RestaurantVO> list_all();
 }
 
 

@@ -59,9 +59,31 @@
       </when>
       <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
         WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+        
       </otherwise>
     </choose>
-  </select>   
+  </select>  
+  
+  <select id="list_by_restno_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM menu
+    
+    <choose>
+    <when test="restno != 0">
+    	 WHERE restno = #{restno}
+    	 <if test="word != null and word != ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+      		AND UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+  		</if>
+    </when>
+    <otherwise>
+    	<if test="word != null and word != ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+      		WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+  		</if>
+    </otherwise>
+    </choose>
+  	
+    
+  </select>    
   
   <select id="list_by_restno_count" resultType="int" parameterType="int">
   	SELECT COUNT(*)

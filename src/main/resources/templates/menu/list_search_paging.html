@@ -4,21 +4,94 @@
 
 <div layout:fragment="content">
 <script>
-
+	window.onload = function() {
+            console.log("Page is fully loaded");
+            send();
+        };
+	// 페이지 이동
+	function pageMove(movePage){
+		const now_page = document.getElementById("now_page");
+		console.log('ccc' + document.getElementById("now_page").innerText);
+		now_page.removeAttribute('id');
+		movePage.id = 'now_page';
+		console.log('bbb' + document.getElementById("now_page").innerText);
+		console.log(movePage.innerText);
+		send();
+	}
     function send() { // 회원 가입 처리
-		const restno = document.getElementById("restno");
+    	
+    	const restno = document.getElementById("restno");
 		const word = document.getElementById("word");
-	      fetch("/menu/menulist", {
+    	const now_page_tag = document.getElementById("now_page");
+    	const bottom = document.getElementById('bottom');
+    	bottom.innerHTML = '';
+    	let now_page_value = 0;
+		if(now_page_tag == null){
+			now_page_value = 1;
+		}else{
+			now_page_value = now_page_tag.innerText;
+		}
+		
+		
+		console.log(word.value + restno.value);
+		const data = {
+			restno: restno,
+			word: word
+		};
+	      fetch("/menu/menulist?word="+word.value+"&restno="+restno.value+"&now_page=" + now_page_value, {
 	      method: 'GET'
 	    })
 	      .then(response => response.json())
 	      .then(rdata => {
-	        
-	        // 받은 데이터에서 categoryno 값을 옵션으로 추가
-	        rdata.forEach(item => {
-	          console.log(item);
+			const resultBody = document.getElementById('tbody');
+			resultBody.innerHTML=`
+			<tr>
+		        <th class='th_bs'>이미지</th>
+		        <th class='th_bs'>식당명</th>
+		        <th class='th_bs'>메뉴명</th>
+		        <th class='th_bs'>가격</th>
+		        <th class='th_bs'>수정 / 삭제</th>
+		    </tr>
+			`;
+			const bottommenu = document.createElement('div');
+	        rdata.menuList.forEach(menuVO =>{
+				const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                        <div ${menuVO.image.endsWith('jpg') || menuVO.image.endsWith('JPG') || menuVO.image.endsWith('png') || menuVO.image.endsWith('PNG') || menuVO.image.endsWith('gif') ? '' : 'style="display: none;"'}>
+                            <img src="/menu/storage/${menuVO.image}" style="width: 120px; height: 90px;">
+                        </div>
+                    </td>
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                        <span>${menuVO.restname}</span>
+                    </td>
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                        <span>${menuVO.name}</span>
+                    </td>
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                        <span>${menuVO.price}</span>
+                    </td>
+                    <td class="td_bs">
+                        <a href="/menu/update?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}">
+                            <img src="/cate/images/update.png" class="icon">
+                        </a>
+                        <a onclick="delete_check(${menuVO.menuno}, '${word.value}', ${now_page_value})">
+                            <img src="/cate/images/delete.png" class="icon">
+                        </a>
+                    </td>
+
+
+
+                `;
 				
-	        });
+                resultBody.appendChild(row);
+			})
+			
+			bottommenu.innerHTML = rdata.paging;
+			
+			bottom.appendChild(bottommenu);
+	        // 받은 데이터에서 categoryno 값을 옵션으로 추가
 	      });
 	    }
 
@@ -31,9 +104,10 @@
   </div>
   <div>
   	<form name='frm'>
-  		<input type="hidden" th:value="${word}" id="word">
+  		<input type="text" th:value="${word}" id="word">
   		<select id="restno" onchange="send()">
-  			<option th:each="restaurantVO, status : ${ownerRestList}" th:value="restaurantVO.restno" th:text="${restaurantVO.name}"></option>
+  			<option value="0">전체 식당</option>
+  			<option th:each="restaurantVO, status : ${ownerRestList}" th:value="${restaurantVO.restno}" th:text="${restaurantVO.name}"></option>
   		</select>
   	</form>
   </div>
@@ -47,16 +121,15 @@
    
   <div class='menu_line'>   </div>
     
-   
-  <table class="table table-striped" style='width: 100%;'>
-    <colgroup>
+  <table>
+  	<colgroup>
       <col style='width: 20%;'/>
       <col style='width: 30%;'/>
       <col style='width: 30%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
     </colgroup>
-    <tbody>
+    <tbody id='tbody'>
       <tr>
         <th class='th_bs'>이미지</th>
         <th class='th_bs'>식당명</th>
@@ -64,15 +137,32 @@
         <th class='th_bs'>가격</th>
         <th class='th_bs'>수정 / 삭제</th>
       </tr>
-    
-    
-    <tr th:if="${list.size()==0}">
-      <td colspan="2" style="text-align: center; padding: 50px 0px;">관련 글이 등록되지 않았습니다.</td>
-    </tr>
+      <tr th:each="menuVO, status : ${list}">
+      	<td><img th:src="@{|/menu/storage/${menuVO.image}|}" style="width: 120px; height: 90px;"></td>
+      	<td class="td_basic" th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'">
+            <span th:text="${menuVO.restname}"></span>
+        </td>
+        <td class="td_basic" th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'">
+            <span th:text="${menuVO.name}"></span>
+        </td>
+        <td class="td_basic" th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'">
+            <span th:text="${menuVO.price}"></span>
+        </td>
+        <td class="td_bs">
+            <a th:href="@{|/menu/update?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}|}">
+                <img src="/cate/images/update.png" class="icon">
+            </a>
+            <a th:onclick="@{|delete_check(${menuVO.menuno}, '${word}', ${now_page})|}">
+                <img src="/cate/images/delete.png" class="icon">
+            </a>
+        </td>
+      </tr>
     </tbody>
   </table>
-  <div class="bottom_menu" th:utext="${paging}"></div>
-
+  
+    
+    <div id="bottom" th:utext="${paging}"></div>
+    
 
 <script>
   	function delete_check(menuno, word, now_page){
