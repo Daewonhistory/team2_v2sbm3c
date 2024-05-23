@@ -217,13 +217,17 @@ public class MenuCont {
 		String type = (String)session.getAttribute("type");
 		int restno = 0;
 		ArrayList<RestaurantVO> RestList = null;
+		int ownerno = 0;
 		if(type == null) {
+			System.out.println("admin");
 			restno = 0;
 			RestList = this.restaurantProc.list_all();
+			ownerno = 0;
 			
 		}else if(type.equals("owner")) {
 			
-			int ownerno = (int)session.getAttribute("ownerno");
+			ownerno = (int)session.getAttribute("ownerno");
+			System.out.println("Owner" + ownerno);
 			RestList = this.restaurantProc.findByOwnerR(ownerno);
 			restno = 0;
 		}
@@ -233,6 +237,7 @@ public class MenuCont {
 		map.put("word", word);
 		map.put("now_page", now_page);
 		map.put("restno", restno);
+		map.put("ownerno", ownerno);
 
 		ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
 		model.addAttribute("list", list);

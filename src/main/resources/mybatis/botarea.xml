@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.botarea.BotAreaDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+	<insert id="create">
+		INSERT INTO botarea(botareano, name)
+		VALUES (botarea_seq.nextval, #{name});
+	</insert>
+	<select id="read">
+		SELECT botareano, name FROM botarea WHERE botareano = #{botareano}
+	</select>
+	<select id="list_all">
+		SELECT botareano, name FROM botarea
+	</select>
+	<select id="search_list">
+		SELECT botareano, name FROM botarea WHERE name LIKE '%' || #{word} || '%'
+	</select>
+	<select id="search_by_midareano">
+		SELECT botareano, name FROM botarea WHERE midareano = #{midareano}
+	</select>
+	<update id="update">
+		UPDATE botarea SET name = #{name} WHERE botareano = #{botareano}
+	</update>
+	<delete id="delete">
+		DELETE FROM botarea WHERE botareano = #{botareano}
+	</delete>
+	
+</mapper>
+
+
+

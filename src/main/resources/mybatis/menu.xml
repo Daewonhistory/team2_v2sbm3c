@@ -67,7 +67,6 @@
   <select id="list_by_restno_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
     FROM menu
-    
     <choose>
     <when test="restno != 0">
     	 WHERE restno = #{restno}
