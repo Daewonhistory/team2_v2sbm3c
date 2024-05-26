@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+  리뷰 수정
+  </div>
+  
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_all|}">목록</a>    
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${reviewVO}" action='./update' enctype="multipart/form-data">
+
+    <input type="hidden" name="reviewno" th:value="${reviewVO.reviewno}">
+    <div>
+       <label>식당명</label>
+       <input type='text' name='title' th:value='${reviewVO.title}' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+       <label>내용</label>
+       <input type="text" name='content' th:value='${reviewVO.content}' required="required" class="form-control" style='width: 100%;'></input>
+    </div>
+    
+    <div>
+       <label>평점</label>
+       <input type="int" name='rate' th:value='${reviewVO.rate}' required="required" class="form-control" style='width: 10%;'></input>
+    </div>
+
+   
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">수정</button>
+      <button type="button" th:attr="onclick=|location.href='./list_all'|" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+  
+  </form>
+
+</div>
+
+
+
+  
