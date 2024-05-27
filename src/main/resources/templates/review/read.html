@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">리뷰 정보</div>
+
+  <div class="container mt-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">번호: <span th:text="${reviewVO.reviewno}"></span></li>
+      <li class="list-group-item">식당명: <span th:text="${reviewVO.title}"></span></li>
+      <li class="list-group-item">내용: <span th:text="${reviewVO.content}"></span></li>
+      <li class="list-group-item">평점: <span th:text="${reviewVO.rate}"></span></li>
+      <li class="list-group-item">등록일: <span th:text="${reviewVO.rdate}"></span></li>
+    </ul>  
+  </div>
+
+  <div class="content_body_bottom">
+    <button type="button" onclick="location.href='/review/list_all'" class="btn btn-secondary btn-sm">목록</button>
+    <button type="button" th:onclick="|location.href='/review/update?reviewno=${reviewVO.reviewno}'|" class="btn btn-secondary btn-sm">수정</button>
+    <button type="button" th:onclick="|confirmDelete(${reviewVO.reviewno})|" class="btn btn-danger btn-sm">삭제</button>
+  </div>
+  
+  </div>
+</html>
+  <script type="text/javascript">
+  function confirmDelete(reviewno) {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      let f = document.createElement('form');
+      
+      let obj1;
+      obj1 = document.createElement('input');
+      obj1.type ='hidden';
+      obj1.name = 'reviewno';
+      obj1.value = reviewno;
+      
+      f.appendChild(obj1);
+      f.setAttribute('method', 'post');
+      f.setAttribute('action', '/review/delete');
+      document.body.appendChild(f);
+      f.submit(); 
+    }else{ //취소시
+      return;
+    }
+ }
+  </script>
+  
+
+
+

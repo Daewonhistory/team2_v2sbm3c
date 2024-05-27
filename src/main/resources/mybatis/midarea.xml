@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.midarea.MidAreaDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+	<insert id="create">
+		INSERT INTO midarea(midareano, name)
+		VALUES (midarea_seq.nextval, #{name});
+	</insert>
+	<select id="read">
+		SELECT midareano, name FROM midarea WHERE midareano = #{midareano}
+	</select>
+	<select id="list_all">
+		SELECT midareano, name FROM midarea
+	</select>
+	<select id="search_list">
+		SELECT midareano, name FROM midarea WHERE name LIKE '%' || #{word} || '%'
+	</select>
+	<update id="update">
+		UPDATE midarea SET name = #{name} WHERE midareano = #{midareano}
+	</update>
+	<delete id="delete">
+		DELETE FROM midarea WHERE midareano = #{midareano}
+	</delete>
+	
+</mapper>
+
+
+

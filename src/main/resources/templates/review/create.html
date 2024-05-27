@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    > 리뷰 등록
+  </div>
+  
+  <aside class="aside_right">
+    <span class='menu_divide' >│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${reviewVO}" action='./create' enctype="multipart/form-data">
+    <input type="text" name="custno" value="16">
+    <input type="text" name="restno" value="4">
+    
+    <div>
+       <label>제목</label>
+       <input type='text' name='title' value='서울의 맛집 죽염 추천' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+       <label>내용</label>
+       <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'>여기 김치가 맛집 입니다. </textarea>
+    </div>
+    <div>
+       <label>평점</label>
+       <input type='text' name='rate' value='3' required="required" 
+                 class="form-control" style='width: 10%;'>
+    </div>   
+ 
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+  
+  </form>
+
+</div>
+
+
+  

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span th:text="${reviewVO?.title}" class="title_line_text"></span> 
+    <div th:if="${word.length() > 0}" class='title_line' th:text="|> 「${word}」 검색 ${search_count} 건|"></div>
+  </div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/title/create?word=${word}&now_page=${now_page}|}">등록</a>
+  </aside> 
+  <div th:replace="~{review/list_search_component::list_search_fragment}"></div>
+   	
+   
+  <div class='menu_line'>   </div>
+    
+   
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 20%;'/>
+      <col style='width: 40%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 20%;'/>
+      <col style='width: 10%;'/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <th class='th_bs'>식당명</th>
+        <th class='th_bs'>내용</th>
+        <th class='th_bs'>평점</th>
+        <th class='th_bs'>날짜</th>
+        <th class='th_bs'>수정 / 삭제</th>
+      </tr>
+    
+    <tr th:if="${list.size()>0}" th:each="reviewVO, status : ${list}">
+      
+      <td class="td_basic" th:attr="onclick=|location.href='/review/read?reviewno=${reviewVO.reviewno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
+      	<span th:text="${reviewVO.title}"></span>
+      </td>
+      <td class="td_basic" th:attr="onclick=|location.href='/review/read?reviewno=${reviewVO.reviewno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
+      	<span th:text="${reviewVO.content}"></span>
+      </td>
+      <td class="td_basic" th:attr="onclick=|location.href='/review/read?reviewno=${reviewVO.reviewno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
+      	<span th:text="${reviewVO.rate}"></span>
+      </td>
+      <td class="td_bs">
+          <a th:href="@{|/review/update?reviewno=${reviewVO.reviewno}&word=${word}&now_page=${now_page}|}"><img src="/cate/images/update.png" class="icon"></a>
+          <a th:attr="onclick=|delete_check(${reviewVO.reviewno}, '${word}', ${now_page})|"><img src="/cate/images/delete.png" class="icon"></a>
+          <a th:attr="onclick=|delete_check(${reviewVO.reviewno}, '${word}', ${now_page})|">
+        </td>
+    </tr> 
+    <tr th:if="${list.size()==0}">
+      <td colspan="2" style="text-align: center; padding: 50px 0px;">관련 글이 등록되지 않았습니다.</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="bottom_menu" th:utext="${paging}"></div>
+
+
+<script>
+  	function delete_check(reviewno, word, now_page){
+	  	if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+	  		let f = document.createElement('form');
+    
+		    let obj1;
+		    obj1 = document.createElement('input');
+		    obj1.type = 'hidden';
+		    obj1.name = 'reviewno';
+		    obj1.value = reviewno;
+		    
+			let obj2;
+			obj2 = document.createElement('input');
+		    obj2.type = 'hidden';
+		    obj2.name = 'word';
+		    obj2.value = word;
+			
+			let obj3;
+			obj3 = document.createElement('input');
+		    obj3.type = 'hidden';
+		    obj3.name = 'now_page';
+		    obj3.value = now_page;
+		
+		    f.appendChild(obj1);
+		    f.appendChild(obj2);
+		    f.appendChild(obj3);
+		    f.setAttribute('method', 'post');
+		    f.setAttribute('action', '/review/delete');
+		    document.body.appendChild(f);
+		    f.submit();
+	  	}else{   //취소
+	      	return;
+	  	}
+	}
+</script> 
+</div>
+
+</html>

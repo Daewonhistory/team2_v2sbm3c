@@ -154,7 +154,10 @@
             </if>
         </if>
     </select>
-
+	<select id="list_all">
+		SELECT *
+     	FROM restaurant 
+	</select>
 
 
 </mapper>

@@ -61,4 +61,10 @@ public interface MenuDAOInter {
 	 */
 	public MenuVO last_menu_by_restno(int restno);
 	
+	/**
+	 * 식당별 검색된 메뉴 갯수
+	 * @param map
+	 * @return
+	 */
+	public int list_by_restno_search_count(HashMap<String, Object> map);
 }

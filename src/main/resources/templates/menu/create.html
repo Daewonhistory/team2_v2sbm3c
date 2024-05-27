@@ -17,9 +17,13 @@
   <form name='frm' method='post' th:object="${menuVO}" action='./create' enctype="multipart/form-data">
     <input type="hidden" name="word" th:value="${word}">
     <input type="hidden" name="now_page" th:value="${now_page}">
-    <input type="hidden" name="restno" th:value="${restno}">
-    
+
+	
     <div>
+    <label>식당</label>
+    <select id="restno" name="restno">
+		<option th:each="restaurantVO, status : ${ownerRestList}" th:value="${restaurantVO.restno}" th:text="${restaurantVO.name}"></option>
+	</select>
        <label>메뉴명</label>
        <input type='text' name='name' value='백반' required="required" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
