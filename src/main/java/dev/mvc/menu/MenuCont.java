@@ -220,16 +220,13 @@ public class MenuCont {
 		int ownerno = 0;
 		if(type == null) {
 			System.out.println("admin");
-			restno = 0;
 			RestList = this.restaurantProc.list_all();
 			ownerno = 0;
 			
 		}else if(type.equals("owner")) {
-			
 			ownerno = (int)session.getAttribute("ownerno");
 			System.out.println("Owner" + ownerno);
 			RestList = this.restaurantProc.findByOwnerR(ownerno);
-			restno = 0;
 		}
 		model.addAttribute("ownerRestList", RestList);
 		System.out.println("restno:"+restno);
