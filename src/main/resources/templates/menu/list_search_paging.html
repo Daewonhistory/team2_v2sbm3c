@@ -5,22 +5,32 @@
 <div layout:fragment="content">
 <script>
 
-    function send() { // 회원 가입 처리
-		const restno = document.getElementById("restno");
-		const word = document.getElementById("word");
-	      fetch("/menu/menulist", {
-	      method: 'GET'
-	    })
-	      .then(response => response.json())
-	      .then(rdata => {
-	        
-	        // 받은 데이터에서 categoryno 값을 옵션으로 추가
-	        rdata.forEach(item => {
-	          console.log(item);
-				
-	        });
-	      });
-	    }
+  function send() {
+    const restno = document.getElementById("restno").value; // input 요소의 값 가져오기
+    const word = document.getElementById("word").value; // input 요소의 값 가져오기
+    const data = { restno: restno, word: word }; // 서버로 전송할 데이터 객체 생성
+
+    if (word ==null) {
+      const word = "";
+    }
+    fetch("/menu/menulist", {
+      method: 'POST', // 메서드를 POST로 변경
+      headers: {
+        'Content-Type': 'application/json' // JSON 형식으로 데이터 전송
+      },
+      body: JSON.stringify(data) // 데이터 객체를 JSON 문자열로 변환하여 body에 포함
+    })
+      .then(response => response.json())
+      .then(rdata => {
+        // 받은 데이터 처리
+        rdata.forEach(item => {
+          console.log(item);
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 
     
 
@@ -33,7 +43,7 @@
   	<form name='frm'>
   		<input type="hidden" th:value="${word}" id="word">
   		<select id="restno" onchange="send()">
-  			<option th:each="restaurantVO, status : ${ownerRestList}" th:value="restaurantVO.restno" th:text="${restaurantVO.name}"></option>
+  			<option th:each="restaurantVO, status : ${ownerRestList}" th:value="${restaurantVO.restno}" th:text="${restaurantVO.name}"></option>
   		</select>
   	</form>
   </div>
