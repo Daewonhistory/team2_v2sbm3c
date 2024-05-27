@@ -1,6 +1,7 @@
 package dev.mvc.restaurant;
 
 import dev.mvc.category.CategoryVO;
+import dev.mvc.dto.RestDTO;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public interface RestaurantProInter {
    * 매개변수 search 넣을 내용, start_num ,end_num ,
    * @return 표시된 카테고리 객체의 목록  s
    */
-  public ArrayList<RestaurantVO> list_search_paging(String word, String type, int now_page, int record_per_page);
+  public ArrayList<RestDTO> list_search_paging(String word, String type, int now_page, int record_per_page);
 
 
 

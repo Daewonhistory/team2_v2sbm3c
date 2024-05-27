@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class restDTO {
+public class RestDTO {
 
   /** 식당 번호 */
   private int restno;

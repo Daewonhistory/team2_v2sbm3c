@@ -24,7 +24,7 @@
     </select>
 
 	
-    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.restaurant.RestaurantVO">
+    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.dto.RestDTO">
         <if test="type == 100">
             <if test="word == null or word == ''">
                 <!-- 전체 결과를 가져오는 쿼리 -->
