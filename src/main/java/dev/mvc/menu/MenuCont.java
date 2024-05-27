@@ -48,14 +48,14 @@ public class MenuCont {
 	@Autowired
 	@Qualifier("dev.mvc.restaurant.RestaurantProc")
 	private RestaurantProInter restaurantProc;
-	
+
 	public MenuCont() {
 		System.out.println("-> MenuCont Created.");
 	}
 
 	/**
 	 * 메뉴 생성 GET
-	 * 
+	 *
 	 * @param session
 	 * @param model
 	 * @param restno
@@ -69,20 +69,20 @@ public class MenuCont {
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
 
-		String type = (String)session.getAttribute("type");
+		String type = (String) session.getAttribute("type");
 		int restno = 0;
-		if(type == null) {
+		if (type == null) {
 			restno = 0;
-		}else if(type.equals("owner")) {
-			
-			int ownerno = (int)session.getAttribute("ownerno");
+		} else if (type.equals("owner")) {
+
+			int ownerno = (int) session.getAttribute("ownerno");
 			ArrayList<RestaurantVO> ownersRestList = this.restaurantProc.findByOwnerR(ownerno);
 			model.addAttribute("ownerRestList", ownersRestList);
 		}
-		
+
 		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
 		model.addAttribute("list", list);
-		
+
 		model.addAttribute("restno", 4);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
@@ -92,7 +92,7 @@ public class MenuCont {
 
 	/**
 	 * 메뉴 생성 POST
-	 * 
+	 *
 	 * @param model
 	 * @param request
 	 * @param session
@@ -109,7 +109,7 @@ public class MenuCont {
 			int now_page,
 			@RequestParam("ingredno[]") int[] ingredno,
 			RedirectAttributes ra) {
-		for(int no: ingredno) {
+		for (int no : ingredno) {
 			System.out.println(no);
 		}
 		// ------------------------------------------------------------------------------
@@ -162,30 +162,28 @@ public class MenuCont {
 			model.addAttribute("cnt", cnt);
 			model.addAttribute("code", "create_fail");
 			return "content/msg";
-		}else {
+		} else {
 			int menuIngredCnt = 0;
 			// 메뉴 재료 추가
-			for(int ingredientno : ingredno) {
+			for (int ingredientno : ingredno) {
 				MenuVO lastMenuVO = this.menuProc.last_menu_by_restno(menuVO.getRestno());
 				MenuIngredVO menuIngredVO = new MenuIngredVO();
 				menuIngredVO.setIngredno(ingredientno);
 				menuIngredVO.setMenuno(lastMenuVO.getMenuno());
 				menuIngredCnt = this.menuIngredProc.create(menuIngredVO);
-				if(menuIngredCnt == 0){
+				if (menuIngredCnt == 0) {
 					ra.addAttribute("word", word);
 					ra.addAttribute("now_page", now_page);
 					ra.addFlashAttribute("code", "create_menuingred_fail");
 					return "redirect:/menu/msg"; // ra.addAttribute 사용시 url에 직접 작성 안함
 				}
-				
+
 			}
 			ra.addAttribute("word", word);
 			ra.addAttribute("now_page", now_page);
 			return "redirect:/menu/list_search_paging"; // ra.addAttribute 사용시 url에 직접 작성 안함
-			
-		}
 
-		
+		}
 
 	}
 
@@ -197,12 +195,12 @@ public class MenuCont {
 		// 메뉴의 재료 목록
 		ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuno);
 		ArrayList<IngredientVO> IngredList = new ArrayList<IngredientVO>();
-		for(MenuIngredVO menuIngredVO : menuIngredList) {
+		for (MenuIngredVO menuIngredVO : menuIngredList) {
 			IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
 			IngredList.add(ingredientVO);
 		}
 		model.addAttribute("IngredNameList", IngredList);
-		
+
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
 		return "menu/read";
@@ -214,11 +212,11 @@ public class MenuCont {
 			HttpSession session,
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
-		String type = (String)session.getAttribute("type");
+		String type = (String) session.getAttribute("type");
 		int restno = 0;
 		ArrayList<RestaurantVO> RestList = null;
 		int ownerno = 0;
-		if(type == null) {
+		if (type == null) {
 			System.out.println("admin");
 			RestList = this.restaurantProc.list_all();
 			ownerno = 0;
@@ -229,7 +227,7 @@ public class MenuCont {
 			RestList = this.restaurantProc.findByOwnerR(ownerno);
 		}
 		model.addAttribute("ownerRestList", RestList);
-		System.out.println("restno:"+restno);
+		System.out.println("restno:" + restno);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("word", word);
 		map.put("now_page", now_page);
@@ -253,7 +251,7 @@ public class MenuCont {
 
 	/**
 	 * 메뉴 수정 GET
-	 * 
+	 *
 	 * @param model
 	 * @param menuno
 	 * @param word
@@ -264,21 +262,19 @@ public class MenuCont {
 	public String update(Model model, int menuno, String word, int now_page) {
 		MenuVO menuVO = this.menuProc.read(menuno);
 		model.addAttribute(menuVO);
-		
+
 		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
 		model.addAttribute("list", list);
-		
 
 		// 메뉴의 재료 목록
 		ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuno);
 		ArrayList<IngredientVO> IngredList = new ArrayList<IngredientVO>();
-		for(MenuIngredVO menuIngredVO : menuIngredList) {
+		for (MenuIngredVO menuIngredVO : menuIngredList) {
 			IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
 			IngredList.add(ingredientVO);
 		}
 		model.addAttribute("IngredNameList", IngredList);
 
-		
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
 		return "menu/update";
@@ -286,7 +282,7 @@ public class MenuCont {
 
 	/**
 	 * 메뉴 수정 (내용, 이미지)POST
-	 * 
+	 *
 	 * @param model
 	 * @param ra
 	 * @param word
@@ -295,9 +291,9 @@ public class MenuCont {
 	 * @return
 	 */
 	@PostMapping("update")
-	public String update(Model model, RedirectAttributes ra, 
-			@RequestParam(defaultValue = "") String word, 
-			int now_page, 
+	public String update(Model model, RedirectAttributes ra,
+			@RequestParam(defaultValue = "") String word,
+			int now_page,
 			MenuVO menuVO,
 			@RequestParam(name = "ingredno[]", defaultValue = "") int[] ingredno,
 			@RequestParam(name = "deleteIngredno[]", defaultValue = "") int[] deleteIngredno) {
@@ -348,39 +344,39 @@ public class MenuCont {
 
 		}
 		int cnt = this.menuProc.update_by_menuno(menuVO);
-		
+
 		if (cnt == 0) {
 			model.addAttribute("cnt", cnt);
 			model.addAttribute("code", "create_fail");
 			return "content/msg";
-		}else {
-			for(int deleteno : deleteIngredno) {
+		} else {
+			for (int deleteno : deleteIngredno) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("ingredno", deleteno);
 				map.put("menuno", menuVO.getMenuno());
 				MenuIngredVO deleteMenuIngredVO = this.menuIngredProc.search_by_ingredno_menuno(map);
-				if(deleteMenuIngredVO != null) {
+				if (deleteMenuIngredVO != null) {
 					int deletCnt = this.menuIngredProc.delete_by_menuingredno(deleteMenuIngredVO.getMenuingredno());
 				}
-				
+
 			}
 			int menuIngredCnt = 0;
 			// 메뉴 재료 추가
-			for(int ingredientno : ingredno) {
+			for (int ingredientno : ingredno) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("ingredno", ingredientno);
 				map.put("menuno", menuVO.getMenuno());
-				if(this.menuIngredProc.search_by_ingredno_menuno(map) == null) {
+				if (this.menuIngredProc.search_by_ingredno_menuno(map) == null) {
 					MenuIngredVO menuIngredVO = new MenuIngredVO();
 					menuIngredVO.setIngredno(ingredientno);
 					menuIngredVO.setMenuno(menuVO.getMenuno());
 					menuIngredCnt = this.menuIngredProc.create(menuIngredVO);
-					if(menuIngredCnt == 0){
+					if (menuIngredCnt == 0) {
 						ra.addAttribute("word", word);
 						ra.addAttribute("now_page", now_page);
 						ra.addFlashAttribute("code", "update_menuingred_fail");
 						return "redirect:/menu/msg"; // ra.addAttribute 사용시 url에 직접 작성 안함
-					}	
+					}
 				}
 			}
 			ra.addAttribute("word", word);
@@ -396,7 +392,7 @@ public class MenuCont {
 		// 메뉴 삭제
 		int cnt = this.menuProc.delete_by_menuno(menuno);
 		if (cnt == 1) {
-			
+
 			ra.addAttribute("word", word);
 			ra.addAttribute("now_page", now_page);
 			return "redirect:/menu/list_search_paging";
@@ -405,26 +401,27 @@ public class MenuCont {
 			return "redirect:/menu/msg";
 		}
 	}
-	
-	@GetMapping(value="/menulist") // http://localhost:9091/member/checkId?id=admin
-	  @ResponseBody
-	  public ResponseEntity<MenuResponse> menulist(String word, int restno, int now_page) {
-	    System.out.println("-> word: " + word);
-	    System.out.println("-> restno: " + restno);
-	    System.out.println("-> now_page: " + now_page);
-	    HashMap<String, Object> map = new HashMap<String, Object>();
-	    map.put("word", word);
-	    map.put("restno", restno);
-	    map.put("now_page", now_page);
-	    ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
-	    
-	    int search_count = this.menuProc.list_by_restno_search_count(map);
-	    
-	    MenuResponse response = new MenuResponse();
-	    String paging = this.menuProc.pagingBox(now_page, word, word, search_count, Menu.RECORD_PER_PAGE, Menu.PAGE_PER_BLOCK);
-	    response.setMenuList(list);
-	    response.setPaging(paging);
-	    System.out.println(search_count);
-	    return new ResponseEntity<>(response, HttpStatus.OK);
-	  }
+
+	@GetMapping(value = "/menulist") // http://localhost:9091/member/checkId?id=admin
+	@ResponseBody
+	public ResponseEntity<MenuResponse> menulist(String word, int restno, int now_page) {
+		System.out.println("-> word: " + word);
+		System.out.println("-> restno: " + restno);
+		System.out.println("-> now_page: " + now_page);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("word", word);
+		map.put("restno", restno);
+		map.put("now_page", now_page);
+		ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
+
+		int search_count = this.menuProc.list_by_restno_search_count(map);
+
+		MenuResponse response = new MenuResponse();
+		String paging = this.menuProc.pagingBox(now_page, word, word, search_count, Menu.RECORD_PER_PAGE,
+				Menu.PAGE_PER_BLOCK);
+		response.setMenuList(list);
+		response.setPaging(paging);
+		System.out.println(search_count);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

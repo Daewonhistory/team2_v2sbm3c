@@ -1,6 +1,7 @@
 package dev.mvc.restaurant;
 
 import dev.mvc.category.CategoryVO;
+import dev.mvc.dto.RestDTO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class RestaurantProC implements RestaurantProInter {
    */
 
   @Override
-  public ArrayList<RestaurantVO> list_search_paging(String word, String type, int now_page, int record_per_page) {
+  public ArrayList<RestDTO> list_search_paging(String word, String type, int now_page, int record_per_page) {
 
     /*
     예) 페이지당 10개의 레코드 출력
@@ -88,7 +89,7 @@ public class RestaurantProC implements RestaurantProInter {
     map.put("type", type);
     map.put("start_num", start_num);
     map.put("end_num", end_num);
-    ArrayList<RestaurantVO> list = this.restDAO.list_search_paging(map);
+    ArrayList<RestDTO> list = this.restDAO.list_search_paging(map);
     return list;
   }
 

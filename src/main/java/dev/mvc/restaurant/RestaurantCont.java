@@ -3,6 +3,7 @@ package dev.mvc.restaurant;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.certifi.Certifi;
 import dev.mvc.certifi.CertifiProInter;
+import dev.mvc.dto.RestDTO;
 import dev.mvc.restimg.RestImgProInter;
 import dev.mvc.restimg.RestimgVO;
 import dev.mvc.tool.Security;
@@ -165,7 +166,7 @@ public class RestaurantCont {
       int count = this.restaurantProc.list_search_count(word, type);
       // 일련 번호 생성
       int num = count - ((now_page - 1) * Restaurant.RECORD_PER_PAGE);
-      ArrayList<RestaurantVO> restlist = this.restaurantProc.list_search_paging(word, type, now_page, Restaurant.RECORD_PER_PAGE);
+      ArrayList<RestDTO> restlist = this.restaurantProc.list_search_paging(word, type, now_page, Restaurant.RECORD_PER_PAGE);
       String paging = this.restaurantProc.pagingBox(now_page, word, type, "/restaurant/search_b", count, Restaurant.RECORD_PER_PAGE, Restaurant.PAGE_PER_BLOCK);
       model.addAttribute("paging", paging);
       model.addAttribute("now_page", now_page);
@@ -185,7 +186,7 @@ public class RestaurantCont {
       model.addAttribute("word", word);
       model.addAttribute("type", type);
       model.addAttribute("searchlist", restlist);
-
+      model.addAttribute("restDTO", restlist);
 
       return "restaurant/search_all"; // Assuming "search_result" is the name of the view to display the search results
 

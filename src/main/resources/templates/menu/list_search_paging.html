@@ -1,50 +1,59 @@
 <!DOCTYPE html>
- 
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 
-<div layout:fragment="content">
-<script>
-	window.onload = function() {
-            console.log("Page is fully loaded");
-            send();
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속-->
+
+  <div layout:fragment="content">
+    <script>
+      window.onload = function () {
+        console.log("Page is fully loaded");
+        send();
+      };
+      // 페이지 이동
+      function pageMove(movePage) {
+        const now_page = document.getElementById("now_page");
+        console.log("ccc" + document.getElementById("now_page").innerText);
+        now_page.removeAttribute("id");
+        movePage.id = "now_page";
+        console.log("bbb" + document.getElementById("now_page").innerText);
+        console.log(movePage.innerText);
+        send();
+      }
+      function send() {
+        // 회원 가입 처리
+
+        const restno = document.getElementById("restno");
+        const word = document.getElementById("word");
+        const now_page_tag = document.getElementById("now_page");
+        const bottom = document.getElementById("bottom");
+        bottom.innerHTML = "";
+        let now_page_value = 0;
+        if (now_page_tag == null) {
+          now_page_value = 1;
+        } else {
+          now_page_value = now_page_tag.innerText;
+        }
+
+        console.log(word.value + restno.value);
+        const data = {
+          restno: restno,
+          word: word,
         };
-	// 페이지 이동
-	function pageMove(movePage){
-		const now_page = document.getElementById("now_page");
-		console.log('ccc' + document.getElementById("now_page").innerText);
-		now_page.removeAttribute('id');
-		movePage.id = 'now_page';
-		console.log('bbb' + document.getElementById("now_page").innerText);
-		console.log(movePage.innerText);
-		send();
-	}
-    function send() { // 회원 가입 처리
-    	
-    	const restno = document.getElementById("restno");
-		const word = document.getElementById("word");
-    	const now_page_tag = document.getElementById("now_page");
-    	const bottom = document.getElementById('bottom');
-    	bottom.innerHTML = '';
-    	let now_page_value = 0;
-		if(now_page_tag == null){
-			now_page_value = 1;
-		}else{
-			now_page_value = now_page_tag.innerText;
-		}
-		
-		
-		console.log(word.value + restno.value);
-		const data = {
-			restno: restno,
-			word: word
-		};
-	      fetch("/menu/menulist?word="+word.value+"&restno="+restno.value+"&now_page=" + now_page_value, {
-	      method: 'GET'
-	    })
-	      .then(response => response.json())
-	      .then(rdata => {
-			const resultBody = document.getElementById('tbody');
-			resultBody.innerHTML=`
+        fetch(
+          "/menu/menulist?word=" +
+            word.value +
+            "&restno=" +
+            restno.value +
+            "&now_page=" +
+            now_page_value,
+          {
+            method: "GET",
+          }
+        )
+          .then((response) => response.json())
+          .then((rdata) => {
+            const resultBody = document.getElementById("tbody");
+            resultBody.innerHTML = `
 			<tr>
 		        <th class='th_bs'>이미지</th>
 		        <th class='th_bs'>식당명</th>
@@ -53,30 +62,52 @@
 		        <th class='th_bs'>수정 / 삭제</th>
 		    </tr>
 			`;
-			const bottommenu = document.createElement('div');
-	        rdata.menuList.forEach(menuVO =>{
-				const row = document.createElement('tr');
+            const bottommenu = document.createElement("div");
+            rdata.menuList.forEach((menuVO) => {
+              const row = document.createElement("tr");
 
-                row.innerHTML = `
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
-                        <div ${menuVO.image.endsWith('jpg') || menuVO.image.endsWith('JPG') || menuVO.image.endsWith('png') || menuVO.image.endsWith('PNG') || menuVO.image.endsWith('gif') ? '' : 'style="display: none;"'}>
-                            <img src="/menu/storage/${menuVO.image}" style="width: 120px; height: 90px;">
+              row.innerHTML = `
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                      menuVO.menuno
+                    }&word=${word.value}&now_page=${now_page_value}'">
+                        <div ${
+                          menuVO.image.endsWith("jpg") ||
+                          menuVO.image.endsWith("JPG") ||
+                          menuVO.image.endsWith("png") ||
+                          menuVO.image.endsWith("PNG") ||
+                          menuVO.image.endsWith("gif")
+                            ? ""
+                            : 'style="display: none;"'
+                        }>
+                            <img src="/menu/storage/${
+                              menuVO.image
+                            }" style="width: 120px; height: 90px;">
                         </div>
                     </td>
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                      menuVO.menuno
+                    }&word=${word.value}&now_page=${now_page_value}'">
                         <span>${menuVO.restname}</span>
                     </td>
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                      menuVO.menuno
+                    }&word=${word.value}&now_page=${now_page_value}'">
                         <span>${menuVO.name}</span>
                     </td>
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}'">
+                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                      menuVO.menuno
+                    }&word=${word.value}&now_page=${now_page_value}'">
                         <span>${menuVO.price}</span>
                     </td>
                     <td class="td_bs">
-                        <a href="/menu/update?menuno=${menuVO.menuno}&word=${word.value}&now_page=${now_page_value}">
+                        <a href="/menu/update?menuno=${menuVO.menuno}&word=${
+                word.value
+              }&now_page=${now_page_value}">
                             <img src="/cate/images/update.png" class="icon">
                         </a>
-                        <a onclick="delete_check(${menuVO.menuno}, '${word.value}', ${now_page_value})">
+                        <a onclick="delete_check(${menuVO.menuno}, '${
+                word.value
+              }', ${now_page_value})">
                             <img src="/cate/images/delete.png" class="icon">
                         </a>
                     </td>
@@ -84,121 +115,140 @@
 
 
                 `;
-				
-                resultBody.appendChild(row);
-			})
-			
-			bottommenu.innerHTML = rdata.paging;
-			
-			bottom.appendChild(bottommenu);
-	        // 받은 데이터에서 categoryno 값을 옵션으로 추가
-	      });
-	    }
 
-    
+              resultBody.appendChild(row);
+            });
 
-  </script>
-  <div class='title_line'>
-    <span th:text="${menuVO?.name}" class="title_line_text"></span> 
-    <div th:if="${word.length() > 0}" class='title_line' th:text="|> 「${word}」 검색 ${search_count} 건|"></div>
-  </div>
-  <div>
-  	<form name='frm'>
-  		<input type="text" th:value="${word}" id="word">
-  		<select id="restno" onchange="send()">
-  			<option value="0">전체 식당</option>
-  			<option th:each="restaurantVO, status : ${ownerRestList}" th:value="${restaurantVO.restno}" th:text="${restaurantVO.name}"></option>
-  		</select>
-  	</form>
-  </div>
-  <aside class="aside_right">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|/menu/create?word=${word}&now_page=${now_page}|}">등록</a>
-  </aside> 
-  <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
-   	
-   
-  <div class='menu_line'>   </div>
-    
-  <table>
-  	<colgroup>
-      <col style='width: 20%;'/>
-      <col style='width: 30%;'/>
-      <col style='width: 30%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 10%;'/>
-    </colgroup>
-    <tbody id='tbody'>
-      <tr>
-        <th class='th_bs'>이미지</th>
-        <th class='th_bs'>식당명</th>
-        <th class='th_bs'>메뉴명</th>
-        <th class='th_bs'>가격</th>
-        <th class='th_bs'>수정 / 삭제</th>
-      </tr>
-      <tr th:each="menuVO, status : ${list}">
-      	<td><img th:src="@{|/menu/storage/${menuVO.image}|}" style="width: 120px; height: 90px;"></td>
-      	<td class="td_basic" th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'">
+            bottommenu.innerHTML = rdata.paging;
+
+            bottom.appendChild(bottommenu);
+            // 받은 데이터에서 categoryno 값을 옵션으로 추가
+          });
+      }
+    </script>
+    <div class="title_line">
+      <span th:text="${menuVO?.name}" class="title_line_text"></span>
+      <div
+        th:if="${word.length() > 0}"
+        class="title_line"
+        th:text="|> 「${word}」 검색 ${search_count} 건|"
+      ></div>
+    </div>
+    <div>
+      <form name="frm">
+        <input type="text" th:value="${word}" id="word" />
+        <select id="restno" onchange="send()">
+          <option value="0">전체 식당</option>
+          <option
+            th:each="restaurantVO, status : ${ownerRestList}"
+            th:value="${restaurantVO.restno}"
+            th:text="${restaurantVO.name}"
+          ></option>
+        </select>
+      </form>
+    </div>
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class="menu_divide">│</span>
+      <a th:href="@{|/menu/create?word=${word}&now_page=${now_page}|}">등록</a>
+    </aside>
+    <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
+
+    <div class="menu_line"></div>
+
+    <table>
+      <colgroup>
+        <col style="width: 20%" />
+        <col style="width: 30%" />
+        <col style="width: 30%" />
+        <col style="width: 10%" />
+        <col style="width: 10%" />
+      </colgroup>
+      <tbody id="tbody">
+        <tr>
+          <th class="th_bs">이미지</th>
+          <th class="th_bs">식당명</th>
+          <th class="th_bs">메뉴명</th>
+          <th class="th_bs">가격</th>
+          <th class="th_bs">수정 / 삭제</th>
+        </tr>
+        <tr th:each="menuVO, status : ${list}">
+          <td>
+            <img
+              th:src="@{|/menu/storage/${menuVO.image}|}"
+              style="width: 120px; height: 90px"
+            />
+          </td>
+          <td
+            class="td_basic"
+            th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'"
+          >
             <span th:text="${menuVO.restname}"></span>
-        </td>
-        <td class="td_basic" th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'">
+          </td>
+          <td
+            class="td_basic"
+            th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'"
+          >
             <span th:text="${menuVO.name}"></span>
-        </td>
-        <td class="td_basic" th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'">
+          </td>
+          <td
+            class="td_basic"
+            th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'"
+          >
             <span th:text="${menuVO.price}"></span>
-        </td>
-        <td class="td_bs">
-            <a th:href="@{|/menu/update?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}|}">
-                <img src="/cate/images/update.png" class="icon">
+          </td>
+          <td class="td_bs">
+            <a
+              th:href="@{|/menu/update?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}|}"
+            >
+              <img src="/cate/images/update.png" class="icon" />
             </a>
-            <a th:onclick="@{|delete_check(${menuVO.menuno}, '${word}', ${now_page})|}">
-                <img src="/cate/images/delete.png" class="icon">
+            <a
+              th:onclick="@{|delete_check(${menuVO.menuno}, '${word}', ${now_page})|}"
+            >
+              <img src="/cate/images/delete.png" class="icon" />
             </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-    
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
     <div id="bottom" th:utext="${paging}"></div>
-    
 
-<script>
-  	function delete_check(menuno, word, now_page){
-	  	if (confirm("정말 삭제하시겠습니까??") == true){    //확인
-	  		let f = document.createElement('form');
-    
-		    let obj1;
-		    obj1 = document.createElement('input');
-		    obj1.type = 'hidden';
-		    obj1.name = 'menuno';
-		    obj1.value = menuno;
-		    
-			let obj2;
-			obj2 = document.createElement('input');
-		    obj2.type = 'hidden';
-		    obj2.name = 'word';
-		    obj2.value = word;
-			
-			let obj3;
-			obj3 = document.createElement('input');
-		    obj3.type = 'hidden';
-		    obj3.name = 'now_page';
-		    obj3.value = now_page;
-		
-		    f.appendChild(obj1);
-		    f.appendChild(obj2);
-		    f.appendChild(obj3);
-		    f.setAttribute('method', 'post');
-		    f.setAttribute('action', '/menu/delete');
-		    document.body.appendChild(f);
-		    f.submit();
-	  	}else{   //취소
-	      	return;
-	  	}
-	}
-</script> 
-</div>
+    <script>
+      function delete_check(menuno, word, now_page) {
+        if (confirm("정말 삭제하시겠습니까??") == true) {
+          //확인
+          let f = document.createElement("form");
+          let obj1;
+          obj1 = document.createElement("input");
+          obj1.type = "hidden";
+          obj1.name = "menuno";
+          obj1.value = menuno;
+          let obj2;
+          obj2 = document.createElement("input");
+          obj2.type = "hidden";
+          obj2.name = "word";
+          obj2.value = word;
 
+          let obj3;
+          obj3 = document.createElement("input");
+          obj3.type = "hidden";
+          obj3.name = "now_page";
+          obj3.value = now_page;
+
+          f.appendChild(obj1);
+          f.appendChild(obj2);
+          f.appendChild(obj3);
+          f.setAttribute("method", "post");
+          f.setAttribute("action", "/menu/delete");
+          document.body.appendChild(f);
+          f.submit();
+        } else {
+          //취소
+          return;
+        }
+      }
+    </script>
+  </div>
 </html>
