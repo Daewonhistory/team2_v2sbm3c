@@ -10,8 +10,8 @@ DROP TABLE notice CASCADE CONSTRAINTS;
 
 CREATE TABLE notice(
 		noticeno                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		content                       		CLOB(2000)		 NOT NULL,
-		restno                        		NUMBER(10)		 NULL ,          -- FK
+		content                       		CLOB    		 NOT NULL,
+		restno                        		NUMBER(10)		 NULL,
   FOREIGN KEY (restno) REFERENCES RESTAURANT (restno)
 );
 

@@ -20,7 +20,7 @@
 
 
     <select id="nextval" resultType="int">
-        SELECT restaurant_seq.nextval AS restno FROM dual
+        SELECT restaurant_seq.currval AS restno FROM dual
     </select>
 
 	

@@ -22,6 +22,11 @@ public class HomeCont {
   public String Home() {
     return "index";
   }
+  @RequestMapping("/mobile")
+
+  public String mobile() {
+    return "mobile";
+  }
 
   @GetMapping("/sign-up")
 

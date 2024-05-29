@@ -216,12 +216,12 @@ public class MenuCont {
 		int restno = 0;
 		ArrayList<RestaurantVO> RestList = null;
 		int ownerno = 0;
-		if (type == null) {
+		if (type == null) { // 관리자 접속
 			System.out.println("admin");
 			RestList = this.restaurantProc.list_all();
 			ownerno = 0;
 			
-		}else if(type.equals("owner")) {
+		}else if(type.equals("owner")) {	// 사업자 접속
 			ownerno = (int)session.getAttribute("ownerno");
 			System.out.println("Owner" + ownerno);
 			RestList = this.restaurantProc.findByOwnerR(ownerno);

@@ -17,8 +17,9 @@ COMMENT ON COLUMN RESTAURANT.image is '식당이미지';
 COMMENT ON COLUMN RESTAURANT.ownerno is '사업자 번호';
 COMMENT ON COLUMN RESTAURANT.categoryno is '카테고리번호';
 
+DROP SEQUENCE restaurant_seq;
 CREATE SEQUENCE restaurant_seq
-    START WITH 1              -- 시작 번호
+    START WITH 60              -- 시작 번호
     INCREMENT BY 1          -- 증가값
     MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
     CACHE 2                       -- 2번은 메모리에서만 계산

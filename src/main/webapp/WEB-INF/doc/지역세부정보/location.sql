@@ -1,6 +1,8 @@
 /**********************************/
 /* Table Name: 위치정보 */
 /**********************************/
+DROP TABLE location;
+
 CREATE TABLE LOCATION(
 		locationno                    		NUMBER(10)		 NULL 		 PRIMARY KEY,
 		botareano                     		NUMBER(3)		 NOT NULL,
