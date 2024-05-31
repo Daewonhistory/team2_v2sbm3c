@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content" style="padding:0">
+	<div>
+		<span class="page_name">레스토랑</span>
+	</div>
+	<section id="home" style="height: 300px; margin:0; padding:0">
+        <div class="slider" id="slider">
+		  <div class="slide"><a href="https://www.naver.com"><img src="/images/1.jpg" alt="Slide 1"></a></div>
+		  <div class="slide"><img src="/images/2.jpg" alt="Slide 2"></div>
+		  <div class="slide"><img src="/images/3.jpg" alt="Slide 3"></div>
+		  <!-- Add more slides as needed -->
+		  <button class="arrow left" id="prev">&lt;</button>
+		  <button class="arrow right" id="next">&gt;</button>
+		</div>
+		<div style="height: 15%;display: flex;justify-content: center;align-items: center;">
+			<div class="radio_buttons" id="radio_buttons"></div>
+		</div>
+			
+    </section>
+	<section id="restaurant_info_section">
+		<div>
+			<div>
+				<span id="rest_name" th:text="${restrauntVO.name}"></span>
+			</div>
+			<div>
+				<img src="star" alt="별이미지">
+				<span id="rate">5.0</span>
+			</div>
+		</div>	
+	</section>
+	
+	<script>
+		let slider = document.getElementById('slider');
+		let isDown = false;
+		let startX;
+		let walk;
+		
+		slider.addEventListener('mousedown', (e) => {
+		  isDown = true;
+		  startX = e.pageX;
+		  walk = 0;
+		  slider.style.cursor = 'grabbing';
+		});
+		
+		slider.addEventListener('mouseleave', () => {
+		  if (!isDown) return;
+		  isDown = false;
+		  slider.style.cursor = 'grab';
+		  if (walk < -50) {
+		    nextSlide();
+		  } else if (walk > 50) {
+		    prevSlide();
+		  } else {
+		    showSlide(currentIndex); // Reset to the current slide if not dragged far enough
+		  }
+		});
+		
+		slider.addEventListener('mouseup', () => {
+		  if (!isDown) return;
+		  isDown = false;
+		  slider.style.cursor = 'grab';
+		  if (walk < -50) {
+		    nextSlide();
+		  } else if (walk > 50) {
+		    prevSlide();
+		  } else {
+		    showSlide(currentIndex); // Reset to the current slide if not dragged far enough
+		  }
+		});
+		
+		slider.addEventListener('mousemove', (e) => {
+		  if (!isDown) return;
+		  e.preventDefault();
+		  const x = e.pageX;
+		  walk = x - startX;
+		  slides.forEach((slide, index) => {
+		    slide.style.transform = `translateX(${100 * (index - currentIndex) + (walk / slider.clientWidth) * 100}%)`;
+		  });
+		});
+		
+		let currentIndex = 0;
+		const slides = document.querySelectorAll('.slide');
+		const radioButtonsContainer = document.getElementById('radio_buttons');
+		
+		// Create radio buttons dynamically based on the number of slides
+		slides.forEach((slide, index) => {
+		  const radio = document.createElement('input');
+		  radio.type = 'radio';
+		  radio.className = 'radio_button';
+		  radio.name = 'slider';
+		  radio.id = `radio_${index + 1}`;
+		  if (index === 0) radio.checked = true;
+		
+		  radio.addEventListener('change', () => {
+		    showSlide(index);
+		  });
+		
+		  radioButtonsContainer.appendChild(radio);
+		});
+		
+		function showSlide(index) {
+		  slides.forEach((slide, i) => {
+		    slide.style.transform = `translateX(${100 * (i - index)}%)`;
+		  });
+		  document.getElementById(`radio_${index + 1}`).checked = true;
+		  currentIndex = index;
+		}
+		
+		function nextSlide() {
+		  currentIndex = (currentIndex + 1) % slides.length;
+		  showSlide(currentIndex);
+		}
+		
+		function prevSlide() {
+		  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+		  showSlide(currentIndex);
+		}
+		
+		document.getElementById('next').addEventListener('click', nextSlide);
+		document.getElementById('prev').addEventListener('click', prevSlide);
+		
+		showSlide(currentIndex);
+		
+		function openBotarea(eventButton){
+			let selected_midarea_btn = eventButton;
+			let btn_red = document.getElementsByClassName('btn_red');
+			if(btn_red.length != 0){
+				btn_red[0].classList.remove('btn_red');
+			}
+			selected_midarea_btn.classList.add('btn_red');
+			let selected_midareano = selected_midarea_btn.value;
+			let botarea_div = document.getElementById("botarea_div");
+			//fetch부분
+			botarea_div.innerHTML = 
+				'<input type="text" value="'+selected_midareano+'"><br>'+
+				`<button type="button">강남구</button>
+	            <button type="button">강동구</button>
+	            <button type="button">강북구</button>
+	            <button type="button">강서구</button>
+	            <button type="button">관악구</button>
+	            <button type="button">광진구</button>`;
+			botarea_div.style.display="block";
+		}
+	</script>
+</div>
+</html>

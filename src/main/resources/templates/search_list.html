@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content">
+	<div>
+		<span class="page_name">검색 결과</span>
+	</div>
+	
+	<section id="sec_list">
+		<div><span id="list_count">5</span>개의 매장이 검색되었습니다.</div>
+		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
+			<input type="hidden" id="restno" value="1">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2>식당명</h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+				<div><span>카테고리</span></div>
+			</div>
+		</div>
+		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
+			<input type="hidden" id="restno" value="2">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2>식당명</h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+			</div>
+		</div>
+		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
+			<input type="hidden" id="restno" value="3">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2>식당명</h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+			</div>
+		</div>
+		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
+			<input type="hidden" id="restno" value="4">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2>식당명</h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+			</div>
+		</div>
+		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
+			<input type="hidden" id="restno" value="5">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2>식당명</h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+			</div>
+		</div>
+	</section>
+	<script>
+		function moveRestaurant(event){
+			let restno = event.currentTarget.querySelector('input').value;
+			location.href = "/restaurant?restno=" + restno;
+		}
+	</script>
+</div>
+</html>

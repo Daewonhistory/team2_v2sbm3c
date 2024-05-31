@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content">
+	<div>
+		<span class="page_name">검색 결과</span>
+	</div>
+	<div>
+		<form name='frm' method='get' action='./search_list'>
+			
+			<section id="sec_reserve_condition">
+				<span class="section_name">예약 조건</span><br>
+				<label>인원:</label><input type="number" name="person" value="2">명
+				<input type="date" id="selected_date" name="date">
+				<div class="vertical_scroll" id="scrollContainer">
+					<button type="button" onclick="selectTime(0, this)">0:00</button>
+					<button type="button" onclick="selectTime(1, this)">1:00</button>
+					<button type="button" onclick="selectTime(2, this)">2:00</button>
+					<button type="button" onclick="selectTime(3, this)">3:00</button>
+					<button type="button" onclick="selectTime(4, this)">4:00</button>
+					<button type="button" onclick="selectTime(5, this)">5:00</button>
+					<button type="button" onclick="selectTime(6, this)">6:00</button>
+					<button type="button" onclick="selectTime(7, this)">7:00</button>
+					<button type="button" onclick="selectTime(8, this)">8:00</button>
+					<button type="button" onclick="selectTime(9, this)">9:00</button>
+					<button type="button" onclick="selectTime(10, this)">10:00</button>
+					<button type="button" onclick="selectTime(11, this)">11:00</button>
+					<button type="button" onclick="selectTime(12, this)">12:00</button>
+					<button type="button" onclick="selectTime(13, this)">13:00</button>
+					<button type="button" onclick="selectTime(14, this)">14:00</button>
+					<button type="button" onclick="selectTime(15, this)">15:00</button>
+					<button type="button" onclick="selectTime(16, this)">16:00</button>
+					<button type="button" onclick="selectTime(17, this)">17:00</button>
+					<button type="button" onclick="selectTime(18, this)">18:00</button>
+					<button type="button" onclick="selectTime(19, this)">19:00</button>
+					<button type="button" onclick="selectTime(20, this)">20:00</button>
+					<button type="button" onclick="selectTime(21, this)">21:00</button>
+					<button type="button" onclick="selectTime(22, this)">22:00</button>
+					<button type="button" onclick="selectTime(23, this)">23:00</button>					
+				</div>
+				<input type="text" id="selected_time" name="time" value="">
+				
+				
+			</section>
+			<section id="sec_location">
+				<span class="section_name">지역</span><br>
+				<select id='location1'>
+					<option value="1">서울</option>
+					<option value="1">경기</option>
+					<option value="1">부산</option>
+					<option value="1">전남</option>
+				</select>
+				<button type="button" onclick="location.href='/map'">내주변</button><br>
+				<input type="checkbox" name="botarea" class="btn_botarea">서울 전체</input>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+				<input type="checkbox" name="botarea" class="btn_botarea">강남구</button>
+			</section>
+			<section id="sec_category">
+				<span class="section_name">카테고리</span><br>
+				<button type="button" onclick="selectCategory(this)">한식</button>
+				<button type="button" onclick="selectCategory(this)">중식</button>
+				<button type="button" onclick="selectCategory(this)">일식</button>
+				<button type="button" onclick="selectCategory(this)">디저트</button>
+				<button type="button" onclick="selectCategory(this)">카페</button>
+				<button type="button" onclick="selectCategory(this)">프렌치</button>
+				<button type="button" onclick="selectCategory(this)">고기집</button>
+				<input type="text" name="category">
+			</section>
+			<section id="sec_price">
+				<span class="section_name">가격</span>
+				<h3></h3>
+				<div>
+					<label>최저가격: </label><input type="number" name="min_price" min="0" max="40">만 원<br>
+					<label>최고가격: </label><input type="number" name="max_price" min="1" max="40">만 원 
+				</div>
+				
+			</section>
+			
+			<div style="width: 100%;text-align: center;">
+				<button type="submit" style="width:100px;margin:0px auto;">검색</button>
+			</div>
+			
+			<div style="height: 80px;"></div>
+		</form>
+	</div>
+	<script>
+		window.onload=()=>{
+			document.getElementById('selected_date').value= new Date().toISOString().substring(0, 10);	
+		}
+		
+		function selectTime(time, eventButton){
+			let allBtnRed = document.getElementsByClassName('btn_red');
+			let inputSelectedTime = document.getElementById('selected_time') 
+			if(allBtnRed.length != 0){
+				allBtnRed[0].classList.remove('btn_red');	
+			}
+			eventButton.classList.add('btn_red');
+			inputSelectedTime.value = time;
+		}
+		
+		function selectCategory(selected_category){
+				
+		}
+		
+	</script>
+	<script>
+        const scrollContainer = document.getElementById('scrollContainer');
+        
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            scrollContainer.classList.add('active');
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+
+        scrollContainer.addEventListener('mouseleave', () => {
+            isDown = false;
+            scrollContainer.classList.remove('active');
+        });
+
+        scrollContainer.addEventListener('mouseup', () => {
+            isDown = false;
+            scrollContainer.classList.remove('active');
+        });
+
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 3; //scroll-fast
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</div>
+</html>

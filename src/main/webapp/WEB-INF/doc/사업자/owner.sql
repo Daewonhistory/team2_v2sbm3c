@@ -1,5 +1,6 @@
 drop table owner;
 
+-- 0530 certifi테이블 통합 전
 CREATE TABLE OWNER(
                       ownerno                       		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
                       id                            		VARCHAR2(30)		 NOT NULL,
@@ -12,8 +13,15 @@ CREATE TABLE OWNER(
                       grade                         		NUMBER(2)		 NOT NULL, -- 1 일반 사업자 10 사업자 인증 필요한 사업자 99 탈퇴 사업자
                       reg_date                      		DATE		 NOT NULL,
                       image                         		VARCHAR2(30)		 NOT NULL,
+                      businessno                            VARCHAR2(30)    DEFAULT '-' NOT NULL,
+                      cerifi_image                          VARCHAR2(30)    DEFAULT '-' NOT NULL,
+                      identi_card_image                     VARCHAR2(30)    DEFAULT '-' NOT NULL,
+                      business_reg_date                     DATE            DEFAULT '1900-01-01' NOT NULL,
                       CONSTRAINT SYS_C007042 UNIQUE (ID)
 );
+
+-- 0530 certifi통합 후
+
 
 COMMENT ON TABLE OWNER is '사업자';
 COMMENT ON COLUMN OWNER.ownerno is '사업자 번호';
@@ -27,7 +35,10 @@ COMMENT ON COLUMN OWNER.address2 is '상세주소';
 COMMENT ON COLUMN OWNER.grade is '등급';
 COMMENT ON COLUMN OWNER.reg_date is '등록일자';
 COMMENT ON COLUMN OWNER.image is '프로필이미지';
-
+COMMENT ON COLUMN OWNER.BUSINESSNO is '사업자등록증번호';
+COMMENT ON COLUMN OWNER.certifi_image is '등록증 이미지';
+COMMENT ON COLUMN OWNER.identi_card_image is '신분증 이미지';
+COMMENT ON COLUMN OWNER.business_reg_date is '사업자 등록증 번호 등록날짜';
 
 CREATE SEQUENCE owner_seq
     START WITH 1              -- 시작 번호

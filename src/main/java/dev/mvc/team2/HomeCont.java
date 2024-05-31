@@ -27,6 +27,21 @@ public class HomeCont {
   public String mobile() {
     return "mobile";
   }
+  @RequestMapping("/search")
+
+  public String search() {
+    return "search";
+  }
+  @RequestMapping("/search_list")
+
+  public String search_list() {
+    return "search_list";
+  }
+  @RequestMapping("/restaurant_page")
+
+  public String restaurant_page() {
+    return "restaurant_page";
+  }
 
   @GetMapping("/sign-up")
 

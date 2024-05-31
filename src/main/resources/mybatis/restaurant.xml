@@ -11,18 +11,17 @@
 
 
 
-
+	<!-- 기존 create-->
     <insert id="create" parameterType="dev.mvc.restaurant.RestaurantVO">
-        INSERT INTO restaurant(restno, name, tel,ownerno,categoryno)
+        INSERT INTO restaurant(restno, name, tel, ownerno, categoryno)
         VALUES (restaurant_seq.nextval, #{name},#{tel}, #{ownerno}, #{categoryno})
     </insert>
-
-
-
+    
+	
     <select id="nextval" resultType="int">
         SELECT restaurant_seq.currval AS restno FROM dual
     </select>
-
+	
 	
     <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.dto.RestDTO">
         <if test="type == 100">
@@ -158,6 +157,49 @@
 		SELECT *
      	FROM restaurant 
 	</select>
-
-
+	
+	<!-- 변경 예정 create-->
+	<!--
+	<insert id="create" parameterType="dev.mvc.restaurant.RestaurantVO">
+        INSERT INTO restaurant(restno, name, tel, grade, address, lat, lng, reserveRange, ownerno, categoryno, botareano)
+        VALUES (restaurant_seq.nextval, #{name},#{tel}, #{ownerno}, #{categoryno})
+    </insert>
+	-->
+	
+	<!-- 식당 조회 -->
+	<select id="read" parameterType="int" resultType="dev.mvc.restaurant.RestaurantVO">
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano
+		FROM restaurant
+		WHERE restno = #{restno}
+	</select>
+	
+	<!-- 조건을 통한 식당 검색 -->
+	<select id="condition_search_list">
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano
+		FROM restaurant
+		WHERE restno IN (SELECT restno
+							FROM admitperson
+							WHERE time = #{time}
+							AND admit_person >= curr_person + #{person})
+		<if test="categoryno != null">
+			AND categoryno = #{categoryno}
+		</if>
+		<if test="botareanos.length > 0">
+			AND botareano IN
+			<foreach item="item" index="index" collection="botareanos" open="(" separator="," close=")">
+            	#{item}
+        	</foreach>
+		</if>
+		AND price BETWEEN #{min_price} * 10000 AND #{max_price} * 10000
+	</select>
+	
+	<!-- 좌표값을 통한 식당 검색 -->
+	<select id="coordinate_search_list">
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano 
+		FROM restaurant
+		WHERE lat BETWEEN #{max_lat} AND #{min_lat}
+		AND lng BETWEEN #{max_lng} AND #{mint_lng}
+	</select>
+	
+	<
 </mapper>

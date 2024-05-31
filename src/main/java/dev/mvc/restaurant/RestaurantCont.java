@@ -192,6 +192,18 @@ public class RestaurantCont {
 
 
     }
+  
+  @GetMapping("/main_page")
+  public String main_page(Model model, int restno, int person, String date, int time) {
+	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
+	  System.out.println(restaurantVO.getName());
+	  model.addAttribute("restrauntVO", restaurantVO);
+	  
+	  model.addAttribute("person", person);
+	  model.addAttribute("date", date);
+	  model.addAttribute("time", time);
+	  return "/restaurant_page";
+  }
 
 }
 

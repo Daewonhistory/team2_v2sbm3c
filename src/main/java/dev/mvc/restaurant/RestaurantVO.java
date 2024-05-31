@@ -11,13 +11,20 @@ public class RestaurantVO {
 
   /*
 CREATE TABLE RESTAURANT(
-		restno                        		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		name                          		VARCHAR2(50)		 NOT NULL,
-		tel                           		VARCHAR2(14)		 NOT NULL,
-		ownerno                       		NUMBER(10)		 NOT NULL,
-		cateno                        		NUMBER(10)		 NULL ,
-  FOREIGN KEY (ownerno) REFERENCES OWNER (ownerno),
-  FOREIGN KEY (cateno) REFERENCES CATEGORY (cateno)
+                           restno                        		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+                           name                          		VARCHAR2(50)		 NOT NULL,
+                           tel                           		VARCHAR2(14)		 NOT NULL,
+                           grade                                NUMBER(3)           DEFAULT 1 NOT NULL ,
+                           address                              VARCHAR(100)     DEFAULT '-' NOT NULL,
+                           lat                                  NUMBER(10,7)    DEFAULT 0 NOT NULL,
+                           lng                                  NUMBER(10,7)    DEFAULT 0 NOT NULL,
+                           reserverange                         NUMBER(3)       DEFAULT 1 NOT NULL,
+                           ownerno                       		NUMBER(10)		 NOT NULL,
+                           categoryno                        	NUMBER(10)		 NULL ,
+                           botareano                            NUMBER(3)       NULL,
+                           FOREIGN KEY (ownerno) REFERENCES OWNER (ownerno),
+                           FOREIGN KEY (categoryno) REFERENCES CATEGORY (categoryno),
+                           FOREIGN KEY (botareano) REFERENCES BOTAREANO (botareano)
 );
   */
 
@@ -29,8 +36,16 @@ CREATE TABLE RESTAURANT(
 
     /** 식당 전화 번호 */
     private String tel = "";
-
-
+    
+    private int grade;
+    
+    private String address;
+    
+    private double lat;
+    
+    private double lng;
+    
+    private int reserveRange;
     /** 사업자 번호 */
     private int ownerno;
     /** 카테고리 번호 번호 */

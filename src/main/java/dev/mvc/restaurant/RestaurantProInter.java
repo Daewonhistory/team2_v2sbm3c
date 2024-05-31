@@ -65,6 +65,13 @@ public interface RestaurantProInter {
    * @return
    */
   public ArrayList<RestaurantVO> list_all();
+  
+  /**
+   * 식당 정보 조회
+   * @param restno
+   * @return
+   */
+  public RestaurantVO read(int restno);
 }
 
 

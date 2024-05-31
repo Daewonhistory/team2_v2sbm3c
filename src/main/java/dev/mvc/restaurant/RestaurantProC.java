@@ -191,6 +191,12 @@ public ArrayList<RestaurantVO> list_all() {
 	ArrayList<RestaurantVO> list = this.restDAO.list_all();
 	return list;
 }
+
+@Override
+public RestaurantVO read(int restno) {
+	RestaurantVO restrauntVO = this.restDAO.read(restno);
+	return restrauntVO;
+}
 }
 
 
