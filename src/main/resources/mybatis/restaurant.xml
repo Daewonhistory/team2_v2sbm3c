@@ -28,20 +28,15 @@
             <if test="word == null or word == ''">
                 <!-- 전체 결과를 가져오는 쿼리 -->
                 <![CDATA[
-            SELECT * FROM (
-                SELECT restno, name, tel, ownerno, categoryno, image1, image2, image3, ROWNUM as r
+            SELECT distinct restno, name, tel, ownerno, categoryno,  image1, image2, image3 FROM (
+                SELECT distinct s.restno, s.name, s.tel, s.ownerno, s.categoryno, img1.thumbfile AS image1, img2.thumbfile AS image2, img3.thumbfile AS image3, ROWNUM as r
                 FROM (
-                    SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno,
-                           MAX(CASE WHEN img.rn = 1 THEN img.thumbfile ELSE NULL END) AS image1,
-                           MAX(CASE WHEN img.rn = 2 THEN img.thumbfile ELSE NULL END) AS image2,
-                           MAX(CASE WHEN img.rn = 3 THEN img.thumbfile ELSE NULL END) AS image3
-                    FROM restaurant s
-                    LEFT JOIN (
-                        SELECT restno, thumbfile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY thumbfile) as rn
-                        FROM restimage
-                    ) img ON s.restno = img.restno
-                    GROUP BY s.restno, s.name, s.tel, s.ownerno, s.categoryno
-                )
+                    SELECT restno, name, tel, ownerno, categoryno
+                    FROM restaurant
+                ) s
+                LEFT JOIN restimage img1 ON s.restno = img1.restno AND rownum = 1
+                LEFT JOIN restimage img2 ON s.restno = img2.restno AND rownum = 1
+                LEFT JOIN restimage img3 ON s.restno = img3.restno AND rownum = 1
                 WHERE ROWNUM <= #{end_num}
             ) WHERE r >= #{start_num}
             ]]>
@@ -49,21 +44,16 @@
             <if test="word != null and word != ''">
                 <!-- name으로 조회 -->
                 <![CDATA[
-            SELECT * FROM (
-                SELECT restno, name, tel, ownerno, categoryno, image1, image2, image3, ROWNUM as r
+            SELECT distinct restno, name, tel, ownerno, categoryno,  image1, image2, image3 FROM (
+                SELECT distinct s.restno, s.name, s.tel, s.ownerno, s.categoryno, img1.thumbfile AS image1, img2.thumbfile AS image2, img3.thumbfile AS image3, ROWNUM as r
                 FROM (
-                    SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno,
-                           MAX(CASE WHEN img.rn = 1 THEN img.thumbfile ELSE NULL END) AS image1,
-                           MAX(CASE WHEN img.rn = 2 THEN img.thumbfile ELSE NULL END) AS image2,
-                           MAX(CASE WHEN img.rn = 3 THEN img.thumbfile ELSE NULL END) AS image3
-                    FROM restaurant s
-                    LEFT JOIN (
-                        SELECT restno, thumbfile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY thumbfile) as rn
-                        FROM restimage
-                    ) img ON s.restno = img.restno
-                    WHERE s.name LIKE '%' || #{word} || '%'
-                    GROUP BY s.restno, s.name, s.tel, s.ownerno, s.categoryno
-                )
+                    SELECT restno, name, tel, ownerno, categoryno
+                    FROM restaurant
+                    WHERE name LIKE '%' || #{word} || '%'
+                ) s
+                LEFT JOIN restimage img1 ON s.restno = img1.restno
+                LEFT JOIN restimage img2 ON s.restno = img2.restno
+                LEFT JOIN restimage img3 ON s.restno = img3.restno
                 WHERE ROWNUM <= #{end_num}
             ) WHERE r >= #{start_num}
             ]]>
@@ -73,20 +63,15 @@
             <if test="word == null or word == ''">
                 <!-- 전체 결과를 가져오는 쿼리 -->
                 <![CDATA[
-            SELECT * FROM (
-                SELECT restno, name, tel, ownerno, categoryno, image1, image2, image3, ROWNUM as r
+            SELECT distinct restno, name, tel, ownerno, categoryno,  image1, image2, image3 FROM (
+                SELECT  distinct s.restno, s.name, s.tel, s.ownerno, s.categoryno, img1.thumbfile AS image1, img2.thumbfile AS image2, img3.thumbfile AS image3, ROWNUM as r
                 FROM (
-                    SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno,
-                           MAX(CASE WHEN img.rn = 1 THEN img.thumbfile ELSE NULL END) AS image1,
-                           MAX(CASE WHEN img.rn = 2 THEN img.thumbfile ELSE NULL END) AS image2,
-                           MAX(CASE WHEN img.rn = 3 THEN img.thumbfile ELSE NULL END) AS image3
-                    FROM restaurant s
-                    LEFT JOIN (
-                        SELECT restno, thumbfile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY thumbfile) as rn
-                        FROM restimage
-                    ) img ON s.restno = img.restno
-                    GROUP BY s.restno, s.name, s.tel, s.ownerno, s.categoryno
-                )
+                    SELECT restno, name, tel, ownerno, categoryno
+                    FROM restaurant
+                ) s
+                LEFT JOIN restimage img1 ON s.restno = img1.restno
+                LEFT JOIN restimage img2 ON s.restno = img2.restno
+                LEFT JOIN restimage img3 ON s.restno = img3.restno
                 WHERE ROWNUM <= #{end_num}
             ) WHERE r >= #{start_num}
             ]]>
@@ -94,27 +79,23 @@
             <if test="word != null and word != ''">
                 <!-- ownerno으로 조회 -->
                 <![CDATA[
-            SELECT * FROM (
-                SELECT restno, name, tel, ownerno, categoryno, image1, image2, image3, ROWNUM as r
+            SELECT distinct restno, name, tel, ownerno, categoryno,  image1, image2, image3 FROM (
+                SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno, img1.thumbfile AS image1, img2.thumbfile AS image2, img3.thumbfile AS image3, ROWNUM as r
                 FROM (
-                    SELECT s.restno, s.name, s.tel, s.ownerno, s.categoryno,
-                           MAX(CASE WHEN img.rn = 1 THEN img.thumbfile ELSE NULL END) AS image1,
-                           MAX(CASE WHEN img.rn = 2 THEN img.thumbfile ELSE NULL END) AS image2,
-                           MAX(CASE WHEN img.rn = 3 THEN img.thumbfile ELSE NULL END) AS image3
-                    FROM restaurant s
-                    LEFT JOIN (
-                        SELECT restno, thumbfile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY thumbfile) as rn
-                        FROM restimage
-                    ) img ON s.restno = img.restno
-                    WHERE s.ownerno LIKE '%' || #{word} || '%'
-                    GROUP BY s.restno, s.name, s.tel, s.ownerno, s.categoryno
-                )
+                    SELECT restno, name, tel, ownerno, categoryno
+                    FROM restaurant
+                    WHERE ownerno LIKE '%' || #{word} || '%'
+                ) s
+                LEFT JOIN restimage img1 ON s.restno = img1.restno
+                LEFT JOIN restimage img2 ON s.restno = img2.restno
+                LEFT JOIN restimage img3 ON s.restno = img3.restno
                 WHERE ROWNUM <= #{end_num}
             ) WHERE r >= #{start_num}
             ]]>
             </if>
         </if>
     </select>
+
 
 
     <select id="findByOwnerR" parameterType="int" resultType="dev.mvc.restaurant.RestaurantVO">

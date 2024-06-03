@@ -28,4 +28,9 @@ public class CertifiProC implements CertifiProInter {
   public ArrayList<CertifiVO> findByOnwer(int ownerno) {
     return this.certifiDAO.findByOnwer(ownerno);
   }
+
+  @Override
+  public ArrayList<CertifiVO> businessnoList(int ownerno) {
+    return this.certifiDAO.businessnoList(ownerno);
+  }
 }

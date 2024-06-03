@@ -48,12 +48,15 @@ public class RestaurantCont {
   }
 
 
+
+
+
+
   /*
    * 식당 등록 폼 메서드
    *
    *
    */
-
   @GetMapping("/create")
   public String create(Model model,RestaurantVO restaurantVO,HttpSession session) {
     String type =  "s";
@@ -73,66 +76,80 @@ public class RestaurantCont {
    */
 
   @PostMapping("/create")
-  public String restaurant(Model model, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
+  public String restaurant(Model model,String businessno, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
 
-    restaurantVO.setOwnerno(7);
-
-
-    int count = this.restaurantProc.create(restaurantVO);
+    restaurantVO.setOwnerno(8);
 
 
-    if (count == 1) {
-      int nextval = this.restaurantProc.nextval() - 1;
-      String upDir = Restaurant.getUploadDir(); // 파일을 업로드할 폴더 준비
-      System.out.println("-> upDir: " + upDir);
 
-      MultipartFile mf1 = restimgVO.getFile1MF();
-      MultipartFile mf2 = restimgVO.getFile2MF();
-      MultipartFile mf3 = restimgVO.getFile3MF(); // 파일 3 추가
 
-      String[] fileNames = {mf1.getOriginalFilename(), mf2.getOriginalFilename(), mf3.getOriginalFilename()};
-      MultipartFile[] files = {mf1, mf2, mf3};
+    int nextval = this.restaurantProc.nextval(businessno);
 
-      for (int i = 0; i < files.length; i++) {
-        if (!fileNames[i].isEmpty()) {
-          if (Tool.checkUploadFile(fileNames[i])) {
-            long size = files[i].getSize();
-
-            if (size > 0) {
-              String exe = fileNames[i].split("\\.")[1];
-              String newFileName = "owner_" + (i+1) + "_" + System.currentTimeMillis() + "." + exe;
-              String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
-
-              if (Tool.isImage(fileSaved)) {
-                String thumb = Tool.preview(upDir, fileSaved, 200, 150);
-                System.out.println(restaurantVO.getRestno());
-                restimgVO.setRestno(nextval);
-                restimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
-                restimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
-
-                int saved = this.restimgproc.create(restimgVO);
-                if (saved != 1) {
-                  return "redirect:/";
-                }
-              } else {
-                return "redirect:/"; // 파일이 이미지가 아닐 경우 리다이렉트
-              }
-            } else {
-              return "redirect:/"; // 파일 크기가 0일 경우 리다이렉트
-            }
-          } else {
-            ra.addFlashAttribute("cnt", 0);
-            ra.addFlashAttribute("code", "check_upload_file_fail");
-            ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
-            return "redirect:/contents/msg";
-          }
-        }
-      }
-
+    System.out.println(nextval);
+    if (nextval > 0) {
       return "redirect:/";
     } else {
-      return "redirect:/restaurant/create";
+
+      int count = this.restaurantProc.create(restaurantVO);
+
+      int next = this.restaurantProc.next(businessno);
+
+      if (count == 1) {
+
+        String upDir = Restaurant.getUploadDir(); // 파일을 업로드할 폴더 준비
+        System.out.println("-> upDir: " + upDir);
+
+        MultipartFile mf1 = restimgVO.getFile1MF();
+        MultipartFile mf2 = restimgVO.getFile2MF();
+        MultipartFile mf3 = restimgVO.getFile3MF(); // 파일 3 추가
+
+        String[] fileNames = {mf1.getOriginalFilename(), mf2.getOriginalFilename(), mf3.getOriginalFilename()};
+        MultipartFile[] files = {mf1, mf2, mf3};
+
+        for (int i = 0; i < files.length; i++) {
+          if (!fileNames[i].isEmpty()) {
+            if (Tool.checkUploadFile(fileNames[i])) {
+              long size = files[i].getSize();
+
+              if (size > 0) {
+                String exe = fileNames[i].split("\\.")[1];
+                String newFileName = "owner_" + (i+1) + "_" + System.currentTimeMillis() + "." + exe;
+                String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
+
+                if (Tool.isImage(fileSaved)) {
+                  String thumb = Tool.preview(upDir, fileSaved, 200, 150);
+                  System.out.println(restaurantVO.getRestno());
+                  restimgVO.setRestno(next);
+                  restimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
+                  restimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
+
+                  int saved = this.restimgproc.create(restimgVO);
+                  if (saved != 1) {
+                    return "redirect:/category/list";
+                  }
+                } else {
+                  return "redirect:/category/list"; // 파일이 이미지가 아닐 경우 리다이렉트
+                }
+              } else {
+                return "redirect:/category/list"; // 파일 크기가 0일 경우 리다이렉트
+              }
+            } else {
+              ra.addFlashAttribute("cnt", 0);
+              ra.addFlashAttribute("code", "check_upload_file_fail");
+              ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
+              return "redirect:/contents/msg";
+            }
+          }
+        }
+
+        return "redirect:/category/list";
+      } else {
+        return "redirect:/restaurant/create";
+      }
     }
+
+
+
   }
 
 

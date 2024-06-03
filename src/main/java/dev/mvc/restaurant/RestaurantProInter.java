@@ -51,7 +51,9 @@ public interface RestaurantProInter {
   public String pagingBox(int now_page, String word,String type, String list_file, int search_count,int record_per_page, int page_per_block);
 
 
-  public int nextval();
+  public int nextval(String businessno);
+
+  public int next(String businessno);
 
   /**
    * 사업자 세션 으로 식당 리스트 출력

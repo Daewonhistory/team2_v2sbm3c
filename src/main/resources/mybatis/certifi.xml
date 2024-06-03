@@ -7,7 +7,7 @@
 
      <!--   사업자 등록증 신분증 등록-->
     <insert id="createCertifi" parameterType="dev.mvc.owner.OwnerVO">
-        INSERT INTO certifi(certifi, ownerno, businessno, certifi_image,identi_card_image
+        INSERT INTO certifi(certifino, ownerno, businessno, certifi_image,identi_card_image
                           ,reg_date)
         VALUES (certifi_seq.nextval, #{ownerno}, #{businessno}, #{certifi_image}, #{identi_card_image},
                  sysdate)
@@ -74,6 +74,12 @@
             WHERE name LIKE '%' || #{word} || '%'
 
         </if>
+    </select>
+
+    <select id="businessnoList">
+        select businessno
+        from certifi
+        where ownerno = #{ownerno}
     </select>
 
 </mapper>
