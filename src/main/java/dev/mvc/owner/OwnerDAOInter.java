@@ -88,6 +88,6 @@ public interface OwnerDAOInter {
   public int login(HashMap<String, Object> map);
 
 
-
+  public int updateCertifi(OwnerVO ownerVO);
 
 }

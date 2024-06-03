@@ -2,6 +2,7 @@ package dev.mvc.owner;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -36,29 +37,34 @@ CREATE TABLE OWNER(
     /** 회원 성명 */
     private String oname = "";
 
-    /** 회원 닉네임 */
+    /** 사업자 닉네임 */
     private String nickname = "";
-    /** 전화 번호 */
+    /** 휴대폰 번호 */
     private String phone = "";
-
+    /** 회사번호 번호 */
     private String tel = "";
 
     /** 주소 1 */
     private String address1 = " ";
     /** 주소 2 */
     private String address2 = " ";
-    /** SNS 가입여부 */
-
-
+    /** 등급 */
     private int grade;
 
-
+    /** 프로필 이미지 */
     private String image ="";
     /** 가입일 */
     private String reg_date = "";
-    /** 등급 */
+    /** 사업자등록증 번호 */
+    private String businessno = "";
 
+    /** 사업자 등록증 이미지 */
+    private String certifi_image = "";
+    /** 신분증  이미지 */
+    private String identi_card_image = "";
+    /** 사업자 등록한 날짜 */
 
+    private String business_reg_date = "";
     /** 등록된 패스워드 */
     private String old_passwd = "";
     /** id 저장 여부 */
@@ -67,6 +73,9 @@ CREATE TABLE OWNER(
     private String passwd_save = "";
     /** 이동할 주소 저장 */
     private String url_address = "";
+
+    private MultipartFile file1MF;
+    private MultipartFile file2MF;
 
     
   }

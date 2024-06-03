@@ -89,7 +89,16 @@
                  sysdate)
     </insert>
 
-<!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
+
+    <!--   사업자 등록증 신분증 등록-->
+    <update id="updateCertifi" parameterType="dev.mvc.owner.OwnerVO">
+        UPDATE owner
+        SET businessno = #{businessno} , certifi_image = #{certifi_image}, identi_card_image= #{identi_card_image}, business_reg_date=sysdate
+        WHERE ownerno= #{ownerno}
+    </update>
+
+
+    <!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
 <!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->
 <!--               file1, file1saved, thumb1, size1, mp4-->
 <!--        FROM contents-->
