@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -193,6 +195,21 @@ public class RestaurantCont {
 
     }
   
+  @PostMapping("/search_list")
+  public String search_list(Model model, int person, String date, int time, int categoryno, int minPrice, int maxPrice) {
+	  Map<String, Object> map = new HashMap<String, Object>();
+	  map.put("person", person);
+	  map.put("date", date);
+	  map.put("time", time);
+	  map.put("categoryno", categoryno);
+	  map.put("min_price", minPrice);
+	  map.put("max_price", maxPrice);
+	  
+	  ArrayList<RestaurantVO> list = this.restaurantProc.condition_search_list(map);
+	  model.addAttribute("list", list);
+	  return "/searach_list";
+  }
+  
   @GetMapping("/main_page")
   public String main_page(Model model, int restno, int person, String date, int time) {
 	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
@@ -204,7 +221,7 @@ public class RestaurantCont {
 	  model.addAttribute("time", time);
 	  return "/restaurant_page";
   }
-
+  
 }
 
 

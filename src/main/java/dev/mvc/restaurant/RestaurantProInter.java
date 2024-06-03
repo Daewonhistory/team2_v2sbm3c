@@ -72,6 +72,13 @@ public interface RestaurantProInter {
    * @return
    */
   public RestaurantVO read(int restno);
+  
+  /**
+   * 조건을 통한 식당 검색
+   * @param map
+   * @return
+   */
+  public ArrayList<RestaurantVO> condition_search_list(Map<String, Object> map);
 }
 
 

@@ -174,13 +174,15 @@
 	</select>
 	
 	<!-- 조건을 통한 식당 검색 -->
-	<select id="condition_search_list">
+	<select id="condition_search_list" parameterType="HashMap" resultType="dev.mvc.restaurant.RestaurantVO">
 		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano
 		FROM restaurant
-		WHERE restno IN (SELECT restno
-							FROM admitperson
-							WHERE time = #{time}
-							AND admit_person >= curr_person + #{person})
+		WHERE restno IN (
+			SELECT restno
+    		FROM admitperson
+    		WHERE reserve_date = TO_DATE(#{date}, 'YYYY-MM-DD')
+    		AND time = #{time}
+    		AND admit_person >= curr_person + #{person}
 		<if test="categoryno != null">
 			AND categoryno = #{categoryno}
 		</if>
@@ -190,16 +192,18 @@
             	#{item}
         	</foreach>
 		</if>
-		AND price BETWEEN #{min_price} * 10000 AND #{max_price} * 10000
+		AND restno IN (
+		    SELECT restno 
+		    FROM menu
+		    WHERE price BETWEEN #{min_price} * 10000 AND #{max_price} * 10000)
 	</select>
 	
 	<!-- 좌표값을 통한 식당 검색 -->
-	<select id="coordinate_search_list">
+	<select id="coordinate_search_list" parameterType="HashMap" resultType="dev.mvc.restaurant.RestaurantVO">
 		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano 
 		FROM restaurant
 		WHERE lat BETWEEN #{max_lat} AND #{min_lat}
-		AND lng BETWEEN #{max_lng} AND #{mint_lng}
+		AND lng BETWEEN #{max_lng} AND #{min_lng}
 	</select>
 	
-	<
 </mapper>

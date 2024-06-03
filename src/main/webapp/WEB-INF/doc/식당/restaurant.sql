@@ -20,7 +20,6 @@ COMMENT ON TABLE RESTAURANT is '식당';
 COMMENT ON COLUMN RESTAURANT.restno is '식당번호';
 COMMENT ON COLUMN RESTAURANT.name is '식당명';
 COMMENT ON COLUMN RESTAURANT.tel is '전화번호';
-COMMENT ON COLUMN RESTAURANT.image is '식당이미지';
 COMMENT ON COLUMN RESTAURANT.address is '상세주소';
 COMMENT ON COLUMN RESTAURANT.lat is '위도';
 COMMENT ON COLUMN RESTAURANT.lng is '경도';
@@ -36,3 +35,19 @@ CREATE SEQUENCE restaurant_seq
     MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
     CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;
+  
+  
+SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano
+FROM restaurant
+WHERE restno IN (SELECT restno
+                    FROM admitperson
+                    WHERE reserve_date = TO_DATE('2024-06-01', 'YYYY-MM-DD')
+                    AND time = 1
+                    AND admit_person >= curr_person + 2)
+AND categoryno = 3
+AND botareano IN (1,2,3,4,5)
+AND restno IN (SELECT restno 
+                FROM menu
+                WHERE price BETWEEN 1 * 10000 AND 40 * 10000)
+    
+    
