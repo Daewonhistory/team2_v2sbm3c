@@ -32,7 +32,7 @@
     <!-- Iterate over your data -->
     <tr th:each="restDTO,status : ${searchlist}">
 
-      <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${restDTO.categoryno}"></td>
+      <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${restDTO.restno}"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
       <td class="td_bs"  th:text="${restDTO.categoryno}" id="categoryno"></td>
       <td class="td_bs"  th:text="${restDTO.ownerno}" id="ownerno"></td>
@@ -57,30 +57,30 @@
 
 
         <a href="#" style="text-decoration: none" class="animate__slideOutDown"
-           th:attr="onclick=|upbackward('${restDTO.categoryno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+           th:attr="onclick=|upbackward('${restDTO.restno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/cate/images/decrease.png" class="icon">
 
         </a>
 
 
-        <a style="text-decoration: none" href="#" th:attr="onclick=|upforward('${restDTO.categoryno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+        <a style="text-decoration: none" href="#" th:attr="onclick=|upforward('${restDTO.restno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/cate/images/increase.png" class="icon">
         </a>
-        <a style="text-decoration: none" th:href="@{'/cate/update/' + ${restDTO.categoryno}+ '?word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
+        <a style="text-decoration: none" th:href="@{'/cate/update/' + ${restDTO.restno}+ '?word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
           <img src="/cate/images/update.png" class="icon">
         </a>
 
-        <a style="text-decoration: none" href="#" th:attr="onclick=|deletecate('${restDTO.categoryno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+        <a style="text-decoration: none" href="#" th:attr="onclick=|deleterest('${restDTO.restno}','${restDTO.name}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/cate/images/delete.png" class="icon">
         </a>
         <script>
-            function deletecate(categoryno, catename, word, type,now_page,num) {
-                var name = catename; // restDTO.name 값 가져오기
+            function deleterest(restno, restname, word, type,now_page,num) {
+                var name = restname; // restDTO.name 값 가져오기
 
-                if (confirm(num + "번의 " + name + " 중분류를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
+                if (confirm(restno + "번의 " + name + " 중분류를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
                     var form = document.createElement('form');
                     form.method = 'post';
-                    form.action = '/cate/delete/' + categoryno;
+                    form.action = '/restaurant/delete?restno='+restno;
                     var hiddenField2 = document.createElement('input');
                     hiddenField2.type = 'hidden';
                     hiddenField2.name = 'word'; // 서버에서 사용할 변수 이름

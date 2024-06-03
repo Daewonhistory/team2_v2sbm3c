@@ -29,9 +29,9 @@ public interface RestaurantDAOInter {
 
   public int list_search_count(Map<String, Object> search);
 
-  public int nextval();
+  public int nextval(String businessno);
 
-
+  public int next(String businessno);
   /**
    * 사업자 세션 으로 식당 리스트 출력
    * @param onwerno
@@ -44,4 +44,7 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestaurantVO> list_all();
+
+
+  public int delete(Integer restno);
 }

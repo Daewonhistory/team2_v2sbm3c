@@ -12,6 +12,8 @@ public interface CertifiProInter {
 
   public ArrayList<CertifiVO> findByOnwer(int ownerno);
 
+  public ArrayList<CertifiVO>  businessnoList(int ownerno);
+
 }
 
 

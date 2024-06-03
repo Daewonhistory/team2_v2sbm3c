@@ -172,8 +172,13 @@ public class RestaurantProC implements RestaurantProInter {
   }
 
   @Override
-  public int nextval() {
-    return this.restDAO.nextval();
+  public int nextval(String businessno) {
+    return this.restDAO.nextval(businessno);
+  }
+
+  @Override
+  public int next(String businessno) {
+    return this.restDAO.next(businessno);
   }
 
   /**
@@ -191,6 +196,13 @@ public ArrayList<RestaurantVO> list_all() {
 	ArrayList<RestaurantVO> list = this.restDAO.list_all();
 	return list;
 }
+
+  @Override
+  public int delete(Integer restno) {
+
+    return this.restDAO.delete(restno);
+
+  }
 }
 
 
