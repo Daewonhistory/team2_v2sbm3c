@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.location.LocationDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+	<insert id="create">
+		INSERT INTO LOCATION (locationno, botareano, address, lat, lng, restno)
+		VALUES (location_seq.nextval, #{botareano}, #{address}, #{lat}, #{lng}, #{restno});
+	</insert>
+	<select id="read">
+		SELECT locationno, botareano, address, lat, lng, restno
+		FROM location WHERE restno = #{restno}
+	</select>
+	<select id="list_all">
+		SELECT locationno, botareano, address, lat, lng, restno 
+		FROM location
+	</select>
+	<select id="search_list">
+		SELECT locationno, botareano, address, lat, lng, restno 
+		FROM location WHERE address LIKE '%' || #{word} || '%'
+	</select>
+	<select id="list_by_midareano">
+		SELECT locationno, botareano, address, lat, lng, restno 
+		FROM location 
+		WHERE botareno IN (SELECT botareno
+							FROM botareano
+							WHERE midareano = #{midareano})
+	</select>
+	<select id="list_by_botareano">
+		SELECT locationno, botareano, address, lat, lng, restno 
+		FROM location WHERE botareano = #{botareano}
+	</select>
+	<update id="update">
+		UPDATE location 
+		SET address = #{address}, botareano = #{botareano}, lat = #{lat}, lng = #{lng}
+		WHERE restno = #{restno}
+	</update>
+	<delete id="delete">
+		DELETE FROM location WHERE restno = #{restno}
+	</delete>
+	
+</mapper>
+
+
+

@@ -1,12 +1,14 @@
 /**********************************/
 /* Table Name: 위치정보 */
 /**********************************/
+DROP TABLE location;
+
 CREATE TABLE LOCATION(
 		locationno                    		NUMBER(10)		 NULL 		 PRIMARY KEY,
 		botareano                     		NUMBER(3)		 NOT NULL,
-		address                       		VARCHAR2(50)		 NOT NULL,
-		lat                           		NUMBER(10)		 NOT NULL,
-		lng                           		NUMBER(10)		 NOT NULL,
+		address                       		VARCHAR2(100)		 NOT NULL,
+		lat                           		NUMBER(10,7)		 NOT NULL,
+		lng                           		NUMBER(10,7)		 NOT NULL,
         restno                              NUMBER(10)       NOT NULL,
   FOREIGN KEY (botareano) REFERENCES BOTAREA (botareano),
   FOREIGN KEY (restno) REFERENCES RESTAURANT (restno)
@@ -31,7 +33,7 @@ CREATE SEQUENCE location_seq
   
 -- CREATE
 INSERT INTO location(locationno, botareano, address, lat, lng, restno)
-VALUES(location_seq.nextval, 1, '상세주소', 33.450701, 126.570667);
+VALUES(location_seq.nextval, 1, '상세주소', 33.450701, 126.570667, 4);
 
 COMMIT;
 
@@ -51,4 +53,13 @@ WHERE address LIKE '%검색어%';
 SELECT locationno, botareano, address, lat, lng, restno
 FROM location
 WHERE botareano = 1;
+
+-- UPDATE
+
+UPDATE location
+SET midareano = 1, botareano = 1, address = '주소' , lat = 33.450701, lng = 126.570667, restno = 1
+WHERE locationno = 1;
+
+-- DELETE
+
 

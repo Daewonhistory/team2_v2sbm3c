@@ -25,6 +25,7 @@ COMMENT ON COLUMN MENU.price is '가격';
 COMMENT ON COLUMN MENU.restno is '식당번호';
 COMMENT ON COLUMN MENU.image is '메뉴이미지';
 
+
 DROP SEQUENCE menu_seq;
 
 CREATE SEQUENCE menu_seq

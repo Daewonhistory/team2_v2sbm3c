@@ -68,7 +68,7 @@ CREATE TABLE OWNER(
     /** 이동할 주소 저장 */
     private String url_address = "";
 
-
+    
   }
 
 

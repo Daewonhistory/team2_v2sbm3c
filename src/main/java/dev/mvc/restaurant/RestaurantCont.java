@@ -209,21 +209,17 @@ public class RestaurantCont {
 
 
     }
-  @PostMapping("/delete")
-  public String delete(Model model, @RequestParam(value = "restno",defaultValue = "1")  Integer restno,
-                       @RequestParam("name") String name, HttpSession session,
-                       RedirectAttributes rttr) {
-    System.out.println(restno);
-    int count = this.restaurantProc.delete(restno);
-
-
-    if (count == 1) {
-      rttr.addFlashAttribute("delete", name + "'이 삭제되었습니다.");
-      return "redirect:/restaurant/list";
-    } else {
-      rttr.addFlashAttribute("delete", "삭제 실패");
-      return "redirect:/restaurant/list";
-    }
+  
+  @GetMapping("/main_page")
+  public String main_page(Model model, int restno, int person, String date, int time) {
+	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
+	  System.out.println(restaurantVO.getName());
+	  model.addAttribute("restrauntVO", restaurantVO);
+	  
+	  model.addAttribute("person", person);
+	  model.addAttribute("date", date);
+	  model.addAttribute("time", time);
+	  return "/restaurant_page";
   }
 
 }

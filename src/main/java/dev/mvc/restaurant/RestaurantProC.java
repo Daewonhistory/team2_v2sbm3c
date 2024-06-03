@@ -197,12 +197,11 @@ public ArrayList<RestaurantVO> list_all() {
 	return list;
 }
 
-  @Override
-  public int delete(Integer restno) {
-
-    return this.restDAO.delete(restno);
-
-  }
+@Override
+public RestaurantVO read(int restno) {
+	RestaurantVO restrauntVO = this.restDAO.read(restno);
+	return restrauntVO;
+}
 }
 
 

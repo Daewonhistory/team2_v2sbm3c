@@ -44,7 +44,11 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestaurantVO> list_all();
-
-
-  public int delete(Integer restno);
+  
+  /**
+   * 식당 정보 조회
+   * @param restno
+   * @return
+   */
+  public RestaurantVO read(int restno);
 }

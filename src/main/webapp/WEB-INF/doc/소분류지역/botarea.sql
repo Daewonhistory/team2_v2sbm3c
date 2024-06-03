@@ -577,6 +577,10 @@ commit;
 SELECT botareano, name, midareano
 FROM botarea;
 
+2. 중분류지역으로 조회
+SELECT botareano, name, midareano
+FROM botarea
+WHERE midareano = 9;
 
 -- UPDATE
 UPDATE botarea
