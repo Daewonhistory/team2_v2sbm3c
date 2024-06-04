@@ -1,9 +1,13 @@
 package dev.mvc.restaurant;
 
+import dev.mvc.botarea.BotAreaVO;
+import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.certifi.Certifi;
 import dev.mvc.certifi.CertifiProInter;
 import dev.mvc.dto.RestDTO;
+import dev.mvc.midarea.MidAreaProcInter;
+import dev.mvc.midarea.MidAreaVO;
 import dev.mvc.restimg.RestImgProInter;
 import dev.mvc.restimg.RestimgVO;
 import dev.mvc.tool.Security;
@@ -12,6 +16,7 @@ import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +43,14 @@ public class RestaurantCont {
   @Autowired
   @Qualifier("dev.mvc.restimg.RestImgProC")
   private RestImgProInter restimgproc;
-
+  
+  @Autowired
+  @Qualifier("dev.mvc.midarea.MidAreaProc")
+  private MidAreaProcInter midAreaProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.category.CategoryProc")
+  private CategoryProcInter categoryProc;
 
   @Autowired
   private Security security;
@@ -212,19 +224,60 @@ public class RestaurantCont {
 
     }
   
-  @PostMapping("/search_list")
-  public String search_list(Model model, int person, String date, int time, int categoryno, int minPrice, int maxPrice) {
+  @GetMapping("/search")
+  public String search(Model model) {
+	  ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
+	  model.addAttribute("midAreaList", midAreaList);
+	  ArrayList<CategoryVO> cateList = this.categoryProc.list();
+	  model.addAttribute("cateList", cateList);
+	  return "/search";  
+  }
+  
+  @GetMapping("/search_list")
+  public String search_list(Model model, 
+		  					int person, 
+		  					String date, 
+		  					int time,
+		  					@RequestParam(defaultValue="0") int categoryno,
+		  					@RequestParam(defaultValue="") String botarea,
+		  					@RequestParam(name = "min_price", defaultValue = "0")int minPrice, 
+		  					@RequestParam(name = "max_price", defaultValue = "40")int maxPrice) {
+	  int[] botareanos = null;
+	  if(!botarea.equals("")) {
+		  String[] splitedBotareas = botarea.split("_");
+		  botareanos = new int[splitedBotareas.length];
+		  for(int i = 0;i < splitedBotareas.length; i++) {
+			  botareanos[i] = Integer.parseInt(splitedBotareas[i]);
+		  }
+	  }else {
+		  botareanos = new int[0];
+	  }
+	 
+	  
 	  Map<String, Object> map = new HashMap<String, Object>();
 	  map.put("person", person);
-	  map.put("date", date);
+	  map.put("date", date + " 00:00:00");
 	  map.put("time", time);
 	  map.put("categoryno", categoryno);
+	  map.put("botareanos", botareanos);
 	  map.put("min_price", minPrice);
 	  map.put("max_price", maxPrice);
+	  System.out.println("person:"+person);
+	  System.out.println("date:"+date);
+	  System.out.println("time:"+time);
+	  System.out.println("categoryno:"+categoryno);
+	  System.out.println("min_price:"+minPrice);
+	  System.out.println("max_price:"+maxPrice);
 	  
 	  ArrayList<RestaurantVO> list = this.restaurantProc.condition_search_list(map);
+	  
+	  String date1 = this.restaurantProc.test(date);
 	  model.addAttribute("list", list);
-	  return "/searach_list";
+	  
+	  model.addAttribute("person", person);
+	  model.addAttribute("date", date);
+	  model.addAttribute("time", time);
+	  return "/search_list";
   }
   
   @GetMapping("/main_page")

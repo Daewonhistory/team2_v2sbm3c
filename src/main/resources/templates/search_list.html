@@ -4,9 +4,13 @@
 	<div>
 		<span class="page_name">검색 결과</span>
 	</div>
-	
+	<section>
+		<span th:text="|인원:${person}|"></span>
+		<span th:text="|날짜:${date}|"></span>
+		<span th:text="|시간:${time}시|"></span>
+	</section>
 	<section id="sec_list">
-		<div><span id="list_count">5</span>개의 매장이 검색되었습니다.</div>
+		<div><span id="list_count" th:text="${list.size()}"></span>개의 매장이 검색되었습니다.</div>
 		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
 			<input type="hidden" id="restno" value="1">
 			<div style="flex:0 0 20%; height:100%">
@@ -58,11 +62,26 @@
 				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
 			</div>
 		</div>
+		<div th:each="restaurantVO, status : ${list}" style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event,)">
+			<input type="hidden" id="restno" th:value="${restaurantVO.restno}">
+			<input type="hidden" id="person" th:value="${person}">
+			<input type="hidden" id="time" th:value="${time}">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2 th:text="${restaurantVO.name}"></h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+			</div>
+		</div>
 	</section>
 	<script>
 		function moveRestaurant(event){
-			let restno = event.currentTarget.querySelector('input').value;
-			location.href = "/restaurant?restno=" + restno;
+			let inputs = event.currentTarget.querySelectorAll('input');
+			let restno = inputs[0].value;
+			let person = inputs[1].value;
+			let time = inputs[2].value;
+			location.href = "/restaurant/main_page?restno=" + restno + "&person=" + person + "&time=" + time;
 		}
 	</script>
 </div>

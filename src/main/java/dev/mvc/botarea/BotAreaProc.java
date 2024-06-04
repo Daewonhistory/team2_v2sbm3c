@@ -18,37 +18,37 @@ public class BotAreaProc implements BotAreaProcInter {
 
 	@Override
 	public BotAreaVO read(int botareano) {
-		BotAreaVO botAreaVO = this.read(botareano);
+		BotAreaVO botAreaVO = this.botAreaDAO.read(botareano);
 		return botAreaVO;
 	}
 
 	@Override
 	public ArrayList<BotAreaVO> list_all() {
-		ArrayList<BotAreaVO> list = this.list_all();
+		ArrayList<BotAreaVO> list = this.botAreaDAO.list_all();
 		return list;
 	}
 
 	@Override
 	public ArrayList<BotAreaVO> search_list(String word) {
-		ArrayList<BotAreaVO> list = this.search_list(word);
+		ArrayList<BotAreaVO> list = this.botAreaDAO.search_list(word);
 		return list;
 	}
 
 	@Override
 	public ArrayList<BotAreaVO> search_by_midareano(int midareano) {
-		ArrayList<BotAreaVO> list = this.search_by_midareano(midareano);
+		ArrayList<BotAreaVO> list = this.botAreaDAO.search_by_midareano(midareano);
 		return list;
 	}
 
 	@Override
 	public int update(BotAreaVO botAreaVO) {
-		int cnt = this.update(botAreaVO);
+		int cnt = this.botAreaDAO.update(botAreaVO);
 		return cnt;
 	}
 
 	@Override
 	public int delete(int botareano) {
-		int cnt = this.delete(botareano);
+		int cnt = this.botAreaDAO.delete(botareano);
 		return cnt;
 	}
 

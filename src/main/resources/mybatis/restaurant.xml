@@ -161,10 +161,10 @@
 		WHERE restno IN (
 			SELECT restno
     		FROM admitperson
-    		WHERE reserve_date = TO_DATE(#{date}, 'YYYY-MM-DD')
+    		WHERE reserve_date = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
     		AND time = #{time}
-    		AND admit_person >= curr_person + #{person}
-		<if test="categoryno != null">
+    		AND admit_person >= curr_person + #{person})
+		<if test="categoryno != ''">
 			AND categoryno = #{categoryno}
 		</if>
 		<if test="botareanos.length > 0">
@@ -177,6 +177,12 @@
 		    SELECT restno 
 		    FROM menu
 		    WHERE price BETWEEN #{min_price} * 10000 AND #{max_price} * 10000)
+	</select>
+	
+	<select id = "test">
+		SELECT restno
+    		FROM admitperson
+    		WHERE reserve_date = TO_DATE('2024-06-06 12:06:00', 'YYYY-MM-DD HH24:MI:SS')
 	</select>
 	
 	<!-- 좌표값을 통한 식당 검색 -->
