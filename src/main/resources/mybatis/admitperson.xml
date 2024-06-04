@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.admitperson.AdmitPersonDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+	
+	<select id="list_all">
+		SELECT admitpersonno, reserve_date, time, admit_person, curr_person, restno
+		FROM admitperson
+	</select>
+	<select id="admit_list" parameterType="HashMap">
+		SELECT admitpersonno, reserve_date, time, admit_person, curr_person, restno
+		FROM admitperson
+		WHERE restno = #{restno}
+		AND reserve_date = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
+		AND admit_person >= curr_person + #{personnel}
+
+	</select>
+	<update id="update_admit_person">
+		UPDATE admitperson
+		SET admit_person = #{admit_person}
+		WHERE admitpersonno = #{admitpersonno}
+	</update>
+	<update id="add_curr_person">
+		UPDATE curr_person SET curr_person = curr_person + #{person} WHERE admitpersonno = #{admitpersonno}
+	</update>
+	<update id="minus_curr_person">
+		UPDATE curr_person SET curr_person = curr_person - #{person} WHERE admitpersonno = #{admitpersonno}
+	</update>
+	
+</mapper>
+
+
+
