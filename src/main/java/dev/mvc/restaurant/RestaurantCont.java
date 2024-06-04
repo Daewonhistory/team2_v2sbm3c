@@ -3,8 +3,7 @@ package dev.mvc.restaurant;
 import dev.mvc.botarea.BotAreaVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
-import dev.mvc.certifi.Certifi;
-import dev.mvc.certifi.CertifiProInter;
+
 import dev.mvc.dto.RestDTO;
 import dev.mvc.midarea.MidAreaProcInter;
 import dev.mvc.midarea.MidAreaVO;
@@ -36,9 +35,6 @@ public class RestaurantCont {
   @Qualifier("dev.mvc.restaurant.RestaurantProc")
   private RestaurantProInter restaurantProc;
 
-  @Autowired
-  @Qualifier("dev.mvc.certifi.CertifiProc")
-  private CertifiProInter certifipro;
 
   @Autowired
   @Qualifier("dev.mvc.restimg.RestImgProC")
@@ -88,23 +84,19 @@ public class RestaurantCont {
    */
 
   @PostMapping("/create")
-  public String restaurant(Model model,String businessno, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
+  public String restaurant(Model model, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
 
     restaurantVO.setOwnerno(8);
 
 
 
 
-    int nextval = this.restaurantProc.nextval(businessno);
 
-    System.out.println(nextval);
-    if (nextval > 0) {
-      return "redirect:/";
-    } else {
+
 
       int count = this.restaurantProc.create(restaurantVO);
 
-      int next = this.restaurantProc.next(businessno);
+      int restno = this.restaurantProc.foreign(restaurantVO.getOwnerno());
 
       if (count == 1) {
 
@@ -125,13 +117,13 @@ public class RestaurantCont {
 
               if (size > 0) {
                 String exe = fileNames[i].split("\\.")[1];
-                String newFileName = "owner_" + (i+1) + "_" + System.currentTimeMillis() + "." + exe;
+                String newFileName = "owner_" + (i+1)  + "." + exe;
                 String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
 
                 if (Tool.isImage(fileSaved)) {
                   String thumb = Tool.preview(upDir, fileSaved, 200, 150);
-                  System.out.println(restaurantVO.getRestno());
-                  restimgVO.setRestno(next);
+
+                  restimgVO.setRestno(restno);
                   restimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
                   restimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
 
@@ -140,7 +132,7 @@ public class RestaurantCont {
                     return "redirect:/category/list";
                   }
                 } else {
-                  return "redirect:/category/list"; // 파일이 이미지가 아닐 경우 리다이렉트
+                  return "redirect:/restaurant/list"; // 파일이 이미지가 아닐 경우 리다이렉트
                 }
               } else {
                 return "redirect:/category/list"; // 파일 크기가 0일 경우 리다이렉트
@@ -158,7 +150,7 @@ public class RestaurantCont {
       } else {
         return "redirect:/restaurant/create";
       }
-    }
+
 
 
 

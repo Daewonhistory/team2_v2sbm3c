@@ -172,8 +172,8 @@ public class RestaurantProC implements RestaurantProInter {
   }
 
   @Override
-  public int nextval(String businessno) {
-    return this.restDAO.nextval(businessno);
+  public int foreign(int ownerno) {
+    return this.restDAO.foreign(ownerno);
   }
 
   @Override

@@ -104,6 +104,8 @@ public interface OwnerProInter {
    * @return
    */
   public int update_grade(HashMap<String,Object> map);
+
+  public int updateCertifi(OwnerVO ownerVO);
 }
 
 

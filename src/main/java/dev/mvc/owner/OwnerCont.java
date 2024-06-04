@@ -1,8 +1,6 @@
 package dev.mvc.owner;
 
-import dev.mvc.certifi.Certifi;
-import dev.mvc.certifi.CertifiProInter;
-import dev.mvc.certifi.CertifiVO;
+
 import dev.mvc.menu.Menu;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
@@ -32,9 +30,7 @@ public class OwnerCont {
   @Qualifier("dev.mvc.owner.OwnerProc")
   private OwnerProInter ownerProc;
 
-  @Autowired
-  @Qualifier("dev.mvc.certifi.CertifiProc")
-  private CertifiProInter certifiProc;
+
 
 
   @Autowired
@@ -477,8 +473,7 @@ public class OwnerCont {
       return "redirect:/owner/list";
     } else {
       model.addAttribute("ownerVO", read);
-      ArrayList<CertifiVO> list = this.certifiProc.findByOnwer(ownerno);
-      model.addAttribute("list", list);
+
 
       return "owner/update_grade";
     }
@@ -552,13 +547,13 @@ public class OwnerCont {
    * 사업자 등록 처리 메서드
    *
    * @param model
-   * @param certifiVO
+   * @param ownerVO
    * @param rrtr
    * @return
    */
   @PostMapping("/certifi")
 
-  public String certicreate(Model model, CertifiVO certifiVO, RedirectAttributes ra) {
+  public String certicreate(Model model, OwnerVO ownerVO, RedirectAttributes ra) {
     String file1 = ""; // 원본 파일명 image
     String file1saved = ""; // 저장된 파일명, image
     String thumb1 = ""; // preview image
@@ -567,15 +562,15 @@ public class OwnerCont {
     String file2saved = ""; // 저장된 파일명, image
     String thumb2 = ""; // preview image
 
-    String upDir = Certifi.getUploadDir(); // 파일을 업로드할 폴더 준비
+    String upDir = Owner.getUploadDir(); // 파일을 업로드할 폴더 준비
     System.out.println("-> upDir: " + upDir);
-    System.out.println("파일명" + certifiVO.getCertifi_image());
-    System.out.println("파일명" + certifiVO.getIdenti_card_image());
+    System.out.println("파일명" + ownerVO.getCertifi_image());
+    System.out.println("파일명" + ownerVO.getIdenti_card_image());
     // 전송 파일이 없어도 file1MF 객체가 생성됨.
     // <input type='file' class="form-control" name='file1MF' id='file1MF'
     // value='' placeholder="파일 선택">
-    MultipartFile mf1 = certifiVO.getFile1MF();
-    MultipartFile mf2 = certifiVO.getFile2MF();
+    MultipartFile mf1 = ownerVO.getFile1MF();
+    MultipartFile mf2 = ownerVO.getFile2MF();
 
     // file1 처리
     file1 = mf1.getOriginalFilename(); // 원본 파일명 산출
@@ -591,19 +586,21 @@ public class OwnerCont {
         long size1 = mf1.getSize(); // 파일 크기
         long size2 = mf2.getSize(); // 파일 크기
 
+        System.out.println(size1);
+
         if (size1 > 0 && size2 > 0) { // 파일 크기가 0보다 큰지 확인
           String exe1 = file1.split("\\.")[1]; // 확장자 추출
           String exe2 = file2.split("\\.")[1]; // 확장자 추출
-          String new_file_name1 = "onwer_" + certifiVO.getOwnerno() + "_b"+certifiVO.getCertifino()+"."+exe1;
-          String new_file_name2 = "onwer_" + certifiVO.getOwnerno() + "_i"+certifiVO.getCertifino()+"."+exe2;
+          String new_file_name1 = "onwer_" + ownerVO.getOwnerno() + "_b"+ownerVO.getCertifi_image()+"."+exe1;
+          String new_file_name2 = "onwer_" + ownerVO.getOwnerno() + "_i"+"w"+"."+exe2;
           file1saved = Upload.saveFileSpring(mf1, upDir, new_file_name1); // 파일 저장 후 업로드된 파일명 리턴
           file2saved = Upload.saveFileSpring(mf2, upDir, new_file_name2); // 파일 저장 후 업로드된 파일명 리턴
 
           if (Tool.isImage(file1saved) && Tool.isImage(file2saved)) { // 이미지 파일인지 검사
             thumb1 = Tool.preview(upDir, file1saved, 200, 150); // 썸네일 생성
             thumb2 = Tool.preview(upDir, file2saved, 200, 150); // 썸네일 생성
-            certifiVO.setCertifi_image(file1saved); // 저장된 파일명 설정
-            certifiVO.setIdenti_card_image(file2saved); // 저장된 파일명 설정
+            ownerVO.setCertifi_image(file1saved); // 저장된 파일명 설정
+            ownerVO.setIdenti_card_image(file2saved); // 저장된 파일명 설정
           } else {
             return "redirect:/"; // 파일이 이미지가 아닐 경우 리다이렉트
           }
@@ -621,7 +618,8 @@ public class OwnerCont {
       return "redirect:/"; // 전송된 파일이 없을 경우 리다이렉트
     }
 
-    int cnt = this.certifiProc.createCertifi(certifiVO);
+    int cnt = this.ownerProc.updateCertifi(ownerVO);
+    System.out.println("-> update cnt"+cnt);
 
     if (cnt == 0) {
       model.addAttribute("cnt", cnt);

@@ -179,5 +179,10 @@ public class OwnerProC implements OwnerProInter {
     return this.onwerDAO.update_grade(map);
   }
 
+  @Override
+  public int updateCertifi(OwnerVO ownerVO) {
+    return this.onwerDAO.updateCertifi(ownerVO);
+  }
+
 
 }
