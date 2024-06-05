@@ -49,23 +49,23 @@
     <section id="loca_shortcut_section">
         <h2>위치기반 숏컷</h2>
         <div id="midarea_div">
-        	<button type="button" value="9" onclick="openBotarea(this)">서울</button>
-            <button type="button" value="2" onclick="openBotarea(this)">경기</button>
-            <button type="button" value="17" onclick="openBotarea(this)">충북</button>
-            <button type="button" value="16" onclick="openBotarea(this)">충남</button>
-            <button type="button" value="1" onclick="openBotarea(this)">강원도</button>
-            <button type="button" value="4" onclick="openBotarea(this)">경북</button>
-            <button type="button" value="3" onclick="openBotarea(this)">경남</button>
-            <button type="button" value="14" onclick="openBotarea(this)">전북</button>
-            <button type="button" value="13" onclick="openBotarea(this)">전남</button>
-            <button type="button" value="15" onclick="openBotarea(this)">제주</button>
-            <button type="button" value="10" onclick="openBotarea(this)">세종</button>
-            <button type="button" value="6" onclick="openBotarea(this)">대구</button>
-            <button type="button" value="5" onclick="openBotarea(this)">광주</button>
-            <button type="button" value="7" onclick="openBotarea(this)">대전</button>
-            <button type="button" value="11" onclick="openBotarea(this)">울산</button>
-            <button type="button" value="8" onclick="openBotarea(this)">부산</button>
-            <button type="button" value="12" onclick="openBotarea(this)">인천</button>
+        	<button type="button" value="9" onclick="selectMidArea(this)">서울</button>
+            <button type="button" value="2" onclick="selectMidArea(this)">경기</button>
+            <button type="button" value="17" onclick="selectMidArea(this)">충북</button>
+            <button type="button" value="16" onclick="selectMidArea(this)">충남</button>
+            <button type="button" value="1" onclick="selectMidArea(this)">강원도</button>
+            <button type="button" value="4" onclick="selectMidArea(this)">경북</button>
+            <button type="button" value="3" onclick="selectMidArea(this)">경남</button>
+            <button type="button" value="14" onclick="selectMidArea(this)">전북</button>
+            <button type="button" value="13" onclick="selectMidArea(this)">전남</button>
+            <button type="button" value="15" onclick="selectMidArea(this)">제주</button>
+            <button type="button" value="10" onclick="selectMidArea(this)">세종</button>
+            <button type="button" value="6" onclick="selectMidArea(this)">대구</button>
+            <button type="button" value="5" onclick="selectMidArea(this)">광주</button>
+            <button type="button" value="7" onclick="selectMidArea(this)">대전</button>
+            <button type="button" value="11" onclick="selectMidArea(this)">울산</button>
+            <button type="button" value="8" onclick="selectMidArea(this)">부산</button>
+            <button type="button" value="12" onclick="selectMidArea(this)">인천</button>
         </div>
         
         <div id="botarea_div" style="display:none">
@@ -250,28 +250,47 @@
 		
 		showSlide(currentIndex);
 		
-		function openBotarea(eventButton){
-			let selected_midarea_btn = eventButton;
-			let btn_red = document.getElementsByClassName('btn_red');
-			if(btn_red.length != 0){
-				btn_red[0].classList.remove('btn_red');
-			}
-			selected_midarea_btn.classList.add('btn_red');
-			let selected_midareano = selected_midarea_btn.value;
-			let botarea_div = document.getElementById("botarea_div");
-			//fetch부분
-			botarea_div.innerHTML = 
-				'<input type="text" value="'+selected_midareano+'"><br>'+
-				'<button type="button" onclick="selectBotarea(this)" value="0">' + selected_midarea_btn .textContent + '전체</button>'+
-				`<button type="button onclick="selectBotarea(this)" value="1">강남구</button>
-	            <button type="button" onclick="selectBotarea(this)" value="1">강동구</button>
-	            <button type="button" onclick="selectBotarea(this)" value="1">강북구</button>
-	            <button type="button" onclick="selectBotarea(this)" value="1">강서구</button>
-	            <button type="button" onclick="selectBotarea(this)" value="1">관악구</button>
-	            <button type="button" onclick="selectBotarea(this)" value="1">광진구</button>`;
-			botarea_div.style.display="block";
-		}
 		
+		
+		function selectMidArea(selectedMidArea){
+		fetch(
+          "/botarea/botarea_list",
+          {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({"midareano": selectedMidArea.value})
+          }
+        )
+          .then((response) => response.json())
+          .then((rdata) => {
+            const divBotAreas = document.getElementById("botarea_div");
+            divBotAreas.innerHTML = '';
+            let allSelect = document.createElement("button");
+            allSelect.type = "button";
+			allSelect.value = 0;
+			allSelect.onclick=function() {
+				selectBotarea(allSelect);
+			};
+			allSelect.classList.add('btn_botarea');
+            allSelect.textContent = "모든 지역";
+            
+            divBotAreas.appendChild(allSelect);
+            rdata.forEach(botAreaVO => {
+              const botArea = document.createElement("button");
+              botArea.textContent = botAreaVO.name;
+              botArea.type = "button";
+              botArea.name = "botareas";
+              botArea.onclick=function() {
+				  selectBotarea(botArea);
+			  };
+			  botArea.value = botAreaVO.botareano;
+			  botArea.classList.add('btn_botarea');
+              
+              divBotAreas.appendChild(botArea);
+              botarea_div.style.display="block";
+            });
+          });
+	}
 		function selectBotarea(eventButton){
 			let selected_botarea_btn = eventButton;
 			console.log(selected_botarea_btn.value);
@@ -281,7 +300,12 @@
 					button.classList.toggle('btn_red');
 				}
 			}else{
-				selected_botarea_btn.classList.toggle('btn_red');	
+				let today = new Date();
+				let year = today.getFullYear();
+				let month = today.getMonth()+1;
+				let date = today.getDate();
+				let full_date = year + "-" + month + "-" + date;
+				location.href="/restaurant/search_list?person=2&date=" + full_date + "&time=6&botareas=" + selected_botarea_btn.value;
 			}
 			
 		}

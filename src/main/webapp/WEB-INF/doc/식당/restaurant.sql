@@ -37,17 +37,21 @@ CREATE SEQUENCE restaurant_seq
   NOCYCLE;
   
   
+
 SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano
 FROM restaurant
-WHERE restno IN (SELECT restno
-                    FROM admitperson
-                    WHERE reserve_date = TO_DATE('2024-06-01', 'YYYY-MM-DD')
-                    AND time = 1
-                    AND admit_person >= curr_person + 2)
+WHERE restno IN (
+    SELECT restno
+    FROM admitperson
+    WHERE reserve_date = TO_DATE('2024-06-06 00:00:00', 'YYYY-MM-DD')
+    AND time = 1
+    AND admit_person >= curr_person + 2)
 AND categoryno = 3
-AND botareano IN (1,2,3,4,5)
-AND restno IN (SELECT restno 
-                FROM menu
-                WHERE price BETWEEN 1 * 10000 AND 40 * 10000)
+AND botareano IN (1)
+AND restno IN (
+    SELECT restno 
+    FROM menu
+    WHERE price BETWEEN 1 * 10000 AND 20 * 10000)
+
     
     

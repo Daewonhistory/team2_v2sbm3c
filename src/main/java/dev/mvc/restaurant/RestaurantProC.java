@@ -205,8 +205,14 @@ public class RestaurantProC implements RestaurantProInter {
 	
 	@Override
 	public ArrayList<RestaurantVO> condition_search_list(Map<String, Object> map) {
-		ArrayList<RestaurantVO> list = this.condition_search_list(map);
+		ArrayList<RestaurantVO> list = this.restDAO.condition_search_list(map);
 		return list;
+	}
+	
+	@Override
+	public String test(String date1) {
+		String date = this.restDAO.test(date1);
+		return date;
 	}
 }
 

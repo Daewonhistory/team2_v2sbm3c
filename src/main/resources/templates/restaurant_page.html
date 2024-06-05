@@ -29,8 +29,18 @@
 			</div>
 		</div>	
 	</section>
-	
+	<section id="sec_reserve_condition">
+				<span class="section_name">예약 조건</span><br>
+				<label>인원:</label><input type="number" id="personnel" name="person" onchange="searchPossibleTime()">명
+				<input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" value="2024-06-04">
+				<div class="vertical_scroll" id="scrollContainer">
+							
+				</div>
+	</section>
 	<script>
+		window.onload = () => {
+			searchPossibleTime();
+		}
 		let slider = document.getElementById('slider');
 		let isDown = false;
 		let startX;
@@ -117,31 +127,46 @@
 		  showSlide(currentIndex);
 		}
 		
+		function searchPossibleTime(){
+			const reserveDate = document.getElementById("reserve_date");
+			const personnel = document.getElementById("personnel");
+			
+			fetch(
+	          "/admitPerson/searchPossibleTime",
+	          {
+	            method: "POST",
+	            headers: {"Content-Type": "application/json"},
+	            body: JSON.stringify({
+					"restno": [[${restrauntVO.restno}]],
+					"personnel": personnel.value,
+					"date": reserveDate.value
+					})
+	          }
+	        )
+	          .then((response) => response.json())
+	          .then((rdata) => {
+	            const scrollContainer = document.getElementById("scrollContainer");
+	            scrollContainer.innerHTML = '';
+	            
+	            rdata.forEach(admitPersonVO => {
+	              const time = document.createElement("button");
+	              time.textContent = admitPersonVO.time + ":00";
+	              time.type = "button";
+	              time.name = "botareas";
+
+				  time.value = admitPersonVO.admitpersonno;
+				  time.classList.add('btn_botarea');
+	              
+	              scrollContainer.appendChild(time);
+	            });
+	          });
+		}
 		document.getElementById('next').addEventListener('click', nextSlide);
 		document.getElementById('prev').addEventListener('click', prevSlide);
 		
 		showSlide(currentIndex);
 		
-		function openBotarea(eventButton){
-			let selected_midarea_btn = eventButton;
-			let btn_red = document.getElementsByClassName('btn_red');
-			if(btn_red.length != 0){
-				btn_red[0].classList.remove('btn_red');
-			}
-			selected_midarea_btn.classList.add('btn_red');
-			let selected_midareano = selected_midarea_btn.value;
-			let botarea_div = document.getElementById("botarea_div");
-			//fetch부분
-			botarea_div.innerHTML = 
-				'<input type="text" value="'+selected_midareano+'"><br>'+
-				`<button type="button">강남구</button>
-	            <button type="button">강동구</button>
-	            <button type="button">강북구</button>
-	            <button type="button">강서구</button>
-	            <button type="button">관악구</button>
-	            <button type="button">광진구</button>`;
-			botarea_div.style.display="block";
-		}
+		
 	</script>
 </div>
 </html>
