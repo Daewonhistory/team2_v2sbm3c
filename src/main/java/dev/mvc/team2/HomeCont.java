@@ -37,10 +37,7 @@ public class HomeCont {
   public String mobl() {
     return "mobile_login";
   }
-  @RequestMapping("/mobile3")
-  public String moble() {
-    return "mobile_login_info";
-  }
+
   @RequestMapping("/search")
   public String search() {
     return "search";
