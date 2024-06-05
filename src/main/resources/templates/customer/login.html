@@ -1,8 +1,95 @@
 <!DOCTYPE html>
-<div th:fragment="loginform"> <!-- <div th:replace=...-->
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content">
+
+<!--<div th:fragment="loginform"> &lt;!&ndash; <div th:replace=...&ndash;&gt;-->
 
 
+  <div th:text="${fail}">
 
+  </div>
+  <script th:inline="javascript">
+    if ([[${error}]]) {
+      alert([[${error}]]);
+    }
+  </script>
+  <script>
+
+
+    window.onload = function () {
+
+      document.querySelector('#id').addEventListener('keypress', (event) => {
+
+        let id = document.getElementById('id').value;
+
+
+        if (id !== "" && event.key === 'Enter') {
+          document.getElementById('passwd').focus();
+        } else if (passwd === "" && event.key === 'Enter') {
+          document.getElementById('passwd').focus();
+        }
+      });
+
+      document.querySelector('#passwd').addEventListener('keypress', (event) => {
+        let passwd = document.getElementById('passwd').value.trim();
+        if (passwd !== "" && event.key === 'Enter') {
+          document.getElementById('btn_send').focus();
+        } else if (passwd === "" && event.key === 'Enter') {
+          document.getElementById('passwd').focus();
+        }
+
+      });
+
+
+    }
+
+
+    function send() { // 회원 가입 처리
+      let id = document.getElementById('id').value;
+
+      let idfocus = document.getElementById('id');
+      let id_msg = document.getElementById('id_msg');
+
+      if (id == null || id.trim() == null) {
+        alert('ID를 입력해주세요');
+        return false; // 중복 확인을 먼저 하지 않았으므로 회원 가입 진행 중지
+      }
+
+      if (id.trim().length == 0) {
+        id_msg.style.fontSize = "12px";
+        id_msg.innerHTML = 'ID가 누락되었습니다. ID 입력은 필수 입니다.';
+        id_msg.classList.add('span_warning');    // class 적용
+        idfocus.focus();
+
+        return false;  // 회원 가입 진행 중지
+
+      }
+      if (id.trim().length < 4) {
+        id_msg.innerHTML = ' ID(이메일)는 3자이상 권장합니다.';
+        id_msg.style.marginTop = "5px";
+        id_msg.classList.add('span_warning');    // class 적용
+        id.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
+      // 패스워드를 정상적으로 2번 입력했는지 확인
+      let passwd = document.getElementById('passwd').value;
+
+      if (passwd == null || passwd.trim() == null) {
+        alert('비밀번호를  입력해주세요');
+        return false;
+      }
+
+      if (passwd.trim().length == 0) {
+        alert('패스워드가 누락되었습니다. 패스워드는 입력은 필수 입니다.');
+        return false;
+      }
+
+
+      document.getElementById('frm').submit(); // required="required" 작동 안됨.
+    }
+  </script>
 
 
 
@@ -10,13 +97,19 @@
 
   <div class="login-wrapper">
     <h2>회원 로그인</h2>
-    <form method="post" action="서버의url" id="login-form">
-      <input type="text" name="userName" placeholder="이메일">
-      <input type="password" name="userPassword" placeholder="비밀번호">
-      <label for="remember-check">
-        <input type="checkbox" id="remember-check">     아이디 저장하기
+    <form method="post" action="/customer/login" id="login-form">
+      <input type="text" name="id" placeholder="아이디" id="id" value="kksos28"  autofocus="autofocus">
+      <input type="password" name="passwd"  id="passwd" value="rbtlr1234"  placeholder="비밀번호">
+      <label for="id_save">
+        <input type="checkbox"  name="id_save" id="id_save"  th:checked="${ck_id_save == 'Y'}" value="Y" >     아이디 저장하기
       </label>
+      <label for="passwd_save">
+        <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"/> 비밀번호 저장      </label>
+
+
       <input type="submit" value="Login">
     </form>
   </div>
 </div>
+
+</html>

@@ -198,7 +198,7 @@ public class CustomerCont {
     String id = (String) session.getAttribute("id");
 
     if (id == null) {
-      return "/customer/login_cookie";
+      return "/customer/login";
     } else {
       return "redirect:/";
     }
@@ -351,6 +351,25 @@ public class CustomerCont {
       model.addAttribute("customerVO", customerVO);
 
       return "/customer/my_page";
+
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
+  }
+
+
+  @GetMapping("/my_info_update")
+  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
+
+
+    if (this.customerProc.isCustomer(session)) {
+      String id = (String) session.getAttribute("id");
+      CustomerVO customerVO = this.customerProc.readById(id);
+
+      model.addAttribute("customerVO", customerVO);
+
+      return "/customer/my_info_update";
 
     } else {
       rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");

@@ -27,21 +27,28 @@
     </main>    
     <aside id="dock">
     	<nav class="bottom-nav">
-	        <a href="/mobile" class="nav-item">
+	        <a href="/" class="nav-item">
               <img src="/images/icon/active_home.svg" alt="Home" class="icon">
             </a>
             <a href="/restaurant/search" class="nav-item">
-              <img src="/images/icon/home.svg" alt="Search" class="icon">
+              <img src="/images/icon/search.svg" alt="Search" class="icon">
             </a>
             <a href="#likes" class="nav-item">
               <img src="/images/icon/favorite.svg" alt="Likes" class="icon">
             </a>
-            <a href="#profile" class="nav-item">
+            <a th:if="${session.id == null }" href="/customer/login" class="nav-item">
               <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
             </a>
+            <a th:if="${session.id != null }" href="/customer/my_page" class="nav-item">
+              <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
+        </a>
 	    </nav>
     </aside>
-	<div id="filter_toggle"><img src="/images/home.png" style="width:100%;height: 100%;opacity: 0.4;"></div>    
+    <div id="filter_toggle">
+      <a href="/manager">
+        <img src="/images/home.png" style="width: 100%; height: 100%; opacity: 0.4;">
+      </a>
     </div>
+  </div>
 </body>
 </html>
