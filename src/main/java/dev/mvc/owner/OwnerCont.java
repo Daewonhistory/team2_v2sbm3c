@@ -1,10 +1,12 @@
 package dev.mvc.owner;
 
 
+import com.google.cloud.translate.*;
+import com.maxmind.geoip2.model.CityResponse;
 import dev.mvc.menu.Menu;
-import dev.mvc.tool.Security;
-import dev.mvc.tool.Tool;
-import dev.mvc.tool.Upload;
+import dev.mvc.ownerhistory.OwnerHistoryProcInter;
+import dev.mvc.ownerhistory.OwnerHistoryVO;
+import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,11 +16,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
@@ -32,13 +36,21 @@ public class OwnerCont {
 
 
 
+  @Autowired
+  @Qualifier("dev.mvc.ownerhistory.OwnerHistoryProc")
+  private OwnerHistoryProcInter ownerhisProc;
+
 
   @Autowired
   private Security security;
 
+  private final String YOUR_IPINFO_TOKEN = "";
+
+
   public OwnerCont() {
 //    System.out.println("CustomerCont created");
   }
+
 
 
   /*
@@ -206,7 +218,8 @@ public class OwnerCont {
                       HttpSession session,
                       HttpServletResponse response,
                       HttpServletRequest request,
-                      RedirectAttributes rttr
+                      RedirectAttributes rttr,
+                      OwnerHistoryVO historyVO
   ) {
 
 
@@ -218,6 +231,41 @@ public class OwnerCont {
     System.out.println(cnt);
     if (cnt == 1) {
       OwnerVO ownerVO = this.ownerProc.readById(id);
+
+
+      historyVO.setOwnerno(ownerVO.getOwnerno());
+
+
+      String ipAddress =  ClientUtils.getRemoteIP(request);
+
+      System.out.println(ipAddress);
+      historyVO.setIp(ipAddress);
+
+
+      historyVO.setLogininfo(request.getHeader("User-Agent"));
+      IpLocationService ipLocationService = new IpLocationService();
+
+      Map<String, Object> location = ipLocationService.getLocation(ipAddress, YOUR_IPINFO_TOKEN);
+      String city = (String) location.get("city");
+
+      if (city == null ){
+        city = "개인ip위치파악 X";
+      } else {
+        Translate translate = TranslateOptions.newBuilder().setApiKey("").build().getService();
+        Translation translation = translate.translate(city, Translate.TranslateOption.targetLanguage("ko"));
+
+
+        if (translation.getTranslatedText().equals("서울")) {
+          city = translation.getTranslatedText() + "특별시";
+        } else {
+          city = translation.getTranslatedText() + "시";
+        }
+      }
+      System.out.println("city"+city);
+
+
+      historyVO.setCity(city);
+      int history = ownerhisProc.create(historyVO);
       if (id_save.equals("Y")) { // id를 저장할 경우, Checkbox를 체크한 경우
         Cookie ck_id = new Cookie("ck_id", id);
         ck_id.setPath("/");  // root 폴더에 쿠키를 기록함으로 모든 경로에서 쿠기 접근 가능

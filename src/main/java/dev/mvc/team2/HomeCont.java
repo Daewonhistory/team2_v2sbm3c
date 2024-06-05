@@ -17,18 +17,31 @@ public class HomeCont {
 
   }
 
-  @RequestMapping("/")
-
+  @GetMapping("/")
   public String Home() {
     return "index";
   }
-  @RequestMapping("/mobile")
 
+
+
+  @RequestMapping("/mobile")
   public String mobile() {
     return "mobile";
   }
-  @RequestMapping("/search")
 
+  @RequestMapping("/mobile2")
+  public String mob() {
+    return "mobile_layout";
+  }
+  @RequestMapping("/mobilel")
+  public String mobl() {
+    return "mobile_login";
+  }
+  @RequestMapping("/mobile3")
+  public String moble() {
+    return "mobile_login_info";
+  }
+  @RequestMapping("/search")
   public String search() {
     return "search";
   }
