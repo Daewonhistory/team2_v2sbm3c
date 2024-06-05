@@ -17,16 +17,18 @@
   </header>
   <main>
     <th:block layout:fragment="content">
-      <section th:each="historyDTO : ${loginHistoryList}" id="login-history" class="login-history-section">
-
-        <div>
-          <div class="login-date-header" th:text="${historyDTO.key}"></div>
+    <div th:each="historyDTO : ${loginHistoryList}">
+    	<div class="login-date-header" th:text="${historyDTO.key}"></div>
+    	<section  id="login-history" class="login-history-section">
+        <div>  
           <section class="login-info" th:each="detail : ${historyDTO.value}">
             <div class="login-time" th:text="${detail.login_times}"></div>
             <div class="login-info-detail" th:text="${detail.city}"></div>
           </section>
         </div>
       </section>
+    </div>
+      
 
     </th:block>
   </main>
