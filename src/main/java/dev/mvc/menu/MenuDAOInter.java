@@ -33,6 +33,14 @@ public interface MenuDAOInter {
 	 */
 	public int update_by_menuno(MenuVO menuVO);
 	
+	
+	/**
+	 * 식당의 메뉴 조회
+	 * @param restno
+	 * @return
+	 */
+	public ArrayList<MenuVO> list_by_restno(int restno);
+	
 	/**
 	 * 메뉴 이름 검색 + 페이징
 	 * @param word

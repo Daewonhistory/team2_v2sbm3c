@@ -31,7 +31,7 @@
 			<section id="sec_reserve_condition">
 				<span class="section_name">예약 조건</span><br>
 				<label>인원:</label><input type="number" name="person" value="2">명
-				<input type="date" id="selected_date" name="date">
+				<input type="date" id="reserve_date" name="date">
 				<div class="vertical_scroll" id="scrollContainer">
 					<button type="button" id="time0" onclick="selectTime(0, this)">0:00</button>
 					<button type="button" id="time1" onclick="selectTime(1, this)">1:00</button>
@@ -97,10 +97,12 @@
 	</div>
 	<script>
 		window.onload=()=>{
-			document.getElementById('selected_date').value= new Date().toISOString().substring(0, 10);	
+			document.getElementById('reserve_date').value= new Date().toISOString().substring(0, 10);	
 			const form = document.getElementById('frm');
 	    	const time1 = document.getElementById('time1');
-	    	
+	    	console.log(getTodayDate());
+			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
+			
 		    form.addEventListener('submit', function (event) {
 		        // 기본 동작(페이지 새로고침) 막기
 		        event.preventDefault();
@@ -189,7 +191,13 @@
 			}
 			
 		}
-		
+		function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+            const day = String(today.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
 	</script>
 	<script>
         const scrollContainer = document.getElementById('scrollContainer');

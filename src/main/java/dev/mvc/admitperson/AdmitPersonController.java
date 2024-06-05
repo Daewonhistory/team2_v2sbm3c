@@ -32,6 +32,7 @@ public class AdmitPersonController {
 		requestBody.replace("date", date);
 		requestBody.replace("personnel", personnel);
 		ArrayList<AdmitPersonVO> list = this.admitPersonProc.admit_list(requestBody);
+		System.out.println(list.get(0).getReserve_date());
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}	
 }

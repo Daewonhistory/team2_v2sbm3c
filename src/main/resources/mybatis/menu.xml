@@ -24,6 +24,11 @@
 	WHERE menuno = #{menuno}
   </update>
   
+  <select id="list_by_restno">
+  	SELECT menuno, name, price, restno, image
+  	FROM menu
+  	WHERE restno = #{restno}
+  </select>
   <!-- 카테고리별 검색 + 페이징 목록 -->
   <select id="list_search_paging" resultType="dev.mvc.menu.MenuVO" parameterType="HashMap">
     SELECT menuno, name, price, restno, image, restname, r
