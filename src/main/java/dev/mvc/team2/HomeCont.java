@@ -26,7 +26,7 @@ public class HomeCont {
 
   @RequestMapping("/mobile")
   public String mobile() {
-    return "index";
+    return "mobile";
   }
 
   @RequestMapping("/mobile2")
