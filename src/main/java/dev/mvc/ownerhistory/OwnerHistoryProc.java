@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 @Service("dev.mvc.ownerhistory.OwnerHistoryProc")
 public class OwnerHistoryProc implements OwnerHistoryProcInter {
 
-	@Autowired
+  @Autowired
   OwnerHistoryDAOInter historyDAO;
-	
-	@Override
-	public int create(OwnerHistoryVO historyVO) {
-		int cnt = this.historyDAO.create(historyVO);
-		return cnt;
-	}
+
+  @Override
+  public int create(OwnerHistoryVO historyVO) {
+    int cnt = this.historyDAO.create(historyVO);
+    return cnt;
+  }
 
 
 }

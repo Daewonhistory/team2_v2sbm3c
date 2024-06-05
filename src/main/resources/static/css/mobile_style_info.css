@@ -368,3 +368,17 @@ height: 400px;
   font-size: 12px;
   color: #777;
 }
+.login-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.login-table th, .login-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.login-table th {
+  background-color: #f2f2f2;
+}

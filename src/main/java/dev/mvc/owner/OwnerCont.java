@@ -44,7 +44,7 @@ public class OwnerCont {
   @Autowired
   private Security security;
 
-  private final String YOUR_IPINFO_TOKEN = "";
+
 
 
   public OwnerCont() {
@@ -245,26 +245,17 @@ public class OwnerCont {
       historyVO.setLogininfo(request.getHeader("User-Agent"));
       IpLocationService ipLocationService = new IpLocationService();
 
-      Map<String, Object> location = ipLocationService.getLocation(ipAddress, YOUR_IPINFO_TOKEN);
+      Map<String, Object> location = ipLocationService.getLocation(ipAddress);
       String city = (String) location.get("city");
 
-      if (city == null ){
-        city = "개인ip위치파악 X";
-      } else {
-        Translate translate = TranslateOptions.newBuilder().setApiKey("").build().getService();
-        Translation translation = translate.translate(city, Translate.TranslateOption.targetLanguage("ko"));
+
+      CityUtils cityUtils = new CityUtils();
 
 
-        if (translation.getTranslatedText().equals("서울")) {
-          city = translation.getTranslatedText() + "특별시";
-        } else {
-          city = translation.getTranslatedText() + "시";
-        }
-      }
-      System.out.println("city"+city);
+      String cityConvert = cityUtils.cityConvert(city);
 
 
-      historyVO.setCity(city);
+      historyVO.setCity(cityConvert);
       int history = ownerhisProc.create(historyVO);
       if (id_save.equals("Y")) { // id를 저장할 경우, Checkbox를 체크한 경우
         Cookie ck_id = new Cookie("ck_id", id);

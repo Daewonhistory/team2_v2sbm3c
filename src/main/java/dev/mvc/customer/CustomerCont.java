@@ -1,10 +1,9 @@
 package dev.mvc.customer;
 
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
-import dev.mvc.loginhistory.LoginHistoryProcInter;
-import dev.mvc.loginhistory.LoginHistoryVO;
+import dev.mvc.customerhistory.CustomerHistoryProcInter;
+import dev.mvc.customerhistory.CustomerHistoryVO;
+import dev.mvc.dto.HistoryDTO;
+import dev.mvc.tool.CityUtils;
 import dev.mvc.tool.ClientUtils;
 import dev.mvc.tool.IpLocationService;
 import dev.mvc.tool.Security;
@@ -12,11 +11,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -40,8 +34,8 @@ public class CustomerCont {
   private CustomerProInter customerProc;
 
   @Autowired
-  @Qualifier("dev.mvc.loginhistory.LoginHistoryProc")
-  private LoginHistoryProcInter historyproc;
+  @Qualifier("dev.mvc.customerhistory.CustomerHistoryProc")
+  private CustomerHistoryProcInter historyproc;
 
   private final String YOUR_IPINFO_TOKEN = "";
   @Autowired
@@ -239,7 +233,7 @@ public class CustomerCont {
                       HttpServletResponse response,
                       HttpServletRequest request,
                       RedirectAttributes rttr,
-                      LoginHistoryVO historyVO
+                      CustomerHistoryVO historyVO
   ) {
 
 
@@ -256,7 +250,7 @@ public class CustomerCont {
 
 
 
-      session.setAttribute("customerno", customerVO.getCustno());
+      session.setAttribute("custno", customerVO.getCustno());
 
 
       session.setAttribute("customerVO", customerVO);
@@ -324,25 +318,15 @@ public class CustomerCont {
       historyVO.setIp(ipAddress);
       IpLocationService ipLocationService = new IpLocationService();
 
-      Map<String, Object> location = ipLocationService.getLocation(ipAddress, YOUR_IPINFO_TOKEN);
+      Map<String, Object> location = ipLocationService.getLocation(ipAddress);
       String city = (String) location.get("city");
 
-      if (city == null ){
-        city = "개인ip위치파악 X";
-      } else {
-        Translate translate = TranslateOptions.newBuilder().setApiKey("").build().getService();
-        Translation translation = translate.translate(city, Translate.TranslateOption.targetLanguage("ko"));
+      CityUtils cityUtils = new CityUtils();
 
-
-        if (translation.getTranslatedText().equals("서울")) {
-          city = translation.getTranslatedText() + "특별시";
-        } else {
-          city = translation.getTranslatedText() + "시";
-        }
-      }
+      String cityConvert = cityUtils.cityConvert(city);
 
       historyVO.setLogininfo(request.getHeader("User-Agent"));
-      historyVO.setCity(city);
+      historyVO.setCity(cityConvert);
       int history = historyproc.create(historyVO);
 
       return "redirect:/";
@@ -570,6 +554,46 @@ public class CustomerCont {
 
 
 
+
+  @GetMapping("/logininfo")
+  public String moble(Model model, CustomerHistoryVO loginHistoryVO, HttpSession session) {
+
+    Integer custno = (Integer) session.getAttribute("custno");
+
+    if (custno == null) {
+      custno =19;
+    }
+    ArrayList<HistoryDTO> selecthistory = this.historyproc.selecthistory(custno);
+
+    Map<String, List<HistoryDTO>> groupedLoginHistory = groupByLoginDate(selecthistory);
+
+    for (HistoryDTO history : selecthistory) {
+      System.out.println("Date: " + history.getLogin_date());
+      System.out.println("Time: " + history.getLogin_times());
+      System.out.println("Info: " + history.getLogininfo());
+    }
+
+
+    for (String date : groupedLoginHistory.keySet()) {
+      System.out.println("Date: " + date);
+      List<HistoryDTO> historyList = groupedLoginHistory.get(date);
+      for (HistoryDTO history : historyList) {
+        System.out.println("  Time: " + history.getLogin_times());
+        System.out.println("  Info: " + history.getLogininfo());
+      }
+    }
+    model.addAttribute("loginHistoryList", groupedLoginHistory);
+
+
+
+    return "mobile_login_info";
+  }
+  public Map<String, List<HistoryDTO>> groupByLoginDate(List<HistoryDTO> loginHistoryList) {
+   
+    return loginHistoryList.stream().collect(Collectors.groupingBy(HistoryDTO::getLogin_date));
+
+
+  }
 
 
 }
