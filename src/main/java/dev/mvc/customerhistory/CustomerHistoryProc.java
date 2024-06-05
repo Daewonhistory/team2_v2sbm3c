@@ -24,17 +24,19 @@ public class CustomerHistoryProc implements CustomerHistoryProcInter {
 		return cnt;
 	}
 
-
-	/**
-	 * 로그인 내역 조회
-	 *
-	 * @param custno
-	 * @return
-	 */
 	@Override
 	public ArrayList<HistoryDTO> selecthistory(int custno) {
 		return this.historyDAO.selecthistory(custno);
 	}
+
+
+	/**
+	 * 로그인 내역 조회aa
+	 *
+	 * @param custno
+	 * @return
+	 */
+
 
 
 }
