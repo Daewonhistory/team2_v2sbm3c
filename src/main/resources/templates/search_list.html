@@ -4,10 +4,39 @@
 	<div>
 		<span class="page_name">검색 결과</span>
 	</div>
-	<section>
-		<span th:text="|인원:${person}|"></span>
-		<span th:text="|날짜:${date}|"></span>
-		<span th:text="|시간:${time}시|"></span>
+	<section id="sec_reserve_condition">
+		<span class="section_name">예약 조건</span><br>
+		<label>인원:</label><input type="number" name="person" th:value="${person}">명
+		<input type="date" id="reserve_date" name="date" th:value="${reserve_date}">
+		<div class="vertical_scroll" id="scrollContainer">
+			<button type="button" id="time0" onclick="selectTime(0, this)">0:00</button>
+			<button type="button" id="time1" onclick="selectTime(1, this)">1:00</button>
+			<button type="button" onclick="selectTime(2, this)">2:00</button>
+			<button type="button" onclick="selectTime(3, this)">3:00</button>
+			<button type="button" onclick="selectTime(4, this)">4:00</button>
+			<button type="button" onclick="selectTime(5, this)">5:00</button>
+			<button type="button" onclick="selectTime(6, this)">6:00</button>
+			<button type="button" onclick="selectTime(7, this)">7:00</button>
+			<button type="button" onclick="selectTime(8, this)">8:00</button>
+			<button type="button" onclick="selectTime(9, this)">9:00</button>
+			<button type="button" onclick="selectTime(10, this)">10:00</button>
+			<button type="button" onclick="selectTime(11, this)">11:00</button>
+			<button type="button" onclick="selectTime(12, this)">12:00</button>
+			<button type="button" onclick="selectTime(13, this)">13:00</button>
+			<button type="button" onclick="selectTime(14, this)">14:00</button>
+			<button type="button" onclick="selectTime(15, this)">15:00</button>
+			<button type="button" onclick="selectTime(16, this)">16:00</button>
+			<button type="button" onclick="selectTime(17, this)">17:00</button>
+			<button type="button" onclick="selectTime(18, this)">18:00</button>
+			<button type="button" onclick="selectTime(19, this)">19:00</button>
+			<button type="button" onclick="selectTime(20, this)">20:00</button>
+			<button type="button" onclick="selectTime(21, this)">21:00</button>
+			<button type="button" onclick="selectTime(22, this)">22:00</button>
+			<button type="button" onclick="selectTime(23, this)">23:00</button>					
+		</div>
+		<input type="text" id="selected_time" name="time" th:value="${time}">
+		
+		
 	</section>
 	<section id="sec_list">
 		<div><span id="list_count" th:text="${list.size()}"></span>개의 매장이 검색되었습니다.</div>
@@ -23,17 +52,7 @@
 			</div>
 		</div>
 		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="2">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2>식당명</h2></div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-			</div>
-		</div>
-		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="3">
+			<input type="hidden" id="restno" value="4">
 			<div style="flex:0 0 20%; height:100%">
 				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
 			</div>
@@ -53,7 +72,17 @@
 			</div>
 		</div>
 		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="5">
+			<input type="hidden" id="restno" value="4">
+			<div style="flex:0 0 20%; height:100%">
+				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
+			</div>
+			<div style="flex:1; height:100%">
+				<div><h2>식당명</h2></div>
+				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+			</div>
+		</div>
+		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
+			<input type="hidden" id="restno" value="4">
 			<div style="flex:0 0 20%; height:100%">
 				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
 			</div>
@@ -64,25 +93,102 @@
 		</div>
 		<div th:each="restaurantVO, status : ${list}" style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event,)">
 			<input type="hidden" id="restno" th:value="${restaurantVO.restno}">
-			<input type="hidden" id="person" th:value="${person}">
-			<input type="hidden" id="time" th:value="${time}">
 			<div style="flex:0 0 20%; height:100%">
 				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
 			</div>
 			<div style="flex:1; height:100%">
-				<div><h2 th:text="${restaurantVO.name}"></h2></div>
+				<div><h2 th:text="${restaurantVO.name}"></h2>[[${reserve_date}]]</div>
 				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
 			</div>
 		</div>
 	</section>
 	<script>
+		window.onload = () => {
+			let reserveTime = document.getElementById('selected_time').value;
+			document.getElementById('time' + reserveTime).click();
+			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
+		}
 		function moveRestaurant(event){
 			let inputs = event.currentTarget.querySelectorAll('input');
 			let restno = inputs[0].value;
-			let person = inputs[1].value;
-			let time = inputs[2].value;
-			location.href = "/restaurant/main_page?restno=" + restno + "&person=" + person + "&time=" + time;
+			let person = [[${person}]];
+			let time = [[${time}]];
+			let date = '2024-06-06';
+			location.href = "/restaurant/main_page?restno=" + restno + "&person=" + person + "&date=" + date + "&time=" + time;
 		}
+	 	function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+            const day = String(today.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+        //시간버튼 클릭 이벤트
+		function selectTime(time, eventButton){
+			let allBtnRed = document.getElementsByClassName('btn_red');
+			let inputSelectedTime = document.getElementById('selected_time') 
+			if(allBtnRed.length != 0){
+				allBtnRed[0].classList.remove('btn_red');	
+			}
+			eventButton.classList.add('btn_red');
+			inputSelectedTime.value = time;
+		}
+		/*
+		function findRestaurant(){
+			fetch(
+	          "/restaurant/findRestaurant",
+	          {
+	            method: "POST",
+	            headers: {"Content-Type": "application/json"},
+	            body: JSON.stringify({
+					"personnel":  ,
+					"reserve_date": ,
+					"time": ,
+					"" 
+					})
+	          }
+	        )
+	          .then((response) => response.json())
+	          .then((rdata) => {
+	            
+	            rdata.forEach(botAreaVO => {
+	              
+	            });
+	          });
+		}
+		*/
 	</script>
+	<script>
+        const scrollContainer = document.getElementById('scrollContainer');
+        
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            scrollContainer.classList.add('active');
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+
+        scrollContainer.addEventListener('mouseleave', () => {
+            isDown = false;
+            scrollContainer.classList.remove('active');
+        });
+
+        scrollContainer.addEventListener('mouseup', () => {
+            isDown = false;
+            scrollContainer.classList.remove('active');
+        });
+
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 3; //scroll-fast
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+    </script>
 </div>
 </html>

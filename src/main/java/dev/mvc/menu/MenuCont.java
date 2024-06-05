@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.ingredient.IngredientProcInter;
 import dev.mvc.ingredient.IngredientVO;
+import dev.mvc.menuingred.MenuIngredDTO;
 import dev.mvc.menuingred.MenuIngredProcInter;
 import dev.mvc.menuingred.MenuIngredVO;
 import dev.mvc.restaurant.RestaurantProInter;
@@ -423,5 +424,29 @@ public class MenuCont {
 		response.setPaging(paging);
 		System.out.println(search_count);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/menuAllList")
+	public String menuAllList(Model model, int restno, int person, String date) {
+		ArrayList<MenuIngredDTO> list = new ArrayList<MenuIngredDTO>();
+		ArrayList<MenuVO> menuList = this.menuProc.list_by_restno(restno);
+		for(MenuVO menuVO : menuList) {
+			MenuIngredDTO menuIngredDTO = new MenuIngredDTO();
+			ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuVO.getMenuno());
+			ArrayList<IngredientVO> ingredList = new ArrayList<IngredientVO>();
+			for(MenuIngredVO menuIngredVO : menuIngredList) {
+				IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
+				ingredList.add(ingredientVO);
+			}
+			menuIngredDTO.setMenuVO(menuVO);
+			menuIngredDTO.setIngredList(ingredList);
+			list.add(menuIngredDTO);
+		}
+		model.addAttribute("list", list);
+		model.addAttribute("restno", restno);
+		model.addAttribute("person", person);
+		model.addAttribute("date", date);
+		
+		return "/menu/menu_list";
 	}
 }

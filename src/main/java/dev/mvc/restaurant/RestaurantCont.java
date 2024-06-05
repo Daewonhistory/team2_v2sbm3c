@@ -267,22 +267,25 @@ public class RestaurantCont {
 	  model.addAttribute("list", list);
 	  
 	  model.addAttribute("person", person);
-	  model.addAttribute("date", date);
+	  model.addAttribute("reserve_date", date);
+	  System.out.println(date);
 	  model.addAttribute("time", time);
 	  return "/search_list";
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, int restno, int person, String date, int time) {
+  public String main_page(Model model, int restno, int person, String date) {
 	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 	  System.out.println(restaurantVO.getName());
 	  model.addAttribute("restrauntVO", restaurantVO);
 	  
+	  
 	  model.addAttribute("person", person);
 	  model.addAttribute("date", date);
-	  model.addAttribute("time", time);
 	  return "/restaurant_page";
   }
+  
+  
   
 }
 

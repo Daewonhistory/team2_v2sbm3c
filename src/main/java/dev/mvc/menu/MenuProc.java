@@ -38,7 +38,13 @@ public class MenuProc implements MenuProcInter {
 		int cnt = this.menuDAO.update_by_menuno(menuVO);
 		return cnt;
 	}
-
+	
+	@Override
+	public ArrayList<MenuVO> list_by_restno(int restno){
+		ArrayList<MenuVO> list = this.menuDAO.list_by_restno(restno);
+		return list;
+	}
+	
 	@Override
 	public ArrayList<MenuVO> list_search_paging(HashMap<String, Object> map) {
 	    /*
