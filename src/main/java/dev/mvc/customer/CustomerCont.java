@@ -1,5 +1,12 @@
 package dev.mvc.customer;
 
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
+import dev.mvc.loginhistory.LoginHistoryProcInter;
+import dev.mvc.loginhistory.LoginHistoryVO;
+import dev.mvc.tool.ClientUtils;
+import dev.mvc.tool.IpLocationService;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+
 @Controller
 @RequestMapping("/customer")
 public class CustomerCont {
@@ -30,7 +39,11 @@ public class CustomerCont {
   @Qualifier("dev.mvc.customer.CustomerProc")
   private CustomerProInter customerProc;
 
+  @Autowired
+  @Qualifier("dev.mvc.loginhistory.LoginHistoryProc")
+  private LoginHistoryProcInter historyproc;
 
+  private final String YOUR_IPINFO_TOKEN = "";
   @Autowired
   private Security security;
 
@@ -225,7 +238,8 @@ public class CustomerCont {
                       HttpSession session,
                       HttpServletResponse response,
                       HttpServletRequest request,
-                      RedirectAttributes rttr
+                      RedirectAttributes rttr,
+                      LoginHistoryVO historyVO
   ) {
 
 
@@ -238,7 +252,13 @@ public class CustomerCont {
     if (cnt == 1) {
       CustomerVO customerVO = this.customerProc.readById(id);
       // id를 이용하여 회원 정보 조회
+
+
+
+
       session.setAttribute("customerno", customerVO.getCustno());
+
+
       session.setAttribute("customerVO", customerVO);
       session.setAttribute("id", customerVO.getId());
       session.setAttribute("cname", customerVO.getCname());
@@ -294,6 +314,36 @@ public class CustomerCont {
       ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
       response.addCookie(ck_passwd_save);
       // -------------------------------------------------------------------
+
+      historyVO.setCustno(customerVO.getCustno());
+
+
+      String ipAddress =  ClientUtils.getRemoteIP(request);
+
+      System.out.println(ipAddress);
+      historyVO.setIp(ipAddress);
+      IpLocationService ipLocationService = new IpLocationService();
+
+      Map<String, Object> location = ipLocationService.getLocation(ipAddress, YOUR_IPINFO_TOKEN);
+      String city = (String) location.get("city");
+
+      if (city == null ){
+        city = "개인ip위치파악 X";
+      } else {
+        Translate translate = TranslateOptions.newBuilder().setApiKey("").build().getService();
+        Translation translation = translate.translate(city, Translate.TranslateOption.targetLanguage("ko"));
+
+
+        if (translation.getTranslatedText().equals("서울")) {
+          city = translation.getTranslatedText() + "특별시";
+        } else {
+          city = translation.getTranslatedText() + "시";
+        }
+      }
+
+      historyVO.setLogininfo(request.getHeader("User-Agent"));
+      historyVO.setCity(city);
+      int history = historyproc.create(historyVO);
 
       return "redirect:/";
 
