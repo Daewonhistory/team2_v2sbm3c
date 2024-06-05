@@ -3,7 +3,9 @@ package dev.mvc.review;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import dev.mvc.review.ReviewVO;
+import org.apache.ibatis.annotations.Param;
+
+import dev.mvc.dto.ReviewDTO;
 
 public interface ReviewProcInter {
   
@@ -38,11 +40,12 @@ public interface ReviewProcInter {
   public int update_review(ReviewVO reviewVO);
   
   /**
-   * 전체 목록
-   * select id="list_all" resultType="dev.mvc.review.ReviewVO"     
+   * 페이징된 리뷰 목록
+   * @param now_page 현재 페이지 번호
+   * @param record_per_page 페이지당 레코드 수
    * @return 레코드 목록
    */
-  public ArrayList<ReviewVO> list_all();
+  public ArrayList<ReviewDTO> list_paging(int now_page, int record_per_page);
   
   /**
    * 손님 리뷰 갯수
@@ -56,7 +59,27 @@ public interface ReviewProcInter {
    * @param restno
    * @return
    */
-  public int list_by_restno_count(int restno);
+  public int list_count();
+  
+  /**
+   * delete id="delete" parameterType="int"
+   * @param reviewno
+   * @return 삭제된 레코드 갯수
+   */
+  public int foreign(@Param("restno") int restno, @Param("custno") int custno);
+  
+  /**
+   * 페이징 박스 생성
+   * @param now_page 현재 페이지 번호
+   * @param list_file 목록 파일명
+   * @param total_count 전체 레코드 수
+   * @param record_per_page 페이지당 레코드 수
+   * @param page_per_block 블록당 페이지 수
+   * @return 페이징 박스 HTML
+   */
+  public String pagingBox(int now_page, String list_file, int total_count, int record_per_page, int page_per_block);
+  
+  
   
 
 

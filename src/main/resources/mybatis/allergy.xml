@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.allergy.AllergyDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <insert id="create" parameterType="dev.mvc.allergy.AllergyVO">
+  	INSERT INTO ALLERGY(allerno, ingredno, custno)
+	VALUES (allergy_seq.nextval, #{ingredno}, #{custno})
+  </insert>
+  
+  <select id="list_by_custno" resultType="dev.mvc.allergy.AllergyVO" parameterType="int">
+      SELECT a.allerno, a.ingredno, a.custno, i.name as ingredientName
+      FROM allergy a
+      JOIN ingredient i ON a.ingredno = i.ingredno
+      WHERE a.custno = #{custno}
+      ORDER BY a.ingredno ASC
+  </select>
+  
+  <select id="list_by_ingredno" resultType="dev.mvc.allergy.AllergyVO" parameterType="int">
+    SELECT allerno, ingredno, custno
+    FROM allergy
+    WHERE ingredno = #{ingredno}
+    ORDER BY custno ASC
+  </select>
+  
+  <select id="search_by_ingredno" parameterType="int">
+  	SELECT allerno, ingredno, custno
+  	FROM allergy
+	WHERE ingredno = #{ingredno}
+	ORDER BY ingredno ASC
+  </select>
+  
+  <select id="search_by_ingredno_custno" resultType="dev.mvc.allergy.AllergyVO" parameterType="HashMap">
+  	SELECT allerno, ingredno, custno
+  	FROM allergy
+	WHERE ingredno = #{ingredno} AND custno = #{custno}
+	ORDER BY ingredno ASC
+  </select>
+  
+  <delete id="delete_by_allerno" parameterType="int">
+  	DELETE FROM allergy
+	WHERE allerno = #{allerno}
+  </delete>
+  
+  <delete id="delete_by_custno" parameterType="int">
+  	DELETE FROM allergy
+	WHERE custno = #{custno}
+  </delete>
+</mapper>
