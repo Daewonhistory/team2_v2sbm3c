@@ -10,6 +10,7 @@ DROP TABLE notice CASCADE CONSTRAINTS;
 
 CREATE TABLE notice(
 		noticeno                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+        title                               VARCHAR(100)     NOT NULL,
 		content                       		CLOB    		 NOT NULL,
 		restno                        		NUMBER(10)		 NULL,
   FOREIGN KEY (restno) REFERENCES RESTAURANT (restno)
@@ -17,6 +18,7 @@ CREATE TABLE notice(
 
 COMMENT ON TABLE notice is '공지';
 COMMENT ON COLUMN notice.noticeno is '공지번호';
+COMMENT ON COLUMN notice.title is '제목';
 COMMENT ON COLUMN notice.content is '내용';
 COMMENT ON COLUMN notice.restno is '식당번호';
 
@@ -31,8 +33,8 @@ CREATE SEQUENCE notice_seq
 
 
 -- CREATE
-INSERT INTO notice(noticeno, cotent, restno)
-VALUES(notice_seq.nextval , '예약시각으로부터 1시간 이내에 모든 식사를 마쳐주셔야합니다.', 1);
+INSERT INTO notice(noticeno, title, content, restno)
+VALUES(notice_seq.nextval , '시간제한공지', '예약시각으로부터 1시간 이내에 모든 식사를 마쳐주셔야합니다.', 4);
 
 COMMIT;
 

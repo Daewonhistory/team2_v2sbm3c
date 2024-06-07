@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+	메뉴 등록
+  </div>
+  
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./list_seach_paging?word=&now_page=1|}">목록</a>    
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${noticeVO}" action='./create' enctype="multipart/form-data">
+    <input type="hidden" name="restno" th:value="${restno}">
+
+	
+    <div>
+    	<label>공지 제목</label>
+   
+       
+       <input type='text' name='title'  required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+       <label>공지 내용</label><br>
+       <textarea name='content' class="form-control" style='width: 100%;'></textarea>
+    </div>
+    
+  </form>
+	<script>
+		function handleSelectChange(selectElement) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            addIngredient(selectedOption.value, selectedOption.text);
+        }
+		function addIngredient(ingredno ,name) {
+		    const ingredientDiv = document.createElement('div');
+		    ingredientDiv.classList.add('ingredient');
+		    ingredientDiv.style = "background-color: gray; border-radius: 50%; width:150px";
+		     
+		    const ingredientInput = document.createElement('input');
+		    ingredientInput.type = 'hidden';
+		    ingredientInput.name = 'ingredno[]';
+		    ingredientInput.value = ingredno;
+		    ingredientInput.required = true;
+		    
+		    const ingredientText = document.createElement('span');
+		    ingredientText.innerText = name;
+
+		     
+		    const removeButton = document.createElement('button');
+		    removeButton.type = 'button';
+		    removeButton.innerText = '삭제';
+
+		    removeButton.onclick = function() {
+		        removeIngredient(removeButton);
+		    };
+		    
+		    ingredientDiv.appendChild(ingredientInput);
+		    ingredientDiv.appendChild(ingredientText);
+		    ingredientDiv.appendChild(removeButton);
+		    
+		    
+		    document.getElementById('ingredients').appendChild(ingredientDiv);
+		}
+		
+		// 재료 입력 필드를 제거하는 함수
+		function removeIngredient(button) {
+		    const ingredientDiv = button.parentElement;
+		    document.getElementById('ingredients').removeChild(ingredientDiv);
+		}
+	</script>
+</div>
+</html>
+
+  

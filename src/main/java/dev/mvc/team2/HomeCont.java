@@ -19,7 +19,7 @@ public class HomeCont {
 
   @GetMapping("/")
   public String Home() {
-    return "index";
+    return "mobile";
   }
 
 
