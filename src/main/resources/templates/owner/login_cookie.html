@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{mobile_layout}">
 <div layout:fragment="content">
+
+  <!--<div th:fragment="loginform"> &lt;!&ndash; <div th:replace=...&ndash;&gt;-->
+
 
   <div th:text="${fail}">
 
@@ -89,60 +91,27 @@
     }
   </script>
 
-  <ASIDE class="aside_right">
-    <A href="javascript:location.reload();">새로고침</A>
-    <span class='menu_divide'>│</span>
-    <A href='./create.do'>회원 가입</A>
-    <span class='menu_divide'>│</span>
-    <A href='./list.do'>목록</A>
-  </ASIDE>
-
-  <div class='menu_line'></div>
-
-  <div style="width: 60%; margin: 0px auto ">A
-    <div class="title_line">사업자 로그인</div>
-    <form id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/login">
-      <label>아이디(이메일)* </label>
-
-      <div >
-
-        <input type="text" name="id" id="id" value="bdaystest7000" autofocus="autofocus"
-               class="form-control form-control-sm" style="width: 27%;"  required>
-
-<!--        th:value="${ck_id}"-->
-        <label style="margin-top: 5px;">
 
 
-          <input type="checkbox" name="id_save" id="id_save" th:checked="${ck_id_save == 'Y'}" value="Y"/> 저장
-      </div>
-      <div th:if="${#fields.hasErrors('id')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-        <div th:each="err : ${#lists.sort(#fields.errors('id'))}" th:text="${err}"></div>
-      </div>
-
-      <span style="margin-top: 100px;" id='id_msg'></span>
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label>비밀번호* </label>
-        <input type="password" name="passwd" id="passwd" value="69017000" autofocus="autofocus"
-               class="form-control form-control-sm" style="width: 27%;" required   >
-        <label>
-<!--          th:value="${ck_passwd}"-->
-
-          <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"/> 저장
-           </label>
-        <div th:if="${#fields.hasErrors('passwd')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-          <div th:each="err : ${#lists.sort(#fields.errors('passwd'))}" th:text="${err}"></div>
-        </div>
 
 
-      </div>
+  <div class="login-wrapper">
+    <h2>사업자 로그인</h2>
+    <form method="post" action="/owner/login" id="login-form">
+      <input type="text" name="id" placeholder="아이디" id="id" value="kksos28"  autofocus="autofocus">
+      <input type="password" name="passwd"  id="passwd" value="rbtlr1234"  placeholder="비밀번호">
+      <label for="id_save">
+        <input type="checkbox"  name="id_save" id="id_save"  th:checked="${ck_id_save == 'Y'}" value="Y" >     아이디 저장하기
+      </label>
+      <label for="passwd_save">
+        <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"/> 비밀번호 저장      </label>
 
 
-      <div class="form-group" style="margin-top: 10px;">
-        <button type="button" class="btn btn-primary" onclick="return send()" id="btn_send">로그인</button>
-        <button type="button" class="btn btn-primary" onclick="location.href = '/';" id="btn_cancel">취소</button>
-      </div>
-
+      <input type="submit" value="로그인">
+      <button type="button"   onclick = "location.href = '/customer/login' " style="margin-top: 1px;" class="sign_button">일반 회원 로그인</button>
+      <button type="button"   onclick = "location.href = '/owner/create' " style="margin-top: 1px;" class="sign_button">회원가입</button>
     </form>
   </div>
 </div>
+
+</html>

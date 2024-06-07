@@ -17,9 +17,9 @@
 
 
     <insert id="create" parameterType="dev.mvc.customer.CustomerVO">
-        INSERT INTO customer(custno, id, passwd, cname,nickname,phone, address1, address2, sns, grade,
+        INSERT INTO customer(custno, id, passwd, cname,nickname,phone,zipcode,address1, address2, sns, grade,
                               gender,image,reg_date)
-        VALUES (customer_seq.nextval, #{id}, #{passwd}, #{cname}, #{nickname}, #{phone},
+        VALUES (customer_seq.nextval, #{id}, #{passwd}, #{cname}, #{nickname}, #{phone}, #{zipcode},
                 #{address1}, #{address2}, #{sns}, #{grade}, #{gender} , #{image}, sysdate)
     </insert>
 
@@ -39,7 +39,7 @@
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.customer.CustomerVO" parameterType="String">
-        SELECT custno, id, passwd, cname,grade,phone,address1,address2
+        SELECT custno, id, passwd, cname,grade,phone,zipcode,address1,address2,image
         FROM customer
         WHERE id = #{id}
     </select>
@@ -48,7 +48,7 @@
     <!-- 회원 정보 수정 -->
     <update id="update" parameterType="dev.mvc.customer.CustomerVO">
         UPDATE customer
-        SET  cname=#{cname}, phone=#{phone},  address1=#{address1}, address2=#{address2}
+        SET  cname=#{cname}, phone=#{phone},zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}
         WHERE id=#{id}
     </update>
 

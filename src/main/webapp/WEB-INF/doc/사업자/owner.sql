@@ -8,6 +8,7 @@ CREATE TABLE OWNER(
                       oname                          		VARCHAR2(20)		 NOT NULL,
                       phone                         		VARCHAR2(14)		 NOT NULL,
                       tel                           		VARCHAR2(20)		 NOT NULL,
+                      zipcode                           VARCHAR2(30)     NOT NULL,
                       address1                      		VARCHAR2(100)		 NOT NULL,
                       address2                      		VARCHAR2(100)		 NOT NULL,
                       grade                         		NUMBER(2)		 NOT NULL, -- 1 일반 사업자 10 사업자 인증 필요한 사업자 99 탈퇴 사업자
@@ -30,6 +31,7 @@ COMMENT ON COLUMN OWNER.passwd is '패스워드';
 COMMENT ON COLUMN OWNER.oname is '성명';
 COMMENT ON COLUMN OWNER.phone is '휴대폰번호';
 COMMENT ON COLUMN OWNER.tel is '회사번호';
+COMMENT ON COLUMN OWNER.zipcode is '우편번호';
 COMMENT ON COLUMN OWNER.address1 is '주소';
 COMMENT ON COLUMN OWNER.address2 is '상세주소';
 COMMENT ON COLUMN OWNER.grade is '등급';

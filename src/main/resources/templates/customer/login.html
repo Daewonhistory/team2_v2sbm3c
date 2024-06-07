@@ -107,7 +107,9 @@
         <input type="checkbox" name="passwd_save" id="passwd_save" th:checked="${ck_passwd_save == 'Y'}" value="Y"/> 비밀번호 저장      </label>
 
 
-      <input type="submit" value="Login">
+      <input type="submit" value="로그인">
+      <button type="button"   onclick = "location.href = '/owner/login' " style="margin-top: 1px;" class="sign_button">사업자 로그인</button>
+      <button type="button"   onclick = "location.href = '/customer/create' " style="margin-top: 1px;" class="sign_button">회원가입</button>
     </form>
   </div>
 </div>

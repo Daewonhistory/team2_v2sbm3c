@@ -2,15 +2,31 @@
 
 <html layout:decorate="~{mobile_layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  <h2  class="h2">
+    회원 마이페이지
+  </h2>
+  <div class="profile-body" th:object="${customerVO}">
+    <div class="profile-container">
 
+      <div class="profile_edit">
+        <div class="profile-picture"
+             th:if="${customerVO.image != null and (customerVO.image.endsWith('jpg') or customerVO.image.endsWith('JPG') or customerVO.image.endsWith('png') or customerVO.image.endsWith('PNG') or customerVO.image.endsWith('gif'))}">
 
+          <img th:src="@{|/customer/storage/${customerVO.image}|}">
+          <!--        <img id="profileImage" src="#" alt="Profile Picture" style="display: none;">-->
+        </div>
+      </div>
+      <h2 style="margin-top: 30px;">김규식</h2>
+      <button id="uploadButton">프로필 수정</button>
+      <input type="file" id="profilePictureInput" style="display: none;" accept="image/*">
+    </div>
+  </div>
+  <script src="/js/script.js"></script>
 
   <section><a href="https://www.example1.com" class="box">예약 조회</a></section>
   <section><a href="https://www.example1.com" class="box">리뷰 조회</a></section>
-
   <section><a href="/customer/my_info_update" class="box">내 정보 수정</a></section>
-  <section><a href="https://www.example1.com" class="box">로그인 내역</a></section>
-
+  <section><a href="/customer/logininfo" class="box">로그인 내역</a></section>
 
 
 </div>

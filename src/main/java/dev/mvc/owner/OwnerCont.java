@@ -3,6 +3,9 @@ package dev.mvc.owner;
 
 import com.google.cloud.translate.*;
 import com.maxmind.geoip2.model.CityResponse;
+import dev.mvc.customer.CustomerVO;
+import dev.mvc.customerhistory.CustomerHistoryVO;
+import dev.mvc.dto.HistoryDTO;
 import dev.mvc.menu.Menu;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.ownerhistory.OwnerHistoryVO;
@@ -20,10 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 @RequestMapping("/owner")
@@ -338,10 +338,10 @@ public class OwnerCont {
     String id = (String) session.getAttribute("id");
     System.out.println(id);
 
-    if (id == null) {
-      return "redirect:/";
-    } else {
-      OwnerVO ownerVO = this.ownerProc.readById(id);
+//    if (id == null) {
+//      return "redirect:/";
+//    } else {
+      OwnerVO ownerVO = this.ownerProc.readById("kksos28");
       if (ownerVO == null) {
         return "redirect:/";
       } else {
@@ -352,9 +352,63 @@ public class OwnerCont {
 
 
     }
+  @GetMapping("/my_info_update")
+  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
+//    if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
+    OwnerVO ownerVO = this.ownerProc.readById("kksos28");
+
+    model.addAttribute("ownerVO", ownerVO);
+
+    return "/owner/my_info_update";
+
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
   }
+
+  /**
+   * 로그인  접속 기록 메서드
+   * @param model
+   * @param loginHistoryVO
+   * @param session
+   * @return
+   */
+
+  @GetMapping("/logininfo")
+  public String moble(Model model, OwnerHistoryVO loginHistoryVO, HttpSession session) {
+
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+
+    if (ownerno == null) {
+      ownerno =15;
+    }
+    ArrayList<HistoryDTO> selecthistory = this.ownerhisProc.selecthistory(ownerno);
+
+
+    PublicTools publicTools = new PublicTools();
+
+
+
+    Map<String, List<HistoryDTO>> groupedLoginHistory = publicTools.groupByLoginDate(selecthistory);
+
+
+
+
+
+
+    model.addAttribute("loginHistoryList", groupedLoginHistory);
+
+
+
+    return "mobile_login_info";
+  }
+
+
+
 
   @GetMapping("/logout")
   public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
@@ -587,7 +641,7 @@ public class OwnerCont {
    *
    * @param model
    * @param ownerVO
-   * @param rrtr
+   * @param ra
    * @return
    */
   @PostMapping("/certifi")
