@@ -3,10 +3,7 @@ package dev.mvc.customer;
 import dev.mvc.customerhistory.CustomerHistoryProcInter;
 import dev.mvc.customerhistory.CustomerHistoryVO;
 import dev.mvc.dto.HistoryDTO;
-import dev.mvc.tool.CityUtils;
-import dev.mvc.tool.ClientUtils;
-import dev.mvc.tool.IpLocationService;
-import dev.mvc.tool.Security;
+import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -340,41 +337,57 @@ public class CustomerCont {
 
   }
 
+  /**
+   * 마이페이지
+   * @param model
+   * @param session
+   * @param rttr
+   * @return
+   */
   @GetMapping("/my_page")
   public String mypage(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-    if (this.customerProc.isCustomer(session)) {
-      String id = (String) session.getAttribute("id");
-      CustomerVO customerVO = this.customerProc.readById(id);
+//    if (this.customerProc.isCustomer(session)) {
+//      String id = (String) session.getAttribute("id");
+
+
+      CustomerVO customerVO = this.customerProc.readById("kksos28");
 
       model.addAttribute("customerVO", customerVO);
 
       return "/customer/my_page";
 
-    } else {
-      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-      return "redirect:/";
-    }
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
   }
 
+  /**
+   * 마이페이지  정보 수정
+   * @param model
+   * @param session
+   * @param rttr
+   * @return
+   */
 
   @GetMapping("/my_info_update")
   public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-    if (this.customerProc.isCustomer(session)) {
+//    if (this.customerProc.isCustomer(session)) {
       String id = (String) session.getAttribute("id");
-      CustomerVO customerVO = this.customerProc.readById(id);
+      CustomerVO customerVO = this.customerProc.readById("kksos28");
 
       model.addAttribute("customerVO", customerVO);
 
       return "/customer/my_info_update";
 
-    } else {
-      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-      return "redirect:/";
-    }
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
   }
 
   @GetMapping("/logout")
@@ -442,7 +455,7 @@ public class CustomerCont {
         rrtr.addFlashAttribute("success", 1);
         rrtr.addFlashAttribute("come", customerVO.getCname() + "님 수정 완료 되었습니다! ");
 
-        return "redirect:/customer/my_page";
+        return "redirect:/customer/my_info_update";
       } else {
         rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
 
@@ -584,35 +597,24 @@ public class CustomerCont {
     }
     ArrayList<HistoryDTO> selecthistory = this.historyproc.selecthistory(custno);
 
-    Map<String, List<HistoryDTO>> groupedLoginHistory = groupByLoginDate(selecthistory);
 
-    for (HistoryDTO history : selecthistory) {
-      System.out.println("Date: " + history.getLogin_date());
-      System.out.println("Time: " + history.getLogin_times());
-      System.out.println("Info: " + history.getLogininfo());
-    }
+    PublicTools publicTools = new PublicTools();
 
 
-    for (String date : groupedLoginHistory.keySet()) {
-      System.out.println("Date: " + date);
-      List<HistoryDTO> historyList = groupedLoginHistory.get(date);
-      for (HistoryDTO history : historyList) {
-        System.out.println("  Time: " + history.getLogin_times());
-        System.out.println("  Info: " + history.getLogininfo());
-      }
-    }
+
+    Map<String, List<HistoryDTO>> groupedLoginHistory = publicTools.groupByLoginDate(selecthistory);
+
+
+
+
+
     model.addAttribute("loginHistoryList", groupedLoginHistory);
 
 
 
     return "mobile_login_info";
   }
-  public Map<String, List<HistoryDTO>> groupByLoginDate(List<HistoryDTO> loginHistoryList) {
-   
-    return loginHistoryList.stream().collect(Collectors.groupingBy(HistoryDTO::getLogin_date));
 
-
-  }
 
 
 }

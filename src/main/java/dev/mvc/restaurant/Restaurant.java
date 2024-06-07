@@ -18,7 +18,7 @@ public class Restaurant {
 
     } else { // Linux, AWS, 서비스용 배치 폴더
       // System.out.println("Linux");
-      path = "/home/ubuntu/deploy/team2_v2sbm3c/menu/storage/";
+      path = "/home/ubuntu/deploy/team2_v2sbm3c/restaurant/storage/";
     }
 
     return path;

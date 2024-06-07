@@ -13,10 +13,10 @@
 
 
     <insert id="create" parameterType="dev.mvc.owner.OwnerVO">
-        INSERT INTO owner(ownerno, id, passwd, oname,phone,tel, address1, address2, grade,
+        INSERT INTO owner(ownerno, id, passwd, oname,phone,tel,zipcode, address1, address2, grade,
                             image,reg_date)
         VALUES (owner_seq.nextval, #{id}, #{passwd}, #{oname}, #{phone},
-                #{tel}, #{address1}, #{address2},  #{grade}, #{image}, sysdate)
+                #{tel}, #{zipcode}, #{address1}, #{address2},  #{grade}, #{image}, sysdate)
     </insert>
 
     <select id="list" resultType="dev.mvc.owner.OwnerVO">
@@ -34,7 +34,7 @@
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.owner.OwnerVO" parameterType="String">
-        SELECT ownerno, id, passwd, oname, tel,phone , address1, address2, reg_date, grade
+        SELECT ownerno, id, passwd, oname, tel,phone ,zipcode, address1, address2,image, reg_date, grade
         FROM owner
         WHERE id = #{id}
     </select>

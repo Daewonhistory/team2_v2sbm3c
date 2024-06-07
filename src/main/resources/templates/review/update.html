@@ -9,7 +9,7 @@
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|./list_all|}">목록</a>    
+    <a th:href="@{|./list_paging|}">목록</a>    
   </aside>
   
   <div class='menu_line'></div>
@@ -31,11 +31,12 @@
        <label>평점</label>
        <input type="int" name='rate' th:value='${reviewVO.rate}' required="required" class="form-control" style='width: 10%;'></input>
     </div>
+    
 
    
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">수정</button>
-      <button type="button" th:attr="onclick=|location.href='./list_all'|" class="btn btn-secondary btn-sm">목록</button>
+      <button type="button" th:attr="onclick=|location.href='./list_paging'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
   
   </form>

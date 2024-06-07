@@ -41,9 +41,11 @@ CREATE TABLE OWNER(
     private String nickname = "";
     /** 휴대폰 번호 */
     private String phone = "";
-    /** 회사번호 번호 */
+    /** 회사번호 */
     private String tel = "";
 
+    /** 우편번호 번호 */
+    private String zipcode = "";
     /** 주소 1 */
     private String address1 = " ";
     /** 주소 2 */

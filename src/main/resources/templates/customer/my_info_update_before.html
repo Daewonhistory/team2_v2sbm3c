@@ -102,7 +102,7 @@
 
       <div style="display: flex; align-items: center;">
 
-        <input class="form-control form-control-sm"  name="id" th:value="${customerVO.id}" style=" width: 27%;" id='id_msg' readonly></input>
+        <input  type="hidden" class="form-control form-control-sm"  name="id" th:value="${customerVO.id}" style=" width: 27%;" id='id_msg' readonly></input>
 
       </div>
 
@@ -121,7 +121,7 @@
       <label style="margin-top:5px;" >전화 번호 <span  class="required">*</span>  </label>
       <div class="form-group" style="margin-top: 3px; display: flex; align-items: center;">
 
-        <select class="form-control form-control-sm" id="phone1" style="width: 15%; border: 1px solid black;">
+        <select id="phone1" style="width: 15%; border: 1px solid black;">
           <option value="010">010</option>
         </select>
         <span style="margin-left: 3px; margin-right: 3px; font-weight: bold">-</span>

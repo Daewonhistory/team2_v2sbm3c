@@ -22,8 +22,9 @@ CREATE TABLE CUSTOMER
   cname    VARCHAR2(30) NOT NULL,
   nickname VARCHAR2(50) NOT NULL,
   phone    VARCHAR2(14) NOT NULL,
-  address1 VARCHAR2(50) NULL,
-  address2 VARCHAR2(50) NOT NULL,
+  zipcode  VARCHAR2(30),
+  address1 VARCHAR2(100) NULL,
+  address2 VARCHAR2(100) NOT NULL,
   sns      NUMBER(1) NULL,     -- 1 이면 기본 회원 2면 카카오 3번 구글 4번 애플 5번 네이버
   grade    NUMBER(2) NOT NULL, -- 10이면 일반 회원 20 이면 정지 회원  99면 탈퇴 회원
   gender   CHAR(1) NOT NULL,   -- M 남자  F 여자

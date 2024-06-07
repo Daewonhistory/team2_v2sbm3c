@@ -1,7 +1,11 @@
 package dev.mvc.team2;
 
 
+import dev.mvc.customer.Customer;
+import dev.mvc.owner.Owner;
 import dev.mvc.restaurant.Restaurant;
+import dev.mvc.review.Review;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -23,8 +27,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         registry.addResourceHandler("/menu/storage/**").addResourceLocations("file:///" +  Menu.getUploadDir());
 
         registry.addResourceHandler("/restaurant/storage/**").addResourceLocations("file:///" +  Restaurant.getUploadDir());
-
-
+        
+        registry.addResourceHandler("/review/storage/**").addResourceLocations("file:///" +  Review.getUploadDir());
+        registry.addResourceHandler("/owner/storage/**").addResourceLocations("file:///" + Owner.getUploadDir());
+        registry.addResourceHandler("/customer/storage/**").addResourceLocations("file:///" + Customer.getUploadDir());
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");
         

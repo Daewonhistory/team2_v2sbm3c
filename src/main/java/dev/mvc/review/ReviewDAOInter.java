@@ -2,8 +2,11 @@ package dev.mvc.review;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-import dev.mvc.review.ReviewVO;
+import org.apache.ibatis.annotations.Param;
+
+import dev.mvc.dto.ReviewDTO;
 
 public interface ReviewDAOInter {
   
@@ -40,10 +43,10 @@ public interface ReviewDAOInter {
   
   /**
    * 전체 목록
-   * select id="list_all" resultType="dev.mvc.review.ReviewVO"     
+   * select id="list_paging" resultType="dev.mvc.review.ReviewVO"     
    * @return 레코드 목록
    */
-  public ArrayList<ReviewVO> list_all();
+  public ArrayList<ReviewDTO> list_paging(Map<String, Object> map);
   
   /**
    * 고객의 리뷰 갯수
@@ -57,7 +60,17 @@ public interface ReviewDAOInter {
    * @param custno
    * @return
    */
-  public int list_by_restno_count(int restno);
+  public int list_count();
+  
+  /**
+   * delete id="delete" parameterType="int"
+   * @param reviewno
+   * @return 삭제된 레코드 갯수
+   */
+  public int foreign(@Param("restno") int restno, @Param("custno") int custno);
+  
+
+  
   
   
   

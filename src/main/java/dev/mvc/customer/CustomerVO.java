@@ -47,7 +47,7 @@ public class CustomerVO {
     /** 전화 번호 */
     private String phone = "";
     /** 우편 번호 */
-
+    private String zipcode = "";
     /** 주소 1 */
     private String address1 = " ";
     /** 주소 2 */

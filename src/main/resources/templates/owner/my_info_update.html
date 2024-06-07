@@ -13,12 +13,12 @@
 
 
 
-      document.querySelector('#cname').addEventListener('keypress', (event) => {
-        let cname = document.getElementById('cname').value.trim();
-        if (cname !== "" && event.key === 'Enter') {
+      document.querySelector('#oname').addEventListener('keypress', (event) => {
+        let oname = document.getElementById('oname').value.trim();
+        if (oname !== "" && event.key === 'Enter') {
           document.getElementById('phone').focus();
-        } else if (cname === "" && event.key === 'Enter') {
-          document.getElementById('cname').focus();
+        } else if (oname === "" && event.key === 'Enter') {
+          document.getElementById('oname').focus();
         }
       });
 
@@ -156,8 +156,8 @@
       let id_msg = document.getElementById('id_msg');
 
 
-      let cname = document.getElementById('cname');
-      let cname_msg = document.getElementById('cname_msg');
+      let oname = document.getElementById('oname');
+      let oname_msg = document.getElementById('oname_msg');
 
 
       let nickname = document.getElementById('nickname');
@@ -193,11 +193,11 @@
         return false;  // 회원 가입 진행 중지
       }
 
-      if (cname.value.trim().length == 0) {
-        cname_msg.style.fontSize = "12px";
-        cname_msg.innerHTML = '이름이 누락되었습니다. 이름 입력은 필수 입니다.';
-        cname_msg.classList.add('span_warning');    // class 적용
-        cname.focus();
+      if (oname.value.trim().length == 0) {
+        oname_msg.style.fontSize = "12px";
+        oname_msg.innerHTML = '이름이 누락되었습니다. 이름 입력은 필수 입니다.';
+        oname_msg.classList.add('span_warning');    // class 적용
+        oname.focus();
 
         return false;  // 회원 가입 진행 중지
 
@@ -257,23 +257,23 @@
       // .
     }
   </script>
-  <div class="login-wrapper" th:object="${customerVO}">
-    <h2 th:text="|${customerVO.cname} 정보 수정|"> </h2>
+  <div class="login-wrapper" th:object="${ownerVO}">
+    <h2 th:text="|${ownerVO.oname} 정보 수정|"> </h2>
     <form method="post" action="/customer/update-mypage"  id="login-form">
       <label>아이디</label>
-      <input type="text" name="id" placeholder="아이디" id="id" th:value="${customerVO.id}" autofocus="autofocus"
+      <input type="text" name="id" placeholder="아이디" id="id" th:value="${ownerVO.id}" autofocus="autofocus"
             readonly style="margin-top: 10px">
       <label>이름</label>
-      <input type='text' name='cname' th:value="${customerVO.cname}" id='cname' value='' required="required"
+      <input type='text' name='oname' th:value="${ownerVO.oname}" id='oname' value='' required="required"
              placeholder="성명" style="margin-top: 10px">
-      <span id='cname_msg'></span>
+      <span id='oname_msg'></span>
       <label style="margin-top:5px;">전화 번호 <span class="required">*</span> </label>
       <div style="margin-top: 10px;">
-        <input type='text' id='phone1'   th:value="${customerVO.phone.substring(0,3)}" placeholder="" style="width: 25%;">
+        <input type='text' id='phone1'   th:value="${ownerVO.phone.substring(0,3)}" placeholder="" style="width: 25%;">
         <span style="margin-left: 3px; margin-right: 3px; font-weight: bold">-</span>
-        <input type='text' id='phone2'  th:value="${customerVO.phone.substring(3,7)}" style="width: 25%;">
+        <input type='text' id='phone2'  th:value="${ownerVO.phone.substring(3,7)}" style="width: 25%;">
         <span style="margin-left: 3px; margin-right: 3px; font-weight: bold">-</span>
-        <input type='text' id='phone3'   th:value="${customerVO.phone.substring(7,11)}" placeholder="0000"
+        <input type='text' id='phone3'   th:value="${ownerVO.phone.substring(7,11)}" placeholder="0000"
                style="width: 25%;">
       </div>
       <input type="hidden" name="phone" id="phone" value="">
@@ -281,7 +281,7 @@
         우편번호
       </label>
       <div>
-        <input type='text' name='zipcode' id='zipcode'  th:value="${customerVO.zipcode}"style="width: 32%;" value=''
+        <input type='text' name='zipcode' id='zipcode'  th:value="${ownerVO.zipcode}"style="width: 32%;" value=''
                placeholder="우편번호" readonly>
 
         <button type='button'id="btn_DaumPostcode" onclick="DaumPostcode()"
@@ -380,12 +380,12 @@
 
       <div>
         <label>주소</label>
-        <input style="margin-top: 10px" type='text' name='address1' th:value="${customerVO.address1}" id='address1'
+        <input style="margin-top: 10px" type='text' name='address1' th:value="${ownerVO.address1}" id='address1'
                value=''
                placeholder="주소1"
                readonly>
         <label>상세주소</label>
-        <input type='text' style="margin-top: 10px" name='address2' th:value="${customerVO.address2}" id='address2'
+        <input type='text' style="margin-top: 10px" name='address2' th:value="${ownerVO.address2}" id='address2'
                value=''
                placeholder="주소2"
         >

@@ -6,7 +6,22 @@
 		INSERT INTO ownerhistory(ownerhistoryno,  ownerno ,ip,logininfo,city,logintime)
 		VALUES (ownerhistory_seq.nextval, #{ownerno}, #{ip}, #{logininfo},#{city}, sysdate)
 	</insert>
-	
+
+
+	<select id="selecthistory" resultType="dev.mvc.dto.HistoryDTO">
+		SELECT
+			TO_CHAR(LOGINTIME, 'YYYY"년 "MM"월 "DD"일"') AS login_date,
+			TO_CHAR(LOGINTIME, 'AM HH12:MI ') AS login_times,
+			city,
+			ip,
+			logininfo
+		FROM
+			ownerhistory
+		WHERE
+			ownerno = #{ownerno}
+		ORDER BY
+			LOGINTIME
+	</select>
 </mapper>
 
 

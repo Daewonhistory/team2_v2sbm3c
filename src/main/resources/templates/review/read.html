@@ -4,14 +4,28 @@
 <div layout:fragment="content">
   <div class="title_line">리뷰 정보</div>
 
-  <div class="container mt-3">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">번호: <span th:text="${reviewVO.reviewno}"></span></li>
-      <li class="list-group-item">식당명: <span th:text="${reviewVO.title}"></span></li>
-      <li class="list-group-item">내용: <span th:text="${reviewVO.content}"></span></li>
-      <li class="list-group-item">평점: <span th:text="${reviewVO.rate}"></span></li>
-      <li class="list-group-item">등록일: <span th:text="${reviewVO.rdate}"></span></li>
-    </ul>  
+  
+  <div class='menu_line'></div>
+  <div>
+    <ul>
+
+    <li>
+      <span th:text="|식당명 : ${reviewVO.title}|"></span>
+    </li>
+    
+    <li class="li_none">
+      <span th:text="|내용: ${reviewVO.content}|"></span>
+    </li>
+    
+    <li class="li_none">
+      <span th:text="|평점: ${reviewVO.rate}|"></span>
+    </li>
+    
+    <li class="li_none">
+      <span th:text="|작성일자: ${reviewVO.rdate}|"></span>
+    </li>
+    
+  </ul>
   </div>
 
   <div class="content_body_bottom">
