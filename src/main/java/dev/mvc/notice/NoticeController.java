@@ -29,10 +29,11 @@ public class NoticeController {
 	@GetMapping("/create")
 	public String create(Model model, HttpSession session) {
 		String accessType = (String) session.getAttribute("type");
-		if(accessType.equals("owner")) {	// 사업자 접속
-			int ownerno = Integer.parseInt((String) session.getAttribute("ownerno"));
+		if(accessType!=null && accessType.equals("owner")) {	// 사업자 접속
+			int ownerno = (int) session.getAttribute("ownerno");
 			ArrayList<RestaurantVO> restList = this.restaurantPro.findByOwnerR(ownerno);
-			int restno = 0;
+			int restno;
+			System.out.println("size=>" + restList.size());
 			if(restList.size() >= 1) {
 				restno = restList.get(0).getRestno();
 				model.addAttribute("restno", restno);
@@ -60,9 +61,10 @@ public class NoticeController {
 	@GetMapping("/list")
 	public String list(Model model, HttpSession session) {
 		String accessType = (String) session.getAttribute("type");
+		System.out.println("type=>" + accessType);
 		ArrayList<NoticeVO> noticeList;
 		if(accessType!=null && accessType.equals("owner")) {
-			int ownerno = Integer.parseInt((String) session.getAttribute("ownerno"));
+			int ownerno = (int) session.getAttribute("ownerno");
 			ArrayList<RestaurantVO> restList = this.restaurantPro.findByOwnerR(ownerno);
 			if(restList.size() >= 1) {
 				int restno = restList.get(0).getRestno();

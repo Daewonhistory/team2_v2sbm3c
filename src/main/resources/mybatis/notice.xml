@@ -4,7 +4,7 @@
 <mapper namespace="dev.mvc.notice.NoticeDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 	<insert id="create" parameterType="dev.mvc.notice.NoticeVO">
 		INSERT INTO notice(noticeno, title, content, restno)
-		VALUES(notice_seq.nextval ,#{title}, #{content}, #{restno});
+		VALUES(notice_seq.nextval ,#{title}, #{content}, #{restno})
 	</insert>
 	<select id="read">
 		SELECT noticeno, title, content, restno
