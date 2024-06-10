@@ -85,6 +85,8 @@ public interface CustomerDAOInter {
    */
   public int login(HashMap<String, Object> map);
 
+  public int updateProfile(CustomerVO customerVO);
+
 
 
 

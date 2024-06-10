@@ -376,7 +376,7 @@ public class Upload extends HttpServletRequestWrapper {
         int ext_index = originalFileName.lastIndexOf("."); // 파일 구분자 "." 위치 추출
         String only_filename = originalFileName.substring(0, ext_index); // 순수 파일명 추출, winter
         String ext_filename = originalFileName.substring(ext_index); // 파일 확장자 추출, .jpg
-
+        System.out.println(". ->"+ext_filename);
         InputStream inputStream = null;
         OutputStream outputStream = null;
 

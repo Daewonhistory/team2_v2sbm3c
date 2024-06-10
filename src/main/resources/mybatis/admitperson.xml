@@ -20,12 +20,12 @@
 		SET admit_person = #{admit_person}
 		WHERE admitpersonno = #{admitpersonno}
 	</update>
-	<update id="add_curr_person">
-		UPDATE curr_person SET curr_person = curr_person + #{person} WHERE admitpersonno = #{admitpersonno}
-	</update>
-	<update id="minus_curr_person">
-		UPDATE curr_person SET curr_person = curr_person - #{person} WHERE admitpersonno = #{admitpersonno}
-	</update>
+<!--	<update id="add_curr_person">-->
+<!--		UPDATE curr_person SET curr_person = curr_person + #{person} WHERE admitpersonno = #{admitpersonno}-->
+<!--	</update>-->
+<!--	<update id="minus_curr_person">-->
+<!--		UPDATE curr_person SET curr_person = curr_person - #{person} WHERE admitpersonno = #{admitpersonno}-->
+<!--	</update>-->
 	
 </mapper>
 

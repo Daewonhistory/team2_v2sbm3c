@@ -58,9 +58,10 @@ public class Tool {
     boolean sw = false;
     if (file != null) {
       file = file.toLowerCase();
-      if (file.endsWith("jpg") || file.endsWith(".jpeg") || file.endsWith(".png") || file.endsWith("gif")) {
+      if (file.endsWith("jpg") || file.endsWith(".jpeg") || file.endsWith(".png") || file.endsWith("gif") || file.endsWith("jfif")) {
         sw = true;
       }
+
     }
     return sw;
   }
@@ -148,7 +149,7 @@ public class Tool {
     String name = src.getName().toLowerCase(); // 파일명을 추출하여 소문자로 변경
     // 이미지 파일인지 검사
     if (name.endsWith("jpg") || name.endsWith("bmp") || name.endsWith("png")
-        || name.endsWith("gif")) {
+        || name.endsWith("gif") || name.endsWith("jfif")) {
       try {
         srcImg = ImageIO.read(src); // 메모리에 원본 이미지 생성
         int srcWidth = srcImg.getWidth(null); // 원본 이미지 너비 추출
@@ -330,7 +331,7 @@ public class Tool {
     boolean sw = false;
 
     try {
-      if (folder != null && fileName != null) { // 값이 있는지 확인
+      if (folder != null && fileName != null && fileName.startsWith("basic")  && fileName.startsWith("ownerbasic")) { // 값이 있는지 확인
         File file = new File(folder + fileName);
         System.out.println(file.getAbsolutePath() + " 삭제");
 

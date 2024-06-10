@@ -193,5 +193,10 @@ public class CustomerProC implements CustomerProInter {
     return this.customerDAO.update_grade(map);
   }
 
+  @Override
+  public int updateProfile(CustomerVO customerVO) {
+    return this.customerDAO.updateProfile(customerVO);
+  }
+
 
 }

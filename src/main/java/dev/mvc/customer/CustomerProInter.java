@@ -98,6 +98,9 @@ public interface CustomerProInter {
   public int login(HashMap<String, Object> map);
 
   public int update_grade(HashMap<String,Object> map);
+
+  public int updateProfile(CustomerVO customerVO);
+
 }
 
 
