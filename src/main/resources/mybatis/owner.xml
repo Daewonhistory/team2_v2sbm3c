@@ -45,6 +45,12 @@
         WHERE id=#{id}
     </update>
 
+    <!--   프로필 업데이트 처리 -->
+    <update id="updateProfile" parameterType="dev.mvc.owner.OwnerVO">
+        UPDATE owner
+        SET  image=#{image}
+        WHERE id=#{id}
+    </update>
 <!--    <delete id="delete" parameterType="int">-->
 <!--        update owner set  grade=99-->
 <!--        WHERE ownerno=#{ownerno}-->

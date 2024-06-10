@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -73,7 +74,7 @@ public class CustomerVO {
     /** 이동할 주소 저장 */
     private String url_address = "";
 
-
+    private MultipartFile file1MF;
   }
 
 

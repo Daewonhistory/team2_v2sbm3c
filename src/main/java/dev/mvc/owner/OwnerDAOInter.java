@@ -87,7 +87,18 @@ public interface OwnerDAOInter {
    */
   public int login(HashMap<String, Object> map);
 
-
+  /**
+   * 인증정보 업데이트
+   * @param ownerVO
+   * @return
+   */
   public int updateCertifi(OwnerVO ownerVO);
+
+  /**
+   * 프로필 업데이트
+   * @param ownerVO
+   * @return
+   */
+  public int updateProfile(OwnerVO ownerVO);
 
 }

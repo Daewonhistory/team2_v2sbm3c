@@ -1,12 +1,8 @@
 package dev.mvc.owner;
 
 
-import com.google.cloud.translate.*;
-import com.maxmind.geoip2.model.CityResponse;
-import dev.mvc.customer.CustomerVO;
-import dev.mvc.customerhistory.CustomerHistoryVO;
+import dev.mvc.customer.Customer;
 import dev.mvc.dto.HistoryDTO;
-import dev.mvc.menu.Menu;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.ownerhistory.OwnerHistoryVO;
 import dev.mvc.tool.*;
@@ -19,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,7 +30,6 @@ public class OwnerCont {
   private OwnerProInter ownerProc;
 
 
-
   @Autowired
   @Qualifier("dev.mvc.ownerhistory.OwnerHistoryProc")
   private OwnerHistoryProcInter ownerhisProc;
@@ -45,12 +39,9 @@ public class OwnerCont {
   private Security security;
 
 
-
-
   public OwnerCont() {
 //    System.out.println("CustomerCont created");
   }
-
 
 
   /*
@@ -236,7 +227,7 @@ public class OwnerCont {
       historyVO.setOwnerno(ownerVO.getOwnerno());
 
 
-      String ipAddress =  ClientUtils.getRemoteIP(request);
+      String ipAddress = ClientUtils.getRemoteIP(request);
 
       System.out.println(ipAddress);
       historyVO.setIp(ipAddress);
@@ -341,17 +332,18 @@ public class OwnerCont {
 //    if (id == null) {
 //      return "redirect:/";
 //    } else {
-      OwnerVO ownerVO = this.ownerProc.readById("kksos28");
-      if (ownerVO == null) {
-        return "redirect:/";
-      } else {
-        model.addAttribute("ownerVO", ownerVO);
+    OwnerVO ownerVO = this.ownerProc.readById("kksos28");
+    if (ownerVO == null) {
+      return "redirect:/";
+    } else {
+      model.addAttribute("ownerVO", ownerVO);
 
-        return "/owner/my_page";
-      }
-
-
+      return "/owner/my_page";
     }
+
+
+  }
+
   @GetMapping("/my_info_update")
   public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
 
@@ -371,12 +363,94 @@ public class OwnerCont {
   }
 
   /**
+   * 프로필 업데이트 처리 메서드
+   * @param session
+   * @param ra
+   * @param ownerVO
+   * @return
+   */
+
+  @PostMapping("/update_profile")
+  public String updateProfile(HttpSession session, RedirectAttributes ra,OwnerVO ownerVO) {
+
+
+    String id = (String) session.getAttribute("id");
+    OwnerVO owner_old = this.ownerProc.readById(id);
+
+    // -------------------------------------------------------------------
+    // 파일 삭제 시작
+    // -------------------------------------------------------------------
+    String file1saved = owner_old.getImage();  // 실제 저장된 파일명
+
+    long size1 = 0;
+
+    String upDir = Owner.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
+
+    Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
+    // -------------------------------------------------------------------
+    // 파일 삭제 종료
+    // -------------------------------------------------------------------
+
+    // -------------------------------------------------------------------
+    // 파일 전송 시작
+    // -------------------------------------------------------------------
+    String file1 = "";          // 원본 파일명 image
+
+    // 전송 파일이 없어도 file1MF 객체가 생성됨.
+    // <input type='file' class="form-control" name='file1MF' id='file1MF'
+    //           value='' placeholder="파일 선택">
+    MultipartFile mf = ownerVO.getFile1MF();
+
+    file1 = mf.getOriginalFilename(); // 원본 파일명
+    size1 = mf.getSize();  // 파일 크기
+
+    if (size1 > 0) { // 폼에서 새롭게 올리는 파일이 있는지 파일 크기로 체크 ★
+      // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
+      String exe = file1.split("\\.")[1];
+      String newFileName = "owner_" + owner_old.getOwnerno() + "." + exe;
+      file1saved = Upload.saveFileSpring(mf, upDir,newFileName);
+
+      if (Tool.isImage(file1saved)) { // 이미지인지 검사
+        // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
+        file1 = Tool.preview(upDir, file1saved, 150, 150);
+      }  else {
+        ra.addFlashAttribute("success","이미지가 아닙니다!");
+        return "redirect:/owner/my_page";
+      }
+
+    } else { // 파일이 삭제만 되고 새로 올리지 않는 경우
+      file1 = "";
+      file1saved = "";
+      size1 = 0;
+    }
+
+    ownerVO.setImage(file1);
+    ownerVO.setId(id);
+    // -------------------------------------------------------------------
+    // 파일 전송 코드 종료
+    // -------------------------------------------------------------------
+
+    int count = this.ownerProc.updateProfile(ownerVO);// Oracle 처리
+
+    if (count ==1 ){
+      ra.addFlashAttribute("success","프로필 수정이 완료되었습니다.");
+      return "redirect:/owner/my_page";
+    } else {
+      return "redirect:/";
+    }
+  }
+
+
+
+  /**
    * 로그인  접속 기록 메서드
+   *
    * @param model
    * @param loginHistoryVO
    * @param session
    * @return
    */
+  
 
   @GetMapping("/logininfo")
   public String moble(Model model, OwnerHistoryVO loginHistoryVO, HttpSession session) {
@@ -384,7 +458,7 @@ public class OwnerCont {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
 
     if (ownerno == null) {
-      ownerno =15;
+      ownerno = 15;
     }
     ArrayList<HistoryDTO> selecthistory = this.ownerhisProc.selecthistory(ownerno);
 
@@ -392,22 +466,14 @@ public class OwnerCont {
     PublicTools publicTools = new PublicTools();
 
 
-
     Map<String, List<HistoryDTO>> groupedLoginHistory = publicTools.groupByLoginDate(selecthistory);
-
-
-
-
 
 
     model.addAttribute("loginHistoryList", groupedLoginHistory);
 
 
-
     return "mobile_login_info";
   }
-
-
 
 
   @GetMapping("/logout")
@@ -488,7 +554,7 @@ public class OwnerCont {
   }
 
   @GetMapping("/list")
-  public String list_member(Model model, OwnerVO ownerVO, HttpSession session, RedirectAttributes rttr) {
+  public String list_member(Model model, HttpSession session, RedirectAttributes rttr) {
 
     String id = (String) session.getAttribute("id");
 
@@ -619,14 +685,14 @@ public class OwnerCont {
 //    OwnerVO ownerVO1 = (OwnerVO) session.getAttribute("ownerVO");
 //    if (ownerVO1 != null && ownerVO1.getGrade() == 20) {
 
-      OwnerVO read = this.ownerProc.read(8);
-      if (read != null) {
-        model.addAttribute("ownerVO", read);
-        return "owner/certifi";
-      } else {
-        return "redirect:/";
+    OwnerVO read = this.ownerProc.read(8);
+    if (read != null) {
+      model.addAttribute("ownerVO", read);
+      return "owner/certifi";
+    } else {
+      return "redirect:/";
 
-      }
+    }
 
 
 //    } else {
@@ -684,8 +750,8 @@ public class OwnerCont {
         if (size1 > 0 && size2 > 0) { // 파일 크기가 0보다 큰지 확인
           String exe1 = file1.split("\\.")[1]; // 확장자 추출
           String exe2 = file2.split("\\.")[1]; // 확장자 추출
-          String new_file_name1 = "onwer_" + ownerVO.getOwnerno() + "_b"+ownerVO.getCertifi_image()+"."+exe1;
-          String new_file_name2 = "onwer_" + ownerVO.getOwnerno() + "_i"+"w"+"."+exe2;
+          String new_file_name1 = "onwer_" + ownerVO.getOwnerno() + "_b" + ownerVO.getCertifi_image() + "." + exe1;
+          String new_file_name2 = "onwer_" + ownerVO.getOwnerno() + "_i" + "w" + "." + exe2;
           file1saved = Upload.saveFileSpring(mf1, upDir, new_file_name1); // 파일 저장 후 업로드된 파일명 리턴
           file2saved = Upload.saveFileSpring(mf2, upDir, new_file_name2); // 파일 저장 후 업로드된 파일명 리턴
 
@@ -712,7 +778,7 @@ public class OwnerCont {
     }
 
     int cnt = this.ownerProc.updateCertifi(ownerVO);
-    System.out.println("-> update cnt"+cnt);
+    System.out.println("-> update cnt" + cnt);
 
     if (cnt == 0) {
       model.addAttribute("cnt", cnt);

@@ -52,6 +52,12 @@
         WHERE id=#{id}
     </update>
 
+    <update id="updateProfile" parameterType="dev.mvc.customer.CustomerVO">
+        UPDATE customer
+        SET  image=#{image}
+        WHERE id=#{id}
+    </update>
+
     <delete id="delete" parameterType="int">
         update customer set  grade=99
         WHERE custno=#{custno}

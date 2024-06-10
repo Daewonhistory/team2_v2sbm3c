@@ -83,6 +83,8 @@ public interface RestaurantProInter {
   public ArrayList<RestaurantVO> condition_search_list(Map<String, Object> map);
   
   public String test(String date);
+
+
 }
 
 
