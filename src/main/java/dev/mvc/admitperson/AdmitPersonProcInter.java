@@ -17,5 +17,24 @@ public interface AdmitPersonProcInter {
 	 */
 	public ArrayList<AdmitPersonVO> admit_list(Map<String, Object> map);
 	
-	public int update_admit_person();
+	/**
+	 * 예약정보 조회
+	 * @param admitpersonno
+	 * @return
+	 */
+	public AdmitPersonVO read(int admitpersonno);
+	
+	/**
+	 * 현재 예약인원 갱신
+	 * @param admitpersonno
+	 * @return
+	 */
+	public int update_curr_person(int admitpersonno);
+	
+	/**
+	 * 정원 변경
+	 * @param admitpersonno
+	 * @return
+	 */
+	public int update_admit_person(int admitpersonno);
 }

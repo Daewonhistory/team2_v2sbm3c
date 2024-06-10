@@ -293,19 +293,22 @@
 		}
 		function selectBotarea(eventButton){
 			let selected_botarea_btn = eventButton;
-			console.log(selected_botarea_btn.value);
+			let today = new Date();
+			let year = today.getFullYear();
+			let month = String(today.getMonth() + 1).padStart(2, '0');
+			let date = String(today.getDate() + 1).padStart(2, '0');
+			let full_date = year + "-" + month + "-" + date;
 			if(selected_botarea_btn.value == 0){
 				let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
+				let botareaList = ""; 
 				for(const button of all_botarea_button){
-					button.classList.toggle('btn_red');
+					if(button.value != 0){
+						botareaList += button.value + "_";
+					}
 				}
+				location.href="/restaurant/search_list?person=2&date=" + full_date + "&time=6&botareas=" + botareaList + "&categoryno=&min_price=0&max_price=40";
 			}else{
-				let today = new Date();
-				let year = today.getFullYear();
-				let month = today.getMonth()+1;
-				let date = today.getDate();
-				let full_date = year + "-" + month + "-" + date;
-				location.href="/restaurant/search_list?person=2&date=" + full_date + "&time=6&botareas=" + selected_botarea_btn.value;
+				location.href="/restaurant/search_list?person=2&date=" + full_date + "&time=6&botareas=" + selected_botarea_btn.value + "&categoryno=&min_price=0&max_price=40";
 			}
 			
 		}

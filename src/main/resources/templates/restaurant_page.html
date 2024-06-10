@@ -4,7 +4,7 @@
 	<nav>
         <ul>
             <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
-            <li><a th:href="|/menu/menuAllList?restno=${restrauntVO.restno}&person=${person}&date=${date}|">메뉴</a></li>
+            <li><a th:href="|/menu/menuAllList?restno=${restaurantVO.restno}&person=${person}&date=${date}|">메뉴</a></li>
             <li><a href="#section3">리뷰</a></li>
         </ul>
     </nav>
@@ -29,7 +29,7 @@
 	<section id="restaurant_info_section">
 		<div>
 			<div>
-				<span id="rest_name" th:text="${restrauntVO.name}"></span>
+				<span id="rest_name" th:text="${restaurantVO.name}"></span>
 			</div>
 			<div>
 				<img src="star" alt="별이미지">
@@ -39,9 +39,15 @@
 	</section>
 	<section id="sec_reserve_condition">
 				<span class="section_name">예약 조건</span><br>
-				<label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()">명
-				<input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}">
-				<div class="vertical_scroll" id="scrollContainer">
+				<form>
+					<label>예약정보번호(미구현): </label><input type="text" name="admit_personno">
+					<label>레스토랑번호: </label><input type="text" id="restno" name="restno" th:value="${restaurantVO.restno}"><br>
+					<label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()">명
+					<input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
+					<label>시간:</label><input type="number" name="time" value="2">
+					<div class="vertical_scroll" id="scrollContainer">
+				</form>
+				
 							
 				</div>
 	</section>
@@ -138,6 +144,7 @@
 		function searchPossibleTime(){
 			const reserveDate = document.getElementById("reserve_date");
 			const personnel = document.getElementById("personnel");
+			const restno = document.getElementById("personnel");
 			
 			fetch(
 	          "/admitPerson/searchPossibleTime",
@@ -145,7 +152,7 @@
 	            method: "POST",
 	            headers: {"Content-Type": "application/json"},
 	            body: JSON.stringify({
-					"restno": [[${restrauntVO.restno}]],
+					"restno": restno.value,
 					"personnel": personnel.value,
 					"date": reserveDate.value
 					})

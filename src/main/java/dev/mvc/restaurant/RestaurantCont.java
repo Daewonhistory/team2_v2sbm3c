@@ -277,7 +277,7 @@ public class RestaurantCont {
   public String main_page(Model model, int restno, int person, String date) {
 	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 	  System.out.println(restaurantVO.getName());
-	  model.addAttribute("restrauntVO", restaurantVO);
+	  model.addAttribute("restaurantVO", restaurantVO);
 	  
 	  
 	  model.addAttribute("person", person);
