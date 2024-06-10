@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속-->
+
+  <div layout:fragment="content">
+    <div class="title_line">
+      <span th:text="${restVO?.name}" class="title_line_text"></span>
+    </div>
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class="menu_divide">│</span>
+      <a th:href="@{|/notice/create|}">등록</a>
+    </aside>
+
+    <div class="menu_line"></div>
+
+    <table>
+      <colgroup>
+        <col style="width: 30%" />
+        <col style="width: 60%" />
+        <col style="width: 10%" />
+      </colgroup>
+      <tbody id="tbody">
+        <tr>
+          <th class="th_bs">제목</th>
+          <th class="th_bs">내용</th>
+          <th class="th_bs">수정 / 삭제</th>
+        </tr>
+        <tr th:each="noticeVO, status : ${noticeList}">
+          <td
+            class="td_basic"
+            th:onclick="@|location.href='/notice/read?noticeno=${noticeVO.noticeno}'|"
+          >
+            <span th:text="${noticeVO.title}"></span>
+          </td>
+          <td
+            class="td_basic"
+            th:onclick="location.href='/notice/read?noticeno=${noticeVO.noticeno}'"
+          >
+          	<span th:text="|${noticeVO.content}|"></span>
+            <span th:if="${noticeVO.content.length() >= 100}" th:text="|${noticeVO.content.substring(0, 100)}...|"></span>
+          </td>
+          
+          <td class="td_bs">
+            <a
+              th:href="@{|/notice/update?noticeno=${noticeVO.noticeno}|}"
+            >
+              <img src="/cate/images/update.png" class="icon" />
+            </a>
+            <a
+              th:onclick="@{|delete_check(${noticeVO.noticeno})|}"
+            >
+              <img src="/cate/images/delete.png" class="icon" />
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <script>
+      function delete_check(noticeno) {
+        if (confirm("정말 삭제하시겠습니까??") == true) {
+          //확인
+          let f = document.createElement("form");
+          let obj1;
+          obj1 = document.createElement("input");
+          obj1.type = "hidden";
+          obj1.name = "notice";
+          obj1.value = notice;
+          
+          f.appendChild(obj1);
+
+          f.setAttribute("method", "post");
+          f.setAttribute("action", "/notice/delete");
+          document.body.appendChild(f);
+          f.submit();
+        } else {
+          //취소
+          return;
+        }
+      }
+    </script>
+  </div>
+</html>
