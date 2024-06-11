@@ -7,6 +7,8 @@ import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
 import dev.mvc.midarea.MidAreaProcInter;
 import dev.mvc.midarea.MidAreaVO;
+import dev.mvc.notice.NoticeProcInter;
+import dev.mvc.notice.NoticeVO;
 import dev.mvc.restimg.RestImgProInter;
 import dev.mvc.restimg.RestimgVO;
 import dev.mvc.tool.Security;
@@ -15,6 +17,7 @@ import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +50,11 @@ public class RestaurantCont {
   @Autowired
   @Qualifier("dev.mvc.category.CategoryProc")
   private CategoryProcInter categoryProc;
-
+  
+  @Autowired
+  @Qualifier("dev.mvc.notice.NoticeProc")
+  private NoticeProcInter noticeProc;
+  
   @Autowired
   private Security security;
 
@@ -252,20 +259,71 @@ public class RestaurantCont {
 
     String date1 = this.restaurantProc.test(date);
     model.addAttribute("list", list);
-
+    
+    model.addAttribute("date", date);
+    model.addAttribute("categoryno", categoryno);
+    model.addAttribute("botareanos", botareanos);
+    model.addAttribute("min_price", minPrice);
+    model.addAttribute("max_price", maxPrice);
     model.addAttribute("person", person);
     model.addAttribute("reserve_date", date);
-    System.out.println(date);
     model.addAttribute("time", time);
     return "/search_list";
   }
 
+  @PostMapping("/search_list")
+  @ResponseBody
+  public ResponseEntity<ArrayList<RestaurantVO>> searchList(@RequestBody Map<String, Object> requestBody){
+	  int person = (int) requestBody.get("person");
+      String date = (String) requestBody.get("date");
+      int time = (int) requestBody.get("time");
+      int categoryno = 0;
+      if(!((String) requestBody.get("categoryno")).equals("")) {
+    	  categoryno = (int) requestBody.get("categoryno");
+      }
+      
+      String botarea = "";
+      int[] botareanos;
+      if(!((String) requestBody.get("botarea")).equals("")) {
+		  String[] splitedBotareas = botarea.split("_");
+		  botareanos = new int[splitedBotareas.length];
+		  for (int i = 0; i < splitedBotareas.length; i++) {
+		    botareanos[i] = Integer.parseInt(splitedBotareas[i]);
+		  }
+	  } else {
+		  botareanos = new int[0];
+	  }
+      
+      int minPrice = (int) requestBody.get("min_price");
+      int maxPrice = (int) requestBody.get("max_price");
+      
+      Map<String, Object> map = new HashMap<String, Object>();
+      map.put("person", person);
+      map.put("date", date + " 00:00:00");
+      map.put("time", time);
+      map.put("categoryno", categoryno);
+      map.put("botareanos", botareanos);
+      map.put("min_price", minPrice);
+      map.put("max_price", maxPrice);
+      System.out.println("person:" + person);
+      System.out.println("date:" + date);
+      System.out.println("time:" + time);
+      System.out.println("categoryno:" + categoryno);
+      System.out.println("min_price:" + minPrice);
+      System.out.println("max_price:" + maxPrice);
+
+      ArrayList<RestaurantVO> list = this.restaurantProc.condition_search_list(map);
+      
+	  return new ResponseEntity<ArrayList<RestaurantVO>>(list, HttpStatus.OK);
+  }
   @GetMapping("/main_page")
   public String main_page(Model model, int restno, int person, String date) {
 	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 	  System.out.println(restaurantVO.getName());
 	  model.addAttribute("restaurantVO", restaurantVO);
 	  
+	  ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
+	  model.addAttribute("noticeList", noticeList);
 	  
 	  model.addAttribute("person", person);
 	  model.addAttribute("date", date);

@@ -32,6 +32,7 @@ public class AdmitPersonController {
 		requestBody.replace("date", date);
 		requestBody.replace("personnel", personnel);
 		ArrayList<AdmitPersonVO> list = this.admitPersonProc.admit_list(requestBody);
+		System.out.println("리스트사이즈:" + list.size());
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}	
 }

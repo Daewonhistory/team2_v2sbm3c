@@ -1,14 +1,19 @@
 package dev.mvc.notice;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.restaurant.RestaurantVO;
@@ -29,6 +34,7 @@ public class NoticeController {
 	@GetMapping("/create")
 	public String create(Model model, HttpSession session) {
 		String accessType = (String) session.getAttribute("type");
+		System.out.println("type:" + accessType);
 		if(accessType!=null && accessType.equals("owner")) {	// 사업자 접속
 			int ownerno = (int) session.getAttribute("ownerno");
 			ArrayList<RestaurantVO> restList = this.restaurantPro.findByOwnerR(ownerno);
@@ -83,9 +89,31 @@ public class NoticeController {
 		return "/notice/list";
 	}
 	
+	@GetMapping("/read")
+	public String read(Model model, int noticeno) {
+		NoticeVO noticeVO = this.noticeProc.read(noticeno);
+		model.addAttribute("noticeVO", noticeVO);
+		return "/notice/read";
+	}
+	
 	@GetMapping("/update")
 	public String update(Model model, int noticeno) {
-		
+		System.out.println(noticeno);
+		NoticeVO noticeVO = this.noticeProc.read(noticeno);
+		model.addAttribute("noticeVO", noticeVO);
 		return "/notice/update";
+	}
+	
+	
+	@PostMapping("/update")
+	public String updateProc(Model model, NoticeVO noticeVO){
+		
+		int cnt = this.noticeProc.update(noticeVO);
+		return "redirect:/notice/list";
+	}
+	@PostMapping("/delete")
+	public String delete(Model model, int noticeno) {
+		int cnt = this.noticeProc.delete(noticeno);
+		return "redirect:/notice/list";
 	}
 }

@@ -41,6 +41,7 @@
     </div>
 
     <div  class="auth-buttons">
+    	<a th:href="@{/notice/list}"> 공지 리스트</a>
       |
       <a th:href="@{/customer/list}"> 회원 리스트</a>
       |
@@ -58,7 +59,7 @@
       |
       <a  th:text="${session.oname}"  th:href="@{/owner/my_page}"></a>
       |
-      <a th:href="@{/review/list_all}">리뷰 리스트</a>
+      <a th:href="@{/review/list_paging}">리뷰 리스트</a>
       |
       <a th:href="@{/customer/logininfo}"> logininfo</a>
       |

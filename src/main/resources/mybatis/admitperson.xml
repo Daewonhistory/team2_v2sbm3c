@@ -13,7 +13,7 @@
 		WHERE restno = #{restno}
 		AND reserve_date = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
 		AND admit_person >= curr_person + #{personnel}
-
+		ORDER BY time ASC
 	</select>
 	
 	<select id="read">

@@ -71,6 +71,7 @@ public class MenuCont {
 			@RequestParam(defaultValue = "1") int now_page) {
 
 		String type = (String) session.getAttribute("type");
+		System.out.println("=>type:" + type);
 		int restno = 0;
 		if (type == null) {
 			restno = 0;
@@ -214,6 +215,7 @@ public class MenuCont {
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
 		String type = (String) session.getAttribute("type");
+		
 		int restno = 0;
 		ArrayList<RestaurantVO> RestList = null;
 		int ownerno = 0;
@@ -226,6 +228,7 @@ public class MenuCont {
 			ownerno = (int)session.getAttribute("ownerno");
 			System.out.println("Owner" + ownerno);
 			RestList = this.restaurantProc.findByOwnerR(ownerno);
+			System.out.println("ownerRestList"+ RestList.size());
 		}
 		model.addAttribute("ownerRestList", RestList);
 		System.out.println("restno:" + restno);
@@ -235,14 +238,14 @@ public class MenuCont {
 		map.put("restno", restno);
 		map.put("ownerno", ownerno);
 
-		ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
-		model.addAttribute("list", list);
+		
 		int search_count = this.menuProc.list_search_count(word);
 		model.addAttribute("search_count", search_count);
 		String paging = this.menuProc.pagingBox(now_page, word, "/menu/list_search_paging", search_count,
 				Menu.RECORD_PER_PAGE, Menu.PAGE_PER_BLOCK);
 		model.addAttribute("paging", paging);
-
+		
+		model.addAttribute("type", type);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
 		model.addAttribute("search_count", search_count);
@@ -298,6 +301,7 @@ public class MenuCont {
 			MenuVO menuVO,
 			@RequestParam(name = "ingredno[]", defaultValue = "") int[] ingredno,
 			@RequestParam(name = "deleteIngredno[]", defaultValue = "") int[] deleteIngredno) {
+		System.out.println("가격:" + menuVO.getPrice());
 		MenuVO menuVO_old = this.menuProc.read(menuVO.getMenuno());
 		// -------------------------------------------------------------------
 		// 파일 삭제 시작
@@ -403,9 +407,13 @@ public class MenuCont {
 		}
 	}
 
-	@GetMapping(value = "/menulist") // http://localhost:9091/member/checkId?id=admin
+	@PostMapping(value = "/menulist") // http://localhost:9091/member/checkId?id=admin
 	@ResponseBody
-	public ResponseEntity<MenuResponse> menulist(String word, int restno, int now_page) {
+	public ResponseEntity<MenuResponse> menulist(@RequestBody Map<String,Object> requestBody) {
+		String word = ((String) requestBody.get("word")).trim();
+		System.out.println(word);
+		int restno = Integer.parseInt((String) requestBody.get("restno"));
+		int now_page = Integer.parseInt((String) requestBody.get("now_page"));
 		System.out.println("-> word: " + word);
 		System.out.println("-> restno: " + restno);
 		System.out.println("-> now_page: " + now_page);
