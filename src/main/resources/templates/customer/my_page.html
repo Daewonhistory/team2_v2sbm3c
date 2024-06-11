@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html layout:decorate="~{mobile_layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-  <script  th:inline="javascript">
+  <script th:inline="javascript">
     if ([[${success}]]) {
       alert([[${success}]]);
+      window.location.href = window.location.href + "?timestamp=" + new Date().getTime();
     }
   </script>
   <h2 class="h2">마이페이지</h2>
@@ -63,6 +64,7 @@
   <section><a href="https://www.example1.com" class="box">리뷰 조회</a></section>
   <section><a href="/customer/my_info_update" class="box">내 정보 수정</a></section>
   <section><a href="/customer/logininfo" class="box">로그인 내역</a></section>
+  <section><a href="/customer/my_password_update" class="box">패스워드 수정</a></section>
   <div style="height: 80px;">
 
   </div>

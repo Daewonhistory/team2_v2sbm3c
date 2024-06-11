@@ -27,7 +27,7 @@
       <if test="word == null or word == ''">
         <!-- 전체 결과를 가져오는 쿼리 -->
         <![CDATA[
-        SELECT *
+        SELECT restno,name,tel,categoryno,image1,image2,image3
         FROM (
           SELECT re.restno, re.name, re.tel, re.categoryno, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
           FROM restaurant re
@@ -166,9 +166,9 @@
         </if>
     </select>
 	<select id="list_all">
-		SELECT *
-     	FROM restaurant 
-	</select>
+    SELECT *
+    FROM restaurant
+  </select>
 	
 	<!-- 변경 예정 create-->
 	<!--

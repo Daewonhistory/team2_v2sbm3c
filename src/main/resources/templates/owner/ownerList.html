@@ -1,106 +1,51 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}">
 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
-
-  <script  th:inline="javascript">
-    if ([[${delete}]]) {
-    alert([[${delete}]]);
-    }
-  </script>
-  <div class='title_line'>사업자(관리자 전용)</div>
-  <aside class="aside_right">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide'>│</span>
-    <a href='./list.do'>목록</a>
-    <div class='menu_line'></div>
-  </aside>
-
-  <table class="table table-striped" style='width: 100%;'>
-    <colgroup>
-      <col style='width: 5%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 7%;'/>
-      <col style='width: 13%;'/>
-      <col style='width: 13%;'/>
-      <col style='width: 30%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 13%;'/>
-    </colgroup>
-    <tr>
-      <th class='th_bs'></th>
-      <th class='th_bs'>ID</th>
-      <th class='th_bs'>성명</th>
-      <th class='th_bs'>휴대폰번호</th>
-      <th class='th_bs'>회사번호</th>
-      <th class='th_bs'>주소</th>
-      <th class='th_bs'>등록일</th>
-      <th class='th_bs'></th>
-    </tr>
-
-    <tr th:each="ownerVO, status:${list}">
-      <td>
-      <div th:if="${ownerVO.grade}">
-        <div th:if="*{ownerVO.grade == 1}">
-          <a th:href="@{|./update_grade?ownerno=${ownerVO.ownerno}|}">  <img src='/member/images/admin.png' title="회원" class="icon"></a>
-        </div>
-
-        <div th:if="*{ownerVO.grade == 99}">
-          <a th:href="@{|./update_grade?ownerno=${ownerVO.ownerno}|}">  <img src='/images/exit.png' title="탈퇴회원" class="icon"></a>
-        </div>
-      </div>
-      </td>
-      <td class='td_left'><a th:href="@{|./read?ownerno=${ownerVO.ownerno}|}" th:text="${ownerVO.id}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?ownerno=${ownerVO.ownerno}|}" th:text="${ownerVO.oname}"></a></td>
-      <td class='td_basic' th:text="${ownerVO.phone}"></td>
-      <td class='td_basic' th:text="${ownerVO.tel}"></td>
-      <td class='td_left'>
-        <span th:if="${ownerVO.address1.length() > 15 }" th:text="${ownerVO.address1.substring(0, 15) }"></span>
-        <span th:unless="${ownerVO.address1.length() > 15 }" th:text="${ownerVO.address1}"></span>
-      </td>
-      <td class='td_basic' th:text="${ownerVO.reg_date.substring(0, 10)}"></td>
-      <td class='td_basic'>
-        <a th:href="@{|./read?ownerno=${ownerVO.ownerno}|}"><img src='/member/images/update.png' title='수정' class="icon"></a>
-        <a th:attr="onclick=|deletecustomer('${ownerVO.ownerno}','${ownerVO.oname}')|"><img src='/member/images/delete.png' title='삭제' class="icon"></a>
-        <a th:href="@{|./update_grade?ownerno=${ownerVO.ownerno}|}"><img src='/member/images/grade.png' title='등급 수정' class="icon"></a>
-      </td>
-    </tr>
-  </table>
-  <script>
-    function deletecustomer(ownerno, custname) {
-      var name = custname; // cateVO.name 값 가져오기
-
-      if (confirm(name + " 님을 탈퇴 처리하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
-        var form = document.createElement('form');
-        form.method = 'post';
-        form.action = '/customer/delete' ;
-        var hiddenField5 = document.createElement('input');
-        hiddenField5.type = 'hidden';
-        hiddenField5.name = 'ownerno'; // 서버에서 사용할 변수 이름
-        hiddenField5.value = ownerno;
-        form.appendChild(hiddenField5);
-
-        var hiddenField6 = document.createElement('input');
-        hiddenField6.type = 'hidden';
-        hiddenField6.name = 'oname'; // 서버에서 사용할 변수 이름
-        hiddenField6.value = name;
-        form.appendChild(hiddenField6);
-        document.body.appendChild(form);
-        form.submit();
-      } else {
-        alert("원래 페이지로 돌아갑니다.");
-      }
-    }
-  </script>
-  <div class='bottom_menu'>
-
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+  <div th:if="${down != null}" class="alert alert-warning" role="alert">
+    <span th:text="${down}"></span>
   </div>
 
-</div>
+  <div th:if="${up != null}" class="alert alert-warning" role="alert">
+    <span th:text="${up}"></span>
+  </div>
 
+
+  <div th:if="${hide != null}" class="alert alert-warning" role="alert">
+    <span th:text="${hide}"></span>
+  </div>
+
+  <div th:if="${show != null}" class="alert alert-warning" role="alert">
+    <span th:text="${show}"></span>
+  </div>
+  <div th:if="${search != null}" class="alert alert-success" role="alert">
+    <span th:text="${search}"></span>
+  </div>
+
+  <div th:if="${nulllist != null}" class="alert alert-warning" role="alert">
+    <span th:text="${nulllist}"></span>
+  </div>
+
+  <div th:if="${delete != null}" class="alert alert-danger" role="alert">
+    <span th:text="${delete}"></span>
+  </div>
+  <div class="title_line">회원 리스트</div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();" > 새로고침</a>
+
+  </aside>
+  <div th:replace="~{owner/search_form::search_fragment}"></div>
+  <div class="menu_line">
+
+  </div>
+
+
+  <!-- /cate/list_all_compoent.html 파일의 list_all_fragment import -->
+  <div th:replace="~{owner/search_all_component::search_all_fragment}"></div>
+
+
+</div>
 
 </html>

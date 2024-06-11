@@ -1,7 +1,10 @@
 package dev.mvc.customer;
 
+import dev.mvc.dto.RestDTO;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public interface CustomerDAOInter {
 
@@ -86,6 +89,16 @@ public interface CustomerDAOInter {
   public int login(HashMap<String, Object> map);
 
   public int updateProfile(CustomerVO customerVO);
+
+
+  /**
+   * 기능 : 사업자 번호로 검색
+   * 매개변수 search 넣을 내용, start_num ,end_num ,
+   * @return 표시된 카테고리 객체의 목록  s
+   */
+  public ArrayList<CustomerVO> list_search_paging(Map<String,Object> map);
+
+  public int list_search_count(HashMap<String,Object> map);
 
 
 

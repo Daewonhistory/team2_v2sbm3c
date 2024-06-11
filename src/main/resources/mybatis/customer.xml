@@ -3,102 +3,227 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.customer.CustomerDAOInter">
-    <select id="checkID" resultType="int" parameterType="String">
-        SELECT COUNT(id) as cnt
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(id) as cnt
+    FROM customer
+    WHERE id = #{id}
+  </select>
+
+  <select id="checkNickName" resultType="int" parameterType="String">
+    SELECT COUNT(nickname) as cnt
+    FROM customer
+    WHERE nickname = #{nickname}
+  </select>
+
+
+  <select id="list_search_count" parameterType="java.util.Map" resultType="int">
+    <if test="type == 100">
+      <if test="word == null or word == ''">
+        <!-- 전체 결과를 가져오는 쿼리 -->
+        SELECT count(*) as cnt
         FROM customer
-        WHERE id=#{id}
-    </select>
-
-    <select id="checkNickName" resultType="int" parameterType="String">
-        SELECT COUNT(nickname) as cnt
+      </if>
+      <if test="word != null and word != ''">
+        <!-- name으로 조회 -->
+        SELECT count(*) as cnt
         FROM customer
-        WHERE nickname=#{nickname}
-    </select>
-
-
-    <insert id="create" parameterType="dev.mvc.customer.CustomerVO">
-        INSERT INTO customer(custno, id, passwd, cname,nickname,phone,zipcode,address1, address2, sns, grade,
-                              gender,image,reg_date)
-        VALUES (customer_seq.nextval, #{id}, #{passwd}, #{cname}, #{nickname}, #{phone}, #{zipcode},
-                #{address1}, #{address2}, #{sns}, #{grade}, #{gender} , #{image}, sysdate)
-    </insert>
-
-
-    <select id="list" resultType="dev.mvc.customer.CustomerVO">
-        SELECT custno, id, passwd, cname, phone, address1, address2, reg_date, grade
+        WHERE cname LIKE '%' || #{word} || '%'
+      </if>
+    </if>
+    <if test="type == 200">
+      <if test="word == null or word == ''">
+        <!-- 전체 결과를 가져오는 쿼리 -->
+        SELECT count(*) as cnt
         FROM customer
-        ORDER BY grade ASC, id ASC
-    </select>
-
-    <!-- customerno로 회원 정보 조회 -->
-    <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">
-        SELECT custno, id, passwd, cname, phone, address1, address2, reg_date, grade,sns
+      </if>
+      <if test="word != null and word != ''">
+        <!-- ownerno으로 조회 -->
+        SELECT count(*) as cnt
         FROM customer
-        WHERE custno = #{custno}
-    </select>
+        WHERE id LIKE '%' || #{word} || '%'
+      </if>
+    </if>
+  </select>
 
-    <!-- id(이메일)로 회원 정보 조회 -->
-    <select id="readById" resultType="dev.mvc.customer.CustomerVO" parameterType="String">
-        SELECT custno, id, passwd, cname,grade,phone,zipcode,address1,address2,image
+
+  <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.customer.CustomerVO">
+    <if test="word == null or word == ''">
+      <!-- 전체 결과를 가져오는 쿼리 -->
+      SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date, r
+      FROM (
+      SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date, ROWNUM as r
+      FROM (
+      SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date
+      FROM customer
+      ORDER BY custno ASC
+      )
+      )
+      WHERE r BETWEEN #{start_num} AND #{end_num}
+    </if>
+    <if test="word != null and word != ''">
+      <!-- type이 100이면 name으로 조회 -->
+      <if test="type == '100'">
+        SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date,r
+        FROM (
+              SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date, ROWNUM as r
+               FROM (
+                     SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date
+                      FROM customer
+                      WHERE cname LIKE '%' || #{word} || '%'
+                      ORDER BY cname ASC
+            )
+        )
+        WHERE r BETWEEN #{start_num} AND #{end_num}
+      </if>
+      <!-- type이 200이면 namesub으로 조회 -->
+      <if test="type == '200'">
+        SELECT custno, id, cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date,r
+        FROM (
+              SELECT custno, id,  cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date, ROWNUM as r
+              FROM (
+                    SELECT custno, id,  cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date
+                    FROM customer
+        WHERE id LIKE '%' || #{word} || '%'
+        ORDER BY id ASC
+          )
+        )
+        WHERE r BETWEEN #{start_num} AND #{end_num}
+      </if>
+      <!-- type이 300이면 name과 namesub 모두로 조회 -->
+      <if test="type == '300'">
+        SELECT custno, id,  cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date,r
+        FROM (
+        SELECT custno, id,  cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date, ROWNUM as r
+        FROM (
+        SELECT custno, id,  cname, nickname, phone, zipcode, address1, address2, sns, grade, gender, image, reg_date
         FROM customer
-        WHERE id = #{id}
-    </select>
+        WHERE cname LIKE '%' || #{word} || '%' OR custno LIKE '%' || #{word} || '%'
+        ORDER BY cname,custno ASC
+        )
+        )
+        WHERE r BETWEEN #{start_num} AND #{end_num}
+      </if>
+    </if>
+
+  </select>
 
 
-    <!-- 회원 정보 수정 -->
-    <update id="update" parameterType="dev.mvc.customer.CustomerVO">
-        UPDATE customer
-        SET  cname=#{cname}, phone=#{phone},zipcode=#{zipcode}, address1=#{address1}, address2=#{address2}
-        WHERE id=#{id}
-    </update>
+  <insert id="create" parameterType="dev.mvc.customer.CustomerVO">
+    INSERT INTO customer(custno, id, passwd, cname, nickname, phone, zipcode, address1, address2, sns, grade,
+                         gender, image, reg_date)
+    VALUES (customer_seq.nextval, #{id}, #{passwd}, #{cname}, #{nickname}, #{phone}, #{zipcode},
+            #{address1}, #{address2}, #{sns}, #{grade}, #{gender}, #{image}, sysdate)
+  </insert>
 
-    <update id="updateProfile" parameterType="dev.mvc.customer.CustomerVO">
-        UPDATE customer
-        SET  image=#{image}
-        WHERE id=#{id}
-    </update>
 
-    <delete id="delete" parameterType="int">
-        update customer set  grade=99
-        WHERE custno=#{custno}
-    </delete>
+  <select id="list" resultType="dev.mvc.customer.CustomerVO">
+    SELECT custno,
+           id,
+           passwd,
+           cname,
+           phone,
+           address1,
+           address2,
+           reg_date,
+           grade
+    FROM customer
+    ORDER BY grade ASC, id ASC
+  </select>
 
-<!--    &lt;!&ndash; 로그인 &ndash;&gt;-->
-    <select id="login" resultType="int" parameterType="HashMap">
+  <!-- customerno로 회원 정보 조회 -->
+  <select id="read" resultType="dev.mvc.customer.CustomerVO" parameterType="int">
+    SELECT custno,
+           id,
+           passwd,
+           cname,
+           phone,
+           zipcode,
+           address1,
+           address2,
+           reg_date,
+           grade,
+           sns
+    FROM customer
+    WHERE custno = #{custno}
+  </select>
+
+  <!-- id(이메일)로 회원 정보 조회 -->
+  <select id="readById" resultType="dev.mvc.customer.CustomerVO" parameterType="String">
+    SELECT custno,
+           id,
+           passwd,
+           cname,
+           grade,
+           phone,
+           zipcode,
+           address1,
+           address2,
+           image
+    FROM customer
+    WHERE id = #{id}
+  </select>
+
+
+  <!-- 회원 정보 수정 -->
+  <update id="update" parameterType="dev.mvc.customer.CustomerVO">
+    UPDATE customer
+    SET cname=#{cname},
+        phone=#{phone},
+        zipcode=#{zipcode},
+        address1=#{address1},
+        address2=#{address2}
+    WHERE id = #{id}
+  </update>
+
+  <update id="updateProfile" parameterType="dev.mvc.customer.CustomerVO">
+    UPDATE customer
+    SET image=#{image}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="delete" parameterType="int">
+    update customer
+    set grade=99
+    WHERE custno = #{custno}
+  </delete>
+
+  <!--    &lt;!&ndash; 로그인 &ndash;&gt;-->
+  <select id="login" resultType="int" parameterType="HashMap">
     <![CDATA[
-        SELECT COUNT(custno) as cnt
-        FROM customer
-        WHERE id = #{id}
-          AND passwd = #{passwd}
-          AND grade <> 99
-        ]]>
+    SELECT COUNT(custno) as cnt
+    FROM customer
+    WHERE id = #{id}
+      AND passwd = #{passwd}
+      AND grade <> 99
+    ]]>
     </select>
 
-    <!--  현재 패스워드 검사 -->
-    <select id="passwd_check" parameterType="HashMap" resultType="int">
-        SELECT COUNT(customerno) as cnt
-        FROM customer
-        WHERE customerno=#{customerno} AND passwd=#{passwd}
-    </select>
+  <!--  현재 패스워드 검사 -->
+  <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(customerno) as cnt
+    FROM customer
+    WHERE customerno = #{customerno}
+      AND passwd = #{passwd}
+  </select>
 
-    <!-- 패스워드 변경 -->
-    <update id="passwd_update" parameterType="HashMap">
-        UPDATE customer
-        SET passwd=#{passwd}
-        WHERE customerno=#{customerno}
-    </update>
+  <!-- 패스워드 변경 -->
+  <update id="passwd_update" parameterType="HashMap">
+    UPDATE customer
+    SET passwd=#{passwd}
+    WHERE customerno = #{customerno}
+  </update>
 
-    <update id="update_grade" parameterType="HashMap"  >
-        UPDATE customer
-        SET grade=#{grade}
-        WHERE custno=#{custno}
-    </update>
+  <update id="update_grade" parameterType="HashMap">
+    UPDATE customer
+    SET grade=#{grade}
+    WHERE custno = #{custno}
+  </update>
 
-<!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
-<!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->
-<!--               file1, file1saved, thumb1, size1, mp4-->
-<!--        FROM contents-->
-<!--        WHERE cateno = #{cateno}-->
-<!--        ORDER BY contentsno DESC-->
-<!--    </select>-->
+  <!--    <select id="list_by_cateno" resultType="dev.mvc.contents.ContentsVO" parameterType="int">-->
+  <!--        SELECT contentsno, adminno, cateno, title, content, recom, cnt, replycnt, rdate,-->
+  <!--               file1, file1saved, thumb1, size1, mp4-->
+  <!--        FROM contents-->
+  <!--        WHERE cateno = #{cateno}-->
+  <!--        ORDER BY contentsno DESC-->
+  <!--    </select>-->
 </mapper>

@@ -1,8 +1,11 @@
 package dev.mvc.customer;
 
+import dev.mvc.category.CategoryVO;
 import dev.mvc.customerhistory.CustomerHistoryProcInter;
 import dev.mvc.customerhistory.CustomerHistoryVO;
 import dev.mvc.dto.HistoryDTO;
+import dev.mvc.dto.RestDTO;
+import dev.mvc.restaurant.Restaurant;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -373,23 +376,6 @@ public class CustomerCont {
    * @return
    */
 
-  @GetMapping("/my_info_update")
-  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
-
-
-//    if (this.customerProc.isCustomer(session)) {
-      String id = (String) session.getAttribute("id");
-      CustomerVO customerVO = this.customerProc.readById("kksos28");
-
-      model.addAttribute("customerVO", customerVO);
-
-      return "/customer/my_info_update";
-
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
-  }
 
   @GetMapping("/logout")
   public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
@@ -404,6 +390,23 @@ public class CustomerCont {
 
   }
 
+  @GetMapping("/my_info_update")
+  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
+
+
+//    if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
+    CustomerVO customerVO = this.customerProc.readById("kksos28");
+
+    model.addAttribute("customerVO", customerVO);
+
+    return "/customer/my_info_update";
+
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
+  }
 
   @PostMapping("/update")
 
@@ -469,14 +472,58 @@ public class CustomerCont {
   }
 
   @GetMapping("/list")
-  public String list_member(Model model, CustomerVO customerVO, HttpSession session, RedirectAttributes rttr) {
+  public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
+          categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
 
     String id = (String) session.getAttribute("id");
+    String grade = (String) session.getAttribute("grade");
+
+    if (now_page < 1) {
+      now_page = 1;
+    }
 
 
-    ArrayList<CustomerVO> list = this.customerProc.list();
-    model.addAttribute("list", list);
-    return "customer/customerList";
+    word = Tool.wordcheckNull(word);
+    type = Tool.wordcheckNull(type);
+    String types = "";
+
+
+    if (type.equals("100")) {
+      types = "이름";
+    } else if (type.equals("200")) {
+      types = "아이디";
+    } else {
+      types = "이름 + 아이디";
+    }
+
+
+    int count = this.customerProc.list_search_count(word, type);
+    // 일련 번호 생성
+    int num = count - ((now_page - 1) * Restaurant.RECORD_PER_PAGE);
+    ArrayList<CustomerVO> custlist = this.customerProc.list_search_paging(word, type, now_page, Customer.RECORD_PER_PAGE);
+    String paging = this.customerProc.pagingBox(now_page, word, type, "/customer/list", count, Customer.RECORD_PER_PAGE, Customer.PAGE_PER_BLOCK);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    model.addAttribute("count", count);
+
+    model.addAttribute("num", num);
+    if (custlist.isEmpty()) {
+      model.addAttribute("word", word);
+      model.addAttribute("type", type);
+      model.addAttribute("nulllist", "결과가 없습니다.");
+    } else if (!custlist.isEmpty() && !word.equals("")) {
+      model.addAttribute("word", word);
+      model.addAttribute("type", type);
+      model.addAttribute("search", types + ":" + word + "에  대한 검색 결과 : 총 " + custlist.size() + "건");
+    }
+
+    model.addAttribute("word", word);
+    model.addAttribute("type", type);
+    model.addAttribute("searchlist", custlist);
+    model.addAttribute("restDTO", custlist);
+
+    return "customer/customerList"; // Assuming "search_result" is the name of the view to display the search results
 
 
   }
@@ -661,7 +708,23 @@ public class CustomerCont {
     }
   }
 
+  @GetMapping("/my_password_update")
+  public String passwordupdate(Model model, HttpSession session, RedirectAttributes rttr) {
 
+
+//    if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
+    CustomerVO customerVO = this.customerProc.readById("kksos28");
+
+    model.addAttribute("customerVO", customerVO);
+
+    return "/customer/my_password_update";
+
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
+  }
 
 
 

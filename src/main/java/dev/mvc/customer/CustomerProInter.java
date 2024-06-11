@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public interface CustomerProInter {
 
@@ -14,6 +15,10 @@ public interface CustomerProInter {
    */
   public int checkNickName(String nickname);
 
+  public ArrayList<CustomerVO> list_search_paging(String word, String type, int now_page, int record_per_page);
+
+
+  public int list_search_count(String word, String type);
 
   /**
    * 중복아이디 체크
@@ -100,6 +105,9 @@ public interface CustomerProInter {
   public int update_grade(HashMap<String,Object> map);
 
   public int updateProfile(CustomerVO customerVO);
+
+  public String pagingBox(int now_page, String word,String type, String list_file, int search_count,int record_per_page, int page_per_block);
+
 
 }
 

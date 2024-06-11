@@ -24,30 +24,39 @@
 	    </header>
     <main>
      <th:block layout:fragment="content"></th:block>
-    </main>    
+    </main>
     <aside id="dock">
-    	<nav class="bottom-nav">
-	        <a href="/" class="nav-item">
-              <img src="/images/icon/active_home.svg" alt="Home" class="icon">
-            </a>
-            <a href="/restaurant/search" class="nav-item">
-              <img src="/images/icon/search.svg" alt="Search" class="icon">
-            </a>
-            <a href="#likes" class="nav-item">
-              <img src="/images/icon/favorite.svg" alt="Likes" class="icon">
-            </a>
-        <a th:if="${session.id == null }" href="/customer/login" class="nav-item">
+      <nav class="bottom-nav">
+        <a href="/" class="nav-item home">
+          <img src="/images/icon/home.svg" alt="Home" class="icon">
+        </a>
+        <a href="/restaurant/search" class="nav-item search">
+          <img src="/images/icon/search.svg" alt="Search" class="icon">
+        </a>
+        <a href="#likes" class="nav-item favorite">
+          <img src="/images/icon/favorite.svg" alt="Likes" class="icon">
+        </a>
+        <a th:if="${session.id == null }" href="/customer/login" class="nav-item profile">
           <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
         </a>
-
-            <a th:if="${session.grade == 'owner' }" href="/owner/my_page" class="nav-item">
-              <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
-            </a>
-        <a th:if="${session.grade == 'customer' }" href="/customer/my_page" class="nav-item">
-              <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
+        <a th:if="${session.grade == 'owner' }" href="/owner/my_page" class="nav-item profile">
+          <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
         </a>
-	    </nav>
+        <a th:if="${session.grade == 'customer' }" href="/customer/my_page" class="nav-item profile">
+          <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
+        </a>
+      </nav>
     </aside>
+   <script>
+     document.addEventListener("DOMContentLoaded", function() {
+       const navItems = document.querySelectorAll(".nav-item");
+       navItems.forEach(item => {
+         if (item.href === window.location.href) {
+           item.classList.add("active");
+         }
+       });
+     });
+   </script>
     <div id="filter_toggle">
       <a href="/manager">
         <img src="/images/home.png" style="width: 100%; height: 100%; opacity: 0.4;">
