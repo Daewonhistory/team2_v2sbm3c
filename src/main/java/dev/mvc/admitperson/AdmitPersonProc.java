@@ -22,11 +22,22 @@ public class AdmitPersonProc implements AdmitPersonProcInter{
 		ArrayList<AdmitPersonVO> list = this.admitPersonDAO.admit_list(map);
 		return list;
 	}
-	
-	
+
 	@Override
-	public int update_admit_person() {
-		int cnt = this.admitPersonDAO.update_admit_person();
+	public AdmitPersonVO read(int admitpersonno) {
+		AdmitPersonVO admitPersonVO = this.admitPersonDAO.read(admitpersonno);
+		return admitPersonVO;
+	}
+
+	@Override
+	public int update_curr_person(int admitpersonno) {
+		int cnt = this.admitPersonDAO.update_curr_person(admitpersonno);
+		return cnt;
+	}
+
+	@Override
+	public int update_admit_person(int admitpersonno) {
+		int cnt = this.admitPersonDAO.update_admit_person(admitpersonno);
 		return cnt;
 	}
 	

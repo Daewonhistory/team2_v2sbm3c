@@ -15,19 +15,25 @@
 		AND admit_person >= curr_person + #{personnel}
 
 	</select>
+	
+	<select id="read">
+		SELECT admitpersonno, reserve_date, time, admit_person, curr_person, restno
+		FROM admitperson
+		WHERE admitpersonno = #{admitpersonno}
+	</select>
+	
 	<update id="update_admit_person">
 		UPDATE admitperson
 		SET admit_person = #{admit_person}
 		WHERE admitpersonno = #{admitpersonno}
 	</update>
-<!--	<update id="add_curr_person">-->
-<!--		UPDATE curr_person SET curr_person = curr_person + #{person} WHERE admitpersonno = #{admitpersonno}-->
-<!--	</update>-->
-<!--	<update id="minus_curr_person">-->
-<!--		UPDATE curr_person SET curr_person = curr_person - #{person} WHERE admitpersonno = #{admitpersonno}-->
-<!--	</update>-->
+	
+	<update id="update_curr_person">
+		UPDATE admitperson
+		SET curr_person = (
+			SELECT SUM(person) 
+			FROM reserve 
+			WHERE admitpersonno = #{admitpersonno})
+	</update>
 	
 </mapper>
-
-
-
