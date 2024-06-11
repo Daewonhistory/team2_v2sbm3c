@@ -1,5 +1,6 @@
 package dev.mvc.owner;
 
+import dev.mvc.customer.CustomerVO;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
@@ -118,6 +119,15 @@ public interface OwnerProInter {
    * @return
    */
   public int updateProfile(OwnerVO ownerVO);
+
+  public ArrayList<OwnerVO> list_search_paging(String word, String type, int now_page, int record_per_page);
+
+
+  public int list_search_count(String word, String type);
+
+
+  public String pagingBox(int now_page, String word,String type, String list_file, int search_count,int record_per_page, int page_per_block);
+
 }
 
 

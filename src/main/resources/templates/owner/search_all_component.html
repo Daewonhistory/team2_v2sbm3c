@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<div th:fragment="search_all_fragment"> <!-- <div th:replace=...-->
+
+
+
+
+  <table class="table table-striped" >
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 7%;'/>
+      <col style='width: 7%;'/>
+      <col style='width: 7%;'/>
+    </colgroup>
+    <thead>
+    <tr>
+      <th class="th_bs">선택</th>
+      <th class="th_bs">번호</th>
+      <th class="th_bs">아이디</th>
+      <th class="th_bs">이름</th>
+      <th class="th_bs">프로필</th>
+      <th class="th_bs">신분증 이미지</th>
+      <th class="th_bs">사업자등록증 이미지</th>
+      <th class="th_bs">기타</th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+
+
+    <!-- Iterate over your data -->
+    <tr th:each="ownerVO,status : ${searchlist}">
+
+      <td class="td_bs"><input type="checkbox" name="selectedownergories" th:value="${ownerVO.ownerno}"></td>
+      <td class="td_bs" th:text="${num - status.index}"></td>
+      <td class="td_bs"><a th:href="@{|/owner/read?ownerno=${ownerVO.ownerno}&word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
+                           th:text="${ownerVO.id}"></a></td>
+      <td class="td_bs"><a th:href="@{|/owner/read?ownerno=${ownerVO.ownerno}&word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
+                           th:text="${ownerVO.oname}"></a></td>
+
+
+
+
+      <td th:if="${ownerVO.image != null and (ownerVO.image.endsWith('jpg') or ownerVO.image.endsWith('JPG') or ownerVO.image.endsWith('png') or ownerVO.image.endsWith('PNG') or ownerVO.image.endsWith('gif'))}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img th:src="@{|/owner/storage/${ownerVO.image}|}" style="width: 120px; height: 90px;">
+      </td>
+
+      <td th:if="${ownerVO.certifi_image != null and (ownerVO.certifi_image.endsWith('jpg') or ownerVO.certifi_image.endsWith('JPG') or ownerVO.certifi_image.endsWith('png') or ownerVO.certifi_image.endsWith('PNG') or ownerVO.certifi_image.endsWith('gif'))}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img th:src="@{|/owner/storage/${ownerVO.certifi_image}|}" style="width: 120px; height: 90px;">
+      </td>
+
+      <td th:if="${ownerVO.certifi_image == '-'}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img src="/images/none.png" style="width: 120px; height: 90px;">
+      </td>
+
+      <td th:if="${ownerVO.identi_card_image == '-'}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img src="/images/none.png" style="width: 120px; height: 90px;">
+      </td>
+      
+      <td th:if="${ownerVO.identi_card_image != null and (ownerVO.identi_card_image.endsWith('jpg') or ownerVO.identi_card_image.endsWith('JPG') or ownerVO.identi_card_image.endsWith('png') or ownerVO.identi_card_image.endsWith('PNG') or ownerVO.identi_card_image.endsWith('gif'))}">
+        <!--/*@thymesVar id="certifi_image" type=""*/-->
+        <img th:src="@{|/owner/storage/${ownerVO.identi_card_image}|}" style="width: 120px; height: 90px;">
+      </td>
+
+
+      <td class="td_bs">
+
+
+
+
+
+
+        <a style="text-decoration: none" th:href="@{'/owner/read?ownerno=' + ${ownerVO.ownerno}+ '&word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
+          <img src="/images/update.png" class="icon">
+        </a>
+
+        <a style="text-decoration: none" href="#" th:attr="onclick=|deleterest('${ownerVO.ownerno}','${ownerVO.oname}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
+          <img src="/images/delete.png" class="icon">
+        </a>
+        <script>
+            function deleterest(ownerno, restname, word, type,now_page,num) {
+                var name = restname; // ownerVO.oname 값 가져오기
+
+                if (confirm(ownerno + "번의 " + name + " 중분류를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/owner/delete?ownerno='+ownerno;
+                    var hiddenField2 = document.createElement('input');
+                    hiddenField2.type = 'hidden';
+                    hiddenField2.name = 'word'; // 서버에서 사용할 변수 이름
+                    hiddenField2.value = word;
+                    form.appendChild(hiddenField2);
+                    var hiddenField3 = document.createElement('input');
+                    hiddenField3.type = 'hidden';
+                    hiddenField3.name = 'type'; // 서버에서 사용할 변수 이름
+                    hiddenField3.value = type;
+                    form.appendChild(hiddenField3);
+                    var hiddenField4 = document.createElement('input');
+                    hiddenField4.type = 'hidden';
+                    hiddenField4.name = 'now_page'; // 서버에서 사용할 변수 이름
+                    hiddenField4.value = now_page;
+                    form.appendChild(hiddenField4);
+                    var hiddenField5 = document.createElement('input');
+                    hiddenField5.type = 'hidden';
+                    hiddenField5.name = 'num'; // 서버에서 사용할 변수 이름
+                    hiddenField5.value = num;
+                    form.appendChild(hiddenField5);
+
+                    var hiddenField6 = document.createElement('input');
+                    hiddenField6.type = 'hidden';
+                    hiddenField6.name = 'name'; // 서버에서 사용할 변수 이름
+                    hiddenField6.value = name;
+                    form.appendChild(hiddenField6);
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    alert("원래 페이지로 돌아갑니다.");
+                }
+            }
+        </script>
+        <script>
+            function upforward(ownerno, oname, word, type,now_page,num) {
+                var name = oname; // ownerVO.oname 값 가져오기
+
+                if (confirm(num + "번의 " + name + " 중분류의 순서를 하나 올리겠습니까?")) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/owner/upforward/' + ownerno;
+                    var hiddenField2 = document.createElement('input');
+                    hiddenField2.type = 'hidden';
+                    hiddenField2.name = 'word'; // 서버에서 사용할 변수 이름
+                    hiddenField2.value = word;
+                    form.appendChild(hiddenField2);
+                    var hiddenField3 = document.createElement('input');
+                    hiddenField3.type = 'hidden';
+                    hiddenField3.name = 'type'; // 서버에서 사용할 변수 이름
+                    hiddenField3.value = type;
+                    form.appendChild(hiddenField3);
+                    var hiddenField4 = document.createElement('input');
+                    hiddenField4.type = 'hidden';
+                    hiddenField4.name = 'now_page'; // 서버에서 사용할 변수 이름
+                    hiddenField4.value = now_page;
+                    form.appendChild(hiddenField4);
+                    var hiddenField5 = document.createElement('input');
+                    hiddenField5.type = 'hidden';
+                    hiddenField5.name = 'num'; // 서버에서 사용할 변수 이름
+                    hiddenField5.value = num;
+                    form.appendChild(hiddenField5);
+
+                    var hiddenField6 = document.createElement('input');
+                    hiddenField6.type = 'hidden';
+                    hiddenField6.name = 'name'; // 서버에서 사용할 변수 이름
+                    hiddenField6.value = name;
+                    form.appendChild(hiddenField6);
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    alert("원래 페이지로 돌아갑니다.");
+
+                }
+            }
+        </script>
+
+        <script>
+            function upbackward(ownerno, oname, word, type,now_page,num) {
+                var name = oname; // ownerVO.oname 값 가져오기
+
+                if (confirm(num + "번의 " + name + " 중분류의 순서를 하나 내리겠습니까?")) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/owner/upbackward/' + ownerno;
+                    var hiddenField2 = document.createElement('input');
+                    hiddenField2.type = 'hidden';
+                    hiddenField2.name = 'word'; // 서버에서 사용할 변수 이름
+                    hiddenField2.value = word;
+                    form.appendChild(hiddenField2);
+                    var hiddenField3 = document.createElement('input');
+                    hiddenField3.type = 'hidden';
+                    hiddenField3.name = 'type'; // 서버에서 사용할 변수 이름
+                    hiddenField3.value = type;
+                    form.appendChild(hiddenField3);
+                    var hiddenField4 = document.createElement('input');
+                    hiddenField4.type = 'hidden';
+                    hiddenField4.name = 'now_page'; // 서버에서 사용할 변수 이름
+                    hiddenField4.value = now_page;
+                    form.appendChild(hiddenField4);
+                    var hiddenField5 = document.createElement('input');
+                    hiddenField5.type = 'hidden';
+                    hiddenField5.name = 'num'; // 서버에서 사용할 변수 이름
+                    hiddenField5.value = num;
+                    form.appendChild(hiddenField5);
+
+                    var hiddenField6 = document.createElement('input');
+                    hiddenField6.type = 'hidden';
+                    hiddenField6.name = 'name'; // 서버에서 사용할 변수 이름
+                    hiddenField6.value = name;
+                    form.appendChild(hiddenField6);
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    alert("원래 페이지로 돌아갑니다.");
+
+                }
+            }
+        </script>
+
+
+        <script>
+            function show(ownerno, oname, word, type,now_page,num) {
+                var name = oname; // ownerVO.oname 값 가져오기
+
+                if (confirm(num + "번의 " + name + " 중분류의 공개 처리 하겠습니까?")) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/owner/show/' + ownerno;
+                    var hiddenField2 = document.createElement('input');
+                    hiddenField2.type = 'hidden';
+                    hiddenField2.name = 'word'; // 서버에서 사용할 변수 이름
+                    hiddenField2.value = word;
+                    form.appendChild(hiddenField2);
+                    var hiddenField3 = document.createElement('input');
+                    hiddenField3.type = 'hidden';
+                    hiddenField3.name = 'type'; // 서버에서 사용할 변수 이름
+                    hiddenField3.value = type;
+                    form.appendChild(hiddenField3);
+                    var hiddenField4 = document.createElement('input');
+                    hiddenField4.type = 'hidden';
+                    hiddenField4.name = 'now_page'; // 서버에서 사용할 변수 이름
+                    hiddenField4.value = now_page;
+                    form.appendChild(hiddenField4);
+                    var hiddenField5 = document.createElement('input');
+                    hiddenField5.type = 'hidden';
+                    hiddenField5.name = 'num'; // 서버에서 사용할 변수 이름
+                    hiddenField5.value = num;
+                    form.appendChild(hiddenField5);
+
+                    var hiddenField6 = document.createElement('input');
+                    hiddenField6.type = 'hidden';
+                    hiddenField6.name = 'name'; // 서버에서 사용할 변수 이름
+                    hiddenField6.value = name;
+                    form.appendChild(hiddenField6);
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    alert("원래 페이지로 돌아갑니다.");
+
+                }
+            }
+        </script>
+
+        <script>
+            function hide(ownerno, oname, word, type,now_page,num) {
+
+                var name = oname; // ownerVO.oname 값 가져오기
+
+                if (confirm(num + "번의 " + name + " 중분류의 숨김 처리 하겠습니까?")) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/owner/hide/' + ownerno;
+                    var hiddenField2 = document.createElement('input');
+                    hiddenField2.type = 'hidden';
+                    hiddenField2.name = 'word'; // 서버에서 사용할 변수 이름
+                    hiddenField2.value = word;
+                    form.appendChild(hiddenField2);
+                    var hiddenField3 = document.createElement('input');
+                    hiddenField3.type = 'hidden';
+                    hiddenField3.name = 'type'; // 서버에서 사용할 변수 이름
+                    hiddenField3.value = type;
+                    form.appendChild(hiddenField3);
+                    var hiddenField4 = document.createElement('input');
+                    hiddenField4.type = 'hidden';
+                    hiddenField4.name = 'now_page'; // 서버에서 사용할 변수 이름
+                    hiddenField4.value = now_page;
+                    form.appendChild(hiddenField4);
+                    var hiddenField5 = document.createElement('input');
+                    hiddenField5.type = 'hidden';
+                    hiddenField5.name = 'num'; // 서버에서 사용할 변수 이름
+                    hiddenField5.value = num;
+                    form.appendChild(hiddenField5);
+
+                    var hiddenField6 = document.createElement('input');
+                    hiddenField6.type = 'hidden';
+                    hiddenField6.name = 'name'; // 서버에서 사용할 변수 이름
+                    hiddenField6.value = name;
+                    form.appendChild(hiddenField6);
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    alert("원래 페이지로 돌아갑니다.");
+
+                }
+            }
+        </script>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-danger btn-sm" onclick="multideleteowner()">선택 삭제</button>
+
+  <script>
+      function multideleteowner() {
+          var selectedownergories = document.getElementsByName('selectedownergories');
+          var selectedownernoList = [];
+          for (var i = 0; i < selectedownergories.length; i++) {
+              if (selectedownergories[i].checked) {
+                  selectedownernoList.push(selectedownergories[i].value);
+              }
+          }
+
+          if (selectedownernoList.length === 0) {
+              alert("선택된 카테고리가 없습니다.");
+              return;
+          }
+
+          if (confirm(selectedownernoList.join(", ") + "번의 카테고리를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
+              var form = document.createElement('form');
+              form.method = 'post';
+              form.action = '/owner/multidelete';
+
+              for (var j = 0; j < selectedownernoList.length; j++) {
+                  var hiddenField = document.createElement('input');
+                  hiddenField.type = 'hidden';
+                  hiddenField.name = 'ownernoList';
+                  hiddenField.value = selectedownernoList[j];
+                  form.appendChild(hiddenField);
+              }
+
+              document.body.appendChild(form);
+              form.submit();
+          } else {
+              alert("삭제가 취소되었습니다.");
+          }
+      }
+  </script>
+
+
+<!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="Bottom_menu" th:utext="${paging}"></div>
+</div>
+
+

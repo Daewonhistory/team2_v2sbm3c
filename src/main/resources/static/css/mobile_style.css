@@ -674,6 +674,33 @@ height: 400px;
   border-radius: 5px;
   cursor: pointer;
 }
+.nav-item {
+  display: inline-block;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+
+/* 활성화된 상태의 아이콘 변경 */
+.nav-item.active.home {
+  background-image: url('/images/icon/active_home.svg');
+}
+
+.nav-item.active.search {
+  background-image: url('/images/icon/search_active.svg');
+}
+
+.nav-item.active.favorite {
+  background-image: url('/images/icon/favorite_active.svg');
+}
+
+.nav-item.active.profile {
+  background-image: url('/images/icon/profile_active.svg');
+}
+
 
 .edit-button:hover {
   background-color: #45a049;

@@ -1,10 +1,13 @@
 package dev.mvc.owner;
 
 
+import dev.mvc.category.CategoryVO;
 import dev.mvc.customer.Customer;
+import dev.mvc.customer.CustomerVO;
 import dev.mvc.dto.HistoryDTO;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.ownerhistory.OwnerHistoryVO;
+import dev.mvc.restaurant.Restaurant;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -382,11 +385,16 @@ public class OwnerCont {
     // -------------------------------------------------------------------
     String file1saved = owner_old.getImage();  // 실제 저장된 파일명
 
+    String modifiedFileName = file1saved.replace("_t", "");
+
+
     long size1 = 0;
 
     String upDir = Owner.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
 
     Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
+
+    Tool.deleteFile(upDir, modifiedFileName);
     // -------------------------------------------------------------------
     // 파일 삭제 종료
     // -------------------------------------------------------------------
@@ -554,14 +562,58 @@ public class OwnerCont {
   }
 
   @GetMapping("/list")
-  public String list_member(Model model, HttpSession session, RedirectAttributes rttr) {
+  public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
+          categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
 
     String id = (String) session.getAttribute("id");
+    String grade = (String) session.getAttribute("grade");
+
+    if (now_page < 1) {
+      now_page = 1;
+    }
 
 
-    ArrayList<OwnerVO> list = this.ownerProc.list();
-    model.addAttribute("list", list);
-    return "owner/ownerList";
+    word = Tool.wordcheckNull(word);
+    type = Tool.wordcheckNull(type);
+    String types = "";
+
+
+    if (type.equals("100")) {
+      types = "이름";
+    } else if (type.equals("200")) {
+      types = "아이디";
+    } else {
+      types = "이름 + 아이디";
+    }
+
+
+    int count = this.ownerProc.list_search_count(word, type);
+    // 일련 번호 생성
+    int num = count - ((now_page - 1) * Restaurant.RECORD_PER_PAGE);
+    ArrayList<OwnerVO> ownerList = this.ownerProc.list_search_paging(word, type, now_page, Customer.RECORD_PER_PAGE);
+    String paging = this.ownerProc.pagingBox(now_page, word, type, "/customer/list", count, Customer.RECORD_PER_PAGE, Customer.PAGE_PER_BLOCK);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    model.addAttribute("count", count);
+
+    model.addAttribute("num", num);
+    if (ownerList.isEmpty()) {
+      model.addAttribute("word", word);
+      model.addAttribute("type", type);
+      model.addAttribute("nulllist", "결과가 없습니다.");
+    } else if (!ownerList.isEmpty() && !word.equals("")) {
+      model.addAttribute("word", word);
+      model.addAttribute("type", type);
+      model.addAttribute("search", types + ":" + word + "에  대한 검색 결과 : 총 " + ownerList.size() + "건");
+    }
+
+    model.addAttribute("word", word);
+    model.addAttribute("type", type);
+    model.addAttribute("searchlist", ownerList);
+
+
+    return "owner/ownerList"; // Assuming "search_result" is the name of the view to display the search results
 
 
   }

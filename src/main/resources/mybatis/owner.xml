@@ -25,6 +25,98 @@
         ORDER BY grade ASC, id ASC
     </select>
 
+
+    <select id="list_search_count" parameterType="java.util.Map" resultType="int">
+        <if test="type == 100">
+            <if test="word == null or word == ''">
+                <!-- 전체 결과를 가져오는 쿼리 -->
+                SELECT count(*) as cnt
+                FROM owner
+            </if>
+            <if test="word != null and word != ''">
+                <!-- name으로 조회 -->
+                SELECT count(*) as cnt
+                FROM owner
+                WHERE oname LIKE '%' || #{word} || '%'
+            </if>
+        </if>
+        <if test="type == 200">
+            <if test="word == null or word == ''">
+                <!-- 전체 결과를 가져오는 쿼리 -->
+                SELECT count(*) as cnt
+                FROM owner
+            </if>
+            <if test="word != null and word != ''">
+                <!-- ownerno으로 조회 -->
+                SELECT count(*) as cnt
+                FROM owner
+                WHERE id LIKE '%' || #{word} || '%'
+            </if>
+        </if>
+    </select>
+
+
+    <select id="list_search_paging" parameterType="java.util.Map" resultType="dev.mvc.owner.OwnerVO">
+        <if test="word == null or word == ''">
+            <!-- 전체 결과를 가져오는 쿼리 -->
+            SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date, certifi_image, identi_card_image, r
+            FROM (
+            SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2,  grade, image, reg_date,certifi_image, identi_card_image, ROWNUM as r
+            FROM (
+            SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image
+            FROM owner
+            ORDER BY ownerno ASC
+            )
+            )
+            WHERE r BETWEEN #{start_num} AND #{end_num}
+        </if>
+        <if test="word != null and word != ''">
+            <!-- type이 100이면 name으로 조회 -->
+            <if test="type == '100'">
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image,r
+                FROM (
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image, ROWNUM as r
+                FROM (
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image
+                FROM owner
+                WHERE oname LIKE '%' || #{word} || '%'
+                ORDER BY oname ASC
+                )
+                )
+                WHERE r BETWEEN #{start_num} AND #{end_num}
+            </if>
+            <!-- type이 200이면 namesub으로 조회 -->
+            <if test="type == '200'">
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date ,certifi_image, identi_card_image, r
+                FROM (
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image,certifi_image, identi_card_image,  ROWNUM as r
+                FROM (
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image
+                FROM owner
+                WHERE id LIKE '%' || #{word} || '%'
+                ORDER BY id ASC
+                )
+                )
+                WHERE r BETWEEN #{start_num} AND #{end_num}
+            </if>
+            <!-- type이 300이면 name과 namesub 모두로 조회 -->
+            <if test="type == '300'">
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image,r
+                FROM (
+                SELECT ownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image,certifi_image, identi_card_image, ROWNUM as r
+                FROM (
+                SELECTownerno, id, oname, tel, phone, zipcode, address1, address2, grade, image, reg_date,certifi_image, identi_card_image
+                FROM owner
+                WHERE oname LIKE '%' || #{word} || '%' OR ownerno LIKE '%' || #{word} || '%'
+                ORDER BY oname,ownerno ASC
+                )
+                )
+                WHERE r BETWEEN #{start_num} AND #{end_num}
+            </if>
+        </if>
+
+    </select>
+
 <!--    &lt;!&ndash; ownerno로 회원 정보 조회 &ndash;&gt;-->
     <select id="read" resultType="dev.mvc.owner.OwnerVO" parameterType="int">
         SELECT ownerno, id, passwd, oname, tel,phone , address1, address2, reg_date, grade

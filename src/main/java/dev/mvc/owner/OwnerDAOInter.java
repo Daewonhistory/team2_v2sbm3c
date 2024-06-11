@@ -1,7 +1,10 @@
 package dev.mvc.owner;
 
+import dev.mvc.customer.CustomerVO;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public interface OwnerDAOInter {
 
@@ -100,5 +103,10 @@ public interface OwnerDAOInter {
    * @return
    */
   public int updateProfile(OwnerVO ownerVO);
+
+
+  public ArrayList<OwnerVO> list_search_paging(Map<String,Object> map);
+
+  public int list_search_count(HashMap<String,Object> map);
 
 }

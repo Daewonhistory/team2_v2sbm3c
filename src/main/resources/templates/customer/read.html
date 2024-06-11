@@ -111,7 +111,7 @@
       <label style="margin-top: 10px;">우편 번호: </label>
       <div style="display: flex; align-items: center; ">
 
-        <input type='text' class="form-control form-control-sm" name='zipcode'  id='zipcode' style="width: 27%" value=''
+        <input type='text' class="form-control form-control-sm" name='zipcode'  id='zipcode' style="width: 27%" th:value="${customerVO.zipcode}"
                placeholder="우편번호" readonly>
 
         <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" style="margin-left: 10px;"
