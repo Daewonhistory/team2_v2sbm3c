@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content">
+<style type="text/css">
+* {
+    margin: 0;
+    padding: 0;
+}
+.chat-container {
+    width: 100%;
+    height: 600px;
+    overflow: auto;
+    border: 1px solid #ccc;
+    background-image: linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.6)), url("/static/images/background.jpg"); 
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    margin-bottom: 5px;
+}
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px
+}
+.container h3 {
+    text-align: left;
+    padding: 5px 5px 5px 15px; /* top, right, bottom, left */
+    color: #FFBB00;
+    border-left: 3px solid #FFBB00;
+    margin-bottom: 20px;
+} 
+.chatting_pannel { 
+    padding: 5px;
+}
+.chatting_pannel p {
+    font-size: 16px;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 2px 5px;
+}
+input {
+    width: 60%;
+    height: 25px;
+}
+.send_msg {
+    text-align: right;
+    color: #000000;
+    background-color: yellow;
+    margin-left: 40%;
+}
+.receive_msg {
+    text-align: left;
+    color: #FFFFFF;
+    background-color: #7a7373;
+    margin-right: 40%;
+}
+a:link {
+    text-decoration: none; /* 밑줄 삭제 */
+    color: #FFFFFF;
+}
+a:visited {
+    text-decoration: none; /* 밑줄 삭제 */
+    color: #FFFFFF;
+}
+a:hover {
+    text-decoration: underline; /* 밑줄 출력 */
+    color: #FFFFFF;
+}
+a:active {
+    text-decoration: underline; /* 밑줄 출력 */
+    color: #FFFFFF;
+}
+</style>
+<script type="text/javascript">
+    window.onload = () => {
+        // 키이벤트 처리
+        document.getElementById('question').addEventListener('keydown', function(key) {
+            if (key.keyCode == 13) { // Enter
+                send();
+            }
+        });
+
+        document.getElementById("sendBtn").addEventListener('click', function() {
+            send();
+        });
+
+    };
+
+    // 스크롤을 채팅창의 맨아래로 이동
+    function scroll() {
+        let chatting_pannel = document.getElementById('chatting_pannel');
+        let question = document.getElementById('question');
+
+        // 스크롤을 채팅창의 맨 아래로 이동
+        chatting_pannel.scrollTop = chatting_pannel.scrollHeight;
+
+        // 입력창 초기화
+        question.value = '';
+    }
+
+    function send() {
+        let question = document.getElementById('question').value;
+        let chatting_pannel = document.getElementById('chatting_pannel');
+        let newMessage = document.createElement('div');
+        newMessage.style.textAlign = 'right';
+        newMessage.innerHTML = "<p class='send_msg'>" + question + "</p>";
+        chatting_pannel.appendChild(newMessage);
+
+        document.getElementById('question').value = "";
+        const chatContainer = document.querySelector('.chat-container');
+
+        fetch(
+            'http://localhost:5000/chatbot',
+            {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": JSON.stringify({question})
+            }
+        )
+        .then((response) => response.json())
+        .then((data) => {
+            res = data['res'];
+            if(res != null && res.trim() != ''){
+                var responseMessage = document.createElement('p');
+                responseMessage.className = 'receive_msg';
+                responseMessage.innerHTML = "잇봇: " + res;
+                chatting_pannel.appendChild(responseMessage);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        });
+    }
+</script>
+    <div id="container" class="container">
+        <h3>식당 추천 챗봇</h3>
+        <div class="chat-container">
+            <div id="chatting_pannel" class="chatting_pannel"></div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <span style='margin-top: 3px; margin-right: 5px;'>메시지</span>
+            <input id="question" name='question' placeholder="보내실 메시지를 입력하세요."
+                   style='margin-right: 5px; margin-top: 3px;'>
+            <button id="sendBtn" class="btn btn-info btn-sm" 
+                    style='padding: 0px 5px; margin-top: 3px; margin-right: 5px; height: 24px;'>보내기</button>
+            
+        </div>
+    </div>
+</html>

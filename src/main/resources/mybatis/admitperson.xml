@@ -34,6 +34,7 @@
 			SELECT SUM(person) 
 			FROM reserve 
 			WHERE admitpersonno = #{admitpersonno})
+		WHERE admitpersonno = #{admitpersonno}
 	</update>
 	
 </mapper>

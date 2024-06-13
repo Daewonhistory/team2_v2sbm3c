@@ -22,7 +22,10 @@ public class HomeCont {
     return "mobile";
   }
 
-
+  @RequestMapping("/chatbot")
+  public String chatbot() {
+    return "chatbot";
+  }
 
   @RequestMapping("/mobile")
   public String mobile() {

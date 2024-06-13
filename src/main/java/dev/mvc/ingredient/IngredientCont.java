@@ -67,11 +67,14 @@ public class IngredientCont {
 	public String create(Model model, @Valid IngredientVO ingredientVO, 
 			@RequestParam(name="word", defaultValue="") String word) {
 		System.out.println("check");
+		
+		int cnt = this.ingredientProc.create(ingredientVO);
+		System.out.println("check3");
 		// 페이징 목록
 		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);    
 		model.addAttribute("list", list);
+		System.out.println("check2");
 		
-		int cnt = this.ingredientProc.create(ingredientVO);
 		
 		if (cnt == 1) { // 등록 성공
 		 

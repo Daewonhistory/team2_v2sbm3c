@@ -33,30 +33,30 @@
 				<label>인원:</label><input type="number" name="person" value="2">명
 				<input type="date" id="reserve_date" name="date">
 				<div class="vertical_scroll" id="scrollContainer">
-					<button type="button" onclick="selectTime(0, this)">0:00</button>
-					<button type="button" onclick="selectTime(1, this)">1:00</button>
-					<button type="button" onclick="selectTime(2, this)">2:00</button>
-					<button type="button" onclick="selectTime(3, this)">3:00</button>
-					<button type="button" onclick="selectTime(4, this)">4:00</button>
-					<button type="button" onclick="selectTime(5, this)">5:00</button>
-					<button type="button" onclick="selectTime(6, this)">6:00</button>
-					<button type="button" onclick="selectTime(7, this)">7:00</button>
-					<button type="button" onclick="selectTime(8, this)">8:00</button>
-					<button type="button" onclick="selectTime(9, this)">9:00</button>
-					<button type="button" onclick="selectTime(10, this)">10:00</button>
-					<button type="button" onclick="selectTime(11, this)">11:00</button>
-					<button type="button" onclick="selectTime(12, this)">12:00</button>
-					<button type="button" onclick="selectTime(13, this)">13:00</button>
-					<button type="button" onclick="selectTime(14, this)">14:00</button>
-					<button type="button" onclick="selectTime(15, this)">15:00</button>
-					<button type="button" onclick="selectTime(16, this)">16:00</button>
-					<button type="button" onclick="selectTime(17, this)">17:00</button>
-					<button type="button" onclick="selectTime(18, this)">18:00</button>
-					<button type="button" onclick="selectTime(19, this)">19:00</button>
-					<button type="button" onclick="selectTime(20, this)">20:00</button>
-					<button type="button" onclick="selectTime(21, this)">21:00</button>
-					<button type="button" onclick="selectTime(22, this)">22:00</button>
-					<button type="button" onclick="selectTime(23, this)">23:00</button>					
+					<button type="button" class="timebutton" onclick="selectTime(0, this)">0:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(1, this)">1:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(2, this)">2:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(3, this)">3:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(4, this)">4:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(5, this)">5:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(6, this)">6:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(7, this)">7:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(8, this)">8:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(9, this)">9:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(10, this)">10:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(11, this)">11:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(12, this)">12:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(13, this)">13:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(14, this)">14:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(15, this)">15:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(16, this)">16:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(17, this)">17:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(18, this)">18:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(19, this)">19:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(20, this)">20:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(21, this)">21:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(22, this)">22:00</button>
+					<button type="button" class="timebutton" onclick="selectTime(23, this)">23:00</button>								
 				</div>
 				<input type="text" id="selected_time" name="time" value="">
 				
@@ -74,7 +74,7 @@
 		        <input type="text" name="botarea">
 			</section>
 			<section id="sec_category" >
-				<span class="section_name">카테고리</span><br>
+				<span class="section_name">카테고리(미선택시 모든카테고리 검색)</span><br>
 				<button type="button"th:each="categoryVO, status : ${cateList}" th:onclick="|selectCategory(${categoryVO.categoryno})|" th:text="${categoryVO.name}"></button>
 				<input type="number" id="categoryno" name="categoryno">
 			</section>
@@ -97,6 +97,7 @@
 	</div>
 	<script>
 		window.onload=()=>{
+			document.querySelectorAll('.timebutton')[1].click();
 			document.getElementById('reserve_date').value= new Date().toISOString().substring(0, 10);	
 			const form = document.getElementById('frm');
 	    	const time1 = document.getElementById('time1');
@@ -141,27 +142,28 @@
 	          .then((response) => response.json())
 	          .then((rdata) => {
 	            const divBotAreas = document.getElementById("botarea_div");
-	            divBotAreas.innerHTML = '';
+	            divBotAreas.innerHTML = '<h4>지역 소분류 선택</h4>';
+	            
 	            let allSelect = document.createElement("button");
 	            allSelect.type = "button";
-				allSelect.value = 0;
-				allSelect.onclick=function() {
-					selectBotarea(allSelect);
-				};
-				allSelect.classList.add('btn_botarea');
-	            allSelect.textContent = "모든 지역";
-	            
-	            divBotAreas.appendChild(allSelect);
-	            rdata.forEach(botAreaVO => {
-	              const botArea = document.createElement("button");
-	              botArea.textContent = botAreaVO.name;
-	              botArea.type = "button";
-	              botArea.name = "botareas";
-	              botArea.onclick=function() {
-					  selectBotarea(botArea);
-				  };
-				  botArea.value = botAreaVO.botareano;
-				  botArea.classList.add('btn_botarea');
+							allSelect.value = 0;
+							allSelect.onclick=function() {
+								selectBotarea(allSelect);
+							};
+							allSelect.classList.add('btn_botarea');
+				            allSelect.textContent = "모든 지역";
+				            
+				            divBotAreas.appendChild(allSelect);
+				            rdata.forEach(botAreaVO => {
+				              const botArea = document.createElement("button");
+				              botArea.textContent = botAreaVO.name;
+				              botArea.type = "button";
+				              botArea.name = "botareas";
+				              botArea.onclick=function() {
+								  selectBotarea(botArea);
+							  };
+							  botArea.value = botAreaVO.botareano;
+							  botArea.classList.add('btn_botarea');
 	              
 	              divBotAreas.appendChild(botArea);
 	              botarea_div.style.display="block";
