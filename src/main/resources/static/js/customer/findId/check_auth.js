@@ -1,4 +1,4 @@
-function check_auth() {
+function checkAuth() {
   let auth_btn = document.getElementById('auth_btn');
   let phone = document.getElementById('phone');
   let auth = document.getElementById('auth');

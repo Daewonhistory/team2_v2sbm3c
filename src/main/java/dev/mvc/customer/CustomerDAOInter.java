@@ -25,6 +25,7 @@ public interface CustomerDAOInter {
   public int checkNamePhone(HashMap<String , Object> map) ;
 
 
+  public int checkNameEmail(HashMap<String , Object> map) ;
 
   /**
    * 중복 아이디 체크

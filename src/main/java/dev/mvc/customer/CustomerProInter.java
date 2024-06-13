@@ -24,6 +24,14 @@ public interface CustomerProInter {
    */
   public int checkNamePhone(String cname, String phone);
 
+  /**
+   * 아이디 찾기 시 회원 조회
+   * @param cname
+   * @param email
+   * @return 추가한 레코드 갯수
+   */
+  public int checkNameEmail(String cname, String id);
+
   public ArrayList<CustomerVO> list_search_paging(String word, String type, int now_page, int record_per_page);
 
 
