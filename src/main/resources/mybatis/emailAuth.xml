@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.emailAuth.EmailAuthDAOInter">
+    <insert id="insertEmailAuth">
+        INSERT into emailauth (id,email,auth)
+        values (email_seq.nextval, #{email}, #{auth})
+
+    </insert>
+
+
+
+    <select id="emailcount" resultType="int">
+        select count(*)
+        from emailauth
+        where email = #{email}
+    </select>
+
+    <delete id="deleteExpiredAuthCodes">
+        delete from emailauth
+        where email = #{email} and auth = #{auth}
+    </delete>
+
+    <delete id="deleteauth">
+        delete from emailauth
+        where email = #{email}
+    </delete>
+
+    <select id="findAuthCodeByEmail" resultType="int">
+        select count(*)
+        from emailauth
+        where email = #{email} AND auth = #{auth}
+    </select>
+
+</mapper>

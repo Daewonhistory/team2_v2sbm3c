@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content">
+
+  <script>
+    window.onload = () => {
+      let inputch = document.getElementById('inputch');
+      if (inputch.checked) {
+        let emaildiv = document.getElementById('emailSection');
+        emaildiv.style.display ="none";
+
+
+      }
+    }
+
+
+
+  </script>
+  <section class="findId-section">
+    <div class="findId-info">
+      <input type="radio" class="radio-input" id='inputch' name="authMethod" onclick="showSection('phoneSection')" checked>
+      <span class="info-text"> 회원정보에 등록한 휴대폰번호로 인증</span>
+      <div>
+        <span class="info-description">등록한 이름과 휴대폰 번호가 같아야 인증번호가 전송됩니다.</span>
+      </div>
+    </div>
+    <div id="phoneSection">
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="label">이름</label>
+        <input type="text" id="cname" class="text-input">
+      </div>
+
+      <div class="form-group">
+        <label class="label">휴대폰 번호</label>
+        <input type="text" id="phone" class="phone-input">
+
+        <!-- 인증번호 전송 버튼 -->
+        <button type="button" onclick="sendAuth('phone')" id="auth_btn" class="auth-button">인증번호 전송</button>
+      </div>
+    </div>
+
+    <div class="form-group" id="auth_div_phone" style="display: none;">
+      <label class="label">인증 번호 확인</label>
+      <input type="text" id="auth_phone" class="phone-input">
+
+      <!-- 인증번호 확인 버튼 -->
+      <button type="button" onclick="checkAuth('phone')" id="check_btn_phone" class="auth-button">인증번호 확인</button>
+    </div>
+
+  </section>
+
+  <section class="findId-section" >
+    <div class="findId-info">
+      <input type="radio" class="radio-input" name="authMethod" onclick="showSection('emailSection')">
+      <span class="info-text"> 회원정보에 등록한 이메일으로 인증</span>
+      <div>
+        <span class="info-description">등록한 이름과 이메일이 같아야 인증번호가 전송됩니다.</span>
+      </div>
+    </div>
+
+    <div id="emailSection">
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="label">이름</label>
+        <input type="text" id="cname2" class="text-input">
+      </div>
+
+      <div class="form-group">
+        <label class="label">이메일</label>
+        <input type="text" id="email" class="email-input">
+
+        <!-- 인증번호 전송 버튼 -->
+        <button type="button" onclick="sendAuth('email')" id="auth_btn_email" class="auth-button">인증번호 전송</button>
+      </div>
+    </div>
+
+
+    <div class="form-group" id="auth_div_email" style="display: none;">
+      <label class="label">인증 번호 확인</label>
+      <input type="text" id="auth_email" class="email-input">
+
+      <!-- 인증번호 확인 버튼 -->
+      <button type="button" onclick="checkAuth('email')" id="check_btn_email" class="auth-button">인증번호 확인</button>
+    </div>
+  </section>
+
+  <script>
+    function showSection(sectionId) {
+      document.getElementById('phoneSection').style.display = 'none';
+      document.getElementById('emailSection').style.display = 'none';
+      document.getElementById(sectionId).style.display = 'block';
+    }
+  </script>
+
+
+</div>
+</html>

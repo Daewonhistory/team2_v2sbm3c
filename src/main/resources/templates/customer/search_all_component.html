@@ -66,7 +66,7 @@
             function deleterest(custno, restname, word, type,now_page,num) {
                 var name = restname; // customerVO.cname 값 가져오기
 
-                if (confirm(custno + "번의 " + name + " 중분류를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
+                if (confirm(custno + "번의 " + name + " 회원을 삭제하시겠습니까? 삭제하면 삭제회원이 됩니다!")) {
                     var form = document.createElement('form');
                     form.method = 'post';
                     form.action = '/customer/delete?custno='+custno;
@@ -298,7 +298,7 @@
               return;
           }
 
-          if (confirm(selectedcustomernoList.join(", ") + "번의 카테고리를 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
+          if (confirm(selectedcustomernoList.join(", ") + "번의 회원을 삭제하시겠습니까? 삭제하면 복구할 수 없습니다!")) {
               var form = document.createElement('form');
               form.method = 'post';
               form.action = '/customer/multidelete';

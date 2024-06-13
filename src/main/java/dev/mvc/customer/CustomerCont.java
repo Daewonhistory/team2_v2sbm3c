@@ -4,16 +4,21 @@ import dev.mvc.category.CategoryVO;
 import dev.mvc.customerhistory.CustomerHistoryProcInter;
 import dev.mvc.customerhistory.CustomerHistoryVO;
 import dev.mvc.dto.HistoryDTO;
-import dev.mvc.dto.RestDTO;
+import dev.mvc.emailAuth.EmailAuthVO;
+import dev.mvc.phoneAuth.PhoneAuthVO;
 import dev.mvc.restaurant.Restaurant;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 
 
 @Controller
 @RequestMapping("/customer")
 public class CustomerCont {
-
 
   @Autowired
   @Qualifier("dev.mvc.customer.CustomerProc")
@@ -38,9 +42,16 @@ public class CustomerCont {
   @Qualifier("dev.mvc.customerhistory.CustomerHistoryProc")
   private CustomerHistoryProcInter historyproc;
 
-  private final String YOUR_IPINFO_TOKEN = "";
+  @Autowired
+  private SmsTool smsTool;
+
+  @Autowired
+  private EmailTool emailTool;
+
   @Autowired
   private Security security;
+
+
 
   public CustomerCont() {
 //    System.out.println("CustomerCont created");
@@ -81,6 +92,24 @@ public class CustomerCont {
     return "{\"cnt\":" + cnt + "}";
   }
 
+  @PostMapping("/checkNamePhone")  //http:localhost:9091/meber/checkId?id=admin
+  @ResponseBody
+  public ResponseEntity<HashMap<String,Object>> checkNamePhone(@RequestBody CustomerVO customerVO) {
+
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    int count = this.customerProc.checkNamePhone(customerVO.getCname(), customerVO.getPhone());
+
+    if (count == 1) {
+      map.put("cnt", 1);
+    } else {
+      map.put("cnt", 0);
+    }
+
+
+    return ResponseEntity.ok(map);
+  }
+
+
 
   /**
    * 회원가입 폼 메서드
@@ -108,11 +137,14 @@ public class CustomerCont {
    */
 
   @PostMapping("/create")
-
   public String createcustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr) {
 
 
+
+
     int check_ID = this.customerProc.checkID(customerVO.getId());
+    System.out.println("->"+customerVO.getId());
+    System.out.println("닉네임->"+customerVO.getNickname());
 
 
     System.out.println("check_ID -> " + check_ID);
@@ -139,6 +171,284 @@ public class CustomerCont {
       return "redirect:/customer/create";
     }
 
+  }
+
+  /**
+   * 조히
+   *
+   * @param model
+   * @param custno 회원 번호
+   * @return
+   */
+  @GetMapping("/read")
+  public String read(Model model, @RequestParam(name = "custno") Integer custno, HttpSession session, RedirectAttributes rttr) {
+    System.out.println(custno);
+    CustomerVO read = this.customerProc.read(custno);
+
+    String id = (String) session.getAttribute("id");
+
+
+    if (read != null) {
+
+      model.addAttribute("customerVO", read);
+      return "customer/read";
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/customer/list";
+    }
+  }
+
+  /**
+   * 마이페이지
+   *
+   * @param model
+   * @param session
+   * @param rttr
+   * @return
+   */
+  @GetMapping("/my_page")
+  public String mypage(Model model, HttpSession session, RedirectAttributes rttr) {
+
+
+//    if (this.customerProc.isCustomer(session)) {
+//      String id = (String) session.getAttribute("id");
+
+
+    CustomerVO customerVO = this.customerProc.readById("kksos28");
+
+    model.addAttribute("customerVO", customerVO);
+
+    return "/customer/my_page";
+
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
+  }
+
+  @PostMapping("/update")
+
+  public String updatecustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr, HttpSession session) {
+
+
+    int check_ID = this.customerProc.checkID(customerVO.getId());
+
+
+    int count = this.customerProc.update(customerVO);
+    System.out.println(check_ID);
+    System.out.println(customerVO.getId());
+    if (check_ID == 1) {
+      if (count == 1) {
+
+
+        rrtr.addFlashAttribute("success", 1);
+        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 수정 완료 되었습니다! ");
+        session.setAttribute("cname", customerVO.getCname());
+        return "redirect:/customer/read?custno=" + customerVO.getCustno();
+      } else {
+        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+
+
+        return "redirect:/customer/read?custno=" + customerVO.getCustno();
+      }
+    } else {
+      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+      return "redirect:/customer/create";
+    }
+
+
+  }
+
+  @PostMapping("/update-mypage")
+
+  public String updateMypage(Model model, CustomerVO customerVO, RedirectAttributes rrtr, HttpSession session) {
+
+
+    int check_ID = this.customerProc.checkID(customerVO.getId());
+
+
+    int count = customerProc.update(customerVO);
+    System.out.println(check_ID);
+    System.out.println(customerVO.getId());
+    if (check_ID == 1) {
+      if (count == 1) {
+
+
+        rrtr.addFlashAttribute("success", 1);
+        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 수정 완료 되었습니다! ");
+
+        return "redirect:/customer/my_info_update";
+      } else {
+        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+
+        return "redirect:/customer/my_page";
+      }
+    } else {
+      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+      return "redirect:/customer/create";
+    }
+  }
+
+  @GetMapping("/my_info_update")
+  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
+
+
+//    if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
+    CustomerVO customerVO = this.customerProc.readById("kksos28");
+
+    model.addAttribute("customerVO", customerVO);
+
+    return "/customer/my_info_update";
+
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
+  }
+
+
+  @GetMapping("/update_grade")
+  public String update_gradeForm(Model model, Integer custno, HttpSession session, RedirectAttributes rttr) {
+
+    if (custno == null) {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
+
+    CustomerVO read = this.customerProc.read(custno);
+    if (read == null) {
+      return "redirect:/customer/list";
+    } else {
+      model.addAttribute("customerVO", read);
+      return "customer/update_grade";
+    }
+
+  }
+
+  @PostMapping("update_grade")
+  public String updategrade(Model model, CustomerVO customerVO, Integer grade, Integer custno,
+
+                            RedirectAttributes rrtr, HttpSession session) {
+
+
+    HashMap<String, Object> map = new HashMap<String, Object>();
+
+    System.out.println("custno->" + custno);
+    map.put("grade", grade);
+    map.put("custno", custno);
+    int count = this.customerProc.update_grade(map);
+
+
+    if (count == 1) {
+
+
+      rrtr.addFlashAttribute("success", 1);
+      rrtr.addFlashAttribute("update", "등급  수정이 완료되었습니다 ");
+
+      return "redirect:/customer/list";
+    } else {
+      rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+      return "redirect:/customer/update_grade";
+    }
+
+  }
+
+  /**
+   * 프로필 업데이트 처리 메서드
+   *
+   * @param session
+   * @param ra
+   * @param customerVO
+   * @return
+   */
+
+  @PostMapping("/update_profile")
+  public String updateProfile(HttpSession session, RedirectAttributes ra, CustomerVO customerVO) {
+
+
+    String id = (String) session.getAttribute("id");
+    CustomerVO customer_old = customerProc.readById(id);
+
+    // -------------------------------------------------------------------
+    // 파일 삭제 시작
+    // -------------------------------------------------------------------
+    String file1saved = customer_old.getImage();  // 실제 저장된 파일명
+
+    long size1 = 0;
+
+    String upDir = Customer.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
+
+    Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
+    // -------------------------------------------------------------------
+    // 파일 삭제 종료
+    // -------------------------------------------------------------------
+
+    // -------------------------------------------------------------------
+    // 파일 전송 시작
+    // -------------------------------------------------------------------
+    String file1 = "";          // 원본 파일명 image
+
+    // 전송 파일이 없어도 file1MF 객체가 생성됨.
+    // <input type='file' class="form-control" name='file1MF' id='file1MF'
+    //           value='' placeholder="파일 선택">
+    MultipartFile mf = customerVO.getFile1MF();
+
+    file1 = mf.getOriginalFilename(); // 원본 파일명
+    size1 = mf.getSize();  // 파일 크기
+
+    if (size1 > 0) { // 폼에서 새롭게 올리는 파일이 있는지 파일 크기로 체크 ★
+      // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
+      String exe = file1.split("\\.")[1];
+      String newFileName = "customer_" + customer_old.getCustno() + "." + exe;
+      file1saved = Upload.saveFileSpring(mf, upDir, newFileName);
+
+      if (Tool.isImage(file1saved)) { // 이미지인지 검사
+        // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
+        file1 = Tool.preview(upDir, file1saved, 150, 150);
+      } else {
+        ra.addFlashAttribute("success", "이미지가 아닙니다!");
+        return "redirect:/customer/my_page";
+      }
+
+    } else { // 파일이 삭제만 되고 새로 올리지 않는 경우
+      file1 = "";
+      file1saved = "";
+      size1 = 0;
+    }
+
+    customerVO.setImage(file1);
+    customerVO.setId(id);
+    // -------------------------------------------------------------------
+    // 파일 전송 코드 종료
+    // -------------------------------------------------------------------
+
+    int count = this.customerProc.updateProfile(customerVO);// Oracle 처리
+
+    if (count == 1) {
+      ra.addFlashAttribute("success", "프로필 수정이 완료되었습니다.");
+      return "redirect:/customer/my_page";
+    } else {
+      return "redirect:/";
+    }
+  }
+
+  @GetMapping("/my_password_update")
+  public String passwordupdate(Model model, HttpSession session, RedirectAttributes rttr) {
+
+
+//    if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
+    CustomerVO customerVO = this.customerProc.readById("kksos28");
+
+    model.addAttribute("customerVO", customerVO);
+
+    return "/customer/my_password_update";
+
+//    } else {
+//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+//      return "redirect:/";
+//    }
   }
 
 
@@ -226,16 +536,7 @@ public class CustomerCont {
    */
   @PostMapping("/login")
 
-  public String login(Model model,
-                      String id, String passwd,
-                      @RequestParam(value = "id_save", defaultValue = "") String id_save,
-                      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save,
-                      HttpSession session,
-                      HttpServletResponse response,
-                      HttpServletRequest request,
-                      RedirectAttributes rttr,
-                      CustomerHistoryVO historyVO
-  ) {
+  public String login(Model model, String id, String passwd, @RequestParam(value = "id_save", defaultValue = "") String id_save, @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save, HttpSession session, HttpServletResponse response, HttpServletRequest request, RedirectAttributes rttr, CustomerHistoryVO historyVO) {
 
 
     HashMap<String, Object> map = new HashMap<String, Object>();
@@ -247,8 +548,6 @@ public class CustomerCont {
     if (cnt == 1) {
       CustomerVO customerVO = this.customerProc.readById(id);
       // id를 이용하여 회원 정보 조회
-
-
 
 
       session.setAttribute("custno", customerVO.getCustno());
@@ -313,7 +612,7 @@ public class CustomerCont {
       historyVO.setCustno(customerVO.getCustno());
 
 
-      String ipAddress =  ClientUtils.getRemoteIP(request);
+      String ipAddress = ClientUtils.getRemoteIP(request);
 
       System.out.println(ipAddress);
       historyVO.setIp(ipAddress);
@@ -341,139 +640,35 @@ public class CustomerCont {
 
   }
 
-  /**
-   * 마이페이지
-   * @param model
-   * @param session
-   * @param rttr
-   * @return
-   */
-  @GetMapping("/my_page")
-  public String mypage(Model model, HttpSession session, RedirectAttributes rttr) {
-
-
-//    if (this.customerProc.isCustomer(session)) {
-//      String id = (String) session.getAttribute("id");
-
-
-      CustomerVO customerVO = this.customerProc.readById("kksos28");
-
-      model.addAttribute("customerVO", customerVO);
-
-      return "/customer/my_page";
-
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
-  }
 
   /**
    * 마이페이지  정보 수정
-   * @param model
+   *
+   *
    * @param session
-   * @param rttr
+   * @param ra
    * @return
    */
 
 
-  @GetMapping("/logout")
-  public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+  @PostMapping("/logout")
+  public String logout(HttpSession session, RedirectAttributes ra ) {
     // 세션을 무효화합니다.
     session.invalidate();
 
     // 로그아웃 성공 메시지(선택 사항)
-    redirectAttributes.addFlashAttribute("logout", "로그아웃 되었습니다.");
+    ra.addFlashAttribute("logout", "로그아웃 되었습니다.");
 
     // 홈 페이지로 리다이렉트합니다.
     return "redirect:/";
 
   }
 
-  @GetMapping("/my_info_update")
-  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-//    if (this.customerProc.isCustomer(session)) {
-    String id = (String) session.getAttribute("id");
-    CustomerVO customerVO = this.customerProc.readById("kksos28");
-
-    model.addAttribute("customerVO", customerVO);
-
-    return "/customer/my_info_update";
-
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
-  }
-
-  @PostMapping("/update")
-
-  public String updatecustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr, HttpSession session) {
-
-
-    int check_ID = this.customerProc.checkID(customerVO.getId());
-
-
-    int count = this.customerProc.update(customerVO);
-    System.out.println(check_ID);
-    System.out.println(customerVO.getId());
-    if (check_ID == 1) {
-      if (count == 1) {
-
-
-        rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 수정 완료 되었습니다! ");
-        session.setAttribute("cname", customerVO.getCname());
-        return "redirect:/customer/read?custno=" + customerVO.getCustno();
-      } else {
-        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-
-
-        return "redirect:/customer/read?custno=" + customerVO.getCustno();
-      }
-    } else {
-      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/customer/create";
-    }
-
-
-  }
-
-  @PostMapping("/update-mypage")
-
-  public String updateMypage(Model model, CustomerVO customerVO, RedirectAttributes rrtr, HttpSession session) {
-
-
-    int check_ID = this.customerProc.checkID(customerVO.getId());
-
-
-    int count = customerProc.update(customerVO);
-    System.out.println(check_ID);
-    System.out.println(customerVO.getId());
-    if (check_ID == 1) {
-      if (count == 1) {
-
-
-        rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 수정 완료 되었습니다! ");
-
-        return "redirect:/customer/my_info_update";
-      } else {
-        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-
-        return "redirect:/customer/my_page";
-      }
-    } else {
-      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/customer/create";
-    }
-  }
 
   @GetMapping("/list")
-  public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
-          categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+  public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
 
     String id = (String) session.getAttribute("id");
@@ -528,31 +723,6 @@ public class CustomerCont {
 
   }
 
-  /**
-   * 조히
-   *
-   * @param model
-   * @param custno 회원 번호
-   * @return
-   */
-  @GetMapping("/read")
-  public String read(Model model, @RequestParam(name = "custno") Integer custno, HttpSession session,
-                     RedirectAttributes rttr) {
-    System.out.println(custno);
-    CustomerVO read = this.customerProc.read(custno);
-
-    String id = (String) session.getAttribute("id");
-
-
-    if (read != null) {
-
-      model.addAttribute("customerVO", read);
-      return "customer/read";
-    } else {
-      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-      return "redirect:/customer/list";
-    }
-  }
 
   /**
    * 회원 탈퇴
@@ -565,9 +735,7 @@ public class CustomerCont {
    * @return
    */
   @PostMapping("/delete")
-  public String delete(Model model, @RequestParam("custno") Integer custno,
-                       @RequestParam("cname") String cname, HttpSession session,
-                       RedirectAttributes rttr) {
+  public String delete(Model model, @RequestParam("custno") Integer custno, @RequestParam("cname") String cname, HttpSession session, RedirectAttributes rttr) {
 
     int count = this.customerProc.delete(custno);
 
@@ -581,152 +749,6 @@ public class CustomerCont {
     }
   }
 
-  @GetMapping("/update_grade")
-  public String update_gradeForm(Model model, Integer custno, HttpSession session, RedirectAttributes rttr) {
-
-    if (custno == null) {
-      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-      return "redirect:/";
-    }
-
-    CustomerVO read = this.customerProc.read(custno);
-    if (read == null) {
-      return "redirect:/customer/list";
-    } else {
-      model.addAttribute("customerVO", read);
-      return "customer/update_grade";
-    }
-
-  }
-
-  @PostMapping("update_grade")
-  public String updategrade(Model model, CustomerVO customerVO,
-                            Integer grade, Integer custno,
-
-                            RedirectAttributes rrtr,
-                            HttpSession session
-  ) {
-
-
-    HashMap<String, Object> map = new HashMap<String, Object>();
-
-    System.out.println("custno->"+custno);
-    map.put("grade", grade);
-    map.put("custno", custno);
-    int count = this.customerProc.update_grade(map);
-
-
-    if (count == 1) {
-
-
-      rrtr.addFlashAttribute("success", 1);
-      rrtr.addFlashAttribute("update", "등급  수정이 완료되었습니다 ");
-
-      return "redirect:/customer/list";
-    } else {
-      rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-      return "redirect:/customer/update_grade";
-    }
-
-  }
-
-  /**
-   * 프로필 업데이트 처리 메서드
-   * @param session
-   * @param ra
-   * @param customerVO
-   * @return
-   */
-
-  @PostMapping("/update_profile")
-  public String updateProfile(HttpSession session, RedirectAttributes ra,CustomerVO customerVO) {
-
-
-    String id = (String) session.getAttribute("id");
-    CustomerVO customer_old = customerProc.readById(id);
-
-    // -------------------------------------------------------------------
-    // 파일 삭제 시작
-    // -------------------------------------------------------------------
-    String file1saved = customer_old.getImage();  // 실제 저장된 파일명
-
-    long size1 = 0;
-
-    String upDir = Customer.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
-
-    Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
-    // -------------------------------------------------------------------
-    // 파일 삭제 종료
-    // -------------------------------------------------------------------
-
-    // -------------------------------------------------------------------
-    // 파일 전송 시작
-    // -------------------------------------------------------------------
-    String file1 = "";          // 원본 파일명 image
-
-    // 전송 파일이 없어도 file1MF 객체가 생성됨.
-    // <input type='file' class="form-control" name='file1MF' id='file1MF'
-    //           value='' placeholder="파일 선택">
-    MultipartFile mf = customerVO.getFile1MF();
-
-    file1 = mf.getOriginalFilename(); // 원본 파일명
-    size1 = mf.getSize();  // 파일 크기
-
-    if (size1 > 0) { // 폼에서 새롭게 올리는 파일이 있는지 파일 크기로 체크 ★
-      // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
-      String exe = file1.split("\\.")[1];
-      String newFileName = "customer_" + customer_old.getCustno() + "." + exe;
-      file1saved = Upload.saveFileSpring(mf, upDir,newFileName);
-
-      if (Tool.isImage(file1saved)) { // 이미지인지 검사
-        // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
-        file1 = Tool.preview(upDir, file1saved, 150, 150);
-      }  else {
-        ra.addFlashAttribute("success","이미지가 아닙니다!");
-        return "redirect:/customer/my_page";
-      }
-
-    } else { // 파일이 삭제만 되고 새로 올리지 않는 경우
-      file1 = "";
-      file1saved = "";
-      size1 = 0;
-    }
-
-    customerVO.setImage(file1);
-    customerVO.setId(id);
-    // -------------------------------------------------------------------
-    // 파일 전송 코드 종료
-    // -------------------------------------------------------------------
-
-    int count = this.customerProc.updateProfile(customerVO);// Oracle 처리
-
-    if (count ==1 ){
-      ra.addFlashAttribute("success","프로필 수정이 완료되었습니다.");
-      return "redirect:/customer/my_page";
-    } else {
-      return "redirect:/";
-    }
-  }
-
-  @GetMapping("/my_password_update")
-  public String passwordupdate(Model model, HttpSession session, RedirectAttributes rttr) {
-
-
-//    if (this.customerProc.isCustomer(session)) {
-    String id = (String) session.getAttribute("id");
-    CustomerVO customerVO = this.customerProc.readById("kksos28");
-
-    model.addAttribute("customerVO", customerVO);
-
-    return "/customer/my_password_update";
-
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
-  }
-
-
 
   @GetMapping("/logininfo")
   public String moble(Model model, CustomerHistoryVO loginHistoryVO, HttpSession session) {
@@ -734,7 +756,7 @@ public class CustomerCont {
     Integer custno = (Integer) session.getAttribute("custno");
 
     if (custno == null) {
-      custno =19;
+      custno = 19;
     }
     ArrayList<HistoryDTO> selecthistory = this.historyproc.selecthistory(custno);
 
@@ -742,22 +764,14 @@ public class CustomerCont {
     PublicTools publicTools = new PublicTools();
 
 
-
     Map<String, List<HistoryDTO>> groupedLoginHistory = publicTools.groupByLoginDate(selecthistory);
-
-
-
 
 
     model.addAttribute("loginHistoryList", groupedLoginHistory);
 
 
-
     return "mobile_login_info";
   }
-
-
-
 
 
 }

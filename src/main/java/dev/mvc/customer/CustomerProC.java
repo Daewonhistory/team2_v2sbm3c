@@ -35,6 +35,14 @@ public class CustomerProC implements CustomerProInter {
     return cnt;
   }
 
+  @Override
+  public int checkNamePhone(String cname, String phone) {
+
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("cname", cname);
+    map.put("phone", phone);
+    return this.customerDAO.checkNamePhone(map);
+  }
 
 
   @Override

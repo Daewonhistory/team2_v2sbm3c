@@ -5,16 +5,22 @@ import dev.mvc.category.CategoryVO;
 import dev.mvc.customer.Customer;
 import dev.mvc.customer.CustomerVO;
 import dev.mvc.dto.HistoryDTO;
+import dev.mvc.emailAuth.EmailAuthVO;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.ownerhistory.OwnerHistoryVO;
+import dev.mvc.phoneAuth.PhoneAuthVO;
 import dev.mvc.restaurant.Restaurant;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 @RequestMapping("/owner")
@@ -40,6 +47,13 @@ public class OwnerCont {
 
   @Autowired
   private Security security;
+
+  @Autowired
+  private SmsToolO smsTool;
+
+  @Autowired
+  private EmailToolO emailTool;
+
 
 
   public OwnerCont() {
@@ -840,7 +854,35 @@ public class OwnerCont {
       return "redirect:/";
     }
   }
+  @PostMapping("/send_phone")
 
+  public ResponseEntity<CompletableFuture<Boolean>> PhoneAuth(@RequestBody PhoneAuthVO phoneVO) throws NurigoMessageNotReceivedException, NurigoEmptyResponseException, NurigoUnknownException {
+
+    System.out.println("phone ->"+ phoneVO.getPhone());
+    return ResponseEntity.ok((smsTool.send_message((java.lang.String) phoneVO.getPhone())));
+  }
+
+  @PostMapping("/send_email")
+
+  public  ResponseEntity<CompletableFuture<Boolean>> EmailAuth(@RequestBody EmailAuthVO emailAuthVO) throws Exception {
+
+    System.out.println("->"+emailAuthVO.getEmail());
+    return ResponseEntity.ok((emailTool.sendAuthenticationCode(emailAuthVO.getEmail())));
+  }
+  @PostMapping("/check_phone")
+  public  ResponseEntity<HashMap<String,Object>> auth_phone_check(@RequestBody PhoneAuthVO phoneVO) throws Exception {
+
+    return ResponseEntity.ok((smsTool.checkAuthentication(phoneVO.getPhone(),phoneVO.getAuth())));
+
+  }
+
+
+  @PostMapping("/check_email")
+  public  ResponseEntity<HashMap<String,Object>> auth_email_check(@RequestBody EmailAuthVO emailAuthVO) throws Exception {
+
+    return ResponseEntity.ok((emailTool.checkAuthentication(emailAuthVO.getEmail(),emailAuthVO.getAuth())));
+
+  }
 }
 
 

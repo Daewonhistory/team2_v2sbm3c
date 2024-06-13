@@ -15,6 +15,15 @@ public interface CustomerProInter {
    */
   public int checkNickName(String nickname);
 
+
+  /**
+   * 아이디 찾기 시 회원 조회
+   * @param cname
+   * @param phone
+   * @return 추가한 레코드 갯수
+   */
+  public int checkNamePhone(String cname, String phone);
+
   public ArrayList<CustomerVO> list_search_paging(String word, String type, int now_page, int record_per_page);
 
 
