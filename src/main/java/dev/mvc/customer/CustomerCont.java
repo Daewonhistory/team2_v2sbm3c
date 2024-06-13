@@ -1,10 +1,14 @@
 package dev.mvc.customer;
 
+import dev.mvc.allergy.AllergyProcInter;
+import dev.mvc.allergy.AllergyVO;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.customerhistory.CustomerHistoryProcInter;
 import dev.mvc.customerhistory.CustomerHistoryVO;
 import dev.mvc.dto.HistoryDTO;
 import dev.mvc.emailAuth.EmailAuthVO;
+import dev.mvc.ingredient.IngredientProcInter;
+import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.phoneAuth.PhoneAuthVO;
 import dev.mvc.restaurant.Restaurant;
 import dev.mvc.tool.*;
@@ -41,6 +45,14 @@ public class CustomerCont {
   @Autowired
   @Qualifier("dev.mvc.customerhistory.CustomerHistoryProc")
   private CustomerHistoryProcInter historyproc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.allergy.AllergyProc")
+  private AllergyProcInter allergyProc;
+
+  @Autowired
+  @Qualifier("dev.mvc.ingredient.IngredientProc")
+  private IngredientProcInter ingredientProc;
 
   @Autowired
   private SmsTool smsTool;
@@ -186,6 +198,14 @@ public class CustomerCont {
     CustomerVO read = this.customerProc.read(custno);
 
     String id = (String) session.getAttribute("id");
+    
+    // 알러지 재료 목록 추가
+    ArrayList<AllergyVO> allergies = this.allergyProc.list_by_custno(custno);
+    model.addAttribute("allergies", allergies);
+    
+    // 알러지 재료명 목록 추가
+    ArrayList<IngredientVO> ingredient_list = this.ingredientProc.list_all();
+    model.addAttribute("ingredient_list", ingredient_list);
 
 
     if (read != null) {
@@ -217,6 +237,12 @@ public class CustomerCont {
     CustomerVO customerVO = this.customerProc.readById(id);
 
     model.addAttribute("customerVO", customerVO);
+    
+    ArrayList<IngredientVO> ingredient_list = this.ingredientProc.list_all();
+    model.addAttribute("ingredient_list", ingredient_list);
+
+    List<AllergyVO> allergies = this.allergyProc.list_by_custno(customerVO.getCustno());
+    model.addAttribute("allergies", allergies);
 
     return "/customer/my_page";
 
@@ -228,13 +254,27 @@ public class CustomerCont {
 
   @PostMapping("/update")
 
-  public String updatecustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr, HttpSession session) {
+  public String updatecustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr, @RequestParam(name="ingredno[]", required=false) ArrayList<Integer> ingrednoList,HttpSession session) {
 
 
     int check_ID = this.customerProc.checkID(customerVO.getId());
 
 
     int count = this.customerProc.update(customerVO);
+    
+    // 기존 알러지 재료 삭제
+    this.allergyProc.delete_by_custno(customerVO.getCustno());
+
+    // 새로운 알러지 재료 추가
+    if (ingrednoList != null) {
+        for (Integer ingredno : ingrednoList) {
+            AllergyVO allergyVO = new AllergyVO();
+            allergyVO.setCustno(customerVO.getCustno());
+            allergyVO.setIngredno(ingredno);
+            this.allergyProc.create(allergyVO);
+        }
+    }
+        
     System.out.println(check_ID);
     System.out.println(customerVO.getId());
     if (check_ID == 1) {
@@ -255,16 +295,17 @@ public class CustomerCont {
       rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
       return "redirect:/customer/create";
     }
-
+   
 
   }
 
   @PostMapping("/update-mypage")
 
-  public String updateMypage(Model model, CustomerVO customerVO, RedirectAttributes rrtr, HttpSession session) {
+  public String updateMypage(Model model, CustomerVO customerVO, @RequestParam(name="ingredno[]", required=false) List<Integer> ingrednoList,RedirectAttributes rrtr, HttpSession session) {
 
 
     int check_ID = this.customerProc.checkID(customerVO.getId());
+    System.out.println("->ingred: " + ingrednoList.size());
 
 
     int count = customerProc.update(customerVO);
@@ -272,6 +313,18 @@ public class CustomerCont {
     System.out.println(customerVO.getId());
     if (check_ID == 1) {
       if (count == 1) {
+        // 기존 알러지 재료 삭제
+        this.allergyProc.delete_by_custno(customerVO.getCustno());
+
+        // 새로운 알러지 재료 추가
+        if (ingrednoList != null) {
+            for (Integer ingredno : ingrednoList) {
+                AllergyVO allergyVO = new AllergyVO();
+                allergyVO.setCustno(customerVO.getCustno());
+                allergyVO.setIngredno(ingredno);
+                this.allergyProc.create(allergyVO);
+            }
+      }
 
 
         rrtr.addFlashAttribute("success", 1);
@@ -290,7 +343,8 @@ public class CustomerCont {
   }
 
   @GetMapping("/my_info_update")
-  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
+  public String myinfo(Model model, HttpSession session,@RequestParam(name="ingredno[]", required=false) ArrayList<Integer> ingrednoList,
+                        RedirectAttributes rttr) {
 
 
     if (this.customerProc.isCustomer(session)) {
@@ -298,6 +352,12 @@ public class CustomerCont {
     CustomerVO customerVO = this.customerProc.readById(id);
 
     model.addAttribute("customerVO", customerVO);
+    
+    ArrayList<IngredientVO> ingredient_list = this.ingredientProc.list_all();
+    model.addAttribute("ingredient_list", ingredient_list);
+
+    List<AllergyVO> allergies = this.allergyProc.list_by_custno(customerVO.getCustno());
+    model.addAttribute("allergies", allergies);
 
     return "/customer/my_info_update";
 
@@ -695,7 +755,7 @@ public class CustomerCont {
 
     int count = this.customerProc.list_search_count(word, type);
     // 일련 번호 생성
-    int num = count - ((now_page - 1) * Restaurant.RECORD_PER_PAGE);
+    int num = count - ((now_page - 1) * Customer.RECORD_PER_PAGE);
     ArrayList<CustomerVO> custlist = this.customerProc.list_search_paging(word, type, now_page, Customer.RECORD_PER_PAGE);
     String paging = this.customerProc.pagingBox(now_page, word, type, "/customer/list", count, Customer.RECORD_PER_PAGE, Customer.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);

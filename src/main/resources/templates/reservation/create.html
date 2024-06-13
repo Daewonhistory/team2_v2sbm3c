@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <title>예약 정보 조회</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class='title_line'>
+    > 예약 정보 조회
+  </div>
+  
+  <aside class="aside_right">
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <ul>
+    <li>
+      <span th:text="|레스토랑 이름 : ${restaurant.name}|"></span>
+    </li>
+    <li>
+      <span th:text="|예약 날짜 : ${#dates.format(admitPerson.reserve_date, 'yyyy-MM-dd')}|"></span>
+    </li>
+    <li>
+      <span th:text="|예약 시간 : ${#numbers.formatInteger(admitPerson.time, 2)}:00|"></span>
+    </li>
+    <li>
+      <span th:text="|인원수 : ${person}|"></span>
+    </li>
+ 
+  </ul>
+
+  <form name='frm' method='post' th:object="${reserveVO}" action="/reservation/create">
+    <input type="hidden" name="admitpersonno" th:value="${admitPerson.admitpersonno}">
+    <input type="hidden" name="person" th:value="${person}">
+    <input type="hidden" id="custno" name="custno" th:value="${custno}" class="form-control" required>
+    
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">예약하기</button>
+      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>
