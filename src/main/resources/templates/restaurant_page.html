@@ -38,19 +38,27 @@
 		</div>	
 	</section>
 	<section id="sec_reserve_condition">
-				<span class="section_name">예약 조건</span><br>
-				<form>
-					<label>예약정보번호(미구현): </label><input type="text" name="admit_personno">
-					<label>레스토랑번호: </label><input type="text" id="restno" name="restno" th:value="${restaurantVO.restno}"><br>
-					<label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()">명
-					<input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
-					<label>시간:</label><input type="number" name="time" value="2">
-					<div class="vertical_scroll" id="scrollContainer">
-				</form>
+			<span class="section_name">예약 조건</span><br>
+				<label>예약정보번호(미구현): </label><input type="hidden" name="admit_personno">
+				<label>레스토랑번호: </label><input type="text" id="restno" name="restno" th:value="${restaurantVO.restno}"><br>
+				<label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()">명
+				<input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
+				<label>시간:</label><input type="number" name="time" value="2">
+				<div class="vertical_scroll" id="scrollContainer">
 				
 							
-				</div>
+		</div>
 	</section>
+	<section>
+		<h2>식당 공지</h2>
+		<div id="notice_area" style="height: 200px; overflow-x: hidden ; overflow-y: scroll; padding:4px">
+			<div id="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; margin:3px; overflow: hidden; overflow-wrap: break-word;">
+				<h3 th:text="${noticeVO.title}"></h3>
+				<span th:text="${noticeVO.content}"></span>
+			</div>
+		</div>
+	</section>
+	<div style="height: 80px;"></div>
 	<script>
 		window.onload = () => {
 			searchPossibleTime();
@@ -144,7 +152,8 @@
 		function searchPossibleTime(){
 			const reserveDate = document.getElementById("reserve_date");
 			const personnel = document.getElementById("personnel");
-			const restno = document.getElementById("personnel");
+			const restno = document.getElementById("restno");
+			console.log(reserveDate.value + " " + personnel.value + " " + restno.value);
 			
 			fetch(
 	          "/admitPerson/searchPossibleTime",
@@ -164,17 +173,23 @@
 	            scrollContainer.innerHTML = '';
 	            
 	            rdata.forEach(admitPersonVO => {
-	              const time = document.createElement("button");
-	              time.textContent = admitPersonVO.time + ":00";
-	              time.type = "button";
-	              time.name = "botareas";
-
-				  time.value = admitPersonVO.admitpersonno;
-				  time.classList.add('btn_botarea');
+	              const timeButton = document.createElement("button");
+	              timeButton.textContent = admitPersonVO.time + ":00";
+	              timeButton.dataset.admitpersonno = admitPersonVO.admitpersonno;
+	              timeButton.type = "button";
+							  timeButton.value = admitPersonVO.admitpersonno;
+							  timeButton.classList.add('btn_botarea');
 	              
-	              scrollContainer.appendChild(time);
-	            });
-	          });
+	              timeButton.addEventListener('click', function() {
+	                const admitpersonno = this.dataset.admitpersonno;
+	                const person = document.getElementById('personnel').value;
+	                window.location.href = `/reservation?admitpersonno=${admitpersonno}&person=${person}`;
+            		});
+	              scrollContainer.appendChild(timeButton);
+	              
+	              
+          		});
+        		});
 		}
 		document.getElementById('next').addEventListener('click', nextSlide);
 		document.getElementById('prev').addEventListener('click', prevSlide);

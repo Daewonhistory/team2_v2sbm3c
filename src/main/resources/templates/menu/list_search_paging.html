@@ -32,20 +32,16 @@
           now_page_value = now_page_tag.innerText;
         }
 
-        console.log(word.value + restno.value);
-        const data = {
-          restno: restno,
-          word: word,
-        };
         fetch(
-          "/menu/menulist?word=" +
-            word.value +
-            "&restno=" +
-            restno.value +
-            "&now_page=" +
-            now_page_value,
+          "/menu/menulist",
           {
-            method: "GET",
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+	            body: JSON.stringify({
+					"restno": restno.value,
+					"word": word.value,
+					"now_page": now_page_value
+					})
           }
         )
           .then((response) => response.json())
@@ -134,9 +130,8 @@
     </div>
     <div>
       <form name="frm">
-        <input type="text" th:value="${word}" id="word" />
         <select id="restno" onchange="send()">
-          <option value="0">전체 식당</option>
+          <option th:if="${type==null || !type.equals('owner')}" value="0">전체 식당</option>
           <option
             th:each="restaurantVO, status : ${ownerRestList}"
             th:value="${restaurantVO.restno}"

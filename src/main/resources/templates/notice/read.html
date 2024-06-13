@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+	메뉴 등록
+  </div>
+  
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide'>│</span>
+    <a href="/notice/list">목록</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="|/notice/update?noticeno=${noticeVO.noticeno}|">수정</a>       
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+
+	
+    <div>
+    	<label>공지 제목</label><br>
+      <span th:text="${noticeVO.title}"required="required" style='width: 100%;'></span>
+    </div>
+    <div>
+       <label>공지 내용</label><br>
+       <span th:text="${noticeVO.content}" style='width: 100%;'></span>
+    </div>
+
+	
+</div>
+</html>
+
+  

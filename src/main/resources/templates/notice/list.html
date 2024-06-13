@@ -15,7 +15,7 @@
 
     <div class="menu_line"></div>
 
-    <table>
+    <table style="width: 100%;">
       <colgroup>
         <col style="width: 30%" />
         <col style="width: 60%" />
@@ -28,18 +28,16 @@
           <th class="th_bs">수정 / 삭제</th>
         </tr>
         <tr th:each="noticeVO, status : ${noticeList}">
-          <td
-            class="td_basic"
-            th:onclick="@|location.href='/notice/read?noticeno=${noticeVO.noticeno}'|"
-          >
-            <span th:text="${noticeVO.title}"></span>
+          <td class="td_basic">
+            <a th:href="|/notice/read?noticeno=${noticeVO.noticeno}|">
+            	<span th:text="${noticeVO.title}"></span>
+            </a>
           </td>
-          <td
-            class="td_basic"
-            th:onclick="location.href='/notice/read?noticeno=${noticeVO.noticeno}'"
-          >
-          	<span th:text="|${noticeVO.content}|"></span>
-            <span th:if="${noticeVO.content.length() >= 100}" th:text="|${noticeVO.content.substring(0, 100)}...|"></span>
+          <td class="td_basic">
+          	<a th:href="|/notice/read?noticeno=${noticeVO.noticeno}|">
+          		<span th:if="${noticeVO.content.length() <= 100}" th:text="${noticeVO.content}"></span>
+            	<span th:if="${noticeVO.content.length() > 100}" th:text="|${noticeVO.content.substring(0, 100)}...|"></span>
+          	</a>
           </td>
           
           <td class="td_bs">
@@ -67,8 +65,8 @@
           let obj1;
           obj1 = document.createElement("input");
           obj1.type = "hidden";
-          obj1.name = "notice";
-          obj1.value = notice;
+          obj1.name = "noticeno";
+          obj1.value = noticeno;
           
           f.appendChild(obj1);
 
