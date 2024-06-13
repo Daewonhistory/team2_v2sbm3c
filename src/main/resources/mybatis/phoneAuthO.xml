@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.phoneAuthO.PhoneAuthODAOInter">
+    <insert id="insertPhoneAuth">
+        INSERT into phoneauthO (id,phone,auth)
+        values (phoneO_seq.nextval,#{phone}, #{auth})
+
+    </insert>
+
+
+
+    <select id="phonecount" resultType="int">
+        select count(*)
+        from phoneauthO
+        where phone = #{phone}
+    </select>
+
+    <delete id="deleteExpiredAuthCodes">
+        delete from phoneauthO
+        where phone = #{phone} and auth = #{auth}
+    </delete>
+
+    <delete id="deleteauth">
+        delete from phoneauthO
+        where phone = #{phone}
+    </delete>
+
+    <select id="findAuthCodeByEmail" resultType="int">
+        select count(*)
+        from phoneauthO
+        where phone = #{phone} AND auth = #{auth}
+    </select>
+
+</mapper>

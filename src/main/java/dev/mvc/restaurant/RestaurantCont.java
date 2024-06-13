@@ -108,7 +108,7 @@ public class RestaurantCont {
 
             if (size > 0) {
               String exe = fileNames[i].split("\\.")[1];
-              String newFileName = "owner_" + (i + 1) + "." + exe;
+              String newFileName = "rest_" +restaurantVO.getOwnerno()+"_"+(i + 1) + "." + exe;
               String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
 
               if (Tool.isImage(fileSaved)) {

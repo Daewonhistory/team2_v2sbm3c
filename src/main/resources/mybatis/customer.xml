@@ -16,6 +16,12 @@
   </select>
 
 
+  <select id="checkNamePhone" resultType="int" >
+    SELECT COUNT(id) as cnt
+    FROM customer
+    WHERE cname = #{cname} AND phone = #{phone}
+  </select>
+
   <select id="list_search_count" parameterType="java.util.Map" resultType="int">
     <if test="type == 100">
       <if test="word == null or word == ''">

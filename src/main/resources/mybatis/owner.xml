@@ -13,10 +13,10 @@
 
 
     <insert id="create" parameterType="dev.mvc.owner.OwnerVO">
-        INSERT INTO owner(ownerno, id, passwd, oname,phone,tel,zipcode, address1, address2, grade,
+        INSERT INTO owner(ownerno, id, passwd, oname,phone,tel,zipcode, address1, address2, grade, nickname,
                             image,reg_date)
         VALUES (owner_seq.nextval, #{id}, #{passwd}, #{oname}, #{phone},
-                #{tel}, #{zipcode}, #{address1}, #{address2},  #{grade}, #{image}, sysdate)
+                #{tel}, #{zipcode}, #{address1}, #{address2},  #{grade},#{nickname}, #{image}, sysdate)
     </insert>
 
     <select id="list" resultType="dev.mvc.owner.OwnerVO">

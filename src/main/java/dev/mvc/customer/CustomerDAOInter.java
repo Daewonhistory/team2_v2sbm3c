@@ -15,6 +15,17 @@ public interface CustomerDAOInter {
    */
   public int checkNickName(String nickname);
 
+
+  /**
+   * 아이디 찾기 시 회원 조회
+   * @param cname
+   * @param phone
+   * @return 추가한 레코드 갯수
+   */
+  public int checkNamePhone(HashMap<String , Object> map) ;
+
+
+
   /**
    * 중복 아이디 체크
    * @param id
