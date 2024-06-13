@@ -7,6 +7,61 @@
 
   </div>
   <script>
+    
+     // 재료 입력 필드를 제거하는 함수
+function removeIngredient(button) {
+  const ingredientDiv = button.parentElement;
+  document.getElementById('ingredients').removeChild(ingredientDiv);
+}
+
+// 재료를 추가하는 함수
+function addIngredient(ingredno, name) {
+  // 중복 확인
+  const existingIngredients = document.querySelectorAll('#ingredients input[name="ingredno[]"]');
+  for (let i = 0; i < existingIngredients.length; i++) {
+    if (existingIngredients[i].value == ingredno) {
+      // 중복되는 경우 추가하지 않고 함수 종료
+      return;
+    }
+  }
+
+  const ingredientDiv = document.createElement('div');
+  ingredientDiv.classList.add('ingredient');
+  ingredientDiv.style = "background-color: gray; border-radius: 50%; width:150px; display: inline-block; margin: 5px;";
+
+  const ingredientInput = document.createElement('input');
+  ingredientInput.type = 'hidden';
+  ingredientInput.name = 'ingredno[]';
+  ingredientInput.value = ingredno;
+  ingredientInput.required = true;
+
+  const ingredientText = document.createElement('span');
+  ingredientText.innerText = name;
+
+  const removeButton = document.createElement('button');
+  removeButton.type = 'button';
+  removeButton.innerText = '삭제';
+
+  removeButton.onclick = function() {
+    removeIngredient(removeButton);
+  };
+
+  ingredientDiv.appendChild(ingredientInput);
+  ingredientDiv.appendChild(ingredientText);
+  ingredientDiv.appendChild(removeButton);
+
+  document.getElementById('ingredients').appendChild(ingredientDiv);
+}
+
+// 알러지 재료를 선택하여 추가하는 함수
+function handleSelectChange(selectElement) {
+  const selectedOption = selectElement.options[selectElement.selectedIndex];
+  if (selectedOption.value !== "") {
+    addIngredient(selectedOption.value, selectedOption.text);
+  }
+}
+    
+    
     window.onload = function() {
 
 
@@ -219,6 +274,24 @@
         <input type='text' class="form-control form-control-sm" name='address2' th:value="${customerVO.address2}" id='address2' value=''
                placeholder="주소2"
                style="width: 70%; margin-top: 5px;">
+      </div>
+      
+      <!-- 알러지 재료 선택 -->
+      <div class="form-group" style="margin-top: 10px;">
+        <label>알러지 재료:</label>
+        <select id="ingredientSelect" onchange="handleSelectChange(this)" class="form-control form-control-sm" style="width: 70%;">
+          <option value="">재료 선택</option>
+          <option th:each="ingredient : ${ingredient_list}" th:value="${ingredient.ingredno}" th:text="${ingredient.name}"></option>
+        </select>
+      </div>
+
+      <!-- 선택된 알러지 재료 목록 -->
+      <div id="ingredients" class="form-group" style="margin-top: 10px;">
+        <div th:each="allergy : ${allergies}" class="ingredient" style="background-color: gray; border-radius: 50%; width:150px; display: inline-block; margin: 5px;">
+          <input type="hidden" name="ingredno[]" th:value="${allergy.ingredno}">
+          <span th:text="${allergy.ingredientName}" style="color: white;"></span>
+          <button type="button" onclick="removeIngredient(this)">삭제</button>
+        </div>
       </div>
 
       <div class="form-group" style="margin-top: 10px;">

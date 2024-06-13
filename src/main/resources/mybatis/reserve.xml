@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.reserve.ReserveDAOInter">
+  
+    <!-- 예약 등록 -->
+    <insert id="create" parameterType="dev.mvc.reserve.ReserveVO">
+        INSERT INTO reserve (reserveno, sub_date, person, custno, admitpersonno)
+        VALUES (reserve_seq.nextval, sysdate, #{person}, #{custno}, #{admitpersonno})
+    </insert>
+
+    <!-- 모든 예약 조회 -->
+    <select id="list_all" resultType="dev.mvc.reserve.ReserveVO">
+        SELECT reserveno, sub_date, person, custno, admitpersonno
+        FROM reserve
+    </select>
+    
+    
+    <!-- 특정 reserve_date의 예약 조회 -->
+    <select id="list_search_by_reserve_date" parameterType="map" resultType="dev.mvc.reserve.ReserveVO">
+        SELECT reserveno, sub_date, person, custno, admitpersonno
+        FROM reserve
+        WHERE custno = #{custno}
+        AND admitpersonno IN (
+            SELECT admitpersonno
+            FROM admitperson
+            WHERE reserve_date = TO_DATE(#{reserveDate}, 'YYYY-MM-DD')
+        )
+    </select>
+    
+    <!-- 로그인한 사람의 예약 조회 -->
+   <select id="list_search_by_custno" parameterType="int" resultType="dev.mvc.reserve.ReserveVO">
+    SELECT reserveno, sub_date, person, custno, admitpersonno
+    FROM reserve
+    WHERE custno = #{custno}
+   </select>
+   
+   <!-- 예약 취소 -->
+   <delete id="delete" parameterType ="int">
+     DELETE FROM reserve 
+     WHERE reserveno = #{reserveno} 
+   </delete>
+    
+</mapper>
