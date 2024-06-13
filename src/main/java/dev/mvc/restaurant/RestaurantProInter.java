@@ -2,6 +2,7 @@ package dev.mvc.restaurant;
 
 import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
+import dev.mvc.dto.RestFullData;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
@@ -81,6 +82,21 @@ public interface RestaurantProInter {
    * @return
    */
   public ArrayList<RestaurantVO> condition_search_list(Map<String, Object> map);
+  
+  /**
+   * 조건을 통한 식당 검색 이미지 포함
+   * @param map
+   * @return
+   */
+  public ArrayList<RestFullData> SearchRestaurantWithImg(Map<String, Object> map);
+  
+
+  /**
+   * 레스토랑의 모든 데이터 조회
+   * @param restno
+   * @return
+   */
+  public RestFullData readFullData(int restno);
   
   public String test(String date);
 

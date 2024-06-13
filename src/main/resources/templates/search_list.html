@@ -6,8 +6,8 @@
 	</div>
 	<section id="sec_reserve_condition">
 		<span class="section_name">예약 조건</span><br>
-		<label>인원:</label><input type="number" id="person" name="person" th:value="${person}">명
-		<input type="date" id="reserve_date" name="date" th:value="${reserve_date}">
+		<label>인원:</label><input type="number" id="person" name="person" th:value="${person}" onchange="searchRestaurant()">명
+		<input type="date" id="reserve_date" name="date" th:value="${reserve_date}" onchange="searchRestaurant()">
 		<div class="vertical_scroll" id="scrollContainer">
 			<button type="button" class="timebutton" onclick="selectTime(0, this)">0:00</button>
 			<button type="button" class="timebutton" onclick="selectTime(1, this)">1:00</button>
@@ -34,79 +34,24 @@
 			<button type="button" class="timebutton" onclick="selectTime(22, this)">22:00</button>
 			<button type="button" class="timebutton" onclick="selectTime(23, this)">23:00</button>					
 		</div>
-		<input type="text" id="selected_time" name="time" th:value="${time}">
+		<input type="text" id="selected_time" name="time" th:value="${time}" onchange="searchRestaurant()">
+		<input type="hidden" id="categoryno" th:value="${categoryno}">
+		<input type="hidden" id="botareas" th:value="${botarea}">
+		<input type="hidden" id="min_price" th:value="${min_price}">
+		<input type="hidden" id="max_price" th:value="${max_price}">
 		
 		
 	</section>
 	<section id="sec_list">
-		<div><span id="list_count" th:text="${list.size()}"></span>개의 매장이 검색되었습니다.</div>
-		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="4">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2>식당명</h2></div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-				<div><span>카테고리</span></div>
-			</div>
-		</div>
-		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="4">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2>식당명</h2></div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-			</div>
-		</div>
-		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="4">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2>식당명</h2></div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-			</div>
-		</div>
-		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="4">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2>식당명</h2></div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-			</div>
-		</div>
-		<div style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event)">
-			<input type="hidden" id="restno" value="4">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2>식당명</h2></div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-			</div>
-		</div>
-		<div th:each="restaurantVO, status : ${list}" style="display: flex; width:100%; height:200px" onclick="moveRestaurant(event,)">
-			<input type="hidden" id="restno" th:value="${restaurantVO.restno}">
-			<div style="flex:0 0 20%; height:100%">
-				<img src="/images/1.jpg" style="width:100%; height:100px;background-size:cover;">
-			</div>
-			<div style="flex:1; height:100%">
-				<div><h2 th:text="${restaurantVO.name}"></h2>[[${reserve_date}]]</div>
-				<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
-			</div>
-		</div>
+		
 	</section>
 	<script>
 		window.onload = () => {
 			let reserveTime = document.querySelector('#selected_time').value;
 			document.querySelectorAll('.timebutton')[reserveTime].click();
 			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
+			
+			searchRestaurant();
 		}
 		function moveRestaurant(event){
 			let inputs = event.currentTarget.querySelector('input');
@@ -117,12 +62,12 @@
 			location.href = "/restaurant/main_page?restno=" + restno + "&person=" + person + "&date=" + reserveDate + "&time=" + time;
 		}
 	 	function getTodayDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
-            const day = String(today.getDate()).padStart(2, '0');
-            return year + '-' + month + '-' + day;
-        }
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+        const day = String(today.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    }
         //시간버튼 클릭 이벤트
 		function selectTime(time, eventButton){
 			let allBtnRed = document.getElementsByClassName('btn_red');
@@ -132,31 +77,57 @@
 			}
 			eventButton.classList.add('btn_red');
 			inputSelectedTime.value = time;
+			searchRestaurant();
 		}
-		/*
-		function findRestaurant(){
+		
+		function searchRestaurant(){
+			const selectedTime = document.getElementById('selected_time');
+			const reserveDate = document.getElementById('reserve_date');
+			const person = document.getElementById('person');
+			const categoryno = document.getElementById('categoryno');
+			const botareas = document.getElementById('botareas');
+			const minPrice = document.getElementById('min_price');
+			const maxPrice = document.getElementById('max_price');
+			
 			fetch(
-	          "/restaurant/findRestaurant",
+	          "/restaurant/search_list",
 	          {
 	            method: "POST",
 	            headers: {"Content-Type": "application/json"},
 	            body: JSON.stringify({
-					"personnel":  ,
-					"reserve_date": ,
-					"time": ,
-					"" 
-					})
+																		"time": selectedTime.value,
+																		"date": reserveDate.value,
+																		"person": person.value,
+																		"categoryno": categoryno.value,
+																		"botareas": botareas.value,
+																		"minPrice": minPrice.value,
+																		"maxPrice": maxPrice.value
+																		})
 	          }
 	        )
 	          .then((response) => response.json())
 	          .then((rdata) => {
-	            
-	            rdata.forEach(botAreaVO => {
-	              
-	            });
+				  		const sectionList = document.getElementById('sec_list');
+				  		console.log(rdata.length);
+				  		sectionList.innerHTML=`<div><span id="list_count">${rdata.length}</span>개의 매장이 검색되었습니다.</div>`;
+	            rdata.forEach(restaurantVO => {
+								const restaurantInfoDiv = document.createElement('div');
+								restaurantInfoDiv.classList.add('restaurant_info');
+								restaurantInfoDiv.addEventListener('click', moveRestaurant)
+								let src = `/restaurant/storage/${restaurantVO.image1}`;
+								restaurantInfoDiv.innerHTML = `
+								<input type="hidden" id="restno" value="${restaurantVO.restno}">
+								<div style="flex:0 0 20%; height:100%">
+									<img src="${src}" style="width:100%; height:100px;background-size:cover;">
+								</div>		
+								<div style="flex:1; height:100%">
+									<div><h2>${restaurantVO.name}</h2></div>
+									<div><img src="/images/icon/favorite_actvie.svg" style="width:20px; height:20px;"><span style="font-style:bold;">5.0</span></div>
+								</div>`
+								sectionList.appendChild(restaurantInfoDiv);
+							});
 	          });
 		}
-		*/
 	</script>
 	<script>
         const scrollContainer = document.getElementById('scrollContainer');

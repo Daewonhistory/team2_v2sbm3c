@@ -25,13 +25,13 @@ CREATE SEQUENCE schedule_seq
 
 -- CREATE
 INSERT INTO schedule(scheduleno, admit_person, time, restno)
-VALUES(schedule_seq.nextval, 0, 0, 110);
+VALUES(schedule_seq.nextval, 0, 0, 113);
 INSERT INTO schedule(scheduleno, admit_person, time, restno)
-VALUES(schedule_seq.nextval, 1, 30, 110);
+VALUES(schedule_seq.nextval, 1, 30, 113);
 INSERT INTO schedule(scheduleno, admit_person, time, restno)
-VALUES(schedule_seq.nextval, 2, 30, 110);
+VALUES(schedule_seq.nextval, 2, 30, 113);
 INSERT INTO schedule(scheduleno, admit_person, time, restno)
-VALUES(schedule_seq.nextval, 3, 30, 110);
+VALUES(schedule_seq.nextval, 3, 30, 113);
 
 
 COMMIT;

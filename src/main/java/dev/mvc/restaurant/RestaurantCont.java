@@ -5,6 +5,7 @@ import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 
 import dev.mvc.dto.RestDTO;
+import dev.mvc.dto.RestFullData;
 import dev.mvc.midarea.MidAreaProcInter;
 import dev.mvc.midarea.MidAreaVO;
 import dev.mvc.notice.NoticeProcInter;
@@ -219,72 +220,91 @@ public class RestaurantCont {
     return "/search";
   }
 
+//  @GetMapping("/search_list")
+//  public String search_list(Model model,
+//                            int person,
+//                            String date,
+//                            int time,
+//                            @RequestParam(defaultValue = "0") int categoryno,
+//                            @RequestParam(defaultValue = "") String botarea,
+//                            @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
+//                            @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
+//    int[] botareanos = null;
+//    if (!botarea.equals("")) {
+//      String[] splitedBotareas = botarea.split("_");
+//      botareanos = new int[splitedBotareas.length];
+//      for (int i = 0; i < splitedBotareas.length; i++) {
+//        botareanos[i] = Integer.parseInt(splitedBotareas[i]);
+//      }
+//    } else {
+//      botareanos = new int[0];
+//    }
+//
+//
+//    Map<String, Object> map = new HashMap<String, Object>();
+//    map.put("person", person);
+//    map.put("date", date + " 00:00:00");
+//    map.put("time", time);
+//    map.put("categoryno", categoryno);
+//    map.put("botareanos", botareanos);
+//    map.put("min_price", minPrice);
+//    map.put("max_price", maxPrice);
+//    System.out.println("person:" + person);
+//    System.out.println("date:" + date);
+//    System.out.println("time:" + time);
+//    System.out.println("categoryno:" + categoryno);
+//    System.out.println("min_price:" + minPrice);
+//    System.out.println("max_price:" + maxPrice);
+//
+//    ArrayList<RestaurantVO> list = this.restaurantProc.condition_search_list(map);
+//
+//    String date1 = this.restaurantProc.test(date);
+//    model.addAttribute("list", list);
+//    
+//    model.addAttribute("date", date);
+//    model.addAttribute("categoryno", categoryno);
+//    model.addAttribute("botareanos", botareanos);
+//    model.addAttribute("min_price", minPrice);
+//    model.addAttribute("max_price", maxPrice);
+//    model.addAttribute("person", person);
+//    model.addAttribute("reserve_date", date);
+//    model.addAttribute("time", time);
+//    return "/search_list";
+//  }
   @GetMapping("/search_list")
-  public String search_list(Model model,
-                            int person,
-                            String date,
-                            int time,
-                            @RequestParam(defaultValue = "0") int categoryno,
-                            @RequestParam(defaultValue = "") String botarea,
-                            @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
-                            @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
-    int[] botareanos = null;
-    if (!botarea.equals("")) {
-      String[] splitedBotareas = botarea.split("_");
-      botareanos = new int[splitedBotareas.length];
-      for (int i = 0; i < splitedBotareas.length; i++) {
-        botareanos[i] = Integer.parseInt(splitedBotareas[i]);
-      }
-    } else {
-      botareanos = new int[0];
-    }
-
-
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("person", person);
-    map.put("date", date + " 00:00:00");
-    map.put("time", time);
-    map.put("categoryno", categoryno);
-    map.put("botareanos", botareanos);
-    map.put("min_price", minPrice);
-    map.put("max_price", maxPrice);
-    System.out.println("person:" + person);
-    System.out.println("date:" + date);
-    System.out.println("time:" + time);
-    System.out.println("categoryno:" + categoryno);
-    System.out.println("min_price:" + minPrice);
-    System.out.println("max_price:" + maxPrice);
-
-    ArrayList<RestaurantVO> list = this.restaurantProc.condition_search_list(map);
-
-    String date1 = this.restaurantProc.test(date);
-    model.addAttribute("list", list);
-    
-    model.addAttribute("date", date);
-    model.addAttribute("categoryno", categoryno);
-    model.addAttribute("botareanos", botareanos);
-    model.addAttribute("min_price", minPrice);
-    model.addAttribute("max_price", maxPrice);
-    model.addAttribute("person", person);
-    model.addAttribute("reserve_date", date);
-    model.addAttribute("time", time);
-    return "/search_list";
+  public String searchList(Model model,
+					        int person,
+					        String date,
+					        int time,
+					        @RequestParam(defaultValue = "0") int categoryno,
+					        @RequestParam(defaultValue = "") String botarea,
+					        @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
+					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
+	  model.addAttribute("person", person);
+	  model.addAttribute("reserve_date", date);
+	  model.addAttribute("time", time);
+	  model.addAttribute("categoryno", categoryno);
+	  model.addAttribute("botarea", botarea);
+	  model.addAttribute("min_price", minPrice);
+	  model.addAttribute("max_price", maxPrice);
+	  
+	  return "/search_list";
   }
 
   @PostMapping("/search_list")
   @ResponseBody
-  public ResponseEntity<ArrayList<RestaurantVO>> searchList(@RequestBody Map<String, Object> requestBody){
-	  int person = (int) requestBody.get("person");
+  public ResponseEntity<ArrayList<RestFullData>> searchList(@RequestBody Map<String, Object> requestBody){
+	  int person = Integer.parseInt((String) requestBody.get("person"));
       String date = (String) requestBody.get("date");
-      int time = (int) requestBody.get("time");
+      int time = Integer.parseInt((String) requestBody.get("time"));
       int categoryno = 0;
       if(!((String) requestBody.get("categoryno")).equals("")) {
-    	  categoryno = (int) requestBody.get("categoryno");
+    	  categoryno = Integer.parseInt((String) requestBody.get("categoryno"));
       }
       
-      String botarea = "";
+      String botarea = (String) requestBody.get("botareas");
       int[] botareanos;
-      if(!((String) requestBody.get("botarea")).equals("")) {
+      if(!botarea.equals("")) {
 		  String[] splitedBotareas = botarea.split("_");
 		  botareanos = new int[splitedBotareas.length];
 		  for (int i = 0; i < splitedBotareas.length; i++) {
@@ -294,8 +314,8 @@ public class RestaurantCont {
 		  botareanos = new int[0];
 	  }
       
-      int minPrice = (int) requestBody.get("min_price");
-      int maxPrice = (int) requestBody.get("max_price");
+      int minPrice = Integer.parseInt((String) requestBody.get("minPrice"));
+      int maxPrice = Integer.parseInt((String) requestBody.get("maxPrice"));
       
       Map<String, Object> map = new HashMap<String, Object>();
       map.put("person", person);
@@ -312,15 +332,16 @@ public class RestaurantCont {
       System.out.println("min_price:" + minPrice);
       System.out.println("max_price:" + maxPrice);
 
-      ArrayList<RestaurantVO> list = this.restaurantProc.condition_search_list(map);
-      
-	  return new ResponseEntity<ArrayList<RestaurantVO>>(list, HttpStatus.OK);
+      ArrayList<RestFullData> list = this.restaurantProc.SearchRestaurantWithImg(map);
+      System.out.println("=>listSize" + list.size());
+	  return new ResponseEntity<>(list, HttpStatus.OK);
   }
+  
   @GetMapping("/main_page")
   public String main_page(Model model, int restno, int person, String date) {
-	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
-	  System.out.println(restaurantVO.getName());
-	  model.addAttribute("restaurantVO", restaurantVO);
+	  RestFullData restFullData = this.restaurantProc.readFullData(restno);
+	  System.out.println(restFullData.getName());
+	  model.addAttribute("restaurantVO", restFullData);
 	  
 	  ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
 	  model.addAttribute("noticeList", noticeList);

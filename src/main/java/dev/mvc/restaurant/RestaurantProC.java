@@ -2,6 +2,7 @@ package dev.mvc.restaurant;
 
 import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
+import dev.mvc.dto.RestFullData;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,6 +214,18 @@ public class RestaurantProC implements RestaurantProInter {
 	public String test(String date1) {
 		String date = this.restDAO.test(date1);
 		return date;
+	}
+
+	@Override
+	public ArrayList<RestFullData> SearchRestaurantWithImg(Map<String, Object> map) {
+		ArrayList<RestFullData> list = this.restDAO.SearchRestaurantWithImg(map);
+		return list;
+	}
+
+	@Override
+	public RestFullData readFullData(int restno) {
+		RestFullData searchRestDTO = this.restDAO.readFullData(restno);
+		return searchRestDTO;
 	}
 
 
