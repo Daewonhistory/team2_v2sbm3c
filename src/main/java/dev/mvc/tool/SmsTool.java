@@ -34,7 +34,7 @@ public class SmsTool {
 
 
   public SmsTool() {
-    this.messageService = NurigoApp.INSTANCE.initialize("", "", "https://api.coolsms.co.kr");
+    this.messageService = NurigoApp.INSTANCE.initialize("NCSXCGGNU2ETCFIN", "LSPWXJZOELE2WUSROBEHNZFCSCB8URXR", "https://api.coolsms.co.kr");
   }
 
   @Async
