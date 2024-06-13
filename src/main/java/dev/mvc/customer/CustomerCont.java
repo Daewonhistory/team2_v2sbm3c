@@ -695,7 +695,7 @@ public class CustomerCont {
 
     int count = this.customerProc.list_search_count(word, type);
     // 일련 번호 생성
-    int num = count - ((now_page - 1) * Restaurant.RECORD_PER_PAGE);
+    int num = count - ((now_page - 1) * Customer.RECORD_PER_PAGE);
     ArrayList<CustomerVO> custlist = this.customerProc.list_search_paging(word, type, now_page, Customer.RECORD_PER_PAGE);
     String paging = this.customerProc.pagingBox(now_page, word, type, "/customer/list", count, Customer.RECORD_PER_PAGE, Customer.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
