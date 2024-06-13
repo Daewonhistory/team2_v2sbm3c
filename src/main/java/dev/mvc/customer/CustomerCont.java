@@ -210,20 +210,20 @@ public class CustomerCont {
   public String mypage(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-//    if (this.customerProc.isCustomer(session)) {
-//      String id = (String) session.getAttribute("id");
+	if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
 
 
-    CustomerVO customerVO = this.customerProc.readById("kksos28");
+    CustomerVO customerVO = this.customerProc.readById(id);
 
     model.addAttribute("customerVO", customerVO);
 
     return "/customer/my_page";
 
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
   }
 
   @PostMapping("/update")
@@ -293,18 +293,18 @@ public class CustomerCont {
   public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-//    if (this.customerProc.isCustomer(session)) {
+    if (this.customerProc.isCustomer(session)) {
     String id = (String) session.getAttribute("id");
-    CustomerVO customerVO = this.customerProc.readById("kksos28");
+    CustomerVO customerVO = this.customerProc.readById(id);
 
     model.addAttribute("customerVO", customerVO);
 
     return "/customer/my_info_update";
 
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
   }
 
 
@@ -437,7 +437,7 @@ public class CustomerCont {
   public String passwordupdate(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-//    if (this.customerProc.isCustomer(session)) {
+    if (this.customerProc.isCustomer(session)) {
     String id = (String) session.getAttribute("id");
     CustomerVO customerVO = this.customerProc.readById("kksos28");
 
@@ -445,10 +445,10 @@ public class CustomerCont {
 
     return "/customer/my_password_update";
 
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
   }
 
 
