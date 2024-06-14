@@ -49,4 +49,6 @@ public class FavoriteCont {
     model.addAttribute("list", list);
     return "favorite/favorite_list"; // 해당 HTML 파일 경로
   }
+  
+  
 }
