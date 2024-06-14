@@ -174,54 +174,43 @@ public class CustomerCont {
 
   @PostMapping("/create")
   public String createcustomer(Model model, CustomerVO customerVO,
-                  @RequestParam(name="ingredno[]", required=false) ArrayList<Integer> ingrednoList,
-                  RedirectAttributes rrtr) {
+      @RequestParam(name = "ingredno[]", required = false) ArrayList<Integer> ingrednoList, RedirectAttributes rrtr) {
 
+      int check_ID = this.customerProc.checkID(customerVO.getId());
+      System.out.println("->" + customerVO.getId());
+      System.out.println("닉네임->" + customerVO.getNickname());
 
-
-
-    int check_ID = this.customerProc.checkID(customerVO.getId());
-    System.out.println("->"+customerVO.getId());
-    System.out.println("닉네임->"+customerVO.getNickname());
-    
-    // 기존 알러지 재료 삭제
-    this.allergyProc.delete_by_custno(customerVO.getCustno());
-
-    // 새로운 알러지 재료 추가
-    if (ingrednoList != null) {
-        for (Integer ingredno : ingrednoList) {
-            AllergyVO allergyVO = new AllergyVO();
-            allergyVO.setCustno(customerVO.getCustno());
-            allergyVO.setIngredno(ingredno);
-            this.allergyProc.create(allergyVO);
-        }
-    }
-
-
-    System.out.println("check_ID -> " + check_ID);
-    if (check_ID == 0) {
-      Random random = new Random();
-      int randomNumber = random.nextInt(5) + 1; // 1부터 5까지의 랜덤한 숫자 생성
-      String imageName = "basic" + randomNumber + ".jpg";
-      customerVO.setImage(imageName);
-      customerVO.setGrade(1);
-      int count = customerProc.create(customerVO);
-      System.out.println("count -> " + count);
-      if (count == 1) {
-
-        rrtr.addFlashAttribute("success", 1);
-
-        rrtr.addFlashAttribute("come", customerVO.getCname() + "님 회원가입 축하드립니다! ");
-        return "redirect:/customer/login";
-      } else {
-        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-        return "redirect:/customer/create";
+      if (ingrednoList != null) {
+          System.out.println("ingred : " + ingrednoList.size());
+          for (Integer ingredno : ingrednoList) {
+              AllergyVO allergyVO = new AllergyVO();
+              allergyVO.setCustno(customerVO.getCustno());
+              allergyVO.setIngredno(ingredno);
+              this.allergyProc.create(allergyVO);
+          }
       }
-    } else {
-      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/customer/create";
-    }
 
+      System.out.println("check_ID -> " + check_ID);
+      if (check_ID == 0) {
+          Random random = new Random();
+          int randomNumber = random.nextInt(5) + 1;
+          String imageName = "basic" + randomNumber + ".jpg";
+          customerVO.setImage(imageName);
+          customerVO.setGrade(1);
+          int count = customerProc.create(customerVO);
+          System.out.println("count -> " + count);
+          if (count == 1) {
+              rrtr.addFlashAttribute("success", 1);
+              rrtr.addFlashAttribute("come", customerVO.getCname() + "님 회원가입 축하드립니다! ");
+              return "redirect:/customer/login";
+          } else {
+              rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+              return "redirect:/customer/create";
+          }
+      } else {
+          rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+          return "redirect:/customer/create";
+      }
   }
 
   /**

@@ -7,47 +7,59 @@
   
     <script>
     
-     // 재료 입력 필드를 제거하는 함수
-    function removeIngredient(button) {
-      const ingredientDiv = button.parentElement;
-      document.getElementById('ingredients').removeChild(ingredientDiv);
-    }
-
-    // 재료를 추가하는 함수
-    function addIngredient(ingredno, name) {
-      const ingredientDiv = document.createElement('div');
-      ingredientDiv.classList.add('ingredient');
-      ingredientDiv.style = "background-color: gray; border-radius: 50%; width:150px; display: inline-block; margin: 5px;";
-      
-      const ingredientInput = document.createElement('input');
-      ingredientInput.type = 'hidden';
-      ingredientInput.name = 'ingredno[]';
-      ingredientInput.value = ingredno;
-      ingredientInput.required = true;
-      
-      const ingredientText = document.createElement('span');
-      ingredientText.innerText = name;
-
-      const removeButton = document.createElement('button');
-      removeButton.type = 'button';
-      removeButton.innerText = '삭제';
-
-      removeButton.onclick = function() {
+      // 재료 입력 필드를 제거하는 함수
+      function removeIngredient(button) {
+        const ingredientDiv = button.parentElement;
+        document.getElementById('ingredients').removeChild(ingredientDiv);
+      }
+  
+      // 재료를 추가하는 함수
+      function addIngredient(ingredno, name) {
+        // 중복 확인
+        const existingIngredients = document.querySelectorAll('#ingredients input[name="ingredno[]"]');
+        for (let i = 0; i < existingIngredients.length; i++) {
+          if (existingIngredients[i].value == ingredno) {
+            // 중복되는 경우 추가하지 않고 함수 종료
+            return;
+          }
+        }
+  
+        const ingredientDiv = document.createElement('div');
+        ingredientDiv.classList.add('ingredient');
+        ingredientDiv.style = "background-color: gray; border-radius: 20px; width: 150px; display: flex; justify-content: space-between; align-items: center; padding: 5px; margin: 5px;";
+  
+        const ingredientInput = document.createElement('input');
+        ingredientInput.type = 'hidden';
+        ingredientInput.name = 'ingredno[]';
+        ingredientInput.value = ingredno;
+        ingredientInput.required = true;
+  
+        const ingredientText = document.createElement('span');
+        ingredientText.innerText = name;
+        ingredientText.style = "color: white;";
+  
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.innerText = '삭제';
+        removeButton.style = "margin-left: 10px; background-color: red; color: white; border: none; border-radius: 5px; padding: 2px 5px;";
+        removeButton.onclick = function() {
           removeIngredient(removeButton);
-      };
-      
-      ingredientDiv.appendChild(ingredientInput);
-      ingredientDiv.appendChild(ingredientText);
-      ingredientDiv.appendChild(removeButton);
-      
-      document.getElementById('ingredients').appendChild(ingredientDiv);
-    }
-
-    // 알러지 재료를 선택하여 추가하는 함수
-    function handleSelectChange(selectElement) {
-      const selectedOption = selectElement.options[selectElement.selectedIndex];
-      addIngredient(selectedOption.value, selectedOption.text);
-    }
+        };
+  
+        ingredientDiv.appendChild(ingredientInput);
+        ingredientDiv.appendChild(ingredientText);
+        ingredientDiv.appendChild(removeButton);
+  
+        document.getElementById('ingredients').appendChild(ingredientDiv);
+      }
+  
+      // 알러지 재료를 선택하여 추가하는 함수
+      function handleSelectChange(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        if (selectedOption.value !== "") {
+          addIngredient(selectedOption.value, selectedOption.text);
+        }
+      }
     </script>
     
   <script src="/js/customer/create/enter.js"></script>
