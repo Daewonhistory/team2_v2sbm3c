@@ -133,6 +133,10 @@ public class CustomerCont {
   @GetMapping("/create")
 
   public String createForm(Model model, CustomerVO customerVO) {
+      
+    // 알러지 재료명 목록 추가
+    ArrayList<IngredientVO> ingredient_list = this.ingredientProc.list_all();
+    model.addAttribute("ingredient_list", ingredient_list);
 
 
     return "/customer/create";
@@ -149,7 +153,9 @@ public class CustomerCont {
    */
 
   @PostMapping("/create")
-  public String createcustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr) {
+  public String createcustomer(Model model, CustomerVO customerVO,
+                  @RequestParam(name="ingredno[]", required=false) ArrayList<Integer> ingrednoList,
+                  RedirectAttributes rrtr) {
 
 
 
@@ -157,6 +163,19 @@ public class CustomerCont {
     int check_ID = this.customerProc.checkID(customerVO.getId());
     System.out.println("->"+customerVO.getId());
     System.out.println("닉네임->"+customerVO.getNickname());
+    
+    // 기존 알러지 재료 삭제
+    this.allergyProc.delete_by_custno(customerVO.getCustno());
+
+    // 새로운 알러지 재료 추가
+    if (ingrednoList != null) {
+        for (Integer ingredno : ingrednoList) {
+            AllergyVO allergyVO = new AllergyVO();
+            allergyVO.setCustno(customerVO.getCustno());
+            allergyVO.setIngredno(ingredno);
+            this.allergyProc.create(allergyVO);
+        }
+    }
 
 
     System.out.println("check_ID -> " + check_ID);

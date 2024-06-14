@@ -1,18 +1,14 @@
 package dev.mvc.favorite;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import dev.mvc.reserve.ReserveVO;
-
+import java.util.ArrayList;
 
 @Service("dev.mvc.favorite.FavoriteProc")
 public class FavoriteProc implements FavoriteProcInter {
-	@Autowired
-	private FavoriteDAOInter favoriteDAO;
+
+  @Autowired
+  private FavoriteDAOInter favoriteDAO;
 
   @Override
   public int create(FavoriteVO favoriteVO) {
@@ -26,12 +22,8 @@ public class FavoriteProc implements FavoriteProcInter {
 
   @Override
   public ArrayList<FavoriteVO> favorite_list() {
-    // TODO Auto-generated method stub
-    return null;
+    ArrayList<FavoriteVO> list = this.favoriteDAO.favorite_list();
+    System.out.println("DAO returned favorite list: " + list);
+    return list;
   }
-
-
-
-
-	  
 }

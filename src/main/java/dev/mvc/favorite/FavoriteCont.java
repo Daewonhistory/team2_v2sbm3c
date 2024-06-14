@@ -1,7 +1,5 @@
 package dev.mvc.favorite;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @RequestMapping("/favorite")
 @Controller
@@ -45,6 +45,7 @@ public class FavoriteCont {
   @GetMapping("/favorite_list")
   public String favorite_list(Model model) {
     List<FavoriteVO> list = favoriteProc.favorite_list();
+    System.out.println("Retrieved favorite list: " + list);
     model.addAttribute("list", list);
     return "favorite/favorite_list"; // 해당 HTML 파일 경로
   }
