@@ -1,42 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>예약 목록</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="/css/mobile_style_info.css">
-  <style>
-    .reservation-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 5px;
-    }
-    .reserve-date-header {
-      font-size: 1.2em;
-      font-weight: bold;
-      margin-top: 20px;
-    }
-    .reserve-history-section {
-      margin-bottom: 20px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background-color: #f9f9f9;
-    }
-  </style>
-</head>
-<body>
-<div id="wrapper">
-  <header>
-    <h1>EAT DAYS</h1>
-  </header>
-  <main>
-    <th:block layout:fragment="content">
+<html layout:decorate="~{mobile_layout}"> <!-- layout.html 상속-->
+<link rel="stylesheet" href="/css/reserve_list.css">
+<div layout:fragment="content">
+  
+
       <form th:action="@{/reservation/list_all}" method="get">
         <label for="reserve_date">예약 날짜:</label>
         <input type="date" id="reserve_date" name="reserve_date" th:value="${reserve_date}">
@@ -66,27 +33,8 @@
           </div>
         </section>
       </div>
-    </th:block>
-  </main>
-  <aside id="dock">
-    <nav class="bottom-nav">
-      <a href="/mobile" class="nav-item">
-        <img src="/images/icon/active_home.svg" alt="Home" class="icon">
-      </a>
-      <a href="/search" class="nav-item">
-        <img src="/images/icon/home.svg" alt="Search" class="icon">
-      </a>
-      <a href="#likes" class="nav-item">
-        <img src="/images/icon/favorite.svg" alt="Likes" class="icon">
-      </a>
-      <a href="/customer/my_page" class="nav-item">
-        <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
-      </a>
-    </nav>
-  </aside>
-  <div id="filter_toggle"><img src="/images/home.png" style="width:100%;height: 100%;opacity: 0.4;"></div>
-</div>
-<script>
+
+	<script>
     function delete_check(reserveno){
       if (confirm("예약 취소 하시겠습니까?") == true){ // 확인
         let f = document.createElement('form');
@@ -112,5 +60,5 @@
     }
   }
 </script>
-</body>
+</div>
 </html>

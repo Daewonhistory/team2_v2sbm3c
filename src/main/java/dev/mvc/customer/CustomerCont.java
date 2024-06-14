@@ -172,8 +172,8 @@ public class CustomerCont {
   public String createcustomer(Model model, CustomerVO customerVO, RedirectAttributes rrtr) {
 
 
-
-
+	  
+	  System.out.println("1->"+customerVO.getId());
     int check_ID = this.customerProc.checkID(customerVO.getId());
     System.out.println("->"+customerVO.getId());
     System.out.println("닉네임->"+customerVO.getNickname());
@@ -850,7 +850,7 @@ public class CustomerCont {
     model.addAttribute("loginHistoryList", groupedLoginHistory);
 
 
-    return "mobile_login_info";
+    return "/customer/login_info";
   }
 
 
