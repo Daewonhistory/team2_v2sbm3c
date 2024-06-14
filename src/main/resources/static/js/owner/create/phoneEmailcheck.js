@@ -157,6 +157,7 @@ function verifyCode(contact, authCode) {
         if (rdata.success === 1) {
           alert("인증 성공");
           modal.style.display = "none";
+          document.getElementById("openModalButton").disabled = true;
           if (currentType === 'Phone') {
             document.getElementById("phone2").setAttribute("readonly", true);
             document.getElementById("phone3").setAttribute("readonly", true);
