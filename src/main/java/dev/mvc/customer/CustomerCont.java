@@ -109,6 +109,7 @@ public class CustomerCont {
   public ResponseEntity<HashMap<String,Object>> checkNamePhone(@RequestBody CustomerVO customerVO) {
 
     HashMap<String,Object> map = new HashMap<String,Object>();
+    System.out.println(customerVO.getPhone() + "?");
     int count = this.customerProc.checkNamePhone(customerVO.getCname(), customerVO.getPhone());
 
     if (count == 1) {
@@ -116,6 +117,25 @@ public class CustomerCont {
     } else {
       map.put("cnt", 0);
     }
+
+
+    return ResponseEntity.ok(map);
+  }
+  @PostMapping("/checkNameid")  //http:localhost:9091/meber/checkId?id=admin
+  @ResponseBody
+  public ResponseEntity<HashMap<String,Object>> checkNameEmail(@RequestBody CustomerVO customerVO) {
+
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    System.out.println(customerVO.getId());
+    System.out.println(customerVO.getCname());
+    int count = this.customerProc.checkNameEmail(customerVO.getCname(), customerVO.getId());
+    System.out.println("countsss->" + count);
+    if (count == 1) {
+      map.put("cnt", 1);
+    } else {
+      map.put("cnt", 0);
+    }
+
 
 
     return ResponseEntity.ok(map);
@@ -249,8 +269,8 @@ public class CustomerCont {
   public String mypage(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-   if (this.customerProc.isCustomer(session)) {
-     String id = (String) session.getAttribute("id");
+	if (this.customerProc.isCustomer(session)) {
+    String id = (String) session.getAttribute("id");
 
 
     CustomerVO customerVO = this.customerProc.readById(id);
@@ -267,7 +287,7 @@ public class CustomerCont {
 
     } else {
       rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-     return "redirect:/";
+      return "redirect:/";
     }
   }
 
@@ -516,7 +536,7 @@ public class CustomerCont {
   public String passwordupdate(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
-//    if (this.customerProc.isCustomer(session)) {
+    if (this.customerProc.isCustomer(session)) {
     String id = (String) session.getAttribute("id");
     CustomerVO customerVO = this.customerProc.readById("kksos28");
 
@@ -524,10 +544,10 @@ public class CustomerCont {
 
     return "/customer/my_password_update";
 
-//    } else {
-//      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
-//      return "redirect:/";
-//    }
+    } else {
+      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
+      return "redirect:/";
+    }
   }
 
 
