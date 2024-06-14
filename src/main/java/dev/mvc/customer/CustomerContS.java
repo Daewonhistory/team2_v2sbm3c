@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,4 +81,16 @@ public class CustomerContS {
   public String findIdForm( ) {
     return "customer/findId";
   }
+
+  @PostMapping("/findPhone")
+  public String findPhone(String cname, String phone, Model model) {
+
+    String id = this.customerProc.findNamePhone(cname,phone);
+
+    model.addAttribute("id",id);
+    model.addAttribute("cname",cname);
+
+    return "customer/viewid";
+  }
+
 }
