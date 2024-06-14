@@ -1,22 +1,22 @@
-function sendAuth() {
-  // Retrieve the input elements
-  let cname_r = document.getElementById('cname');
-  let phone_r = document.getElementById('phone');
+function sendid() {
+  // 입력 요소 가져오기
+  let cname_r = document.getElementById('cname2');
+  let id_r = document.getElementById('id');
 
-  // Get the values from the input elements
+  // 입력 요소에서 값 가져오기
   let cname = cname_r.value;
-  let phone = phone_r.value;
+  let id = id_r.value;
 
-  // Create the customer object
+  // 고객 객체 생성
   const customerVO = {
     cname: cname,
-    phone: phone
+    id: id
   };
 
-  // URL for validating customer information based on phone
-  let url = './checkNamePhone';
+  // 고객 정보를 확인하는 URL
+  let url = './checkNameid';
 
-  // Send the first fetch request to validate the customer information
+  // 첫 번째 fetch 요청을 보내 고객 정보를 확인
   fetch(url, {
     method: 'POST',
     headers: {
@@ -26,25 +26,21 @@ function sendAuth() {
   })
       .then(response => response.json())
       .then(rdata => {
-        // Check if the provided information is valid
+        // 제공된 정보가 유효한지 확인
         if (rdata.cnt === 1) {
-          // URL for sending the authentication code
-          let url2 = './send_phone';
-          let auth_div = document.getElementById('auth_div_phone');
+          // 인증 코드를 보내는 URL
+          let url2 = './send_email';
 
-          // Show the authentication div
-          auth_div.style.display = "block";
-
-          // Make the input fields read-only
+          // 입력 필드를 읽기 전용으로 설정
           cname_r.readOnly = true;
-          phone_r.readOnly = true;
+          id_r.readOnly = true;
 
-          // Create the object to be sent in the second request
+          // 두 번째 요청에 보낼 객체 생성
           const authVO = {
-            phone: phone
+            id: id
           };
 
-          // Send the second fetch request to send the authentication code
+          // 두 번째 fetch 요청을 보내 인증 코드 전송
           fetch(url2, {
             method: 'POST',
             headers: {
@@ -54,18 +50,20 @@ function sendAuth() {
           })
               .then(response => {
                 if (response.status === 200) {
-                  let auth_btn = document.getElementById('auth_btn');
+                  let auth_btn = document.getElementById('auth_btn_id');
                   auth_btn.disabled = true;
+                } else {
+                  console.error('Failed to send authentication code. Status:', response.status);
                 }
               })
               .catch(error => {
                 console.error('Error sending authentication:', error);
               });
         } else {
-          console.log('No matching information found for the provided name and phone.');
+          console.log('No matching information found for the provided name and id.');
         }
       })
       .catch(error => {
-        console.error('Error:', error);
+        console.error('Error validating customer information:', error);
       });
 }

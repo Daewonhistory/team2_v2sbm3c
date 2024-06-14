@@ -1,68 +1,110 @@
-function sendid() {
+function sendcode(type) {
   // Retrieve the input elements
   let cname_r = document.getElementById('cname2');
-  let id_r = document.getElementById('id');
+  let email_r = document.getElementById('email');
+  let phone_r = document.getElementById('phone');
 
-  // Get the values from the input elements
-  let cname = cname_r.value;
-  let id = id_r.value;
+  if (type === 'email') {
+    // Get the values from the input elements
+    let cname = cname_r.value;
+    let email = email_r.value;
 
-  // Create the customer object
-  const customerVO = {
-    cname: cname,
-    id: id
-  };
+    // Create the customer object
+    const customerVO = {
+      cname: cname,
+      id: email
+    };
 
-  // URL for validating customer information based on id
-  let url = './checkNameid';
+    // URL for validating customer information based on email
+    let url = './checkNameid';
 
-  // Send the first fetch request to validate the customer information
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(customerVO)
-  })
-      .then(response => response.json())
-      .then(rdata => {
-        // Check if the provided information is valid
-        if (rdata.cnt === 1) {
-          // URL for sending the authentication code
-          let url2 = './send_email';
+    // Send the first fetch request to validate the customer information
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(customerVO)
+    })
+        .then(response => response.json())
+        .then(rdata => {
+          // Check if the provided information is valid
+          if (rdata.cnt === 1) {
+            // URL for sending the authentication code
+            let url2 = './send_email';
 
+            // Make the input fields read-only
+            cname_r.readOnly = true;
+            email_r.readOnly = true;
 
-          // Make the input fields read-only
-          cname_r.readOnly = true;
-          id_r.readOnly = true;
+            // Create the object to be sent in the second request
+            const authVO = {
+              email: email
+            };
 
-          // Create the object to be sent in the second request
-          const authVO = {
-            id: id
-          };
+            // Send the second fetch request to send the authentication code
+            fetch(url2, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(authVO)
+            })
+                .then(response => {
+                  if (response.status === 200) {
+                    let auth_btn = document.getElementById('auth_btn_email');
+                    let auth_div = document.getElementById('auth_div_email');
+                    auth_div.style.display = "block";
 
-          // Send the second fetch request to send the authentication code
-          fetch(url2, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(authVO)
-          })
-              .then(response => {
-                if (response.status === 200) {
-                  let auth_btn = document.getElementById('auth_btn_id');
-                  auth_btn.disabled = true;
-                }
-              })
-              .catch(error => {
-                console.error('Error sending authentication:', error);
-              });
-        } else {
-          console.log('No matching information found for the provided name and id.');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+                    auth_btn.disabled = true;
+                  }
+                })
+                .catch(error => {
+                  console.error('Error sending authentication:', error);
+                });
+          } else {
+            console.log('No matching information found for the provided name and email.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+  } else if (type === 'phone') {
+    // Get the values from the input elements
+    let phone = phone_r.value;
+
+    // Create the object to be sent in the request
+    const phoneVO = {
+      phone: phone
+    };
+
+    // URL for sending the authentication code to the phone
+    let url2 = './send_phone';
+
+    // Send the fetch request to send the authentication code
+    fetch(url2, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(phoneVO)
+    })
+        .then(response => {
+          if (response.status === 200) {
+            let auth_btn = document.getElementById('auth_btn_phone');
+            let auth_div = document.getElementById('auth_div_phone');
+            auth_div.style.display = "block";
+
+            auth_btn.disabled = true;
+          }
+        })
+        .catch(error => {
+          console.error('Error sending authentication:', error);
+        });
+  }
 }
+
+// Example usage:
+// sendcode('email');  // for sending the email authentication code
+// sendcode('phone');  // for sending the phone authentication code
