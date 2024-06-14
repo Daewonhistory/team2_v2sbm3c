@@ -16,11 +16,11 @@
     <div class="findId-info">
       <input type="radio" class="radio-input" id="inputch" name="authMethod" onclick="showSection('phoneSection')" checked>
       <span class="info-text"> 회원정보에 등록한 휴대폰번호로 인증</span>
+    </div>
+    <div id="phoneSection">
       <div>
         <span class="info-description">등록한 이름과 휴대폰 번호가 같아야 인증번호가 전송됩니다.</span>
       </div>
-    </div>
-    <div id="phoneSection">
       <div class="form-group" style="margin-top: 20px;">
         <label class="label">이름</label>
         <input type="text" id="cname" class="text-input">
@@ -31,15 +31,15 @@
         <input type="text" id="phone" class="phone-input">
 
         <!-- 인증번호 전송 버튼 -->
-        <button type="button" onclick="sendAuth('Phone')" id="auth_btn" class="auth-button">인증번호 전송</button>
+        <button type="button" onclick="sendCode('phone')" id="auth_btn_phone" class="auth-button">인증번호 전송</button>
       </div>
 
       <div class="form-group" id="auth_div_phone" style="display: none;">
         <label class="label">인증 번호 확인</label>
-        <input type="text" id="auth_phone" class="phone-input">
+        <input type="text" id="phone_auth" class="phone-input">
 
         <!-- 인증번호 확인 버튼 -->
-        <button type="button" onclick="checkAuth('Phone')" id="check_btn_phone" class="auth-button">인증번호 확인</button>
+        <button type="button" onclick="check_auth('phone')" id="check_btn_phone" class="auth-button">인증번호 확인</button>
       </div>
     </div>
   </section>
@@ -48,12 +48,12 @@
     <div class="findId-info">
       <input type="radio" class="radio-input" name="authMethod" onclick="showSection('emailSection')">
       <span class="info-text"> 회원정보에 등록한 이메일으로 인증</span>
-      <div>
-        <span class="info-description">등록한 이름과 이메일이 같아야 인증번호가 전송됩니다.</span>
-      </div>
     </div>
 
     <div id="emailSection" style="display: none;">
+      <div>
+        <span class="info-description">등록한 이름과 이메일이 같아야 인증번호가 전송됩니다.</span>
+      </div>
       <div class="form-group" style="margin-top: 20px;">
         <label class="label">이름</label>
         <input type="text" id="cname2" class="text-input">
@@ -61,25 +61,39 @@
 
       <div class="form-group">
         <label class="label">이메일</label>
-        <input type="text" id="id" class="email-input">
+        <input type="text" id="email" class="email-input">
 
         <!-- 인증번호 전송 버튼 -->
-        <button type="button" onclick="sendid()" id="auth_btn_email" class="auth-button">인증번호 전송</button>
+        <button type="button" onclick="sendCode('email')" id="auth_btn_email" class="auth-button">인증번호 전송</button>
       </div>
 
       <div class="form-group" id="auth_div_email" style="display: none;">
         <label class="label">인증 번호 확인</label>
-        <input type="text" id="auth_email" class="email-input">
+        <input type="text" id="email_auth" class="email-input">
 
         <!-- 인증번호 확인 버튼 -->
-        <button type="button" onclick="checkAuth('Id')" id="check_btn_email" class="auth-button">인증번호 확인</button>
+        <button type="button" onclick="checkAuth('email')" id="check_btn_email" class="auth-button">인증번호 확인</button>
       </div>
     </div>
   </section>
 
-  <script src="/js/customer/findId/sendAuth.js"></script>
-  <script src="/js/customer/findId/sendEmail.js"></script>
-  <script src="/js/customer/findId/check_auth.js"></script>
+  <div class="next-button" id="next-phone">
+    <form action="/findPhone" method="POST" id="nextPhoneForm">
+      <input type="hidden" name="cname" id="nextPhoneCname">
+      <input type="hidden" name="phone" id="nextPhonePhone">
+      <input type="hidden" name="auth" id="nextPhoneAuth">
+      <button type="submit">다음</button>
+    </form>
+  </div>
+
+  <div class="next-button" id="next-email">
+    <form action="/findEmail" method="POST" id="nextEmailForm">
+      <input type="hidden" name="cname" id="nextEmailCname">
+      <input type="hidden" name="email" id="nextEmailEmail">
+      <input type="hidden" name="auth" id="nextEmailAuth">
+      <button type="submit">다음</button>
+    </form>
+  </div>
 
   <script>
     function showSection(sectionId) {
@@ -87,6 +101,24 @@
       document.getElementById('emailSection').style.display = 'none';
       document.getElementById(sectionId).style.display = 'block';
     }
+
+    function sendCode(type) {
+      if (type === 'phone') {
+        const cname = document.getElementById('cname').value;
+        const phone = document.getElementById('phone').value;
+        document.getElementById('nextPhoneCname').value = cname;
+        document.getElementById('nextPhonePhone').value = phone;
+        document.getElementById('nextPhoneForm').submit();
+      } else if (type === 'email') {
+        const cname2 = document.getElementById('cname2').value;
+        const email = document.getElementById('email').value;
+        document.getElementById('nextEmailCname').value = cname2;
+        document.getElementById('nextEmailEmail').value = email;
+        document.getElementById('nextEmailForm').submit();
+      }
+    }
+
+
   </script>
 </div>
 </html>

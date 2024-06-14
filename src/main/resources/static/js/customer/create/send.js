@@ -1,7 +1,7 @@
 function send() {
   let id1 = document.getElementById('id1');
   let email = document.getElementById('email');
-  let id = id.value + email.value;
+  let id = id1.value + email.value;
 
   let id_msg = document.getElementById('id_msg');
   let cname = document.getElementById('cname');

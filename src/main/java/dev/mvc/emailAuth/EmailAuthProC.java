@@ -17,8 +17,8 @@ public class EmailAuthProC implements EmailAuthProInter {
 
 
   @Override
-  public int insertEmailAuth(String email, String auth) {
-    return this.emailDAO.insertEmailAuth(email,auth);
+  public int insertEmailAuth(String id, String auth) {
+    return this.emailDAO.insertEmailAuth(id,auth);
   }
 
   @Override
