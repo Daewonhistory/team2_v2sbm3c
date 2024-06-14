@@ -25,7 +25,7 @@ public interface FavoriteDAOInter {
    * 모든 예약 조회
    * @return
    */
-  public ArrayList<ReserveVO> favorite_list();
+  public ArrayList<FavoriteVO> favorite_list();
 }
 
 

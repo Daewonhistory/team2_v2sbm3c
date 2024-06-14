@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속-->
+  <div layout:fragment="content">
+    <div class="title_line">
+      <span id="user-id" class="title_line_text"></span>
+      즐겨찾기 리스트 <span id="user-name" class="title_line_text"></span>
+    </div>
+
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class="menu_divide">│</span>
+    </aside>
+
+    <div class="menu_line"></div>
+
+    <div style="width: 100%">
+      <input type="hidden" id="custno" value="22" /> 
+
+      <!-- 북마크 스크립트 -->
+      <div th:fragment="cont_fragment">
+        <script>
+          // URL 파라미터에서 특정 값을 추출하는 함수
+          function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, "\\$&");
+            let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return "";
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+          }
+
+          // 북마크 추가
+          async function addBookmark() {
+            const currentUrl = window.location.href; // 현재 페이지의 URL
+            const custno = document.getElementById("custno").value;
+            const restno = getParameterByName("restno");
+
+            const response = await fetch("/favorite/create", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                custno: custno,
+                resturl: currentUrl,
+                restno: restno,
+              }),
+            });
+
+            const result = await response.json();
+            alert(result.message);
+          }
+
+          // 북마크 삭제
+          async function deleteBookmark(favoriteno) {
+            if (confirm("북마크를 삭제하시겠습니까?")) {
+              const response = await fetch("/favorite/delete", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  favoriteno: favoriteno
+                }),
+              });
+
+              const result = await response.json();
+              alert(result.message);
+              if (response.ok) {
+                location.reload(); // 성공적으로 삭제되었을 경우 페이지를 새로고침
+              } else {
+                alert("삭제에 실패했습니다.");
+              }
+            }
+          }
+        </script>
+      </div>
+
+      <!-- 북마크 table 시작 -->
+      <table class="table table-striped" style="width: 100%">
+        <colgroup>
+          <col style="width: 5%" />
+          <col style="width: 10%" />
+          <col style="width: 65%" />
+          <col style="width: 10%" />
+        </colgroup>
+        <tr>
+          <th class="th_bs" style="text-align: center;">순서</th>
+          <th class="th_bs" style="text-align: center;">식당이름</th>
+          <th class="th_bs" style="text-align: center;">식당 링크</th>
+          <th class="th_bs" style="text-align: center;">삭제</th>
+        </tr>
+        <tbody id="favorite-list">
+          <!-- 즐겨찾기 항목이 여기에 동적으로 추가됩니다 -->
+          <tr th:each="favorite : ${list}">
+            <td class="td_basic" style="text-align: center; vertical-align: middle;" th:text="${favorite.favoriteno}"></td>
+            <td class="td_basic" style="text-align: center; vertical-align: middle;" th:text="${favorite.restno}"></td>
+            <td class="td_basic" style="text-align: center; vertical-align: middle;"><a th:href="${favorite.resturl}" target="_blank" th:text="${favorite.resturl}"></a></td>
+            <td class="td_basic" style="text-align: center; vertical-align: middle;"><button type="button" th:onclick="|deleteBookmark(${favorite.favoriteno})|">즐겨찾기 삭제</button></td>
+          </tr>
+          <tr th:if="${list.size() == 0}">
+            <td class="td_basic" style="text-align: center; vertical-align: middle;" colspan="4">즐겨찾기가 등록되지 않았습니다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</html>
