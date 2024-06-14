@@ -45,6 +45,14 @@ public class CustomerProC implements CustomerProInter {
   }
 
   @Override
+  public String findNamePhone(String cname, String phone) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("cname", cname);
+    map.put("phone", phone);
+    return this.customerDAO.findNamePhone(map);
+  }
+
+  @Override
   public int checkNameEmail(String cname, String id) {
 
     HashMap<String,Object> map = new HashMap<String,Object>();

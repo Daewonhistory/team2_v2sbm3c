@@ -24,6 +24,9 @@ public interface CustomerProInter {
    */
   public int checkNamePhone(String cname, String phone);
 
+  public String findNamePhone(String cname, String phone);
+
+
   /**
    * 아이디 찾기 시 회원 조회
    * @param cname

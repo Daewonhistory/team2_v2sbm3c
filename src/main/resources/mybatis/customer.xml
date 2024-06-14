@@ -22,6 +22,13 @@
     WHERE cname = #{cname} AND phone = #{phone}
   </select>
 
+  <select id="findNamePhone"  >
+    SELECT id
+    FROM customer
+    WHERE cname = #{cname} AND phone = #{phone}
+  </select>
+
+
 
   <select id="checkNameEmail" resultType="int" >
     SELECT COUNT(id) as cnt
