@@ -56,7 +56,7 @@ public class CustomerProC implements CustomerProInter {
   public int checkNameEmail(String cname, String id) {
 
     HashMap<String,Object> map = new HashMap<String,Object>();
-    System.out.println(id);
+    System.out.println("test"+id);
     map.put("cname", cname);
     map.put("id", id);
     return this.customerDAO.checkNameEmail(map);

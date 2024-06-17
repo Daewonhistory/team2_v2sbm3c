@@ -1,0 +1,18 @@
+.reservation-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
+}
+.reserve-date-header {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.reserve-history-section {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}

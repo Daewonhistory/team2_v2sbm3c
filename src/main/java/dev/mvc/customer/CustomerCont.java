@@ -858,7 +858,7 @@ public class CustomerCont {
     model.addAttribute("loginHistoryList", groupedLoginHistory);
 
 
-    return "mobile_login_info";
+    return "/customer/login_info";
   }
 
 

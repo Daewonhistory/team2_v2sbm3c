@@ -45,9 +45,9 @@
 				<label>날짜:</label><input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
 				<input type="hidden" name="time" value="2">
 				<div class="vertical_scroll" id="scrollContainer">
-				
+					
 							
-		</div>
+				</div>
 	</section>
 	<section>
 		<h2>식당 공지</h2>
@@ -208,5 +208,38 @@
 		
 		
 	</script>
+	<script>
+        const scrollContainer = document.getElementById('scrollContainer');
+        
+        let isDown2 = false;
+        let startX2;
+        let scrollLeft;
+
+        scrollContainer.addEventListener('mousedown', (e) => {
+						
+            isDown2 = true;
+            scrollContainer.classList.add('active');
+            startX2 = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+
+        scrollContainer.addEventListener('mouseleave', () => {
+            isDown2 = false;
+            scrollContainer.classList.remove('active');
+        });
+
+        scrollContainer.addEventListener('mouseup', () => {
+            isDown2 = false;
+            scrollContainer.classList.remove('active');
+        });
+
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if(!isDown2) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX2) * 3; //scroll-fast
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+    </script>
 </div>
 </html>

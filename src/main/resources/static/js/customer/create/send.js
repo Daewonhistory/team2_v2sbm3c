@@ -125,5 +125,6 @@ function send() {
 
   document.getElementById('phone').value = phone;
   document.getElementById('id').value = id;
+  alert(document.getElementById('id').value);
   document.getElementById('login-form').submit();
 }
