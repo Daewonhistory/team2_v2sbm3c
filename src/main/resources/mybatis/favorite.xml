@@ -13,9 +13,9 @@
     DELETE FROM favorite
     WHERE favoriteno = #{favoriteno}
   </delete>
-  
+
   <!-- 즐겨찾기 목록 조회 -->
-  <select id="list_favorite" resultType="dev.mvc.favorite.FavoriteVO">
+  <select id="favorite_list" resultType="dev.mvc.favorite.FavoriteVO">
     SELECT favoriteno, restno, custno, resturl
     FROM favorite
     ORDER BY favoriteno ASC

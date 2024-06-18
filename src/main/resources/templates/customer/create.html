@@ -11,6 +11,7 @@
       // 알러지 재료를 선택하여 추가하는 함수
 
     </script>
+    
   <script src="/js/customer/create/enter.js"></script>
   <script src="/js/customer/create/checkID.js"></script>
 
@@ -210,10 +211,10 @@
 
       <!-- 선택된 알러지 재료 목록 -->
       <div id="ingredients" class="form-group" style="margin-top: 10px;">
-        <div th:each="allergy : ${allergies}" class="ingredient" style="background-color: gray; border-radius: 50%; width:150px; display: inline-block; margin: 5px;">
+        <div th:each="allergy : ${allergies}" class="ingredient" style="background-color: gray; border-radius: 20px; width: 150px; display: flex; justify-content: space-between; align-items: center; padding: 5px; margin: 5px;">
           <input type="hidden" name="ingredno[]" th:value="${allergy.ingredno}">
           <span th:text="${allergy.ingredientName}" style="color: white;"></span>
-          <button type="button" onclick="removeIngredient(this)">삭제</button>
+          <button type="button" onclick="removeIngredient(this)" style="margin-left: 10px; background-color: red; color: white; border: none; border-radius: 5px; padding: 2px 5px;">삭제</button>
         </div>
       </div>
 

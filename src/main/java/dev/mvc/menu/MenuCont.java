@@ -414,7 +414,7 @@ public class MenuCont {
 		String word = ((String) requestBody.get("word")).trim();
 		System.out.println(word);
 		int restno = Integer.parseInt((String) requestBody.get("restno"));
-		int now_page = (int) requestBody.get("now_page");
+		int now_page =  Integer.parseInt((String) requestBody.get("now_page"));
 		System.out.println("-> word: " + word);
 		System.out.println("-> restno: " + restno);
 		System.out.println("-> now_page: " + now_page);

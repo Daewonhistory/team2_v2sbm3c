@@ -128,13 +128,13 @@ public class RestaurantCont {
 
                 int saved = this.restimgproc.create(restimgVO);
                 if (saved != 1) {
-                  return "redirect:/category/list";
+                  return "redirect:/restaurant/search_b";
                 }
               } else {
-                return "redirect:/restaurant/list"; // 파일이 이미지가 아닐 경우 리다이렉트
+                return "redirect:/restaurant/search_b"; // 파일이 이미지가 아닐 경우 리다이렉트
               }
             } else {
-              return "redirect:/category/list"; // 파일 크기가 0일 경우 리다이렉트
+              return "redirect:/restaurant/search_b"; // 파일 크기가 0일 경우 리다이렉트
             }
           } else {
             ra.addFlashAttribute("cnt", 0);
@@ -145,7 +145,7 @@ public class RestaurantCont {
         }
       }
 
-      return "redirect:/category/list";
+      return "redirect:/restaurant/search_b";
     } else {
       return "redirect:/restaurant/create";
     }
@@ -277,14 +277,14 @@ public class RestaurantCont {
 					        String date,
 					        int time,
 					        @RequestParam(defaultValue = "0") int categoryno,
-					        @RequestParam(defaultValue = "") String botarea,
+					        @RequestParam(defaultValue = "") String botareas,
 					        @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
 					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
 	  model.addAttribute("person", person);
 	  model.addAttribute("reserve_date", date);
 	  model.addAttribute("time", time);
 	  model.addAttribute("categoryno", categoryno);
-	  model.addAttribute("botarea", botarea);
+	  model.addAttribute("botarea", botareas);
 	  model.addAttribute("min_price", minPrice);
 	  model.addAttribute("max_price", maxPrice);
 	  
@@ -303,9 +303,12 @@ public class RestaurantCont {
       }
       
       String botarea = (String) requestBody.get("botareas");
+      System.out.println("aaa" + botarea);
       int[] botareanos;
       if(!botarea.equals("")) {
+    	  System.out.println("b");
 		  String[] splitedBotareas = botarea.split("_");
+		  
 		  botareanos = new int[splitedBotareas.length];
 		  for (int i = 0; i < splitedBotareas.length; i++) {
 		    botareanos[i] = Integer.parseInt(splitedBotareas[i]);
@@ -313,10 +316,10 @@ public class RestaurantCont {
 	  } else {
 		  botareanos = new int[0];
 	  }
-      
+
       int minPrice = Integer.parseInt((String) requestBody.get("minPrice"));
       int maxPrice = Integer.parseInt((String) requestBody.get("maxPrice"));
-      
+      System.out.println("b");
       Map<String, Object> map = new HashMap<String, Object>();
       map.put("person", person);
       map.put("date", date + " 00:00:00");
@@ -328,6 +331,7 @@ public class RestaurantCont {
       System.out.println("person:" + person);
       System.out.println("date:" + date);
       System.out.println("time:" + time);
+      System.out.println("botareanos" + botareanos.length);
       System.out.println("categoryno:" + categoryno);
       System.out.println("min_price:" + minPrice);
       System.out.println("max_price:" + maxPrice);
