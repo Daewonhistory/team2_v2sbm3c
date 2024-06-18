@@ -227,7 +227,18 @@ public class RestaurantProC implements RestaurantProInter {
 		RestFullData searchRestDTO = this.restDAO.readFullData(restno);
 		return searchRestDTO;
 	}
+	
+	
 
+	public ArrayList<RestFullData> coordinateSearchList(double westLat, double eastLat, double southLng, double northLng){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("westLat", westLat);
+		map.put("eastLat", eastLat);
+		map.put("southLng", southLng);
+		map.put("northLng", northLng);
+		ArrayList<RestFullData> list = this.restDAO.coordinateSearchList(map);
+	  return list;
+	}
 
 
 }
