@@ -2,21 +2,21 @@
 <html layout:decorate="~{mobile_layout}">
 <div layout:fragment="content" style="padding:0">
 	<nav>
-        <ul>
-            <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
-            <li><a th:href="|/menu/menuAllList?restno=${restaurantVO.restno}&person=${person}&date=${date}|">메뉴</a></li>
-            <li><a href="#section3">리뷰</a></li>
-        </ul>
-    </nav>
+      <ul>
+          <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
+          <li><a th:href="|/menu/menuAllList?restno=${restaurantVO.restno}&person=${person}&date=${date}|">메뉴</a></li>
+          <li><a href="#section3">리뷰</a></li>
+      </ul>
+  </nav>
 	<div>
 		<span class="page_name">레스토랑</span>
 	</div>
 	
 	<section id="home" style="height: 300px; margin:0; padding:0">
-        <div class="slider" id="slider">
-		  <div class="slide"><a href="https://www.naver.com"><img th:src="|/restaurant/storage/${restaurantVO.image1}|" alt="Slide 1"></a></div>
-		  <div class="slide"><img th:src="|/restaurant/storage/${restaurantVO.image2}|" alt="Slide 2"></div>
-		  <div class="slide"><img th:src="|/restaurant/storage/${restaurantVO.image3}|" alt="Slide 3"></div>
+    <div class="slider" id="slider">
+		  <div class="slide"><img th:src="|/restaurant/storage/${restaurantVO.image1}|" alt="Slide"></div>
+		  <div class="slide" th:if="${restaurantVO.image2 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image2}|" alt="Slide"></div>
+		  <div class="slide" th:if="${restaurantVO.image3 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image3}|" alt="Slide"></div>
 		  <!-- Add more slides as needed -->
 		  <button class="arrow left" id="prev">&lt;</button>
 		  <button class="arrow right" id="next">&gt;</button>
@@ -58,140 +58,39 @@
 			</div>
 		</div>
 	</section>
+	<section>
+		<div id="map-section">
+	  	<div id="map"></div>
+	  </div>
+	</section>
 	<div style="height: 80px;"></div>
+	<script src="/js/restaurant/main_page/ImageSlide.js"></script>
+	<script src="/js/restaurant/main_page/SearchPossibleTime.js"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6"></script>
+	
 	<script>
 		window.onload = () => {
 			searchPossibleTime();
 			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
 		}
-		let slider = document.getElementById('slider');
-		let isDown = false;
-		let startX;
-		let walk;
+		let lat = [[${restaurantVO.lat}]];
+		let lng = [[${restaurantVO.lng}]];
 		
-		slider.addEventListener('mousedown', (e) => {
-		  isDown = true;
-		  startX = e.pageX;
-		  walk = 0;
-		  slider.style.cursor = 'grabbing';
-		});
+		console.log(lat + " " + lng);
+		let markerPosition  = new kakao.maps.LatLng(lat, lng);
+		let marker = new kakao.maps.Marker({
+      position: markerPosition
+    });
+		var staticMapContainer  = document.getElementById('map'), // 이미지 지도를 표시할 div  
+    staticMapOption = { 
+        center: new kakao.maps.LatLng(lat, lng), // 이미지 지도의 중심좌표
+        level: 3, // 이미지 지도의 확대 레벨
+        marker: marker // 이미지 지도에 표시할 마커 
+    };    
+
+		// 이미지 지도를 생성합니다
+		var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
 		
-		slider.addEventListener('mouseleave', () => {
-		  if (!isDown) return;
-		  isDown = false;
-		  slider.style.cursor = 'grab';
-		  if (walk < -50) {
-		    nextSlide();
-		  } else if (walk > 50) {
-		    prevSlide();
-		  } else {
-		    showSlide(currentIndex); // Reset to the current slide if not dragged far enough
-		  }
-		});
-		
-		slider.addEventListener('mouseup', () => {
-		  if (!isDown) return;
-		  isDown = false;
-		  slider.style.cursor = 'grab';
-		  if (walk < -50) {
-		    nextSlide();
-		  } else if (walk > 50) {
-		    prevSlide();
-		  } else {
-		    showSlide(currentIndex); // Reset to the current slide if not dragged far enough
-		  }
-		});
-		
-		slider.addEventListener('mousemove', (e) => {
-		  if (!isDown) return;
-		  e.preventDefault();
-		  const x = e.pageX;
-		  walk = x - startX;
-		  slides.forEach((slide, index) => {
-		    slide.style.transform = `translateX(${100 * (index - currentIndex) + (walk / slider.clientWidth) * 100}%)`;
-		  });
-		});
-		
-		let currentIndex = 0;
-		const slides = document.querySelectorAll('.slide');
-		const radioButtonsContainer = document.getElementById('radio_buttons');
-		
-		// Create radio buttons dynamically based on the number of slides
-		slides.forEach((slide, index) => {
-		  const radio = document.createElement('input');
-		  radio.type = 'radio';
-		  radio.className = 'radio_button';
-		  radio.name = 'slider';
-		  radio.id = `radio_${index + 1}`;
-		  if (index === 0) radio.checked = true;
-		
-		  radio.addEventListener('change', () => {
-		    showSlide(index);
-		  });
-		
-		  radioButtonsContainer.appendChild(radio);
-		});
-		
-		function showSlide(index) {
-		  slides.forEach((slide, i) => {
-		    slide.style.transform = `translateX(${100 * (i - index)}%)`;
-		  });
-		  document.getElementById(`radio_${index + 1}`).checked = true;
-		  currentIndex = index;
-		}
-		
-		function nextSlide() {
-		  currentIndex = (currentIndex + 1) % slides.length;
-		  showSlide(currentIndex);
-		}
-		
-		function prevSlide() {
-		  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-		  showSlide(currentIndex);
-		}
-		
-		function searchPossibleTime(){
-			const reserveDate = document.getElementById("reserve_date");
-			const personnel = document.getElementById("personnel");
-			const restno = document.getElementById("restno");
-			console.log(reserveDate.value + " " + personnel.value + " " + restno.value);
-			
-			fetch(
-	          "/admitPerson/searchPossibleTime",
-	          {
-	            method: "POST",
-	            headers: {"Content-Type": "application/json"},
-	            body: JSON.stringify({
-					"restno": restno.value,
-					"personnel": personnel.value,
-					"date": reserveDate.value
-					})
-	          }
-	        )
-	          .then((response) => response.json())
-	          .then((rdata) => {
-	            const scrollContainer = document.getElementById("scrollContainer");
-	            scrollContainer.innerHTML = '';
-	            
-	            rdata.forEach(admitPersonVO => {
-	              const timeButton = document.createElement("button");
-	              timeButton.textContent = admitPersonVO.time + ":00";
-	              timeButton.dataset.admitpersonno = admitPersonVO.admitpersonno;
-	              timeButton.type = "button";
-							  timeButton.value = admitPersonVO.admitpersonno;
-							  timeButton.classList.add('btn_botarea');
-	              
-	              timeButton.addEventListener('click', function() {
-	                const admitpersonno = this.dataset.admitpersonno;
-	                const person = document.getElementById('personnel').value;
-	                window.location.href = `/reservation/create?admitpersonno=${admitpersonno}&person=${person}`;
-            		});
-	              scrollContainer.appendChild(timeButton);
-	              
-	              
-          		});
-        		});
-		}
 		
 		function getTodayDate() {
         const today = new Date();
@@ -201,11 +100,6 @@
         return year + '-' + month + '-' + day;
     }
     
-		document.getElementById('next').addEventListener('click', nextSlide);
-		document.getElementById('prev').addEventListener('click', prevSlide);
-		
-		showSlide(currentIndex);
-		
 		
 	</script>
 	<script>

@@ -20,7 +20,22 @@
     padding: 0;
     box-sizing: border-box;
 }
+html, body {
+    height: 100%;
+    min-height: 100%;
+    padding: 0;
+}
+#wrapper {
+	display: flex;
+	min-height: 100%;
+	flex-direction: column;
+}
 
+main {
+	flex: 1 0 auto;
+	
+	padding: 20px;
+}
 body {
     font-family: Arial, sans-serif;
     max-width: 480px;
@@ -35,6 +50,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+    flex:0 0 auto;
 }
 
 nav {
@@ -65,10 +81,6 @@ nav ul li a:hover {
     color: black;
 }
 
-main {
-    padding: 20px;
-    height: 80%;
-}
 
 section {
     margin-bottom: 20px;
@@ -286,6 +298,38 @@ height: 400px;
 	display: flex;
 	width:100%; 
 	height:200px;
+}
+
+#fragment-container {
+	display:flex;
+	flex-direction: column;
+	height: 100%;
+}
+#map-section {
+    flex:1 0 50%;
+}
+#rest-container {
+		flex:1 0 50%;
+    overflow: hidden; /* 스크롤을 보이지 않도록 설정 */
+}
+#rest-list-container {
+  height: 400px;
+  overflow-y: scroll; /* 내부 콘텐츠가 넘칠 경우 스크롤 */
+}
+.restaurant_info {
+  height:100px;
+}
+#map{
+  width:100%;
+  min-height:400px;
+}
+
+#midarea_div {
+	display: flex;
+	justify-content: space-around;
+	align-content: stretch;
+	flex-wrap: wrap;
+	height: 120px
 }
 /*
  ㅂ 박스

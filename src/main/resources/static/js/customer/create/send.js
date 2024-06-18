@@ -1,7 +1,8 @@
 function send() {
-  let id1 = document.getElementById('id1');
-  let email = document.getElementById('email');
-  let id = id1.value + email.value;
+  let id1 = document.getElementById('id');
+  let domainSelect = document.getElementById('email');
+
+
 
   let id_msg = document.getElementById('id_msg');
   let cname = document.getElementById('cname');
@@ -124,7 +125,6 @@ function send() {
   }
 
   document.getElementById('phone').value = phone;
-  document.getElementById('id').value = id;
-  alert(document.getElementById('id').value);
+  document.getElementById('email').value = document.getElementById('email1').value+ document.getElementById('email2').value;
   document.getElementById('login-form').submit();
 }

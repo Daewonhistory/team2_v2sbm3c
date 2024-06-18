@@ -53,24 +53,8 @@
     </section>
     <section id="loca_shortcut_section">
         <h2>위치기반 숏컷</h2>
-        <div id="midarea_div">
-        	<button type="button" value="9" onclick="selectMidArea(this)">서울</button>
-            <button type="button" value="2" onclick="selectMidArea(this)">경기</button>
-            <button type="button" value="17" onclick="selectMidArea(this)">충북</button>
-            <button type="button" value="16" onclick="selectMidArea(this)">충남</button>
-            <button type="button" value="1" onclick="selectMidArea(this)">강원도</button>
-            <button type="button" value="4" onclick="selectMidArea(this)">경북</button>
-            <button type="button" value="3" onclick="selectMidArea(this)">경남</button>
-            <button type="button" value="14" onclick="selectMidArea(this)">전북</button>
-            <button type="button" value="13" onclick="selectMidArea(this)">전남</button>
-            <button type="button" value="15" onclick="selectMidArea(this)">제주</button>
-            <button type="button" value="10" onclick="selectMidArea(this)">세종</button>
-            <button type="button" value="6" onclick="selectMidArea(this)">대구</button>
-            <button type="button" value="5" onclick="selectMidArea(this)">광주</button>
-            <button type="button" value="7" onclick="selectMidArea(this)">대전</button>
-            <button type="button" value="11" onclick="selectMidArea(this)">울산</button>
-            <button type="button" value="8" onclick="selectMidArea(this)">부산</button>
-            <button type="button" value="12" onclick="selectMidArea(this)">인천</button>
+        <div id="midarea_div" >
+        	<button type="button"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto;"></button>
         </div>
         
         <div id="botarea_div" style="display:none">
@@ -163,139 +147,12 @@
             </div>
         </div>
     </section>
+    <script src="/js/restaurant/main_page/ImageSlide.js"></script>
+    <script src="/js/area/SelectMidArea.js"></script>
 	    <script>
-		let slider = document.getElementById('slider');
-		let isDown = false;
-		let startX;
-		let walk;
-		
-		slider.addEventListener('mousedown', (e) => {
-		  isDown = true;
-		  startX = e.pageX;
-		  walk = 0;
-		  slider.style.cursor = 'grabbing';
-		});
-		
-		slider.addEventListener('mouseleave', () => {
-		  if (!isDown) return;
-		  isDown = false;
-		  slider.style.cursor = 'grab';
-		  if (walk < -50) {
-		    nextSlide();
-		  } else if (walk > 50) {
-		    prevSlide();
-		  } else {
-		    showSlide(currentIndex); // Reset to the current slide if not dragged far enough
-		  }
-		});
-		
-		slider.addEventListener('mouseup', () => {
-		  if (!isDown) return;
-		  isDown = false;
-		  slider.style.cursor = 'grab';
-		  if (walk < -50) {
-		    nextSlide();
-		  } else if (walk > 50) {
-		    prevSlide();
-		  } else {
-		    showSlide(currentIndex); // Reset to the current slide if not dragged far enough
-		  }
-		});
-		
-		slider.addEventListener('mousemove', (e) => {
-		  if (!isDown) return;
-		  e.preventDefault();
-		  const x = e.pageX;
-		  walk = x - startX;
-		  slides.forEach((slide, index) => {
-		    slide.style.transform = `translateX(${100 * (index - currentIndex) + (walk / slider.clientWidth) * 100}%)`;
-		  });
-		});
-		
-		let currentIndex = 0;
-		const slides = document.querySelectorAll('.slide');
-		const radioButtonsContainer = document.getElementById('radio_buttons');
-		
-		// Create radio buttons dynamically based on the number of slides
-		slides.forEach((slide, index) => {
-		  const radio = document.createElement('input');
-		  radio.type = 'radio';
-		  radio.className = 'radio_button';
-		  radio.name = 'slider';
-		  radio.id = `radio_${index + 1}`;
-		  if (index === 0) radio.checked = true;
-		
-		  radio.addEventListener('change', () => {
-		    showSlide(index);
-		  });
-		
-		  radioButtonsContainer.appendChild(radio);
-		});
-		
-		function showSlide(index) {
-		  slides.forEach((slide, i) => {
-		    slide.style.transform = `translateX(${100 * (i - index)}%)`;
-		  });
-		  document.getElementById(`radio_${index + 1}`).checked = true;
-		  currentIndex = index;
-		}
-		
-		function nextSlide() {
-		  currentIndex = (currentIndex + 1) % slides.length;
-		  showSlide(currentIndex);
-		}
-		
-		function prevSlide() {
-		  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-		  showSlide(currentIndex);
-		}
-		
-		document.getElementById('next').addEventListener('click', nextSlide);
-		document.getElementById('prev').addEventListener('click', prevSlide);
-		
-		showSlide(currentIndex);
 		
 		
 		
-		function selectMidArea(selectedMidArea){
-			fetch(
-	          "/botarea/botarea_list",
-	          {
-	            method: "POST",
-	            headers: {"Content-Type": "application/json"},
-	            body: JSON.stringify({"midareano": selectedMidArea.value})
-	          }
-	        )
-	          .then((response) => response.json())
-	          .then((rdata) => {
-	            const divBotAreas = document.getElementById("botarea_div");
-	            divBotAreas.innerHTML = '';
-	            let allSelect = document.createElement("button");
-	            allSelect.type = "button";
-				allSelect.value = 0;
-				allSelect.onclick=function() {
-					selectBotarea(allSelect);
-				};
-				allSelect.classList.add('btn_botarea');
-	            allSelect.textContent = "모든 지역";
-	            
-	            divBotAreas.appendChild(allSelect);
-	            rdata.forEach(botAreaVO => {
-	              const botArea = document.createElement("button");
-	              botArea.textContent = botAreaVO.name;
-	              botArea.type = "button";
-	              botArea.name = "botareas";
-	              botArea.onclick=function() {
-					  selectBotarea(botArea);
-				  };
-				  botArea.value = botAreaVO.botareano;
-				  botArea.classList.add('btn_botarea');
-	              
-	              divBotAreas.appendChild(botArea);
-	              botarea_div.style.display="block";
-	            });
-	          });
-		}
 		function selectBotarea(eventButton){
 			let selected_botarea_btn = eventButton;
 			let today = new Date();

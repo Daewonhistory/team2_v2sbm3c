@@ -53,13 +53,23 @@ public class CustomerProC implements CustomerProInter {
   }
 
   @Override
-  public int checkNameEmail(String cname, String id) {
+  public int checkNameEmail(String cname, String email) {
 
     HashMap<String,Object> map = new HashMap<String,Object>();
-    System.out.println("test"+id);
+    System.out.println(email);
     map.put("cname", cname);
-    map.put("id", id);
+    map.put("email", email);
     return this.customerDAO.checkNameEmail(map);
+  }
+
+  @Override
+  public String findNameEmail(String cname, String email) {
+
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    System.out.println(email);
+    map.put("cname", cname);
+    map.put("email", email);
+    return this.customerDAO.findNameEmail(map);
   }
 
 
@@ -213,6 +223,15 @@ public class CustomerProC implements CustomerProInter {
   public int passwd_update(HashMap<String, Object> map) {
     int cnt = this.customerDAO.passwd_update(map);
     return cnt;
+  }
+
+  @Override
+  public int passwd_updates(String passwd, String id) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("id", id);
+    map.put("passwd", passwd);
+
+    return this.customerDAO.passwd_updates(map);
   }
 
   /**

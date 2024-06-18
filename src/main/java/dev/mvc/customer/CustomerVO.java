@@ -33,9 +33,11 @@ public class CustomerVO {
 
     /** 회원 번호 */
     private int custno;
-    /** 아이디(이메일) */
+    /** 아이디 */
 
     private String id = "";
+
+    private String email = "";
 
     /** 패스워드 */
 

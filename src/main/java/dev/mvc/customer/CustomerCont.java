@@ -121,14 +121,14 @@ public class CustomerCont {
 
     return ResponseEntity.ok(map);
   }
-  @PostMapping("/checkNameid")  //http:localhost:9091/meber/checkId?id=admin
+  @PostMapping("/checkNameEmail")  //http:localhost:9091/meber/checkId?id=admin
   @ResponseBody
   public ResponseEntity<HashMap<String,Object>> checkNameEmail(@RequestBody CustomerVO customerVO) {
 
     HashMap<String,Object> map = new HashMap<String,Object>();
     System.out.println(customerVO.getId());
     System.out.println(customerVO.getCname());
-    int count = this.customerProc.checkNameEmail(customerVO.getCname(), customerVO.getId());
+    int count = this.customerProc.checkNameEmail(customerVO.getCname(), customerVO.getEmail());
     System.out.println("countsss->" + count);
     if (count == 1) {
       map.put("cnt", 1);

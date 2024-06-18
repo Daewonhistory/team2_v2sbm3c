@@ -99,7 +99,14 @@ public interface RestaurantProInter {
   public RestFullData readFullData(int restno);
   
   public String test(String date);
-
+  
+  /**
+   * 맵 화면 내의 식당 조회
+   * @param southWest
+   * @param NorthEast
+   * @return
+   */
+  public ArrayList<RestFullData> coordinateSearchList(double westLat, double eastLat, double southLng, double northLng);
 
 }
 
