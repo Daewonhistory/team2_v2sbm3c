@@ -1,30 +1,30 @@
 function checkID() {
 
-  let id1 = document.getElementById('id1');
-  let email = document.getElementById('email');
+  let id = document.getElementById('id');
+
   let id_msg = document.getElementById('id_msg');
 
-  let id = id1.value + email.value;
+
   console.log(id);
 
-  if (id1.value.trim().length == 0) {
+  if (id.value.trim().length == 0) {
     id_msg.style.fontSize = "12px";
     id_msg.innerHTML = 'ID가 누락되었습니다. ID 입력은 필수 입니다.';
     id_msg.style.marginTop = "5px";
     id_msg.classList.add('span_warning');
-    id1.focus();
+    id.focus();
     return false;
   }
-  if (id1.value.trim().length < 4) {
+  if (id.value.trim().length < 4) {
     id_msg.innerHTML = 'ID(이메일)는 3자이상 권장합니다.';
     id_msg.style.marginTop = "5px";
     id_msg.classList.add('span_warning');
-    id1.focus();
+    id.focus();
     return false;
   } else {
 
     id_msg.classList.remove('span_warning');
-    let url = './checkID?id=' + id;
+    let url = './checkID?id=' + id.value;
 
     fetch(url, {
       method: 'POST'
@@ -34,7 +34,7 @@ function checkID() {
           if (rdata.cnt > 0) {
             id_msg.innerHTML = '이미 사용중인 ID(이메일) 입니다. 다른 ID(이메일)을 지정해주세요.';
             id_msg.classList.add('span_warning');
-            id1.focus();
+            id.focus();
             setTimeout(function () {
               id_msg.innerHTML = '';
             }, 5000);
@@ -48,11 +48,9 @@ function checkID() {
             const btn_checkEmail = document.getElementById('btn_checkEmail');
 
             if(btn_checkID.style.display !== 'none') {
-              btn_checkID.style.display = 'none';
+              btn_checkID.disabled = true;
             }
-            if(btn_checkEmail.style.display === 'none') {
-              btn_checkEmail.style.display = 'block';
-            }
+
 
 
           }

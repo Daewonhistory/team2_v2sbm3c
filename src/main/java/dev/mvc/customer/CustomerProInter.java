@@ -33,7 +33,10 @@ public interface CustomerProInter {
    * @param email
    * @return 추가한 레코드 갯수
    */
-  public int checkNameEmail(String cname, String id);
+  public int checkNameEmail(String cname, String email);
+
+  public String findNameEmail(String cname, String email) ;
+
 
   public ArrayList<CustomerVO> list_search_paging(String word, String type, int now_page, int record_per_page);
 
@@ -116,6 +119,10 @@ public interface CustomerProInter {
    * @return 변경된 패스워드 갯수
    */
   public int passwd_update(HashMap<String, Object> map);
+
+
+  public int passwd_updates(String id, String passwd);
+
 
   /**
    * 로그인 처리

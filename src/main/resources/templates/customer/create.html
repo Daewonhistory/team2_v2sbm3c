@@ -5,49 +5,11 @@
 
   </div>
   
-    <script>
-    
-     // 재료 입력 필드를 제거하는 함수
-    function removeIngredient(button) {
-      const ingredientDiv = button.parentElement;
-      document.getElementById('ingredients').removeChild(ingredientDiv);
-    }
+    <script src="/js/customer/create/Ingredient.js">
 
-    // 재료를 추가하는 함수
-    function addIngredient(ingredno, name) {
-      const ingredientDiv = document.createElement('div');
-      ingredientDiv.classList.add('ingredient');
-      ingredientDiv.style = "background-color: gray; border-radius: 50%; width:150px; display: inline-block; margin: 5px;";
-      
-      const ingredientInput = document.createElement('input');
-      ingredientInput.type = 'hidden';
-      ingredientInput.name = 'ingredno[]';
-      ingredientInput.value = ingredno;
-      ingredientInput.required = true;
-      
-      const ingredientText = document.createElement('span');
-      ingredientText.innerText = name;
 
-      const removeButton = document.createElement('button');
-      removeButton.type = 'button';
-      removeButton.innerText = '삭제';
+      // 알러지 재료를 선택하여 추가하는 함수
 
-      removeButton.onclick = function() {
-          removeIngredient(removeButton);
-      };
-      
-      ingredientDiv.appendChild(ingredientInput);
-      ingredientDiv.appendChild(ingredientText);
-      ingredientDiv.appendChild(removeButton);
-      
-      document.getElementById('ingredients').appendChild(ingredientDiv);
-    }
-
-    // 알러지 재료를 선택하여 추가하는 함수
-    function handleSelectChange(selectElement) {
-      const selectedOption = selectElement.options[selectElement.selectedIndex];
-      addIngredient(selectedOption.value, selectedOption.text);
-    }
     </script>
   <script src="/js/customer/create/enter.js"></script>
   <script src="/js/customer/create/checkID.js"></script>
@@ -60,27 +22,18 @@
     <span> <span class="required">* </span> 은 필수  </span>
     <form style="margin-top: 10px;" name="frm" th:object="${customerVO}" method="post" action="/customer/create"
           id="login-form">
-      <label>아이디(이메일) <span class="required"> * </span> </label>
+      <label>아이디 <span class="required"> * </span> </label>
 
       <div style="display: flex; align-items: center;">
 
-        <input type="hidden" style="margin-top: 10px;" name="id" id="id" value="" autofocus="autofocus"
+        <input type="text" style="margin-top: 10px;" name="id" id="id" value="" autofocus="autofocus"
                placeholder="아이디 입력" th:field="*{id}" >
-        <input type="text" style="margin-top: 10px; width: 35%;" id="id1" value="" autofocus="autofocus"
-               placeholder="아이디 입력" th:field="*{id}" >
-        <span style="margin-left: 5px; margin-right: 5px;" id="dot">@</span>
-        <select id="email" style="margin-top: 10px; width: 40%; font-size: 0.7em;" >
-          <option value="@gmail.com">Gmail.com</option>
-          <option value="@naver.com">Naver.com</option>
-          <option value="@nate.com">Nate.com</option>
-          <option value="@daum.net">daum.net</option>
-        </select>
+
 
         <button type='button' id="btn_checkID" onclick="checkID()"
                 style="margin-left: 10px; margin-top: 10px; font-size: 12px;" >중복확인
         </button>
 
-        <button type="button" onclick="openModal('Email')" id="btn_checkEmail" style="margin-left: 10px; margin-top: 10px; font-size: 12px; display: none;">이메일 인증</button>
       </div>
       <div th:if="${#fields.hasErrors('id')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
         <div th:each="err : ${#lists.sort(#fields.errors('id'))}" th:text="${err}"></div>
@@ -90,7 +43,28 @@
       </script>
 
       <span style="margin-top: 100px;" id='id_msg'></span>
+      <label style="margin-top: 10px;">본인 확인 이메일 <span class="required"> * </span> </label>
+      <div class="form-group" style="margin-top: 10px; display: flex; align-items: center ">
 
+        <input type="hidden" style="margin-top: 10px; width: 35%;" name="email" id="email" value="" autofocus="autofocus"
+               placeholder="이메일 입력" th:field="*{email}" >
+        <input type="text" style="margin-top: 10px; width: 35%;" id="email1" name="email1" value="" autofocus="autofocus"
+               placeholder="이메일 입력" >
+        <span style="margin-left: 5px; margin-right: 5px;" id="dot">@</span>
+        <select id="email2" style="margin-top: 10px; width: 40%; font-size: 0.7em;" >
+          <option value="@gmail.com">Gmail.com</option>
+          <option value="@naver.com">Naver.com</option>
+          <option value="@nate.com">Nate.com</option>
+          <option value="@daum.net">daum.net</option>
+        </select>
+        <button type="button" onclick="openModal('Email')" id="btn_checkEmail" style="margin-left: 10px; margin-top: 10px; font-size: 12px; ">이메일 인증</button>
+
+        <div th:if="${#fields.hasErrors('passwd')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('passwd'))}" th:text="${err}"></div>
+        </div>
+
+
+      </div>
       <div class="form-group" style="margin-top: 10px;">
         <label>비밀번호 <span class="required"> * </span> </label>
         <input type="password" name="passwd" style="margin-top: 10px;" value="" autofocus="autofocus"

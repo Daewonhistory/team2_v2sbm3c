@@ -26,6 +26,9 @@ public interface CustomerDAOInter {
 
   public String findNamePhone(HashMap<String , Object> map) ;
 
+  public String findNameEmail(HashMap<String , Object> map) ;
+
+  public int passwd_updates(HashMap<String, Object> map);
 
 
   public int checkNameEmail(HashMap<String , Object> map) ;
