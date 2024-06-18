@@ -44,7 +44,7 @@
     <![CDATA[
     SELECT *
     FROM (
-      SELECT re.reviewno, re.content, re.rate, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
+      SELECT re.reviewno, re.content, re.rate, re.rdate, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
       FROM review re
       LEFT JOIN (
           SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
@@ -58,7 +58,7 @@
           SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
           FROM reviewimage
       ) ri3 ON re.reviewno = ri3.reviewno AND ri3.rn = 3
-      
+      ORDER BY re.rdate DESC 
     )
     WHERE rnum <= #{end_num} AND rnum >= #{start_num} 
     ]]>
@@ -67,6 +67,7 @@
     <select id="list_count" resultType="int" parameterType="int">
         SELECT COUNT(*) FROM review 
     </select>
+    
     
     
 </mapper>

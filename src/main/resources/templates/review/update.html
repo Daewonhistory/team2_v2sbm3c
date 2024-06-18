@@ -1,48 +1,79 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <style>
+    .star-rating {
+      direction: rtl;
+      display: inline-block;
+      padding: 20px;
+    }
+    .star-rating input {
+      display: none;
+    }
+    .star-rating label {
+      color: #bbb;
+      font-size: 30px;
+      padding: 0;
+      cursor: pointer;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating input:hover ~ label {
+      color: #f2b600;
+    }
+    .star-rating input:checked + label:hover,
+    .star-rating input:checked ~ label:hover,
+    .star-rating input:hover ~ input:checked ~ label {
+      color: #f2b600;
+    }
+  </style>
+</head>
 <div layout:fragment="content">
   <div class='title_line'>
-  리뷰 수정
+    리뷰 수정
   </div>
-  
+
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide'>│</span>
     <a th:href="@{|./list_paging|}">목록</a>    
   </aside>
-  
-  <div class='menu_line'></div>
-  
-  <form name='frm' method='post' th:object="${reviewVO}" action='./update' enctype="multipart/form-data">
 
+  <div class='menu_line'></div>
+
+  <form name='frm' method='post' th:object="${reviewVO}" action='./update' enctype="multipart/form-data">
     <input type="hidden" name="reviewno" th:value="${reviewVO.reviewno}">
     <div>
-       <label>식당명</label>
-       <input type='text' name='title' th:value='${reviewVO.title}' required="required" 
-                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+      <label>내용</label>
+      <textarea name='content' th:text="${reviewVO.content}" required="required" class="form-control" rows="12" maxlength="200" style='width: 100%;'></textarea>
+      <small id="contentHelp" class="form-text text-muted">최대 200자까지 입력 가능합니다. (남은 글자 수: 200)</small>
     </div>
     <div>
-       <label>내용</label>
-       <input type="text" name='content' th:value='${reviewVO.content}' required="required" class="form-control" style='width: 100%;'></input>
+      <label>평점</label>
+      <div class="star-rating">
+        <input type="radio" id="5-stars" name="rate" value="5" th:checked="${reviewVO.rate == 5}" /><label for="5-stars" class="star">&#9733;</label>
+        <input type="radio" id="4-stars" name="rate" value="4" th:checked="${reviewVO.rate == 4}" /><label for="4-stars" class="star">&#9733;</label>
+        <input type="radio" id="3-stars" name="rate" value="3" th:checked="${reviewVO.rate == 3}" /><label for="3-stars" class="star">&#9733;</label>
+        <input type="radio" id="2-stars" name="rate" value="2" th:checked="${reviewVO.rate == 2}" /><label for="2-stars" class="star">&#9733;</label>
+        <input type="radio" id="1-stars" name="rate" value="1" th:checked="${reviewVO.rate == 1}" /><label for="1-stars" class="star">&#9733;</label>
+      </div>
     </div>
     
-    <div>
-       <label>평점</label>
-       <input type="int" name='rate' th:value='${reviewVO.rate}' required="required" class="form-control" style='width: 10%;'></input>
-    </div>
-    
-
-   
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">수정</button>
       <button type="button" th:attr="onclick=|location.href='./list_paging'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
-  
   </form>
-
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const textarea = document.querySelector('textarea[name="content"]');
+        const contentHelp = document.getElementById('contentHelp');
 
-
-
-  
+        textarea.addEventListener('input', function() {
+            const remaining = 200 - textarea.value.length;
+            contentHelp.textContent = `최대 200자까지 입력 가능합니다. (남은 글자 수: ${remaining})`;
+        });
+    });
+</script>
+</html>
