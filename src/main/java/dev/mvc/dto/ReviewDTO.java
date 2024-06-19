@@ -21,7 +21,7 @@ public class ReviewDTO {
 
   /** 작성 날짜 */
   private String rdate;
-
+  
   /** 고객 번호 */
   private int custno;
 
@@ -33,6 +33,11 @@ public class ReviewDTO {
   private String image2;
   private String image3;
   
-  private String restname;  // 식당 이름
-  private String custname;  // 작성자 이름
+  /** 식당 이름 */
+  private String restname;
+  
+  /** 유저 이름*/
+  private String nickname;
+  
+
 }

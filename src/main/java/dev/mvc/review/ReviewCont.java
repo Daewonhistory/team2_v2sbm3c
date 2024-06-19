@@ -15,6 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.dto.ReviewDTO;
+import dev.mvc.ingredient.IngredientVO;
+import dev.mvc.menu.MenuVO;
+import dev.mvc.menuingred.MenuIngredDTO;
+import dev.mvc.menuingred.MenuIngredVO;
 import dev.mvc.restaurant.RestaurantProC;
 import dev.mvc.reviewimg.ReviewImgProcInter;
 import dev.mvc.reviewimg.ReviewimgVO;
@@ -107,7 +111,7 @@ public class ReviewCont {
     }
 
     @GetMapping("/list_paging")
-    public String list_paging(HttpSession session, Model model, 
+    public String list_paging(HttpSession session, Model model,
                               @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
         if (now_page < 1) {
             now_page = 1;
@@ -115,18 +119,18 @@ public class ReviewCont {
 
         ArrayList<ReviewDTO> list = this.reviewProc.list_paging(now_page, Review.RECORD_PER_PAGE);
         model.addAttribute("list", list);
-        
-        int count = this.reviewProc.list_count(); 
+
+        int count = this.reviewProc.list_count();
         model.addAttribute("count", count);
 
         String paging = this.reviewProc.pagingBox(now_page, "/review/list_paging", count, Review.RECORD_PER_PAGE, Review.PAGE_PER_BLOCK);
         model.addAttribute("paging", paging);
 
         model.addAttribute("now_page", now_page);
-        
 
         return "review/list_paging";
     }
+
 
 
 
@@ -162,6 +166,17 @@ public class ReviewCont {
             return "redirect:/review/list_all";
         }
         return "review/list_all";
+    }
+    
+    @GetMapping("/reviewAllList")
+    public String reviewAllList(Model model, int restno, int person, String date) {
+        ArrayList<ReviewDTO> list = this.reviewProc.list_by_restno(restno);
+        model.addAttribute("list", list);
+        model.addAttribute("restno", restno);
+        model.addAttribute("person", person);
+        model.addAttribute("date", date);
+        
+        return "/review/review_list";
     }
     
     

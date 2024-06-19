@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.ReviewDTO;
+import dev.mvc.menu.MenuVO;
 
 @Service("dev.mvc.review.ReviewProc")
 public class ReviewProc implements ReviewProcInter {
@@ -171,6 +172,11 @@ public class ReviewProc implements ReviewProcInter {
       str.append("</nav>");
       
       return str.toString();
+    }
+
+    @Override
+    public ArrayList<ReviewDTO> list_by_restno(int restno) {
+        return this.reviewDAO.list_by_restno(restno);
     }
 
  }

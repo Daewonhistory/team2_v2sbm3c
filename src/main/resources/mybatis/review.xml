@@ -68,6 +68,12 @@
         SELECT COUNT(*) FROM review 
     </select>
     
+   <select id="list_by_restno">
+    SELECT reviewno,  content, rate, rdate, custno, restno
+    FROM review
+    WHERE restno = #{restno}
+  </select>
+    
     
     
 </mapper>

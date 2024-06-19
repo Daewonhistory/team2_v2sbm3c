@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html layout:decorate="~{mobile_layout}">
+<div layout:fragment="content" style="padding:0">
+    <nav>
+        <ul>
+            <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
+            <li><a th:href="|/menu/menuAllList?restno=${restno}&person=${person}&date=${date}|">메뉴</a></li>
+            <li><a th:href="|/review/reviewAllList?restno=${restno}&person=${person}&date=${date}|">리뷰</a></li>
+        </ul>
+    </nav>
+    <section>
+        <div th:if="${#lists.isEmpty(list)}">
+            등록된 리뷰가 없습니다.
+        </div>
+        
+        <div class="menu_info" th:each="reviewDTO, status: ${list}" th:unless="${#lists.isEmpty(list)}">
+            <div style="width:100%; height:200px;display: flex;">
+                <div class="image" style="display: flex; flex:1; padding:3px;">
+                    <img th:src="|/review/storage/${reviewDTO.image1}|" style="width: 100%; border-radius: 10px;" th:if="${reviewDTO.image1 != null}">
+                    <img th:src="|/review/storage/${reviewDTO.image2}|" style="width: 100%; border-radius: 10px;" th:if="${reviewDTO.image2 != null}">
+                    <img th:src="|/review/storage/${reviewDTO.image3}|" style="width: 100%; border-radius: 10px;" th:if="${reviewDTO.image3 != null}">
+                </div>
+                <div class="row" style="display: flex; flex:2;">
+                    <span th:text="${reviewDTO.content}"></span>
+                    <span th:text="${reviewDTO.rate}"></span>
+                    <span th:text="${#dates.format(reviewDTO.rdate, 'yyyy-MM-dd')}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</html>

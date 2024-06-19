@@ -68,6 +68,13 @@ public interface ReviewProcInter {
    */
   public int foreign(@Param("restno") int restno, @Param("custno") int custno);
   
+  /**
+   * 식당 리뷰 조회
+   * @param restno
+   * @return
+   */
+  public ArrayList<ReviewDTO> list_by_restno(int restno);
+  
 
   
   /**

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import dev.mvc.dto.ReviewDTO;
+import dev.mvc.menu.MenuVO;
 
 public interface ReviewDAOInter {
   
@@ -68,6 +69,13 @@ public interface ReviewDAOInter {
    * @return 삭제된 레코드 갯수
    */
   public int foreign(@Param("restno") int restno, @Param("custno") int custno);
+  
+  /**
+   * 식당 리뷰 조회
+   * @param restno
+   * @return
+   */
+  public ArrayList<ReviewDTO> list_by_restno(int restno);
   
 
   
