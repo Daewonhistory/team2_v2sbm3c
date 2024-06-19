@@ -38,4 +38,6 @@ public interface MenuIngredDAOInter {
 	 * @return
 	 */
 	public int delete_by_menuno(int menuno);
+	
+//	public ArrayList<>allergy_check_ingredient(int custno, int menuno);
 }

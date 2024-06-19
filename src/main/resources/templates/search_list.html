@@ -45,6 +45,7 @@
 	<section id="sec_list">
 		
 	</section>
+	<script src="/js/today.js"></script>
 	<script>
 		window.onload = () => {
 			let reserveTime = document.querySelector('#selected_time').value;
@@ -61,13 +62,6 @@
 			let reserveDate = document.getElementById('reserve_date').value;
 			location.href = "/restaurant/main_page?restno=" + restno + "&person=" + person + "&date=" + reserveDate + "&time=" + time;
 		}
-	 	function getTodayDate() {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
-        const day = String(today.getDate()).padStart(2, '0');
-        return year + '-' + month + '-' + day;
-    }
         //시간버튼 클릭 이벤트
 		function selectTime(time, eventButton){
 			let allBtnRed = document.getElementsByClassName('btn_red');

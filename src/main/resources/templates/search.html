@@ -1,27 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{mobile_layout}">
 <div layout:fragment="content">
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-    	
-	});
-	function submitForm(){
-	   // 폼 데이터 가져오기
-        const botareaBox = document.getElementsByName('botarea')[0];
-        botareaBox.value = "";
-        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
-        for(let botareaButton of all_botarea_button){
-			console.log(botareaButton.value);
-			if(botareaButton.classList.contains('btn_red')){
-				botareaBox.value += botareaButton.value + "_";
-			}
-		}     
-	    
-		const form = document.getElementById('frm');
-		form.submit();
-	}
-	
-</script>
+
 	
 	<div>
 		<span class="page_name">검색 조건</span>
@@ -96,17 +76,37 @@
 				<button type="submit" style="width:100px;margin:0px auto;">검색</button>
 			</div>
 			
-			<div style="height: 80px;"></div>
 		</form>
 	</div>
 	<script src="/js/area/SelectMidArea.js"></script>
+	<script src="/js/today.js"></script>
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+    	
+	});
+	function submitForm(){
+	   // 폼 데이터 가져오기
+        const botareaBox = document.getElementsByName('botarea')[0];
+        botareaBox.value = "";
+        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
+        for(let botareaButton of all_botarea_button){
+			console.log(botareaButton.value);
+			if(botareaButton.classList.contains('btn_red')){
+				botareaBox.value += botareaButton.value + "_";
+			}
+		}     
+	    
+		const form = document.getElementById('frm');
+		form.submit();
+	}
+	
+</script>
 	<script>
 		window.onload=()=>{
 			document.querySelectorAll('.timebutton')[1].click();
 			document.getElementById('reserve_date').value= new Date().toISOString().substring(0, 10);	
 			const form = document.getElementById('frm');
-	    	const time1 = document.getElementById('time1');
-	    	console.log(getTodayDate());
+    	const time1 = document.getElementById('time1');
 			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
 			
 		    form.addEventListener('submit', function (event) {

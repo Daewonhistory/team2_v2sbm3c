@@ -58,16 +58,16 @@
 			</div>
 		</div>
 	</section>
-	<section>
-		<div id="map-section">
-	  	<div id="map"></div>
-	  </div>
+	<section id="map-section">
+		<h2>지도</h2>
+		<span th:text="|주소: ${restaurantVO.address}|"></span>
+  	<div id="map"></div>
+		
 	</section>
-	<div style="height: 80px;"></div>
 	<script src="/js/restaurant/main_page/ImageSlide.js"></script>
 	<script src="/js/restaurant/main_page/SearchPossibleTime.js"></script>
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6"></script>
-	
+	<script src="/js/today.js"></script>
 	<script>
 		window.onload = () => {
 			searchPossibleTime();
@@ -92,13 +92,7 @@
 		var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
 		
 		
-		function getTodayDate() {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
-        const day = String(today.getDate()).padStart(2, '0');
-        return year + '-' + month + '-' + day;
-    }
+		
     
 		
 	</script>

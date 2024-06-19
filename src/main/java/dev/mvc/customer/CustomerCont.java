@@ -637,7 +637,7 @@ public class CustomerCont {
       CustomerVO customerVO = this.customerProc.readById(id);
       // id를 이용하여 회원 정보 조회
 
-
+      session.setAttribute("type", "customer");
       session.setAttribute("custno", customerVO.getCustno());
 
 

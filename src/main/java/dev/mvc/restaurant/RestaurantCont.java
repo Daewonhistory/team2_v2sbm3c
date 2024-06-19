@@ -280,14 +280,14 @@ public class RestaurantCont {
 					        String date,
 					        int time,
 					        @RequestParam(defaultValue = "0") int categoryno,
-					        @RequestParam(defaultValue = "") String botareas,
+					        @RequestParam(defaultValue = "") String botarea,
 					        @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
 					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
 	  model.addAttribute("person", person);
 	  model.addAttribute("reserve_date", date);
 	  model.addAttribute("time", time);
 	  model.addAttribute("categoryno", categoryno);
-	  model.addAttribute("botarea", botareas);
+	  model.addAttribute("botarea", botarea);
 	  model.addAttribute("min_price", minPrice);
 	  model.addAttribute("max_price", maxPrice);
 	  
@@ -306,7 +306,7 @@ public class RestaurantCont {
       }
       
       String botarea = (String) requestBody.get("botareas");
-      System.out.println("aaa" + botarea);
+      System.out.println("aaa:" + botarea);
       int[] botareanos;
       if(!botarea.equals("")) {
     	  System.out.println("b");
