@@ -123,7 +123,7 @@ public class OwnerCont {
       if (count == 1) {
 
         rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 회원가입 축하드립니다! 사업자가 인증 완료되면 이용 가능합니다 ");
+        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 회원가입 축하드립니다! 사업자가 인증 완료되면 식당 관리 이용 가능합니다 ");
         return "redirect:/owner/login";
       } else {
         rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
@@ -327,6 +327,7 @@ public class OwnerCont {
         session.setAttribute("id", ownerVO.getId());
         session.setAttribute("oname", ownerVO.getOname());
         session.setAttribute("grade", "NotCerti");
+        session.setAttribute("type", "NotCerti");
         session.setAttribute("ownerVO", ownerVO);
         rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 컨텐츠에 접근할 수 있습니다");
 
@@ -347,19 +348,19 @@ public class OwnerCont {
     String id = (String) session.getAttribute("id");
     System.out.println(id);
 
-//    if (id == null) {
-//      return "redirect:/";
-//    } else {
-    OwnerVO ownerVO = this.ownerProc.readById("kksos28");
-    if (ownerVO == null) {
+    if (id == null) {
       return "redirect:/";
     } else {
-      model.addAttribute("ownerVO", ownerVO);
+      OwnerVO ownerVO = this.ownerProc.readById(id);
+      if (ownerVO == null) {
+        return "redirect:/";
+      } else {
+        model.addAttribute("ownerVO", ownerVO);
 
-      return "/owner/my_page";
+        return "/owner/my_page";
+      }
+
     }
-
-
   }
 
   @GetMapping("/my_info_update")
@@ -368,7 +369,7 @@ public class OwnerCont {
 
 //    if (this.customerProc.isCustomer(session)) {
     String id = (String) session.getAttribute("id");
-    OwnerVO ownerVO = this.ownerProc.readById("kksos28");
+    OwnerVO ownerVO = this.ownerProc.readById(id);
 
     model.addAttribute("ownerVO", ownerVO);
 

@@ -1,7 +1,57 @@
 <!DOCTYPE html>
-<html layout:decorate="~{mobile_layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{mobile_layout}"> <!-- layout.html 상속 -->
+<head>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    /* 모달 내용 스타일 */
+    .modal-content {
+      position: relative;
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; /* 기본 크기 */
+      max-width: 600px; /* 최대 크기 */
+      top: 50%; /* 화면 아래로 이동 */
+      transform: translateY(-50%); /* 세로 중앙 정렬 */
+    }
+
+    /* 모달 크기 조정 */
+    .small-modal .modal-content {
+      width: 40%; /* 너비 조정 */
+      max-width: 300px; /* 최대 너비 조정 */
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
 <div layout:fragment="content">
-  <script  th:inline="javascript">
+  <script th:inline="javascript">
     if ([[${success}]]) {
       alert([[${success}]]);
     }
@@ -58,7 +108,6 @@
     });
   </script>
 
-
   <section class="my_page"><a href="https://www.example1.com" class="box">예약 조회</a></section>
   <section class="my_page"><a href="https://www.example1.com" class="box">리뷰 조회</a></section>
   <section class="my_page"><a href="/owner/my_info_update" class="box">내 정보 수정</a></section>
@@ -77,8 +126,39 @@
       document.getElementById('postForm').submit();
     }
   </script>
-  <div style="height: 80px;">
+  <!-- 모달 -->
+  <div id="myModal" class="modal small-modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
 
+      <p>사업자 인증이 필요합니다.</p>
+
+    </div>
   </div>
+
+
+
+  <script th:inline="javascript">
+    /* 모달 표시 */
+    if ([[${session.type == 'NotCerti'}]]) {
+      let modal = document.getElementById("myModal");
+      let closeModal = document.getElementById("closeModal");
+
+      modal.style.display = "block";
+
+      closeModal.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    }
+  </script>
+
+  <div style="height: 80px;"></div>
 </div>
+</body>
 </html>

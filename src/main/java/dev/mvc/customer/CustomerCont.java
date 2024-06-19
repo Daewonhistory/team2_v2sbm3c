@@ -648,7 +648,7 @@ public class CustomerCont {
       System.out.println("grade" + customerVO.getGrade());
       if (customerVO.getGrade() == 1) {
         session.setAttribute("grade", "customer");
-
+        session.setAttribute("type", "customer");
         System.out.println("grade ->" + session.getAttribute("grade"));
       }
       rttr.addFlashAttribute("login", customerVO.getCname() + "님 안녕하세요");

@@ -13,9 +13,9 @@
 
 
     <insert id="create" parameterType="dev.mvc.owner.OwnerVO">
-        INSERT INTO owner(ownerno, id, passwd, oname,phone,tel,zipcode, address1, address2, grade, nickname,
+        INSERT INTO owner(ownerno, id, email, passwd, oname,phone,tel,zipcode, address1, address2, grade, nickname,
                             image,reg_date)
-        VALUES (owner_seq.nextval, #{id}, #{passwd}, #{oname}, #{phone},
+        VALUES (owner_seq.nextval, #{id},#{email}, #{passwd}, #{oname}, #{phone},
                 #{tel}, #{zipcode}, #{address1}, #{address2},  #{grade}, #{nickname}, #{image}, sysdate)
     </insert>
 
