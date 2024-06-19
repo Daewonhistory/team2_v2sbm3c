@@ -4,6 +4,14 @@
   <div th:text="${fail}">
 
   </div>
+  
+    <script src="/js/owner/create/Ingredient.js">
+
+
+      // 알러지 재료를 선택하여 추가하는 함수
+
+    </script>
+    
   <script src="/js/owner/create/enter.js"></script>
   <script src="/js/owner/create/checkID.js"></script>
 
@@ -15,27 +23,18 @@
     <span> <span class="required">* </span> 은 필수  </span>
     <form style="margin-top: 10px;" name="frm" th:object="${ownerVO}" method="post" action="/owner/create"
           id="login-form">
-      <label>아이디(이메일) <span class="required"> * </span> </label>
+      <label>아이디 <span class="required"> * </span> </label>
 
       <div style="display: flex; align-items: center;">
 
-        <input type="hidden" style="margin-top: 10px;" name="id" value="" autofocus="autofocus"
+        <input type="text" style="margin-top: 10px;" name="id" id="id" value="" autofocus="autofocus"
                placeholder="아이디 입력" th:field="*{id}" >
-        <input type="text" style="margin-top: 10px; width: 35%;" id="id1" value="" autofocus="autofocus"
-               placeholder="아이디 입력" >
-        <span style="margin-left: 5px; margin-right: 5px;" id="dot">@</span>
-        <select id="email" style="margin-top: 10px; width: 40%; font-size: 0.7em;" >
-          <option value="@gmail.com">Gmail.com</option>
-          <option value="@naver.com">Naver.com</option>
-          <option value="@nate.com">Nate.com</option>
-          <option value="@daum.net">daum.net</option>
-        </select>
+
 
         <button type='button' id="btn_checkID" onclick="checkID()"
                 style="margin-left: 10px; margin-top: 10px; font-size: 12px;" >중복확인
         </button>
 
-        <button type="button" onclick="openModal('Email')" id="btn_checkEmail" style="margin-left: 10px; margin-top: 10px; font-size: 12px; display: none;">이메일 인증</button>
       </div>
       <div th:if="${#fields.hasErrors('id')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
         <div th:each="err : ${#lists.sort(#fields.errors('id'))}" th:text="${err}"></div>
@@ -45,7 +44,28 @@
       </script>
 
       <span style="margin-top: 100px;" id='id_msg'></span>
+      <label style="margin-top: 10px;">본인 확인 이메일 <span class="required"> * </span> </label>
+      <div class="form-group" style="margin-top: 10px; display: flex; align-items: center ">
 
+        <input type="hidden" style="margin-top: 10px; width: 35%;" name="email" id="email" value="" autofocus="autofocus"
+               placeholder="이메일 입력" th:field="*{email}" >
+        <input type="text" style="margin-top: 10px; width: 35%;" id="email1" name="email1" value="" autofocus="autofocus"
+               placeholder="이메일 입력" >
+        <span style="margin-left: 5px; margin-right: 5px;" id="dot">@</span>
+        <select id="email2" style="margin-top: 10px; width: 40%; font-size: 0.7em;" >
+          <option value="@gmail.com">Gmail.com</option>
+          <option value="@naver.com">Naver.com</option>
+          <option value="@nate.com">Nate.com</option>
+          <option value="@daum.net">daum.net</option>
+        </select>
+        <button type="button" onclick="openModal('Email')" id="btn_checkEmail" style="margin-left: 10px; margin-top: 10px; font-size: 12px; ">이메일 인증</button>
+
+        <div th:if="${#fields.hasErrors('passwd')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('passwd'))}" th:text="${err}"></div>
+        </div>
+
+
+      </div>
       <div class="form-group" style="margin-top: 10px;">
         <label>비밀번호 <span class="required"> * </span> </label>
         <input type="password" name="passwd" style="margin-top: 10px;" value="" autofocus="autofocus"
@@ -66,19 +86,11 @@
 
         <span id="passwd2_msg"></span>
       </div>
-      <div class="form-group" style="margin-top: 10px;">
-        <label>성별 선택 <span class="required">* </span> </label>
-        <select name="gender" id="gender" style="margin-top: 10px;" >
 
-          <option value="M">남자</option>
-          <option value="F">여자</option>
-        </select>
-        <span id="gender_msg"></span>
-      </div>
 
       <div class="form-group" style="margin-top: 10px;">
         <label>성명 <span class="required">*</span></label>
-        <input type='text' name='oname' id='cname' value='' style="margin-top: 10px;"
+        <input type='text' name='oname' id='oname' value='' style="margin-top: 10px;"
                placeholder="성명">
         <span id='cname_msg'></span>
       </div>
@@ -109,17 +121,7 @@
         <input type='text' id='phone2' maxlength="4" placeholder="0000" style="width: 20%;  ">
         <span style="margin-left: 3px; margin-right: 3px; margin-top: 1px; font-weight: bold ">-</span>
         <input type='text' id='phone3' maxlength="4" placeholder="0000" style="width: 20%; ">
-        <button type="button" id="openModalButton" onclick="openModal('Phone')" style="margin-top: 0px; width: 20%; font-size: 10px;" disabled>휴대폰 인증</button>
-
-      </div>
-
-
-      <label style="margin-top:15px;">전화 번호 <span class="required">*</span> </label>
-      <!-- 모달 열기 버튼 -->
-
-      <div>
-        <input type='text' id='tel' name="tel"   placeholder="010" style="width: 100%;  margin-top: 10px;">
-
+        <button type="button" id="openModalButton" disabled onclick="openModal('Phone')" style="margin-top: 0px; width: 20%; font-size: 10px;">휴대폰 인증</button>
 
       </div>
 
@@ -138,7 +140,12 @@
           </div>
         </div>
       </div>
-
+      <div class="form-group" style="margin-top: 10px;">
+        <label>회사 번호 <span class="required">*</span></label>
+        <input type='text' name='tel' id='tel' value='' style="margin-top: 10px;"
+               placeholder="성명">
+        <span id='tel_msg'></span>
+      </div>
       <!-- 모달 외부의 입력란 -->
 
 
@@ -161,6 +168,7 @@
       </div>
 
 
+      <!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
       <div>
         <div id="wrap" style="display:none;border:1px solid;width:330px;height:300px;margin:5px 0;position:relative">
           <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
@@ -174,7 +182,7 @@
         </script>
 
       </div>
-
+      <!-- ------------------------------ DAUM 우편번호 API 종료 ------------------------------ -->
 
       <div>
         <label>주소</label>
@@ -188,12 +196,15 @@
                placeholder="상세주소 입력"
         >
       </div>
+      
+
 
 
       <div style="margin-top: 10px;">
         <button type="button" onclick="return send()" id="btn_send">회원가입</button>
         <button type="button" onclick="location.href = '/';" id="btn_cancel">취소</button>
       </div>
+
 
     </form>
   </div>

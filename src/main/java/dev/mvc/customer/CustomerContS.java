@@ -123,10 +123,10 @@ public class CustomerContS {
 
   }
 
-  @GetMapping("/findPasswordPhone")
+  @PostMapping("/findPasswordPhone")
   public String findPasswordPhoneForm(String cname, String phone, Model model) {
 
-    String id = "kksos28";
+    String id = this.customerProc.findNamePhone(cname, phone);
     System.out.println("phone->" + id);
     if (id != null) {
 
@@ -143,6 +143,28 @@ public class CustomerContS {
 
 
   }
+  @PostMapping("/findPasswordEmail")
+  public String findPasswordEmail(String cname, String email, Model model) {
+
+    String id = this.customerProc.findNameEmail(cname, email);
+    System.out.println("phone->" + id);
+    if (id != null) {
+
+      model.addAttribute("id",id);
+      return "customer/PasswordChangeEmail";
+
+
+    } else  {
+      return "redirect:/";
+    }
+
+
+
+
+
+  }
+
+
 
 
   @PostMapping("/findEmail")

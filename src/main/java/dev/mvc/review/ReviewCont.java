@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.dto.ReviewDTO;
+import dev.mvc.restaurant.RestaurantProC;
 import dev.mvc.reviewimg.ReviewImgProcInter;
 import dev.mvc.reviewimg.ReviewimgVO;
 import dev.mvc.tool.Tool;
@@ -32,6 +33,10 @@ public class ReviewCont {
     @Autowired
     @Qualifier("dev.mvc.reviewimg.ReviewImgProc")
     private ReviewImgProcInter reviewimgproc;
+    
+    @Autowired
+    @Qualifier("dev.mvc.restaurant.RestaurantProc")
+    private RestaurantProC restaurantProc;
 
     public ReviewCont() {
         System.out.println("-> ReviewCont created.");
@@ -43,102 +48,87 @@ public class ReviewCont {
     }
 
     @PostMapping(value = "/create")
-    public String create(Model model, @Valid ReviewVO reviewVO, BindingResult bindingResult,ReviewimgVO reviewimgVO,
-                                RedirectAttributes ra,
-                                 MultipartFile file1MF,
-                                 MultipartFile file2MF,
-                                 MultipartFile file3MF) {
+    public String create(Model model, @Valid ReviewVO reviewVO, BindingResult bindingResult, 
+                         ReviewimgVO reviewimgVO, RedirectAttributes ra, 
+                         MultipartFile file1MF, MultipartFile file2MF, MultipartFile file3MF) {
       
-      reviewVO.setCustno(16); // 예시로 설정, 실제로는 로그인된 사용자의 ID를 설정
-      reviewVO.setRestno(4); // 예시로 설정, 실제로는 선택된 식당의 ID를 설정
+        reviewVO.setCustno(65); // 예시로 설정, 실제로는 로그인된 사용자의 ID를 설정
+        reviewVO.setRestno(4); // 예시로 설정, 실제로는 선택된 식당의 ID를 설정
 
-      int cnt = this.reviewProc.create(reviewVO); 
+        int cnt = this.reviewProc.create(reviewVO); 
       
-      int restno = reviewVO.getRestno();
-      int custno = reviewVO.getCustno();
-      
-      int foreign = reviewProc.foreign(restno,custno);
-      
-      System.out.println("-> cnt: " + cnt);
-      System.out.println("-> Generated reviewno: " + reviewVO.getReviewno());  // 추가된 로그 확인 부분
+        int restno = reviewVO.getRestno();
+        int custno = reviewVO.getCustno();
+        int foreign = reviewProc.foreign(restno, custno);
 
-      if (cnt == 1) {
-          
-        int reviewno = reviewVO.getReviewno(); // 생성된 리뷰의 번호를 가져옴
-        String upDir = Review.getUploadDir(); // 파일을 업로드할 폴더 준비
-        System.out.println("-> upDir: " + upDir);
+        if (cnt == 1) {
+            int reviewno = reviewVO.getReviewno();
+            String upDir = Review.getUploadDir();
 
-        MultipartFile[] files = {file1MF, file2MF, file3MF};
-        for (MultipartFile mf : files) {
-            if (!mf.isEmpty()) {
-                String originalFileName = mf.getOriginalFilename();
-                if (Tool.checkUploadFile(originalFileName)) {
-                    long size = mf.getSize();
-                    if (size > 0) {
-                        String ext = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String newFileName = "review_" + System.currentTimeMillis() + ext;
-                        String fileSaved = Upload.saveFileSpring(mf, upDir, newFileName);
-                        if (Tool.isImage(fileSaved)) {
-                            String thumb = Tool.preview(upDir, fileSaved, 200, 150);
+            MultipartFile[] files = {file1MF, file2MF, file3MF};
+            for (MultipartFile mf : files) {
+                if (!mf.isEmpty()) {
+                    String originalFileName = mf.getOriginalFilename();
+                    if (Tool.checkUploadFile(originalFileName)) {
+                        long size = mf.getSize();
+                        if (size > 0) {
+                            String ext = originalFileName.substring(originalFileName.lastIndexOf("."));
+                            String newFileName = "review_" + System.currentTimeMillis() + ext;
+                            String fileSaved = Upload.saveFileSpring(mf, upDir, newFileName);
+                            if (Tool.isImage(fileSaved)) {
+                                String thumb = Tool.preview(upDir, fileSaved, 200, 150);
 
-                            
-                            reviewimgVO.setReviewno(foreign);
-                            reviewimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
-                            reviewimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
+                                reviewimgVO.setReviewno(foreign);
+                                reviewimgVO.setImagefile(fileSaved);
+                                reviewimgVO.setThumbfile(thumb);
 
-                            int saved = this.reviewimgproc.create(reviewimgVO);
-                            if (saved != 1) {
+                                int saved = this.reviewimgproc.create(reviewimgVO);
+                                if (saved != 1) {
+                                    return "redirect:/review/create";
+                                }
+                            } else {
                                 return "redirect:/review/create";
                             }
                         } else {
-                            return "redirect:/review/create"; // 파일이 이미지가 아닐 경우 리다이렉트
+                            return "redirect:/review/create";
                         }
                     } else {
-                        return "redirect:/review/create"; // 파일 크기가 0일 경우 리다이렉트
+                        ra.addFlashAttribute("cnt", 0);
+                        ra.addFlashAttribute("code", "check_upload_file_fail");
+                        ra.addFlashAttribute("url", "/review/msg");
+                        return "redirect:/review/msg";
                     }
-                } else {
-                    ra.addFlashAttribute("cnt", 0);
-                    ra.addFlashAttribute("code", "check_upload_file_fail");
-                    ra.addFlashAttribute("url", "/review/msg"); // 메시지 페이지 URL 설정
-                    return "redirect:/review/msg";
                 }
             }
+            return "redirect:/review/list_paging";
+        } else {
+            return "redirect:/review/create";
         }
-        return "redirect:/review/list_paging";
-      } else {
-          return "redirect:/review/create";
-      }
     }
 
-
     @GetMapping("/list_paging")
-    public String list_paging(HttpSession session, Model model, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    public String list_paging(HttpSession session, Model model, 
+                              @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
         if (now_page < 1) {
             now_page = 1;
         }
 
-        // 페이징된 리뷰 목록 가져오기
         ArrayList<ReviewDTO> list = this.reviewProc.list_paging(now_page, Review.RECORD_PER_PAGE);
         model.addAttribute("list", list);
         
-        System.out.println(list.size());
-
-        // 총 리뷰 개수 가져오기
         int count = this.reviewProc.list_count(); 
         model.addAttribute("count", count);
-        
-        System.out.println(count);
 
-        // 페이징 박스 생성
         String paging = this.reviewProc.pagingBox(now_page, "/review/list_paging", count, Review.RECORD_PER_PAGE, Review.PAGE_PER_BLOCK);
         model.addAttribute("paging", paging);
 
         model.addAttribute("now_page", now_page);
         
-        System.out.println(paging);
 
-        return "review/list_paging"; // 페이징 결과를 출력할 view
+        return "review/list_paging";
     }
+
+
 
     @GetMapping("/read")
     public String read(Model model, int reviewno) {
@@ -173,4 +163,7 @@ public class ReviewCont {
         }
         return "review/list_all";
     }
+    
+    
+    
 }

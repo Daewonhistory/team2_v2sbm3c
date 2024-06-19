@@ -68,6 +68,8 @@ public interface ReviewProcInter {
    */
   public int foreign(@Param("restno") int restno, @Param("custno") int custno);
   
+
+  
   /**
    * 페이징 박스 생성
    * @param now_page 현재 페이지 번호

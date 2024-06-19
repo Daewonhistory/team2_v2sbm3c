@@ -50,5 +50,13 @@ public class FavoriteCont {
     return "favorite/favorite_list"; // 해당 HTML 파일 경로
   }
   
+  @GetMapping("/favorite_list_mobile")
+  public String favorite_list_mobile(Model model) {
+    List<FavoriteVO> list = favoriteProc.favorite_list();
+    System.out.println("Retrieved favorite list: " + list);
+    model.addAttribute("list", list);
+    return "favorite/favorite_list_mobile"; // 해당 HTML 파일 경로
+  }
+  
   
 }

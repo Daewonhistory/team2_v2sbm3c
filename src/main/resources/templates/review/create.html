@@ -1,61 +1,99 @@
 <!DOCTYPE html>
-
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-<div layout:fragment="content">
-  <div class='title_line'>
-    > 리뷰 등록
-  </div>
-  
-  <aside class="aside_right">
-    <span class='menu_divide' >│</span>
-    <a href="javascript:location.reload();">새로고침</a>
-  </aside>
-  
-  <div class='menu_line'></div>
-  
-  <form name='frm' method='post' th:object="${reviewVO}" action='./create' enctype="multipart/form-data">
-    <input type="text" name="custno" value="16">
-    <input type="text" name="restno" value="4">
-    
-    <div>
-       <label>제목</label>
-       <input type='text' name='title' value='서울의 맛집 죽염 추천' required="required" 
-                 autofocus="autofocus" class="form-control" style='width: 100%;'>
-    </div>
-    <div>
-       <label>내용</label>
-       <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'>여기 김치가 맛집 입니다. </textarea>
-    </div>
-    
-    <div class="form-group" style="margin-top: 10px;">
-        <label>리뷰 이미지</label>
-        <input type='file' class="form-control" name='file1MF' id='review_img1' placeholder="파일 선택">
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" />
+    <title>Resort world</title>
+    <link rel="shortcut icon" href="/images/shortcut.png" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <style>
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+        }
 
-    <div class="form-group" style="margin-top: 10px;">
-        <label>리뷰 이미지</label>
-        <input type='file' class="form-control" name='file2MF' id='review_img2' placeholder="파일 선택">
+        .rating > input {
+            display: none;
+        }
+
+        .rating > label {
+            position: relative;
+            width: 1em;
+            font-size: 3rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .rating > label::before {
+            content: "★";
+            position: absolute;
+            opacity: 1;
+        }
+
+        .rating > input:checked ~ label,
+        .rating > input:hover ~ label,
+        .rating > label:hover,
+        .rating > label:hover ~ label {
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+    <div th:fragment="create">
+        <c:import url="/menu/top.do" />
+        <div class='title_line'>리뷰 등록</div>
+        <aside class="aside_right">
+            <span class='menu_divide'>│</span>
+            <a href="javascript:location.reload();">새로고침</a>
+        </aside>
+        <div class='menu_line'></div>
+        <form name='frm' method='post' th:object="${reviewVO}" action='./create' enctype="multipart/form-data">
+            <input type="hidden" name="custno" value="16">
+            <input type="hidden" name="restno" value="4">
+            <div>
+                <label>내용</label>
+                <textarea name='content' required="required" class="form-control" rows="12" maxlength="200" style='width: 100%;'></textarea>
+                <small id="contentHelp" class="form-text text-muted">최대 200자까지 입력 가능합니다.</small>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>리뷰 이미지</label>
+                <input type='file' class="form-control" name='file1MF' id='review_img1' placeholder="파일 선택">
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>리뷰 이미지</label>
+                <input type='file' class="form-control" name='file2MF' id='review_img2' placeholder="파일 선택">
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>리뷰 이미지</label>
+                <input type='file' class="form-control" name='file3MF' id='review_img3' placeholder="파일 선택">
+            </div>
+            <div>
+                <label>평점</label>
+                <div class="rating">
+                    <input type="radio" name="rate" id="star5" value="5"><label for="star5">★</label>
+                    <input type="radio" name="rate" id="star4" value="4"><label for="star4">★</label>
+                    <input type="radio" name="rate" id="star3" value="3"><label for="star3">★</label>
+                    <input type="radio" name="rate" id="star2" value="2"><label for="star2">★</label>
+                    <input type="radio" name="rate" id="star1" value="1"><label for="star1">★</label>
+                </div>
+            </div>
+            <div class="content_body_bottom">
+                <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+                <button type="button" onclick="location.href='./list_paging'" class="btn btn-secondary btn-sm">목록</button>
+            </div>
+        </form>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const textarea = document.querySelector('textarea[name="content"]');
+            const contentHelp = document.getElementById('contentHelp');
 
-    <div class="form-group" style="margin-top: 10px;">
-        <label>리뷰 이미지</label>
-        <input type='file' class="form-control" name='file3MF' id='review_img3' placeholder="파일 선택">
-    </div>  
-    
-    <div>
-       <label>평점</label>
-       <input type='text' name='rate' value='3' required="required" 
-                 class="form-control" style='width: 10%;'>
-    </div>   
- 
-    <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
-    </div>
-  
-  </form>
-
-</div>
-
-
-  
+            textarea.addEventListener('input', function() {
+                const remaining = 201 - textarea.value.length;
+                contentHelp.textContent = `최대 200자까지 입력 가능합니다. (남은 글자 수: ${remaining})`;
+            });
+        });
+    </script>
+</body>
+</html>

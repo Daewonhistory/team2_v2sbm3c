@@ -5,7 +5,7 @@
         <ul>
             <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
             <li><a th:href="|/menu/menuAllList?restno=${restno}&person=${person}&date=${date}|">메뉴</a></li>
-            <li><a href="#section3">리뷰</a></li>
+            <li><a th:href="|/review/reviewAllList?restno=${restno}&person=${person}&date=${date}|">리뷰</a></li>
         </ul>
     </nav>
     <section>
