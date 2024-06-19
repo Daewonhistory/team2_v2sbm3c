@@ -43,13 +43,13 @@ public class ReserveCont {
     RestaurantVO restaurant = restaurantProc.read(admitPerson.getRestno());
     int custno = (int)session.getAttribute("custno");
     
-    System.out.println("custno:" + custno);
+    //System.out.println("custno:" + custno);
     model.addAttribute("admitPerson", admitPerson);
     model.addAttribute("restaurant", restaurant);
     model.addAttribute("person", person);
     model.addAttribute("custno", custno);
     
-    return "reservation/create";
+    return "reservation/create_mobile";
   }
 
   @PostMapping("/create")
