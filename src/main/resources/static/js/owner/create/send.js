@@ -1,11 +1,12 @@
 function send() {
-  let id1 = document.getElementById('id1');
-  let email = document.getElementById('email');
-  let id = id1.value + email.value;
+  let id1 = document.getElementById('id');
+  let domainSelect = document.getElementById('email');
+
+
 
   let id_msg = document.getElementById('id_msg');
-  let cname = document.getElementById('cname');
-  let cname_msg = document.getElementById('cname_msg');
+  let oname = document.getElementById('oname');
+  let oname_msg = document.getElementById('oname_msg');
   let nickname = document.getElementById('nickname');
   let nickname_msg = document.getElementById('nickname_msg');
   let address1 = document.getElementById('address1');
@@ -41,11 +42,11 @@ function send() {
     return false;
   }
 
-  if (cname.value.trim().length == 0) {
-    cname_msg.style.fontSize = "12px";
-    cname_msg.innerHTML = '이름이 누락되었습니다. 이름 입력은 필수 입니다.';
-    cname_msg.classList.add('span_warning');
-    cname.focus();
+  if (oname.value.trim().length == 0) {
+    oname_msg.style.fontSize = "12px";
+    oname_msg.innerHTML = '이름이 누락되었습니다. 이름 입력은 필수 입니다.';
+    oname_msg.classList.add('span_warning');
+    oname.focus();
     return false;
   }
 
@@ -124,6 +125,6 @@ function send() {
   }
 
   document.getElementById('phone').value = phone;
-  document.getElementById('id').value = id;
+  document.getElementById('email').value = document.getElementById('email1').value+ document.getElementById('email2').value;
   document.getElementById('login-form').submit();
 }

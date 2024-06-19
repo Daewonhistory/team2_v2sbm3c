@@ -31,10 +31,18 @@
 
 
   <select id="checkNameEmail" resultType="int" >
-    SELECT COUNT(id) as cnt
+    SELECT COUNT(email) as cnt
     FROM customer
-    WHERE cname = #{cname} AND id = #{id}
+    WHERE cname = #{cname} AND email = #{email}
   </select>
+
+  <select id="findNameEmail" resultType="String" >
+    SELECT id as cnt
+    FROM customer
+    WHERE cname = #{cname} AND email = #{email}
+  </select>
+
+
 
 
   <select id="list_search_count" parameterType="java.util.Map" resultType="int">
@@ -130,9 +138,9 @@
 
 
   <insert id="create" parameterType="dev.mvc.customer.CustomerVO">
-    INSERT INTO customer(custno, id, passwd, cname, nickname, phone, zipcode, address1, address2, sns, grade,
+    INSERT INTO customer(custno, id,email, passwd, cname, nickname, phone, zipcode, address1, address2, sns, grade,
                          gender, image, reg_date)
-    VALUES (customer_seq.nextval, #{id}, #{passwd}, #{cname}, #{nickname}, #{phone}, #{zipcode},
+    VALUES (customer_seq.nextval, #{id},#{email}, #{passwd}, #{cname}, #{nickname}, #{phone}, #{zipcode},
             #{address1}, #{address2}, #{sns}, #{grade}, #{gender}, #{image}, sysdate)
   </insert>
 
@@ -232,6 +240,13 @@
     UPDATE customer
     SET passwd=#{passwd}
     WHERE customerno = #{customerno}
+  </update>
+
+
+  <update id="passwd_updates" parameterType="HashMap">
+    UPDATE customer
+    SET passwd=#{passwd}
+    WHERE id = #{id}
   </update>
 
   <update id="update_grade" parameterType="HashMap">

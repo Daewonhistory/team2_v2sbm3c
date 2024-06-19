@@ -1,31 +1,15 @@
 <!DOCTYPE html>
 <html layout:decorate="~{mobile_layout}">
 <div layout:fragment="content">
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-    	
-	});
-	function submitForm(){
-	   // 폼 데이터 가져오기
-        const botareaBox = document.getElementsByName('botarea')[0];
-        botareaBox.value = "";
-        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
-        for(let botareaButton of all_botarea_button){
-			console.log(botareaButton.value);
-			if(botareaButton.classList.contains('btn_red')){
-				botareaBox.value += botareaButton.value + "_";
-			}
-		}     
-	    
-		const form = document.getElementById('frm');
-		form.submit();
-	}
+
 	
-</script>
 	<div>
-		<span class="page_name">검색 결과</span>
+		<span class="page_name">검색 조건</span>
 	</div>
 	<div>
+		<section>
+			<button type="button" onclick="location.href='../map'" style="width:100%">주변지역 레스토랑 보기</button>
+		</section>
 		<form id="frm" name='frm' method='get' action='./search_list'>
 			
 			<section id="sec_reserve_condition">
@@ -65,7 +49,7 @@
 			<section id="sec_location">
 				<span class="section_name">지역선택</span><span>(미선택시 전국기반 검색)</span><br>
 		        <div id="midarea_div" >
-		        	<button type="button"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)"></button>
+		        	<button type="button"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto;"></button>
 		        </div>
 		        
 		        <div id="botarea_div" style="display:none">
@@ -92,16 +76,37 @@
 				<button type="submit" style="width:100px;margin:0px auto;">검색</button>
 			</div>
 			
-			<div style="height: 80px;"></div>
 		</form>
 	</div>
+	<script src="/js/area/SelectMidArea.js"></script>
+	<script src="/js/today.js"></script>
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+    	
+	});
+	function submitForm(){
+	   // 폼 데이터 가져오기
+        const botareaBox = document.getElementsByName('botarea')[0];
+        botareaBox.value = "";
+        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
+        for(let botareaButton of all_botarea_button){
+			console.log(botareaButton.value);
+			if(botareaButton.classList.contains('btn_red')){
+				botareaBox.value += botareaButton.value + "_";
+			}
+		}     
+	    
+		const form = document.getElementById('frm');
+		form.submit();
+	}
+	
+</script>
 	<script>
 		window.onload=()=>{
 			document.querySelectorAll('.timebutton')[1].click();
 			document.getElementById('reserve_date').value= new Date().toISOString().substring(0, 10);	
 			const form = document.getElementById('frm');
-	    	const time1 = document.getElementById('time1');
-	    	console.log(getTodayDate());
+    	const time1 = document.getElementById('time1');
 			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
 			
 		    form.addEventListener('submit', function (event) {
@@ -130,46 +135,7 @@
 			inputCategory.value = categoryno;
 		}
 		
-		function selectMidArea(selectedMidArea){
-			fetch(
-	          "/botarea/botarea_list",
-	          {
-	            method: "POST",
-	            headers: {"Content-Type": "application/json"},
-	            body: JSON.stringify({"midareano": selectedMidArea.value})
-	          }
-	        )
-	          .then((response) => response.json())
-	          .then((rdata) => {
-	            const divBotAreas = document.getElementById("botarea_div");
-	            divBotAreas.innerHTML = '<h4>지역 소분류 선택</h4>';
-	            
-	            let allSelect = document.createElement("button");
-	            allSelect.type = "button";
-							allSelect.value = 0;
-							allSelect.onclick=function() {
-								selectBotarea(allSelect);
-							};
-							allSelect.classList.add('btn_botarea');
-				            allSelect.textContent = "모든 지역";
-				            
-				            divBotAreas.appendChild(allSelect);
-				            rdata.forEach(botAreaVO => {
-				              const botArea = document.createElement("button");
-				              botArea.textContent = botAreaVO.name;
-				              botArea.type = "button";
-				              botArea.name = "botareas";
-				              botArea.onclick=function() {
-								  selectBotarea(botArea);
-							  };
-							  botArea.value = botAreaVO.botareano;
-							  botArea.classList.add('btn_botarea');
-	              
-	              divBotAreas.appendChild(botArea);
-	              botarea_div.style.display="block";
-	            });
-	          });
-		}
+		
 		function selectBotarea(eventButton){
 			let selected_botarea_btn = eventButton;
 			console.log(selected_botarea_btn.value);

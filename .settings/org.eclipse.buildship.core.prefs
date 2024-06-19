@@ -1,7 +1,11 @@
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=9ef91c8e99e2419f833d8c2ffb7bb82504c28721
+<<<<<<< HEAD
 arguments=--init-script C\:\\Users\\DaewonPARK\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.31.0\\config_win\\org.eclipse.osgi\\56\\0\\.cp\\gradle\\init\\init.gradle --init-script C\:\\Users\\DaewonPARK\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.31.0\\config_win\\org.eclipse.osgi\\56\\0\\.cp\\gradle\\protobuf\\init.gradle
+=======
+arguments=--init-script C\:\\Users\\kksos\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.31.0\\config_win\\org.eclipse.osgi\\56\\0\\.cp\\gradle\\init\\init.gradle --init-script C\:\\Users\\kksos\\AppData\\Roaming\\Code\\User\\globalStorage\\redhat.java\\1.31.0\\config_win\\org.eclipse.osgi\\56\\0\\.cp\\gradle\\protobuf\\init.gradle
+>>>>>>> e2fdff2321e71cf2313c605507cac27931992a1e
 auto.sync=false
 build.scans.enabled=false
 connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)

@@ -27,9 +27,11 @@ CREATE TABLE OWNER(
 
     /** 회원 번호 */
     private int ownerno;
-    /** 아이디(이메일) */
+    /** 아이디 */
 
     private String id = "";
+    /** 본인 확인용 (이메일) */
+    private String email = "";
 
     /** 패스워드 */
 

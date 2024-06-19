@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.allergy.AllergyProcInter;
+import dev.mvc.allergy.AllergyVO;
 import dev.mvc.ingredient.IngredientProcInter;
 import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.menuingred.MenuIngredDTO;
@@ -49,6 +51,9 @@ public class MenuCont {
 	@Autowired
 	@Qualifier("dev.mvc.restaurant.RestaurantProc")
 	private RestaurantProInter restaurantProc;
+	@Autowired
+	@Qualifier("dev.mvc.allergy.AllergyProc")
+	private AllergyProcInter AllergyProc;
 
 	public MenuCont() {
 		System.out.println("-> MenuCont Created.");
@@ -408,7 +413,7 @@ public class MenuCont {
 		}
 	}
 
-	@PostMapping(value = "/menulist") // http://localhost:9091/member/checkId?id=admin
+	@PostMapping(value = "/menulist")
 	@ResponseBody
 	public ResponseEntity<MenuResponse> menulist(@RequestBody Map<String,Object> requestBody) {
 		String word = ((String) requestBody.get("word")).trim();
@@ -436,7 +441,14 @@ public class MenuCont {
 	}
 	
 	@GetMapping("/menuAllList")
-	public String menuAllList(Model model, int restno, int person, String date) {
+	public String menuAllList(Model model, HttpSession session, int restno, int person, String date) {
+		String userType = (String)session.getAttribute("type");
+		if(userType!=null && userType.equals("customer")) {
+			int custno = (int) session.getAttribute("custno");
+			ArrayList<AllergyVO> allergyList = this.AllergyProc.list_by_custno(custno);
+		}else {
+			
+		}
 		ArrayList<MenuIngredDTO> list = new ArrayList<MenuIngredDTO>();
 		ArrayList<MenuVO> menuList = this.menuProc.list_by_restno(restno);
 		for(MenuVO menuVO : menuList) {

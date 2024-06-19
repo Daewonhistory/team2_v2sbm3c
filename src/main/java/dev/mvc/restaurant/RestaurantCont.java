@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +60,8 @@ public class RestaurantCont {
   
   @Autowired
   private Security security;
-
+  
+  String today = LocalDate.now().toString();
   public RestaurantCont() {
 //    System.out.println("RestaurantCont created");
   }
@@ -277,14 +280,14 @@ public class RestaurantCont {
 					        String date,
 					        int time,
 					        @RequestParam(defaultValue = "0") int categoryno,
-					        @RequestParam(defaultValue = "") String botareas,
+					        @RequestParam(defaultValue = "") String botarea,
 					        @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
 					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
 	  model.addAttribute("person", person);
 	  model.addAttribute("reserve_date", date);
 	  model.addAttribute("time", time);
 	  model.addAttribute("categoryno", categoryno);
-	  model.addAttribute("botarea", botareas);
+	  model.addAttribute("botarea", botarea);
 	  model.addAttribute("min_price", minPrice);
 	  model.addAttribute("max_price", maxPrice);
 	  
@@ -303,7 +306,7 @@ public class RestaurantCont {
       }
       
       String botarea = (String) requestBody.get("botareas");
-      System.out.println("aaa" + botarea);
+      System.out.println("aaa:" + botarea);
       int[] botareanos;
       if(!botarea.equals("")) {
     	  System.out.println("b");
@@ -342,7 +345,7 @@ public class RestaurantCont {
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, int restno, int person, String date) {
+  public String main_page(Model model, int restno, @RequestParam(defaultValue="2")int person, String date) {
 	  RestFullData restFullData = this.restaurantProc.readFullData(restno);
 	  System.out.println(restFullData.getName());
 	  model.addAttribute("restaurantVO", restFullData);
@@ -354,7 +357,18 @@ public class RestaurantCont {
 	  model.addAttribute("date", date);
 	  return "/restaurant_page";
   }
-
+  
+  @PostMapping("/coordinate_search_list")
+  @ResponseBody
+  public ResponseEntity<ArrayList<RestFullData>> coordinateSearchList(@RequestBody Map<String, Object> requestBody){
+	  double westLat = (double)requestBody.get("westLat");
+	  double eastLat = (double)requestBody.get("eastLat");
+	  double southLng = (double)requestBody.get("southLng");
+	  double northLng = (double)requestBody.get("northLng");
+	  System.out.println("test");
+	  ArrayList<RestFullData> list = restaurantProc.coordinateSearchList(westLat, eastLat, southLng, northLng);
+	  return new ResponseEntity<>(list, HttpStatus.OK);
+  }
 
 }
 

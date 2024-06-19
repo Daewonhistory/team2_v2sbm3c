@@ -4,8 +4,10 @@ drop table owner;
 CREATE TABLE OWNER(
                       ownerno                       		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
                       id                            		VARCHAR2(30)		 NOT NULL,
+                      email                             VARCHAR2(100)    NOT NULL,
                       passwd                        		VARCHAR2(200)		 NOT NULL,
                       oname                          		VARCHAR2(20)		 NOT NULL,
+                      nickname                          VARCHAR2(20)		 NOT NULL,
                       phone                         		VARCHAR2(14)		 NOT NULL,
                       tel                           		VARCHAR2(20)		 NOT NULL,
                       zipcode                           VARCHAR2(30)     NOT NULL,

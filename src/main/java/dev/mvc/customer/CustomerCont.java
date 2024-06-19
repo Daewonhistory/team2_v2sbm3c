@@ -121,14 +121,14 @@ public class CustomerCont {
 
     return ResponseEntity.ok(map);
   }
-  @PostMapping("/checkNameid")  //http:localhost:9091/meber/checkId?id=admin
+  @PostMapping("/checkNameEmail")  //http:localhost:9091/meber/checkId?id=admin
   @ResponseBody
   public ResponseEntity<HashMap<String,Object>> checkNameEmail(@RequestBody CustomerVO customerVO) {
 
     HashMap<String,Object> map = new HashMap<String,Object>();
     System.out.println(customerVO.getId());
     System.out.println(customerVO.getCname());
-    int count = this.customerProc.checkNameEmail(customerVO.getCname(), customerVO.getId());
+    int count = this.customerProc.checkNameEmail(customerVO.getCname(), customerVO.getEmail());
     System.out.println("countsss->" + count);
     if (count == 1) {
       map.put("cnt", 1);
@@ -637,7 +637,7 @@ public class CustomerCont {
       CustomerVO customerVO = this.customerProc.readById(id);
       // id를 이용하여 회원 정보 조회
 
-
+      session.setAttribute("type", "customer");
       session.setAttribute("custno", customerVO.getCustno());
 
 
@@ -648,7 +648,7 @@ public class CustomerCont {
       System.out.println("grade" + customerVO.getGrade());
       if (customerVO.getGrade() == 1) {
         session.setAttribute("grade", "customer");
-
+        session.setAttribute("type", "customer");
         System.out.println("grade ->" + session.getAttribute("grade"));
       }
       rttr.addFlashAttribute("login", customerVO.getCname() + "님 안녕하세요");
