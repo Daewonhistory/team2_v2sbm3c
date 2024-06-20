@@ -1,6 +1,8 @@
 # 식당 예약 사이트 + 챗봇 , 알러지 필터 (팀 프로젝트)
 - 여러 가지 식당을 예약 가능할 수 있는 식당 예약 사이트
   
+## 프로젝트 시연 영상
+
 
 
 ## 프로젝트 설명
@@ -17,24 +19,33 @@
 - DA(data architect)
     - 김규식
       
-⛏ 기술 스택
-  - React
-  - Spring Boot
-  - Oracle
-  - Chat gpt API
-  - Mybatis
-  - Spring JPA
+- TL(Team Leader)
+    - 박대원
+      
 
 
- ERD
+## 🛠기술 스택
+OS | Stack
+--- | --- |
+Language | ![Java](https://img.shields.io/badge/JAVA-000?style=for-the-badge&logo=java&logoColor=white) ![Spring](https://img.shields.io/badge/Spring-000?style=for-the-badge&logo=spring&logoColor=white) ![HTML5](https://img.shields.io/badge/html5-000?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-000?style=for-the-badge&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-000?style=for-the-badge&logo=javascript&logoColor=white)
+Framework | ![Spring Boot](https://img.shields.io/badge/Spring%20boot-6DB33F?style=flat-square&logo=springboot&logoColor=white) ![FLASK](https://img.shields.io/badge/FLASK-357487?style=flat-square&logo=flask&logoColor=white)
+Database | ![Oracle Database 11g](https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white)
+Frontend | ![HTML5](https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) ![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)
+Library | ![Spring Security](https://img.shields.io/badge/spring%20security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white) ![Thymeleaf](https://img.shields.io/badge/thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white) ![Redis](https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white) ![OAuth 2.0 Client](https://img.shields.io/badge/OAuth%202.0%20Client-4b4b4b?style=for-the-badge) ![Jasypt](https://img.shields.io/badge/Jasypt-364162?style=for-the-badge) ![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
+API | ![Java Mail](https://img.shields.io/badge/Java%20Mail-3a75b0?style=for-the-badge) ![Daum Postcode](https://img.shields.io/badge/Daum%20Postcode-f94756?style=for-the-badge) ![Iamport Payment](https://img.shields.io/badge/Iamport%20Payment-c1272d?style=for-the-badge) ![coolSMS](https://img.shields.io/badge/cool%20SMS-f7943a?style=for-the-badge) ![CKEditor 4](https://img.shields.io/badge/CKEditor%204-0287D0?style=for-the-badge&logo=ckeditor4&logoColor=white) ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white) ![ExcelJS](https://img.shields.io/badge/Excel%20JS-209e63?style=for-the-badge) ![Swiper](https://img.shields.io/badge/Swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white) ![ElevateZoom Plus](https://img.shields.io/badge/Elevate%20Zoom%20Plus-ff6347?style=for-the-badge) ![Font Awesome](https://img.shields.io/badge/Font%20Awesome-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white) ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+Server |![Apache Tomcat 0.1.19](https://img.shields.io/badge/logo-test-blue?logo=tomcat)
+Version Control | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white)
 
 
-## 배운점
-- React를 사용하여 메인 페이지의 
-- 디즈니 플러스에서 사용자가 불편함을 느끼는 기능을 보완하는 경험을 통해 사용자의 관점에서 서비스를 바라보고 개발하는 것의 중요성을 알게 되었다.
-- 상태 관리에 대해 고민하면서 Redux Toolkit을 경험할 수 있었고, 많은 페이지를 구현해야 하는 프로젝트 특성에 따라 재사용성 높은 컴포넌트에 대해 고민할 수 있는 기회였다.
-- 프론트엔드와 백엔드 역할을 구분하여 진행한 첫 프로젝트를 경험하면서 프론트엔드 개발에서 백엔드와 데이터를 주고받고 통신하는 과정을 경험할 수 있었다.
-- 팀프로젝트을 통해 Git을 사용하여 협업에 필요한 역량을 익힐 수 있었습니다. Git을 사용하면서 생긴 여러 이슈를 해결하는 과정도 경험하였으며, 브랜치 전략에 대해서도 고민해볼 수 있었다.
+
+
+##  ERD
+![team2ERD](https://github.com/Daewonhistory/team2_v2sbm3c/assets/135415038/8ded0518-85a1-492a-a085-ebda3f76297d)
+
+
+
+
+
 
 ## 둘러보기
 
@@ -61,7 +72,7 @@
 
 
 
-## 기능
+## 핵심 기능
 
 1. 로그인/회원가입
 
@@ -86,6 +97,9 @@
   
 
 ## 기대효과
+
+
+## 배운점
 
 
 
