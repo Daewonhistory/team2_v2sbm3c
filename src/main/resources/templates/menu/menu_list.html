@@ -1,6 +1,58 @@
 <!DOCTYPE html>
 <html layout:decorate="~{mobile_layout}">
 <div layout:fragment="content" style="padding:0">
+	<style>
+		.menu-all-data{
+			margin:10px;
+			border-radius: 10px;
+			box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.5);
+			background-color: rgb(238, 238, 238);
+		}
+		.menu-info{
+			padding: 5px;
+			border-radius: 10px 10px 0px 0px;
+		}
+		.menu-info span{
+			font-size: 20px;
+		}
+		.allergy-menu{
+			background-color: rgb(255, 83, 83);
+		} 
+		.allergy-ingred{
+			background-color: red;
+			border-radius: 10px;
+			margin: 3px;
+			padding: 3px;
+			border-color: black;
+			border-style: solid;
+			border-width: 2px;
+			text-align: center;
+			align-items: center;
+		}
+		.allergy-ingred span{
+			color: white;
+			font-size: 0.8em;
+		}
+		.allergy-menu span{
+			color: white;
+		}
+		.down-triangle{
+			margin:auto; 
+			width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 10px solid red;
+		}
+		.up-triangle{
+			margin:auto; 
+			width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 10px solid red;
+		}
+	</style>
 	<nav>
         <ul>
             <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
@@ -9,41 +61,54 @@
         </ul>
     </nav>
     <section>
-    	<div class="menu_info" th:each="menuIngredDTO, status: ${list}" >
-    		<div style="width:100%; height:200px;display: flex;">
+    	<div class="menu-all-data" th:each="menuIngredDTO, status: ${list}">
+    		<div class="menu-info" style="width:100%; height:200px;display: flex;">
     			<div class="image" style="display: flex; flex:1; padding:3px;">
     				<img th:src="|/menu/storage/${menuIngredDTO.menuVO.image}|" style="width: 100%; border-radius: 10px;">
     			</div>
     			<div class="row" style="display: flex; flex:2;">
     				<span th:text="${menuIngredDTO.menuVO.name}"></span>
-    				<span th:text="${menuIngredDTO.menuVO.price}"></span>
+    				<span th:text="|가격: ${menuIngredDTO.menuVO.price} 원|"></span>
     			</div>
     		</div>
     		<div style="border-top: 5px solid black; text-align: center; padding:2px"onclick="viewIngredient(this)">
-    			<div style="margin:auto; width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 10px solid red;"></div>메뉴 재료 보기
+    			<div id="triangle" class="down-triangle">
+		      </div>메뉴 재료 보기
     		</div>
     		<div id="ingredient" style="width:100%; display: none; grid-template-columns: 25% 25% 25% 25%;">
     			<div th:each="ingredientVO, status: ${menuIngredDTO.ingredList}" style="text-align: center;">
-    				<span th:text="${ingredientVO.name}"></span>
+    				<div th:if="${ingredientVO.has_allergy != null && ingredientVO.has_allergy == 1}" class="allergy-ingred">
+    					<span th:text="${ingredientVO.name}"></span><br><span style="font-weight: bolder;">!알러지<br> 주의!</span>
+    				</div>
+    				<div th:if="${ingredientVO.has_allergy != null && ingredientVO.has_allergy == 0}">
+    					<span th:text="${ingredientVO.name}"></span>
+    				</div>
+    				
     			</div>	
     		</div>
     	</div>
     </section>
     <script>
-    	function viewIngredient(buttonView){
-			const menu_info = buttonView.parentElement;
-			const ingredient = menu_info.querySelector('#ingredient');
-			if(ingredient.style.display == "none"){
-				ingredient.style.display = "grid";
-			}else{
-				ingredient.style.display = "none";
+    	window.onload = () => {
+				const menuList = document.getElementsByClassName('menu-all-data');
+				for(const menuInfo of menuList){
+					if(menuInfo.getElementsByClassName('allergy-ingred').length != 0)
+						menuInfo.querySelector('.menu-info').classList.add('allergy-menu');
+				}
 			}
-			
-		}
+    	function viewIngredient(buttonView){
+				const menu_info = buttonView.parentElement;
+				const triangle = buttonView.querySelector("#triangle");
+				const ingredient = menu_info.querySelector('#ingredient');
+				if(ingredient.style.display == "none"){
+					ingredient.style.display = "grid";
+					triangle.classList.replace("down-triangle","up-triangle");
+				}else{
+					ingredient.style.display = "none";
+					triangle.classList.replace("up-triangle","down-triangle");
+				}
+				console.log(triangle);
+			}
     </script>
 </div>
 </html>

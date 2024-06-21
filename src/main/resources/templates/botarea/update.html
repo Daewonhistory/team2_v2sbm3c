@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+  	지역명 > 
+    <span th:text="${botAreaVO.name}" class="title_line_text"/>
+    수정
+  </div>
+  <aside class="aside_right">
+    <a th:href="@{/botarea/list}">목록</a>
+    <span class="menu_divide">┃</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  <form name="frm" th:object="${botAreaVO}" method="post" action="/botarea/update" style="width: 50%; margin: 5px auto;">
+    <div>
+      <input type="hidden" name="botareano" th:value="${botAreaVO.botareano}">
+      <select name="midareano" >
+  			<option th:each="midAreaVO, stauts:${midAreaList}" th:text="${midAreaVO.name}" th:value="${midAreaVO.midareano}"></option>
+  		</select>
+      <label>지역명</label>
+      <input type="text" name="name" style="border-color: black;" th:value="${botAreaVO.name}" autofocus="autofocus"
+             class="form-control fom-control-sm">
+      <div th:if="${#fields.hasErrors('name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('name'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="button" th:attr="onclick=|location.href='/botarea/list'|" class="btn btn-secondary btn-sm">취소</button>
+    </div>
+  
+  </form>  
+  <div class="menu_line"></div>
+  <!-- /ingredient/list_all_component파일의 list_all_fragment를 삽입
+  <div th:replace="~{ingredient/list_all_component::list_all_fragment}"></div>
+   -->
+</div>
+</html>
+

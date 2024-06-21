@@ -17,4 +17,5 @@ public class IngredientVO {
 //	);
 	private int ingredno;
 	private String name;
+	private int has_allergy;
 }

@@ -345,7 +345,8 @@ public class RestaurantCont {
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, int restno, @RequestParam(defaultValue="2")int person, String date) {
+  public String main_page(Model model, HttpSession session, int restno, @RequestParam(defaultValue="2")int person, String date) {
+	  String accessType = (String) session.getAttribute("type");
 	  RestFullData restFullData = this.restaurantProc.readFullData(restno);
 	  System.out.println(restFullData.getName());
 	  model.addAttribute("restaurantVO", restFullData);
@@ -353,6 +354,8 @@ public class RestaurantCont {
 	  ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
 	  model.addAttribute("noticeList", noticeList);
 	  
+	  model.addAttribute("accessType", accessType);
+	  model.addAttribute("restno", restno);
 	  model.addAttribute("person", person);
 	  model.addAttribute("date", date);
 	  return "/restaurant_page";

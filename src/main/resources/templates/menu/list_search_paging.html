@@ -28,8 +28,9 @@
         let now_page_value = 0;
         if (now_page_tag == null) {
           now_page_value = 1;
+          console.log("nowpage없음");
         } else {
-          now_page_value = now_page_tag.innerText;
+          now_page_value = parseInt(now_page_tag.innerText);
         }
 
         fetch(
@@ -133,7 +134,7 @@
         <select id="restno" onchange="send()">
           <option th:if="${type==null || !type.equals('owner')}" value="0">전체 식당</option>
           <option
-            th:each="restaurantVO, status : ${ownerRestList}"
+            th:each="restaurantVO, status : ${RestList}"
             th:value="${restaurantVO.restno}"
             th:text="${restaurantVO.name}"
           ></option>
@@ -158,51 +159,7 @@
         <col style="width: 10%" />
       </colgroup>
       <tbody id="tbody">
-        <tr>
-          <th class="th_bs">이미지</th>
-          <th class="th_bs">식당명</th>
-          <th class="th_bs">메뉴명</th>
-          <th class="th_bs">가격</th>
-          <th class="th_bs">수정 / 삭제</th>
-        </tr>
-        <tr th:each="menuVO, status : ${list}">
-          <td>
-            <img
-              th:src="@{|/menu/storage/${menuVO.image}|}"
-              style="width: 120px; height: 90px"
-            />
-          </td>
-          <td
-            class="td_basic"
-            th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'"
-          >
-            <span th:text="${menuVO.restname}"></span>
-          </td>
-          <td
-            class="td_basic"
-            th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'"
-          >
-            <span th:text="${menuVO.name}"></span>
-          </td>
-          <td
-            class="td_basic"
-            th:onclick="location.href='/menu/read?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}'"
-          >
-            <span th:text="${menuVO.price}"></span>
-          </td>
-          <td class="td_bs">
-            <a
-              th:href="@{|/menu/update?menuno=${menuVO.menuno}&word=${word}&now_page=${now_page}|}"
-            >
-              <img src="/cate/images/update.png" class="icon" />
-            </a>
-            <a
-              th:onclick="@{|delete_check(${menuVO.menuno}, '${word}', ${now_page})|}"
-            >
-              <img src="/cate/images/delete.png" class="icon" />
-            </a>
-          </td>
-        </tr>
+        
       </tbody>
     </table>
 

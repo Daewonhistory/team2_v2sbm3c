@@ -3,6 +3,8 @@ package dev.mvc.menuingred;
 import java.util.ArrayList;
 import java.util.Map;
 
+import dev.mvc.ingredient.IngredientVO;
+
 public interface MenuIngredProcInter {
 	/**
 	 * 메뉴의 재료 생성
@@ -38,4 +40,12 @@ public interface MenuIngredProcInter {
 	 * @return
 	 */
 	public int delete_by_menuno(int menuno);
+	
+	/**
+	 * 고객의 알러지에 해당하는지 확인
+	 * @param custno
+	 * @param menuno
+	 * @return
+	 */
+	public ArrayList<IngredientVO>allergy_check_ingredient(int custno, int menuno);
 }
