@@ -5,17 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.ReviewDTO;
-import dev.mvc.menu.MenuVO;
+import dev.mvc.reviewimg.ReviewImgProcInter;
 
 @Service("dev.mvc.review.ReviewProc")
 public class ReviewProc implements ReviewProcInter {
 
     @Autowired
     ReviewDAOInter reviewDAO;
+    
+    @Autowired
+    @Qualifier("dev.mvc.reviewimg.ReviewImgProc")
+    ReviewImgProcInter reviewimgproc;  // @Qualifier 사용하여 명확히 지정
 
     @Override
     public int create(ReviewVO reviewVO) {
@@ -31,6 +35,9 @@ public class ReviewProc implements ReviewProcInter {
 
     @Override
     public int delete_review(int reviewno) {
+        // 리뷰와 관련된 모든 리뷰 이미지를 먼저 삭제
+        reviewimgproc.delete_by_reviewno(reviewno);
+        // 그 후 리뷰 삭제
         int cnt = this.reviewDAO.delete_review(reviewno);
         return cnt;
     }
@@ -177,6 +184,11 @@ public class ReviewProc implements ReviewProcInter {
     @Override
     public ArrayList<ReviewDTO> list_by_restno(int restno) {
         return this.reviewDAO.list_by_restno(restno);
+    }
+
+    @Override
+    public ArrayList<ReviewDTO> list_by_custno(int custno) {
+        return this.reviewDAO.list_by_custno(custno);
     }
 
  }

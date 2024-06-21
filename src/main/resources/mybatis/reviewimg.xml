@@ -8,6 +8,11 @@
         INSERT INTO Reviewimage(review_imgno, imagefile, thumbfile, reviewno)
         VALUES (reviewimage_seq.nextval, #{imagefile}, #{thumbfile}, #{reviewno})
     </insert>
+    
+    <delete id="delete_by_reviewno" parameterType="int">
+        DELETE FROM reviewimg 
+        WHERE reviewno = #{reviewno}
+    </delete>
 
 
 </mapper>

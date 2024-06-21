@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{mobile_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 리뷰 조회</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            max-width: 400px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .menu {
+            display: none;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .menu button {
+            display: block;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            text-align: left;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+        .menu button:hover {
+            background-color: #f3f4f6;
+        }
+        .image-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .image-container img {
+            width: calc(33.33% - 0.5rem);
+            height: auto;
+            border-radius: 0.25rem;
+        }
+        .content {
+            color: #000000; /* 검은색으로 설정 */
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" style="padding:0">
+    <c:import url="/menu/top.do" />
+    <div class='title_line'>내 리뷰 목록</div>
+    <div class="max-w-2xl mx-auto">
+        <div th:each="reviewDTO : ${reviews}" class="card">
+            <div class="flex items-center mb-2">
+                <div class="avatar"></div>
+                <div class="ml-2">
+                    <div class="font-bold" th:text="${reviewDTO.nickname}">대원군</div>
+                    <div class="text-gray-500 text-sm" th:text="${#strings.substring(reviewDTO.rdate.toString(), 0, 19)}">2024-06-21 11:53:02</div>
+                </div>
+            </div>
+            <div class="flex items-center mb-2">
+                <span th:classappend="${reviewDTO.rate >= 1} ? 'text-yellow-500' : 'text-gray-400'">★</span>
+                <span th:classappend="${reviewDTO.rate >= 2} ? 'text-yellow-500' : 'text-gray-400'">★</span>
+                <span th:classappend="${reviewDTO.rate >= 3} ? 'text-yellow-500' : 'text-gray-400'">★</span>
+                <span th:classappend="${reviewDTO.rate >= 4} ? 'text-yellow-500' : 'text-gray-400'">★</span>
+                <span th:classappend="${reviewDTO.rate >= 5} ? 'text-yellow-500' : 'text-gray-400'">★</span>
+            </div>
+            <div class="image-container mb-2">
+                <img th:src="@{|/review/storage/${reviewDTO.image1}|}" alt="Review Image 1" th:if="${reviewDTO.image1 != null}">
+                <img th:src="@{|/review/storage/${reviewDTO.image2}|}" alt="Review Image 2" th:if="${reviewDTO.image2 != null}">
+                <img th:src="@{|/review/storage/${reviewDTO.image3}|}" alt="Review Image 3" th:if="${reviewDTO.image3 != null}">
+            </div>
+            <div class="mb-2 content">
+                <span th:text="${reviewDTO.content}">우엑</span>
+            </div>
+            <div class="flex items-center">
+                <span class="text-gray-500">좋아요 0</span>
+                <button class="ml-auto" onclick="toggleMenu(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v.01M12 12v.01M12 18v.01" />
+                    </svg>
+                </button>
+            </div>
+            <div class="menu" style="display: none;">
+                <button th:onclick="|location.href='/review/update?reviewno=' + ${reviewDTO.reviewno} + '|'">수정하기</button>
+                <button th:onclick="|location.href='/review/delete?reviewno=' + ${reviewDTO.reviewno} + '|'">삭제하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function toggleMenu(button) {
+        const menu = button.parentElement.nextElementSibling;
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+</body>
+</html>

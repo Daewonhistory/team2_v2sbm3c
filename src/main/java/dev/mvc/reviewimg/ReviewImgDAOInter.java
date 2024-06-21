@@ -10,6 +10,8 @@ public interface ReviewImgDAOInter {
 
 
   public int create(ReviewimgVO reviewimgVO);
+  
+  public int delete_by_reviewno(int reviewno);
 
 
 

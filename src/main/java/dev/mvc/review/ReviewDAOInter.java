@@ -71,11 +71,18 @@ public interface ReviewDAOInter {
   public int foreign(@Param("restno") int restno, @Param("custno") int custno);
   
   /**
-   * 식당 리뷰 조회
+   * 식당에 따라 리뷰 조회
    * @param restno
    * @return
    */
   public ArrayList<ReviewDTO> list_by_restno(int restno);
+  
+  /**
+   * 고객에 따른 리뷰 조회
+   * @param custno
+   * @return
+   */
+  public ArrayList<ReviewDTO> list_by_custno(int custno);
   
 
   
