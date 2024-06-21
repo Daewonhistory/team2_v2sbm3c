@@ -6,12 +6,10 @@ import java.util.ArrayList;
 
 public interface ReviewImgProcInter {
 
-  /**
-   * 식당 생성
-   * @param reviewimgVO
-   * @return
-   */
+
   public int create(ReviewimgVO reviewimgVO);
+  
+  public int delete_by_reviewno(int reviewno);
   
 
 

@@ -39,5 +39,10 @@ public class ReviewDTO {
   /** 유저 이름*/
   private String nickname;
   
+  /** 좋아요 여부 추가*/
+  private boolean myLike; 
+  
+  private int likes_count;  // 좋아요 개수 필드 추가
+  
 
 }
