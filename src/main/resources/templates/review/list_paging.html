@@ -2,7 +2,7 @@
 <html layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" />
+    <meta name="viewport" content="user-scalable=yes, initial-scale=3.0, width=device-width" />
     <title>Resort world</title>
     <link rel="shortcut icon" href="/images/shortcut.png" />
     <link href="/css/style.css" rel="stylesheet" type="text/css">
@@ -24,6 +24,9 @@
         .more-button {
             color: blue;
             cursor: pointer;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -48,14 +51,16 @@
                 <col style='width: 10%;'/>
             </colgroup>
             <tr>
-                <th class='th_bs'>번호</th>
+                <th class='th_bs hidden'>번호</th>
+                <th class='th_bs'>식당명</th>
                 <th class='th_bs'>내용</th>
                 <th class='th_bs'>평점</th>
                 <th class='th_bs'>날짜</th>
                 <th class='th_bs'>수정/삭제</th>
             </tr>
             <tr th:each="reviewDTO : ${list}">
-                <td class='td_basic' th:text="${reviewDTO.reviewno}"></td>
+                <td class='td_basic hidden' th:text="${reviewDTO.reviewno}"></td>
+                <td class='td_left' th:text="${reviewDTO.restname}"></td>
                 <td class='td_left'>
                     <span class="content-preview" th:if="${reviewDTO.content.length() > 100}" 
                           th:text="|${reviewDTO.content.substring(0, 100)}...|"></span>

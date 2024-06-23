@@ -18,4 +18,9 @@ public class ReviewImgProc implements ReviewImgProcInter {
     return this.reviewimgDAO.create(reviewimgVO);
   }
 
+  @Override
+  public int delete_by_reviewno(int reviewno) {
+      return this.reviewimgDAO.delete_by_reviewno(reviewno);
+  }
+
 }

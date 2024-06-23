@@ -33,20 +33,11 @@
 		      <col style='width: 20%;'/>    
 		      <col style='width: 20%;'/>
 		    </colgroup>
-		    <tbody style="height: 50%">
-		    	<tr style="height: 30%">
-		    		<td><div><img src="">한식</div></td>
-		    		<td>중식</td>
-		    		<td>일식</td>
-		    		<td>양식</td>
-		    		<td>디저트</td>
-		    	</tr>
-		    	<tr style="height: 30%">
-		    		<td>한식</td>
-		    		<td>중식</td>
-		    		<td>일식</td>
-		    		<td>양식</td>
-		    		<td>디저트</td>
+		    <tbody th:each="categoryVO, status : ${categoryList}" th:with="index=${status.index}, rowIndex=${index / 5}" style="height: 50%">
+		    	<tr th:if="${index % 5 == 0}" style="height: 30%">
+		    		<td th:each="i : ${#numbers.sequence(0, 4)}" 
+            th:if="${index + i < categoryList.size()}" 
+            th:text="${categoryList[index + i].name}" th:onclick="|selectCategory(${categoryList[index + i].categoryno})|"></td>
 		    	</tr>
 		    </tbody>
         </table>
@@ -149,6 +140,7 @@
     </section>
     <script src="/js/restaurant/main_page/ImageSlide.js"></script>
     <script src="/js/area/SelectMidArea.js"></script>
+    <script src="/js/today.js"></script>
 	    <script>
 		
 		
@@ -172,6 +164,19 @@
 			}else{
 				location.href="/restaurant/search_list?person=2&date=" + full_date + "&time=6&botareas=" + selected_botarea_btn.value + "&categoryno=&min_price=0&max_price=40";
 			}
+			
+		}
+		
+		function selectCategory(categoryno){
+			
+			let today = new Date();
+			let year = today.getFullYear();
+			let month = String(today.getMonth() + 1).padStart(2, '0');
+			let date = String(today.getDate() + 1).padStart(2, '0');
+			let full_date = year + "-" + month + "-" + date;
+			
+			location.href="/restaurant/search_list?person=2&date=" + full_date + "&time=6&botareas=&categoryno=" + categoryno + "&min_price=0&max_price=40";
+
 			
 		}
 	</script>

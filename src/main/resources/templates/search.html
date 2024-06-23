@@ -1,27 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{mobile_layout}">
 <div layout:fragment="content">
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-    	
-	});
-	function submitForm(){
-	   // 폼 데이터 가져오기
-        const botareaBox = document.getElementsByName('botarea')[0];
-        botareaBox.value = "";
-        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
-        for(let botareaButton of all_botarea_button){
-			console.log(botareaButton.value);
-			if(botareaButton.classList.contains('btn_red')){
-				botareaBox.value += botareaButton.value + "_";
-			}
-		}     
-	    
-		const form = document.getElementById('frm');
-		form.submit();
-	}
-	
-</script>
+
 	
 	<div>
 		<span class="page_name">검색 조건</span>
@@ -62,25 +42,25 @@
 					<button type="button" class="timebutton" onclick="selectTime(22, this)">22:00</button>
 					<button type="button" class="timebutton" onclick="selectTime(23, this)">23:00</button>								
 				</div>
-				<input type="text" id="selected_time" name="time" value="">
+				<input type="hidden" id="selected_time" name="time" value="">
 				
 				
 			</section>
 			<section id="sec_location">
-				<span class="section_name">지역선택</span><span>(미선택시 전국기반 검색)</span><br>
+				<span class="section_name">지역선택</span><span>(미선택시 전국기반)</span><br>
 		        <div id="midarea_div" >
-		        	<button type="button"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto;"></button>
+		        	<button type="button"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto; margin: 1px;"></button>
 		        </div>
 		        
 		        <div id="botarea_div" style="display:none">
 		        	
 		        </div>
-		        <input type="text" name="botarea">
+		        <input type="hidden" name="botarea">
 			</section>
 			<section id="sec_category" >
-				<span class="section_name">카테고리(미선택시 모든카테고리 검색)</span><br>
-				<button type="button"th:each="categoryVO, status : ${cateList}" th:onclick="|selectCategory(${categoryVO.categoryno})|" th:text="${categoryVO.name}"></button>
-				<input type="number" id="categoryno" name="categoryno">
+				<span class="section_name">카테고리</span><span>(미선택시 모든카테고리)</span><br>
+				<button type="button"th:each="categoryVO, status : ${cateList}" th:onclick="|selectCategory(${categoryVO.categoryno}, this)|" th:text="${categoryVO.name}" style="flex:1 0 auto; margin: 1px;"></button>
+				<input type="hidden" id="categoryno" name="categoryno">
 			</section>
 			<section id="sec_price">
 				<span class="section_name">가격</span>
@@ -96,17 +76,37 @@
 				<button type="submit" style="width:100px;margin:0px auto;">검색</button>
 			</div>
 			
-			<div style="height: 80px;"></div>
 		</form>
 	</div>
 	<script src="/js/area/SelectMidArea.js"></script>
+	<script src="/js/today.js"></script>
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+    	
+	});
+	function submitForm(){
+	   // 폼 데이터 가져오기
+        const botareaBox = document.getElementsByName('botarea')[0];
+        botareaBox.value = "";
+        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
+        for(let botareaButton of all_botarea_button){
+			console.log(botareaButton.value);
+			if(botareaButton.classList.contains('btn_red')){
+				botareaBox.value += botareaButton.value + "_";
+			}
+		}     
+	    
+		const form = document.getElementById('frm');
+		form.submit();
+	}
+	
+</script>
 	<script>
 		window.onload=()=>{
 			document.querySelectorAll('.timebutton')[1].click();
 			document.getElementById('reserve_date').value= new Date().toISOString().substring(0, 10);	
 			const form = document.getElementById('frm');
-	    	const time1 = document.getElementById('time1');
-	    	console.log(getTodayDate());
+    	const time1 = document.getElementById('time1');
 			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
 			
 		    form.addEventListener('submit', function (event) {
@@ -130,11 +130,23 @@
 			inputSelectedTime.value = time;
 		}
 		
-		function selectCategory(categoryno){
+		function selectCategory(categoryno, selectButton){
 			let inputCategory = document.getElementById('categoryno');
-			inputCategory.value = categoryno;
+			const secCategory = document.getElementById('sec_category');
+			const btnRedCategory = secCategory.querySelector('.btn_red');
+			
+			if(selectButton.classList.contains('btn_red')){
+				
+				inputCategory.value = '';
+			}else{
+				if(btnRedCategory!=null){
+					btnRedCategory.classList.remove('btn_red');	
+				}
+				inputCategory.value = categoryno;
+			}
+			selectButton.classList.toggle('btn_red');
+			
 		}
-		
 		
 		function selectBotarea(eventButton){
 			let selected_botarea_btn = eventButton;

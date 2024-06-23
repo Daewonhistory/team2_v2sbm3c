@@ -1,5 +1,7 @@
 package dev.mvc.team2;
 
+import dev.mvc.category.CategoryProcInter;
+import dev.mvc.category.CategoryVO;
 import dev.mvc.customer.CustomerVO;
 import dev.mvc.midarea.MidAreaProcInter;
 import dev.mvc.midarea.MidAreaVO;
@@ -25,6 +27,10 @@ public class HomeCont {
   @Qualifier("dev.mvc.midarea.MidAreaProc")
   MidAreaProcInter midAreaProc;
   
+  @Autowired
+  @Qualifier("dev.mvc.category.CategoryProc")
+  CategoryProcInter categoryProc;
+  
   public HomeCont() {
 
   }
@@ -32,7 +38,12 @@ public class HomeCont {
   @GetMapping("/")
   public String Home(Model model) {
     ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
+<<<<<<< HEAD
 
+=======
+    ArrayList<CategoryVO> categoryList = this.categoryProc.list();
+    model.addAttribute("categoryList", categoryList);
+>>>>>>> a62dbcc11b9822fcdf2b5bc62350711ab2086b44
 	model.addAttribute("midAreaList", midAreaList);
     return "mobile";
   }

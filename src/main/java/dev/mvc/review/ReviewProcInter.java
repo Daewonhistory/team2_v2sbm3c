@@ -55,6 +55,13 @@ public interface ReviewProcInter {
   public int list_by_custno_count(int custno);
   
   /**
+   * 고객에 따른 리뷰 조회
+   * @param custno
+   * @return
+   */
+  public ArrayList<ReviewDTO> list_by_custno(int custno);
+  
+  /**
    * 식당 리뷰 갯수
    * @param restno
    * @return
@@ -67,6 +74,13 @@ public interface ReviewProcInter {
    * @return 삭제된 레코드 갯수
    */
   public int foreign(@Param("restno") int restno, @Param("custno") int custno);
+  
+  /**
+   * 식당에 따라 리뷰 조회
+   * @param restno
+   * @return
+   */
+  public ArrayList<ReviewDTO> list_by_restno(int restno);
   
 
   

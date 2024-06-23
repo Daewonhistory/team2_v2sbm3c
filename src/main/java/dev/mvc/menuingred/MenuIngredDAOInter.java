@@ -1,7 +1,10 @@
 package dev.mvc.menuingred;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+
+import dev.mvc.ingredient.IngredientVO;
 
 public interface MenuIngredDAOInter {
 	/**
@@ -38,4 +41,12 @@ public interface MenuIngredDAOInter {
 	 * @return
 	 */
 	public int delete_by_menuno(int menuno);
+	
+	/**
+	 * 고객의 알러지에 해당하는지 확인
+	 * @param custno
+	 * @param menuno
+	 * @return
+	 */
+	public ArrayList<IngredientVO>allergy_check_ingredient(Map<String,Object> map);
 }

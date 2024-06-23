@@ -68,6 +68,56 @@
         SELECT COUNT(*) FROM review 
     </select>
     
+  
+  <select id="list_by_restno" resultType="dev.mvc.dto.ReviewDTO">
+    <![CDATA[
+    SELECT re.reviewno, rt.name as restname, cu.nickname, re.content, re.rate, re.rdate, re.custno, 
+           ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3
+    FROM review re
+    LEFT JOIN (
+        SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
+        FROM reviewimage
+    ) ri1 ON re.reviewno = ri1.reviewno AND ri1.rn = 1
+    LEFT JOIN (
+        SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
+        FROM reviewimage
+    ) ri2 ON re.reviewno = ri2.reviewno AND ri2.rn = 2
+    LEFT JOIN (
+        SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
+        FROM reviewimage
+    ) ri3 ON re.reviewno = ri3.reviewno AND ri3.rn = 3
+    LEFT JOIN customer cu ON cu.custno = re.custno
+    LEFT JOIN restaurant rt ON rt.restno = re.restno
+    WHERE re.restno = #{restno}
+    ORDER BY re.rdate DESC 
+    ]]>
+  </select>
+  
+      <select id="list_by_custno" resultType="dev.mvc.dto.ReviewDTO">
+        <![CDATA[
+        SELECT re.reviewno, rt.name as restname, cu.nickname, re.content, re.rate, re.rdate, re.custno, 
+               ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3
+        FROM review re
+        LEFT JOIN (
+            SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
+            FROM reviewimage
+        ) ri1 ON re.reviewno = ri1.reviewno AND ri1.rn = 1
+        LEFT JOIN (
+            SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
+            FROM reviewimage
+        ) ri2 ON re.reviewno = ri2.reviewno AND ri2.rn = 2
+        LEFT JOIN (
+            SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn
+            FROM reviewimage
+        ) ri3 ON re.reviewno = ri3.reviewno AND ri3.rn = 3
+        LEFT JOIN customer cu ON cu.custno = re.custno
+        LEFT JOIN restaurant rt ON rt.restno = re.restno
+        WHERE re.custno = #{custno}
+        ORDER BY re.rdate DESC 
+        ]]>
+    </select>
+
+    
     
     
 </mapper>

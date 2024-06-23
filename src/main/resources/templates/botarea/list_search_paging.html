@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속-->
+
+  <div layout:fragment="content">
+  	<style type='text/css'>
+	    #paging {text-align: center; margin-top: 5px; font-size: 1em;}
+	    #paging A:link {text-decoration:none; color:black; font-size: 1em;}
+	    #paging A:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}
+	    #paging A:visited {text-decoration:none;color:black; font-size: 1em;}
+	    .span_box_1{
+		    text-align: center;
+		    font-size: 1em;
+		    border: 1px;
+		    border-style: solid;
+		    border-color: #cccccc; 
+		    padding:1px 6px 1px 6px;
+		    margin:1px 2px 1px 2px;
+	    }
+	    .span_box_2{
+	      text-align: center;
+	      background-color: #668db4;
+	      color: #FFFFFF;
+	      font-size: 1em;
+	      border: 1px;
+	      border-style: solid;
+	      border-color: #cccccc;
+	      padding:1px 6px 1px 6px; 
+	      margin:1px 2px 1px 2px;
+	    } 
+	  </style>
+    
+    
+    <div class="title_line">
+
+      <div
+        th:if="${word.length() > 0}"
+        class="title_line"
+        th:text="|> 「${word}」 검색 ${search_count} 건|"
+      ></div>
+    </div>
+    
+		
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class="menu_divide">│</span>
+      <a th:href="@{|/botarea/create?word=${word}&now_page=${now_page}|}">등록</a>
+    </aside>
+    <!--
+    <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
+		-->
+    
+		
+		<div style="text-align: right; clear:both;">
+    
+      <input type="text" name="word" id="word" th:value="${word}" >
+      <input type="hidden" name="now_page" th:value="${now_page}">
+      <button type='button' onclick="search()" class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>  
+      <button type='button' th:onclick="|location.href='/botarea/list|"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
+		
+  	</div>
+  	<div class="menu_line"></div>
+  	<form name='frm' method='post' th:object="${botAreaVO}" action='./create'>
+  		<select name="midareano" >
+  			<option th:each="midAreaVO, stauts:${midAreaList}" th:text="${midAreaVO.name}" th:value="${midAreaVO.midareano}"></option>
+  		</select>
+  		<input type="text" name="name">
+  		<button type="submit">소분류지역 생성</button>
+  	</form>
+  	<div class="menu_line"></div>
+    <table class="table table-striped">
+      <colgroup>
+        <col style="width: 20%" />
+        <col style="width: 30%" />
+        <col style="width: 30%" />
+        <col style="width: 10%" />
+        <col style="width: 10%" />
+      </colgroup>
+      <tbody id="tbody">
+        
+      </tbody>
+    </table>
+
+    <div id="bottom"></div>
+		<script>
+			let now_page_value = 1;
+      window.onload = function () {
+        console.log("Page is fully loaded");
+        send();
+        now_page_value = parseInt(document.querySelector("#now_page").dataset.page);
+      };
+      function search() {
+        now_page_value = 1;
+        send();
+      }
+      
+      // 페이지 이동
+      function pageMove(movePage) {
+        now_page_value =  parseInt(movePage.dataset.page);
+        send();
+      }
+      
+      function pageGrpMove(movePageGrp){
+		  	now_page_value =  parseInt(movePage.dataset.page);
+        send();
+	  	}
+	  	
+      function send() {
+        const word = document.getElementById("word");
+        const bottom = document.getElementById("bottom");
+        bottom.innerHTML = "";
+				
+				if (now_page_value == null){
+					now_page_value = 1;
+					console.log("Aaa");
+				}
+        fetch(
+          "/botarea/list",
+          {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+					"word": word.value,
+					"now_page": now_page_value
+					})
+          }
+        )
+          .then((response) => response.json())
+          .then((rdata) => {
+            const resultBody = document.getElementById("tbody");
+            resultBody.innerHTML = `
+							<tr>
+					        <th class='th_bs'>번호</th>
+					        <th class='th_bs'>중분류</th>
+					        <th class='th_bs'>소분류</th>
+					        <th class='th_bs'>수정 / 삭제</th>
+					    </tr>
+						`;
+            const bottommenu = document.createElement("div");
+            rdata.botAreaList.forEach((botAreaVO) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+                  <td class="td_basic" onclick="location.href='/botarea/read?botareano=${
+                    botAreaVO.botareano
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${botAreaVO.botareano}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    botAreaVO.botareano
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${botAreaVO.midareaname}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    botAreaVO.botareano
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${botAreaVO.name}</span>
+                  </td>
+                  <td class="td_bs">
+                      <a href="/botarea/update?botareano=${botAreaVO.botareano}">
+                          <img src="/cate/images/update.png" class="icon">
+                      </a>
+                      <a onclick="delete_check(${botAreaVO.botareano}, '${word.value}', ${now_page_value})">
+                          <img src="/cate/images/delete.png" class="icon">
+                      </a>
+                  </td>
+                `;
+
+              resultBody.appendChild(row);
+            });
+
+            bottommenu.innerHTML = rdata.paging;
+
+            bottom.appendChild(bottommenu);
+          });
+      }
+    </script>
+    <script>
+      function delete_check(botareano, word, now_page) {
+        if (confirm("정말 삭제하시겠습니까??") == true) {
+          //확인
+          let f = document.createElement("form");
+          let obj1;
+          obj1 = document.createElement("input");
+          obj1.type = "hidden";
+          obj1.name = "botareano";
+          obj1.value = botareano;
+
+          f.appendChild(obj1);
+          f.setAttribute("method", "post");
+          f.setAttribute("action", "/botarea/delete");
+          document.body.appendChild(f);
+          f.submit();
+        } else {
+          //취소
+          return;
+        }
+      }
+    </script>
+  </div>
+</html>

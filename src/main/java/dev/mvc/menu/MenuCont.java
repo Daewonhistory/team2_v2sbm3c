@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.allergy.AllergyProcInter;
+import dev.mvc.allergy.AllergyVO;
 import dev.mvc.ingredient.IngredientProcInter;
 import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.menuingred.MenuIngredDTO;
@@ -49,6 +51,9 @@ public class MenuCont {
 	@Autowired
 	@Qualifier("dev.mvc.restaurant.RestaurantProc")
 	private RestaurantProInter restaurantProc;
+	@Autowired
+	@Qualifier("dev.mvc.allergy.AllergyProc")
+	private AllergyProcInter AllergyProc;
 
 	public MenuCont() {
 		System.out.println("-> MenuCont Created.");
@@ -230,26 +235,28 @@ public class MenuCont {
 			System.out.println("Owner" + ownerno);
 			RestList = this.restaurantProc.findByOwnerR(ownerno);
 			System.out.println("ownerRestList"+ RestList.size());
+		}else {
+			return "redierect:/";
 		}
-		model.addAttribute("ownerRestList", RestList);
-		System.out.println("restno:" + restno);
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("word", word);
-		map.put("now_page", now_page);
-		map.put("restno", restno);
-		map.put("ownerno", ownerno);
-
-		
-		int search_count = this.menuProc.list_search_count(word);
-		model.addAttribute("search_count", search_count);
-		String paging = this.menuProc.pagingBox(now_page, word, "/menu/list_search_paging", search_count,
-				Menu.RECORD_PER_PAGE, Menu.PAGE_PER_BLOCK);
-		model.addAttribute("paging", paging);
-		
+		model.addAttribute("RestList", RestList);
+//		System.out.println("restno:" + restno);
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put("word", word);
+//		map.put("now_page", now_page);
+//		map.put("restno", restno);
+//		map.put("ownerno", ownerno);
+//
+//		
+//		int search_count = this.menuProc.list_search_count(word);
+//		model.addAttribute("search_count", search_count);
+//		String paging = this.menuProc.pagingBox(now_page, word, "/menu/list_search_paging", search_count,
+//				Menu.RECORD_PER_PAGE, Menu.PAGE_PER_BLOCK);
+//		model.addAttribute("paging", paging);
+//		
 		model.addAttribute("type", type);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
-		model.addAttribute("search_count", search_count);
+//		model.addAttribute("search_count", search_count);
 
 		return "menu/list_search_paging";
 	}
@@ -408,26 +415,27 @@ public class MenuCont {
 		}
 	}
 
-	@PostMapping(value = "/menulist") // http://localhost:9091/member/checkId?id=admin
+	@PostMapping(value = "/menulist")
 	@ResponseBody
 	public ResponseEntity<MenuResponse> menulist(@RequestBody Map<String,Object> requestBody) {
 		String word = ((String) requestBody.get("word")).trim();
-		System.out.println(word);
-		int restno = Integer.parseInt((String) requestBody.get("restno"));
-		int now_page =  Integer.parseInt((String) requestBody.get("now_page"));
-		System.out.println("-> word: " + word);
-		System.out.println("-> restno: " + restno);
-		System.out.println("-> now_page: " + now_page);
+		System.out.println("-> searchword:" + word);
+		String strRestno = (String) requestBody.get("restno");
+		int restno = Integer.parseInt(strRestno);
+		System.out.println("-> restno:" + restno);
+		int nowPage = (int)requestBody.get("now_page");
+		System.out.println("-> nowPage:" + nowPage);
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("word", word);
 		map.put("restno", restno);
-		map.put("now_page", now_page);
+		map.put("now_page", nowPage);
 		ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
 
 		int search_count = this.menuProc.list_by_restno_search_count(map);
 
 		MenuResponse response = new MenuResponse();
-		String paging = this.menuProc.pagingBox(now_page, word, word, search_count, Menu.RECORD_PER_PAGE,
+		String paging = this.menuProc.pagingBox(nowPage, word, word, search_count, Menu.RECORD_PER_PAGE,
 				Menu.PAGE_PER_BLOCK);
 		response.setMenuList(list);
 		response.setPaging(paging);
@@ -436,21 +444,44 @@ public class MenuCont {
 	}
 	
 	@GetMapping("/menuAllList")
-	public String menuAllList(Model model, int restno, int person, String date) {
-		ArrayList<MenuIngredDTO> list = new ArrayList<MenuIngredDTO>();
-		ArrayList<MenuVO> menuList = this.menuProc.list_by_restno(restno);
-		for(MenuVO menuVO : menuList) {
-			MenuIngredDTO menuIngredDTO = new MenuIngredDTO();
-			ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuVO.getMenuno());
-			ArrayList<IngredientVO> ingredList = new ArrayList<IngredientVO>();
-			for(MenuIngredVO menuIngredVO : menuIngredList) {
-				IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
-				ingredList.add(ingredientVO);
+	public String menuAllList(Model model, HttpSession session, int restno, int person, String date) {
+		String userType = (String)session.getAttribute("type");
+		ArrayList<MenuIngredDTO> list = null;
+		if(userType!=null && userType.equals("customer")) {
+			int custno = (int) session.getAttribute("custno");
+			list = new ArrayList<MenuIngredDTO>();
+			ArrayList<MenuVO> menuList = this.menuProc.list_by_restno(restno);
+			for(MenuVO menuVO : menuList) {
+				MenuIngredDTO menuIngredDTO = new MenuIngredDTO();
+				ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuVO.getMenuno());
+				
+				ArrayList<IngredientVO> ingredList = this.menuIngredProc.allergy_check_ingredient(menuVO.getMenuno(), custno);
+				System.out.println("재료리스트 사이즈: " + ingredList.size());
+				for(IngredientVO ingredientVO : ingredList) {
+					System.out.println("재료 확인"+ingredientVO.getName() + ": " + ingredientVO.getHas_allergy());
+				}
+				menuIngredDTO.setMenuVO(menuVO);
+				menuIngredDTO.setIngredList(ingredList);
+				list.add(menuIngredDTO);
 			}
-			menuIngredDTO.setMenuVO(menuVO);
-			menuIngredDTO.setIngredList(ingredList);
-			list.add(menuIngredDTO);
+			
+		}else {
+			list = new ArrayList<MenuIngredDTO>();
+			ArrayList<MenuVO> menuList = this.menuProc.list_by_restno(restno);
+			for(MenuVO menuVO : menuList) {
+				MenuIngredDTO menuIngredDTO = new MenuIngredDTO();
+				ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuVO.getMenuno());
+				ArrayList<IngredientVO> ingredList = new ArrayList<IngredientVO>();
+				for(MenuIngredVO menuIngredVO : menuIngredList) {
+					IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
+					ingredList.add(ingredientVO);
+				}
+				menuIngredDTO.setMenuVO(menuVO);
+				menuIngredDTO.setIngredList(ingredList);
+				list.add(menuIngredDTO);
+			}
 		}
+		
 		model.addAttribute("list", list);
 		model.addAttribute("restno", restno);
 		model.addAttribute("person", person);

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.review_like.Review_likeDAOInter">
+   
+  <insert id="increased_likes" parameterType="map">
+    INSERT INTO review_like (review_likeno, reviewno, custno)
+    VALUES (review_like_seq.nextval, #{reviewno}, #{custno})
+  </insert>
+
+  <delete id="decreased_likes" parameterType="map">
+    DELETE FROM review_like
+    WHERE reviewno = #{reviewno} AND custno = #{custno}
+  </delete>
+
+  <delete id="delete" parameterType="int">
+    DELETE FROM review_like
+    WHERE reviewno = #{reviewno}
+  </delete>
+
+  <select id="likes_count" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+    FROM review_like
+    WHERE reviewno = #{reviewno}
+  </select>
+
+  <select id="mylikes" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM review_like
+    WHERE reviewno = #{reviewno} AND custno = #{custno}
+  </select>
+
+</mapper>

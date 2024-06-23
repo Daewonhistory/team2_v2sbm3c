@@ -31,11 +31,28 @@
   
   <delete id="delete_by_menuingredno" parameterType="int">
   	DELETE FROM menuingred
-	WHERE menuingredno = #{menuingredno}
+		WHERE menuingredno = #{menuingredno}
   </delete>
   
   <delete id="delete_by_menuno" parameterType="int">
   	DELETE FROM menuingred
-	WHERE menuno = #{menuno}
+		WHERE menuno = #{menuno}
   </delete>
+  
+  <select id="allergy_check_ingredient" parameterType="HashMap" resultType="dev.mvc.ingredient.IngredientVO">
+  	SELECT ig.name, 
+	    CASE 
+        WHEN al.ingredno IS NOT NULL THEN 1 
+        ELSE 0 
+	    END AS has_allergy
+		FROM (
+		    SELECT menuingredno, menuno, ingredno
+		    FROM menuingred
+		    WHERE menuno = #{menuno}
+		) mi
+		LEFT JOIN (SELECT allerno, ingredno FROM allergy WHERE custno = #{custno}) al
+		ON al.ingredno = mi.ingredno
+		LEFT JOIN ingredient ig
+		ON ig.ingredno = mi.ingredno
+  </select>
 </mapper>

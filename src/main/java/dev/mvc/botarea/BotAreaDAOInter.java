@@ -1,6 +1,7 @@
 package dev.mvc.botarea;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface BotAreaDAOInter {
 	/**
@@ -50,4 +51,10 @@ public interface BotAreaDAOInter {
 	 * @return
 	 */
 	public int delete(int botareano);
+	
+	public ArrayList<BotAreaVO> list_search_paging(HashMap<String, Object> map);
+	
+	public int list_search_count(HashMap<String, Object> map);
+	
+	
 }

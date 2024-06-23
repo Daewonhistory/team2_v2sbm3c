@@ -3,28 +3,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.botarea.BotAreaDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 	<insert id="create">
-		INSERT INTO botarea(botareano, name)
-		VALUES (botarea_seq.nextval, #{name});
+		INSERT INTO botarea(botareano, name, midareano)
+		VALUES (botarea_seq.nextval, #{name}, #{midareano})
 	</insert>
 	<select id="read">
-		SELECT botareano, name FROM botarea WHERE botareano = #{botareano}
+		SELECT botareano, name, midareano FROM botarea WHERE botareano = #{botareano}
 	</select>
 	<select id="list_all">
-		SELECT botareano, name FROM botarea
+		SELECT botareano, name, midareano FROM botarea
 	</select>
 	<select id="search_list">
-		SELECT botareano, name FROM botarea WHERE name LIKE '%' || #{word} || '%'
+		SELECT botareano, name, midareano FROM botarea WHERE name LIKE '%' || #{word} || '%'
 	</select>
 	<select id="search_by_midareano">
-		SELECT botareano, name FROM botarea WHERE midareano = #{midareano}
+		SELECT botareano, name, midareano FROM botarea WHERE midareano = #{midareano}
 	</select>
 	<update id="update">
-		UPDATE botarea SET name = #{name} WHERE botareano = #{botareano}
+		UPDATE botarea SET name = #{name}, midareano = #{midareano} WHERE botareano = #{botareano}
 	</update>
 	<delete id="delete">
 		DELETE FROM botarea WHERE botareano = #{botareano}
 	</delete>
-	
+	<!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_search_paging" resultType="dev.mvc.botarea.BotAreaVO" parameterType="HashMap">
+    SELECT botareano, name, midareaname, r
+	  FROM (
+      SELECT botareano, name, midareaname, rownum as r
+      FROM (
+        SELECT  botareano, bot.name as name, mid.name as midareaname
+        FROM botarea bot 
+        INNER JOIN midarea mid
+        ON bot.midareano = mid.midareano
+        <if test="word != null and word != ''">
+        WHERE UPPER(bot.name) LIKE '%' || UPPER(#{word}) || '%'
+        </if>
+        ORDER BY mid.name ASC, bot.name ASC
+      )
+		)
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+  </select>
+  
+  <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM botarea
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+        
+      </otherwise>
+    </choose>
+  </select>  
+  
 </mapper>
 
 

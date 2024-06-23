@@ -7,4 +7,7 @@ import lombok.Setter;
 public class BotAreaVO {
 	int botareano;
 	String name;
+	int midareano;
+	String midareaname;
+	
 }

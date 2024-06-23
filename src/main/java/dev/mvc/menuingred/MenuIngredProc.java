@@ -1,10 +1,13 @@
 package dev.mvc.menuingred;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import dev.mvc.ingredient.IngredientVO;
 
 @Service("dev.mvc.menuingred.MenuIngredProc")
 public class MenuIngredProc implements MenuIngredProcInter {
@@ -41,6 +44,15 @@ public class MenuIngredProc implements MenuIngredProcInter {
 		return cnt;
 	}
 	
-	
+	@Override
+	public ArrayList<IngredientVO> allergy_check_ingredient(int menuno, int custno){
+		System.out.println("->menuno" + menuno);
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("custno", custno);
+		map.put("menuno", menuno);
+		System.out.println(menuno + " / " + custno);
+		ArrayList<IngredientVO> list = this.menuIngredDAO.allergy_check_ingredient(map);
+		return list;
+	}
 
 }

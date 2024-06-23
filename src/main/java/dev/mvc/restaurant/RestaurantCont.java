@@ -280,14 +280,14 @@ public class RestaurantCont {
 					        String date,
 					        int time,
 					        @RequestParam(defaultValue = "0") int categoryno,
-					        @RequestParam(defaultValue = "") String botareas,
+					        @RequestParam(defaultValue = "") String botarea,
 					        @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
 					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
 	  model.addAttribute("person", person);
 	  model.addAttribute("reserve_date", date);
 	  model.addAttribute("time", time);
 	  model.addAttribute("categoryno", categoryno);
-	  model.addAttribute("botarea", botareas);
+	  model.addAttribute("botarea", botarea);
 	  model.addAttribute("min_price", minPrice);
 	  model.addAttribute("max_price", maxPrice);
 	  
@@ -306,7 +306,7 @@ public class RestaurantCont {
       }
       
       String botarea = (String) requestBody.get("botareas");
-      System.out.println("aaa" + botarea);
+      System.out.println("aaa:" + botarea);
       int[] botareanos;
       if(!botarea.equals("")) {
     	  System.out.println("b");
@@ -345,7 +345,8 @@ public class RestaurantCont {
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, int restno, @RequestParam(defaultValue="2")int person, String date) {
+  public String main_page(Model model, HttpSession session, int restno, @RequestParam(defaultValue="2")int person, String date) {
+	  String accessType = (String) session.getAttribute("type");
 	  RestFullData restFullData = this.restaurantProc.readFullData(restno);
 	  System.out.println(restFullData.getName());
 	  model.addAttribute("restaurantVO", restFullData);
@@ -353,6 +354,8 @@ public class RestaurantCont {
 	  ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
 	  model.addAttribute("noticeList", noticeList);
 	  
+	  model.addAttribute("accessType", accessType);
+	  model.addAttribute("restno", restno);
 	  model.addAttribute("person", person);
 	  model.addAttribute("date", date);
 	  return "/restaurant_page";
