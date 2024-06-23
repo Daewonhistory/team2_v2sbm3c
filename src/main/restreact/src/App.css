@@ -1,0 +1,85 @@
+/* Grobal */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* App Colors */
+    --color-primary: var(--color-brown);
+    --color-primary-variant: var(--color-gray);
+    --color-text: var(--color-black);
+
+    /* Colors */
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-brown: rgb(194,122,52);
+    --color-gray: rgb(56,52,49);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+input, textarea, select {
+    outline: none;
+    padding: 5px;
+    font-size: 0.9rem;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-white)
+}
+
+button {
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+}
+
+button:focus {
+    outline: 1px solid var(--color-accent);
+}
+
+.section-container {
+    margin: 140px 0 0;
+}
+
+.navigate-btn {
+    display: flex;
+    align-items: center;
+    width: 230px;
+    height: 50px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.navigate-btn .text {
+    font-size: 1.1rem;
+    width: 190px;
+    text-align: center;
+}
+
+.navigate-btn .icon {
+    text-align: left;
+}

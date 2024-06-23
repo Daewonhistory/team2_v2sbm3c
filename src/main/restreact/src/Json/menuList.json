@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Lunch",
+        "image": "dish2",
+        "detail": "점심 메뉴",
+        "price": "98,000 KRW"
+    },
+    {
+        "title": "Dinner",
+        "image": "dish4",
+        "detail": "저녁 메뉴",
+        "price": "155,000 KRW"
+    },
+    {
+        "title": "Additional Menu",
+        "image": "dish3",
+        "detail": "단품 메뉴",
+        "price": "120,000 KRW ~"
+    }
+]

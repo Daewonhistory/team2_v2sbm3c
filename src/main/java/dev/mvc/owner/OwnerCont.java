@@ -3,7 +3,6 @@ package dev.mvc.owner;
 
 import dev.mvc.category.CategoryVO;
 import dev.mvc.customer.Customer;
-import dev.mvc.customer.CustomerVO;
 import dev.mvc.dto.HistoryDTO;
 import dev.mvc.emailAuth.EmailAuthVO;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
@@ -56,11 +55,25 @@ public class OwnerCont {
   private EmailToolO emailTool;
 
 
+  @Autowired
+  private PublicTools publicTools;
+
 
   public OwnerCont() {
 //    System.out.println("CustomerCont created");
   }
 
+  @GetMapping()
+  public String owner(Model model,HttpSession session) {
+    String type = (String) session.getAttribute("type");
+
+    if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") ||  publicTools.isOwner(type).equals("ready")) {
+      return "/ownerIndex";
+    } else {
+      return "redirect:/";
+    }
+
+  }
 
   /*
    * 사업자 ID 중복확인 메서드
@@ -322,16 +335,26 @@ public class OwnerCont {
         session.setAttribute("ownerVO", ownerVO);
         return "redirect:/";
 
+      } else if (ownerVO.getGrade() == 10)  {
+        session.setAttribute("ownerno", ownerVO.getOwnerno());
+        session.setAttribute("id", ownerVO.getId());
+        session.setAttribute("oname", ownerVO.getOname());
+        session.setAttribute("grade", "ready");
+        session.setAttribute("type", "ready");
+        session.setAttribute("ownerVO", ownerVO);
+        rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자 인증 대기중입니다.");
+
+        return "redirect:/owner";
       } else {
+        session.setAttribute("type", "NotCerti");
         session.setAttribute("ownerno", ownerVO.getOwnerno());
         session.setAttribute("id", ownerVO.getId());
         session.setAttribute("oname", ownerVO.getOname());
         session.setAttribute("grade", "NotCerti");
-        session.setAttribute("type", "NotCerti");
         session.setAttribute("ownerVO", ownerVO);
         rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 컨텐츠에 접근할 수 있습니다");
-
         return "redirect:/owner/certifi";
+
       }
     } else {
       rttr.addFlashAttribute("error", "아이디 또는 비밀번호 오류입니다.");
@@ -750,12 +773,15 @@ public class OwnerCont {
   public String certi(HttpSession session, OwnerVO ownerVO, Model model) {
 
 
-//    OwnerVO ownerVO1 = (OwnerVO) session.getAttribute("ownerVO");
-//    if (ownerVO1 != null && ownerVO1.getGrade() == 20) {
+    String id = (String) session.getAttribute("id");
+    String grade = (String) session.getAttribute("grade");
 
-    OwnerVO read = this.ownerProc.read(8);
+    if (id != null && grade.equals("NotCerti")) {
+
+    OwnerVO read = this.ownerProc.readById(id);
     if (read != null) {
       model.addAttribute("ownerVO", read);
+
       return "owner/certifi";
     } else {
       return "redirect:/";
@@ -763,9 +789,9 @@ public class OwnerCont {
     }
 
 
-//    } else {
-//      return "redirect:/";
-//    }
+    } else {
+      return "redirect:/";
+    }
 
 
   }
@@ -780,7 +806,7 @@ public class OwnerCont {
    */
   @PostMapping("/certifi")
 
-  public String certicreate(Model model, OwnerVO ownerVO, RedirectAttributes ra) {
+  public String certicreate(Model model, OwnerVO ownerVO, RedirectAttributes ra,HttpSession session) {
     String file1 = ""; // 원본 파일명 image
     String file1saved = ""; // 저장된 파일명, image
     String thumb1 = ""; // preview image
@@ -828,6 +854,13 @@ public class OwnerCont {
             thumb2 = Tool.preview(upDir, file2saved, 200, 150); // 썸네일 생성
             ownerVO.setCertifi_image(file1saved); // 저장된 파일명 설정
             ownerVO.setIdenti_card_image(file2saved); // 저장된 파일명 설정
+            Integer ownerno = (Integer) session.getAttribute("ownerno");
+            session.setAttribute("grade","ready");
+            session.setAttribute("type","ready");
+            HashMap<String,Object> map = new HashMap<String,Object>();
+            map.put("ownerno", ownerno);
+            map.put("grade", 10);
+            ownerProc.update_grade(map);
           } else {
             return "redirect:/"; // 파일이 이미지가 아닐 경우 리다이렉트
           }

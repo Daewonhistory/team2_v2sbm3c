@@ -1,0 +1,89 @@
+.tab-page-container {
+
+}
+
+.tab-page-image {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.tab-page-image img {
+    min-width: 100vw;
+    min-height: 1200px;
+    position: relative;
+    top: -650px;
+    z-index: 1;
+}
+
+.tab-page-image::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.2;
+    z-index: 2;
+}
+
+.tab-page-image .image-text{
+    color: white;
+    position: absolute;
+    z-index: 3;
+    top: 60%;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5rem;
+    animation: imageTextAnimation 1s ease;
+    font-family: 'Gowun Batang', serif;
+}
+
+@keyframes imageTextAnimation {
+    0%{
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+
+    100%{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.tab-wrap {
+    width: 100%;
+    height: 80px;
+    background-color: var(--color-primary-variant);
+    text-align: center;
+}
+
+.tab-wrap .tab-list {
+    position: relative;
+    margin: 0 auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 50px;
+    height: 100%;
+    align-items: center;
+}
+
+.tab-wrap .tab-list .tab-item {
+    min-width: 150px;   
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.tab-wrap .tab-list .tab-item:hover {
+    background-color: var(--color-primary);
+}
+
+.tab-wrap .tab-list .tab-item .tab-link {
+    width: 100%;
+}

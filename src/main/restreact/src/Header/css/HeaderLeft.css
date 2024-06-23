@@ -1,0 +1,119 @@
+.header-left-container {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 6;
+    background-color: rgb(0, 0, 0, 0.7);
+}
+
+.header-left-inner {
+    float: right;
+    height: 100vh;
+    width: 300px;
+    background-color: var(--color-primary);
+    padding: 20px 30px;
+    animation: slideHeaderLeft 0.5s ease;
+}
+
+@keyframes slideHeaderLeft {
+    0% {
+        transform: translateX(200px); 
+    }
+    100% {
+        transform: translateX(0); 
+    }
+}
+
+.header-left-close {
+    font-size: 1.3rem;
+    color: white;
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
+
+.inner-top {
+    position: relative;
+    top: 60px;
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.header-left-inner .line {
+    position: absolute;
+    top: 120px;
+    width: 100%;
+    height: 2.5px;
+    background-color: black;
+}
+
+.inner-top .profile {
+
+} 
+
+.inner-top .sign-in {
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+}
+
+.inner-top .sign-up {
+    font-size: 1.2rem;
+    color: white;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.inner-middle {
+    position: absolute;
+    top: 130px;
+    padding: 2.5px;
+}
+
+.inner-middle h5 {
+    font-size: 1.3rem;
+    margin: 25px 0;
+}
+
+.inner-middle p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    
+}
+
+.inner-middle .user-menu  p:hover, .inner-middle .company p:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.inner-middle .information {
+    margin-top: 130px;
+}
+
+.inner-middle .box {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.inner-middle .box h6 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.inner-middle .box p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.inner-bottom {
+    position: absolute;
+    bottom: 20px;
+    right: 5px;
+}
+
+.inner-bottom p {
+    font-size: 0.8rem;
+}
