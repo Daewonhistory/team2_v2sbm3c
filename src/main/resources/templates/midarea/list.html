@@ -52,17 +52,25 @@
   		<button type="submit">중분류지역 생성</button>
   	</form>
   	<div class="menu_line"></div>
-    <table class="table table-striped">
-      <colgroup>
-        <col style="width: 20%" />
-        <col style="width: 50%" />
-        <col style="width: 30%" />
-      </colgroup>
-      <tbody id="tbody">
-        
-      </tbody>
-    </table>
-
+  	<div class="manager-user">
+	    <table class="manager-user-list">
+	      <colgroup>
+	        <col style="width: 20%" />
+	        <col style="width: 50%" />
+	        <col style="width: 30%" />
+	      </colgroup>
+	      <thead>
+	      	<tr class="manager-header">
+		        <th class='th_bs'>번호</th>
+		        <th class='th_bs'>중분류</th>
+		        <th class='th_bs'>수정 / 삭제</th>
+			    </tr>
+	      </thead>
+	      <tbody id="tbody">
+	        
+	      </tbody>
+	    </table>
+		</div>
     <div id="bottom"></div>
 		<script>
 			let now_page_value = 1;
@@ -108,17 +116,11 @@
           .then((response) => response.json())
           .then((rdata) => {
             const resultBody = document.getElementById("tbody");
-            resultBody.innerHTML = `
-							<tr>
-					        <th class='th_bs'>번호</th>
-					        <th class='th_bs'>중분류</th>
-					        <th class='th_bs'>수정 / 삭제</th>
-					    </tr>
-						`;
+            resultBody.innerHTML = ``;
             const bottommenu = document.createElement("div");
             rdata.midAreaList.forEach((midAreaVO) => {
               const row = document.createElement("tr");
-
+							row.classList.add("manager-data");
               row.innerHTML = `
                   <td class="td_basic">
                       <span>${midAreaVO.midareano}</span>

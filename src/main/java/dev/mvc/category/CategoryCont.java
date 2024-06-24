@@ -31,7 +31,7 @@ public class CategoryCont {
   /**
    * 페이지당 출력할 레코드 개수
    */
-  public int record_per_page = 3;
+  public int record_per_page = 10;
 
   ;
   /**
@@ -100,7 +100,7 @@ public class CategoryCont {
     int num = count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("num", num);
     ArrayList<CategoryVO> catelist = this.categoryProc.list_search_paging(word, type, now_page, this.record_per_page);
-    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/search", count, record_per_page, page_per_blcok);
+    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/list", count, record_per_page, page_per_blcok);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("searchlist", catelist);
@@ -159,7 +159,7 @@ public class CategoryCont {
     ArrayList<CategoryVO> catelist = this.categoryProc.list_search_paging(word, type, now_page, this.record_per_page);
     int num = count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("num", num);
-    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/search", count, record_per_page, page_per_blcok);
+    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/list", count, record_per_page, page_per_blcok);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("word", word);
@@ -190,7 +190,7 @@ public class CategoryCont {
     ArrayList<CategoryVO> catelist = this.categoryProc.list_search_paging(word, type, now_page, this.record_per_page);
     int num = count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("num", num);
-    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/search", count, record_per_page, page_per_blcok);
+    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/list", count, record_per_page, page_per_blcok);
     model.addAttribute("paging", paging);
     model.addAttribute("searchlist", catelist);
     model.addAttribute("now_page", now_page);
@@ -426,7 +426,7 @@ public class CategoryCont {
 //   * @return dw
 //   */
 
-  @GetMapping("/search")
+  @GetMapping("/list")
   public String searchForm(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
     String id = (String) session.getAttribute("id");
@@ -455,7 +455,7 @@ public class CategoryCont {
     // 일련 번호 생성
     int num = count - ((now_page - 1) * this.record_per_page);
     ArrayList<CategoryVO> catelist = this.categoryProc.list_search_paging(word, type, now_page, this.record_per_page);
-    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/search", count, record_per_page, page_per_blcok);
+    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/list", count, record_per_page, page_per_blcok);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("count", count);
@@ -506,7 +506,7 @@ public class CategoryCont {
     int num = count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("num", num);
     model.addAttribute("searchlist", list);
-    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/search", count, record_per_page, page_per_blcok);
+    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/list", count, record_per_page, page_per_blcok);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("count", count);

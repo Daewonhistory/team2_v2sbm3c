@@ -105,7 +105,7 @@ public class BotAreaCont{
 		
 		// 관리자 확인
 		if(accessType != null) {
-			return "redierect:/manager";
+			return "redierect:/";
 		}else{
 			ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
 			model.addAttribute("midAreaList", midAreaList);
