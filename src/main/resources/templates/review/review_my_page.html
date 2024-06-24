@@ -72,7 +72,10 @@
             <div class="flex items-center mb-2">
                 <div class="avatar"></div>
                 <div class="ml-2">
-                    <div class="font-bold" th:text="${reviewDTO.nickname}">대원군</div>
+                    <div class="font-bold">
+                        <span th:text="${reviewDTO.nickname}">대원군</span>
+                        <span th:text="' - ' + ${reviewDTO.restname}"> - 식당명</span>
+                    </div>
                     <div class="text-gray-500 text-sm" th:text="${#strings.substring(reviewDTO.rdate.toString(), 0, 19)}">2024-06-21 11:53:02</div>
                 </div>
             </div>
@@ -92,7 +95,8 @@
                 <span th:text="${reviewDTO.content}">우엑</span>
             </div>
             <div class="flex items-center">
-                <span class="text-gray-500">좋아요 0</span>
+                <span class="text-gray-500">좋아요</span>
+                <span class="text-gray-500 ml-2" th:text="${reviewDTO.likes_count}">0</span>
                 <button class="ml-auto" onclick="toggleMenu(this)">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v.01M12 12v.01M12 18v.01" />
@@ -101,16 +105,34 @@
             </div>
             <div class="menu" style="display: none;">
                 <button th:onclick="|location.href='/review/update?reviewno=' + ${reviewDTO.reviewno} + '|'">수정하기</button>
-                <button th:onclick="|location.href='/review/delete?reviewno=' + ${reviewDTO.reviewno} + '|'">삭제하기</button>
+                <button th:onclick="'delete_check(' + ${reviewDTO.reviewno} + ')'">삭제하기</button>
             </div>
         </div>
     </div>
-</div>
-<script>
+    <script>
     function toggleMenu(button) {
         const menu = button.parentElement.nextElementSibling;
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
+
+    function delete_check(reviewno){
+        if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+            let f = document.createElement('form');
+            let obj1 = document.createElement('input');
+            obj1.type = 'hidden';
+            obj1.name = 'reviewno';
+            obj1.value = reviewno;
+            f.appendChild(obj1);
+            f.setAttribute('method', 'post');
+            f.setAttribute('action', '/review/delete_mobile');
+            document.body.appendChild(f);
+            f.submit();
+        } else {   //취소
+            return;
+        }
+    }
 </script>
+</div>
+
 </body>
 </html>

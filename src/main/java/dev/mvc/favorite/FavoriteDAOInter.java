@@ -26,6 +26,14 @@ public interface FavoriteDAOInter {
    * @return
    */
   public ArrayList<FavoriteVO> favorite_list();
+  
+  /**
+   * 특정 사용자가 특정 식당을 이미 즐겨찾기했는지 확인
+   * @param custno
+   * @param restno
+   * @return
+   */
+  public int isFavorited(int custno, int restno);
 }
 
 

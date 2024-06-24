@@ -26,4 +26,10 @@ public class FavoriteProc implements FavoriteProcInter {
     System.out.println("DAO returned favorite list: " + list);
     return list;
   }
+  
+  @Override
+  public boolean isFavorited(int restno, int custno) {
+    Integer count = this.favoriteDAO.isFavorited(restno, custno);
+    return count != null && count > 0;
+  }
 }

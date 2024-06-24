@@ -22,8 +22,11 @@ public class FavoriteCont {
   private FavoriteProcInter favoriteProc;
 
   @PostMapping("/create")
+  @ResponseBody
   public ResponseEntity<?> create(@RequestBody FavoriteVO favoriteVO) {
       int result = favoriteProc.create(favoriteVO);
+      System.out.println("custno:" + favoriteVO.getCustno());
+      System.out.println("restno:" + favoriteVO.getRestno());
       if (result > 0) {
           return ResponseEntity.ok().body("{\"message\": \"즐겨찾기가 저장되었습니다.\"}");
       } else {
@@ -44,19 +47,19 @@ public class FavoriteCont {
   
   @GetMapping("/favorite_list")
   public String favorite_list(Model model) {
-    List<FavoriteVO> list = favoriteProc.favorite_list();
-    System.out.println("Retrieved favorite list: " + list);
-    model.addAttribute("list", list);
-    return "favorite/favorite_list"; // 해당 HTML 파일 경로
+      List<FavoriteVO> list = favoriteProc.favorite_list();
+      System.out.println("Retrieved favorite list: " + list); // 로그 추가
+      model.addAttribute("list", list);
+      return "favorite/favorite_list"; // 해당 HTML 파일 경로
   }
   
   @GetMapping("/favorite_list_mobile")
   public String favorite_list_mobile(Model model) {
-    List<FavoriteVO> list = favoriteProc.favorite_list();
-    System.out.println("Retrieved favorite list: " + list);
-    model.addAttribute("list", list);
-    return "favorite/favorite_list_mobile"; // 해당 HTML 파일 경로
+      List<FavoriteVO> list = favoriteProc.favorite_list();
+      System.out.println("Favorite list for mobile: " + list);
+      model.addAttribute("list", list);
+      return "favorite/favorite_list_mobile"; // 해당 HTML 파일 경로
   }
-  
-  
+
+
 }

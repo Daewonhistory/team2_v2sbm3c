@@ -256,6 +256,15 @@ public class ReviewCont {
         return "review/list_paging";
     }
     
+    @PostMapping("/delete_mobile")
+    public String review_delete_mobile(Model model, @RequestParam("reviewno") int reviewno) {
+        int cnt = this.reviewProc.delete_review(reviewno);
+        if (cnt == 1) {
+            return "redirect:/review_my_page";
+        }
+        return "review/review_my_page";
+    }
+    
     @GetMapping("/reviewAllList")
     public String reviewAllList(Model model, @RequestParam("restno") int restno, @RequestParam("person") int person, @RequestParam("date") String date) {
         ArrayList<ReviewDTO> list = this.reviewProc.list_by_restno(restno);
@@ -285,6 +294,7 @@ public class ReviewCont {
         Map<String, Object> response = new HashMap<>();
         int reviewno = Integer.parseInt(map.get("reviewno"));
         if (custno != null) {
+            System.out.println("Customer number: " + custno);
             if (Boolean.parseBoolean(map.get("liked"))) {
                 review_likeProc.decreased_likes(reviewno, custno);
                 response.put("success", "decreased");
@@ -293,12 +303,16 @@ public class ReviewCont {
                 response.put("success", "increased");
             }
             int likes_count = review_likeProc.likes_count(reviewno);
+            System.out.println("Likes count: " + likes_count);
             response.put("likes_count", likes_count);
         } else {
             response.put("fail", "login");
         }
         return response;
     }
+
+
+
     
     
 }

@@ -4,8 +4,8 @@
 
   <!-- 즐겨찾기 추가 -->
   <insert id="create" parameterType="dev.mvc.favorite.FavoriteVO">
-    INSERT INTO favorite(favoriteno, restno, custno, resturl)
-    VALUES(favorite_seq.nextval, #{restno}, #{custno}, #{resturl})
+    INSERT INTO favorite(favoriteno, restno, custno)
+    VALUES(favorite_seq.nextval, #{restno}, #{custno})
   </insert>
 
   <!-- 즐겨찾기 제거 -->
@@ -16,9 +16,17 @@
 
   <!-- 즐겨찾기 목록 조회 -->
   <select id="favorite_list" resultType="dev.mvc.favorite.FavoriteVO">
-    SELECT favoriteno, restno, custno, resturl
-    FROM favorite
-    ORDER BY favoriteno ASC
+      SELECT f.favoriteno, f.restno, f.custno, r.name AS restname
+      FROM favorite f
+      JOIN RESTAURANT r ON f.restno = r.restno
+      ORDER BY f.favoriteno ASC
+  </select>
+  
+      <!-- 특정 사용자가 특정 식당을 이미 즐겨찾기했는지 확인 -->
+  <select id="isFavorited" resultType="Integer">
+    SELECT COUNT(*) 
+    FROM favorite 
+    WHERE restno = #{restno} AND custno = #{custno}
   </select>
 
 </mapper>

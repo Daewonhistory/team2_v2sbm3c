@@ -61,6 +61,7 @@ public class ReviewProc implements ReviewProcInter {
         int cnt = this.reviewDAO.list_count();
         return cnt;
     }
+    
 
     @Override
     public ArrayList<ReviewDTO> list_paging(int now_page, int record_per_page) {
