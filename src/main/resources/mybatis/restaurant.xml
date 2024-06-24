@@ -13,8 +13,8 @@
 
 	<!-- 기존 create-->
     <insert id="create" parameterType="dev.mvc.restaurant.RestaurantVO">
-        INSERT INTO restaurant(restno, name, tel, ownerno, categoryno)
-        VALUES (restaurant_seq.nextval, #{name},#{tel}, #{ownerno}, #{categoryno})
+        INSERT INTO restaurant(restno, name, tel, ownerno, categoryno, grade, address, lat, lng,botareano,reserve_range)
+        VALUES (restaurant_seq.nextval, #{name},#{tel}, #{ownerno}, #{categoryno},1,#{address}, #{lat}, #{lng}, #{botareano}, #{reserve_range})
     </insert>
     
 	

@@ -38,12 +38,7 @@ public class HomeCont {
   @GetMapping("/")
   public String Home(Model model) {
     ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
-<<<<<<< HEAD
 
-=======
-    ArrayList<CategoryVO> categoryList = this.categoryProc.list();
-    model.addAttribute("categoryList", categoryList);
->>>>>>> a62dbcc11b9822fcdf2b5bc62350711ab2086b44
 	model.addAttribute("midAreaList", midAreaList);
     return "mobile";
   }

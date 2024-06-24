@@ -629,9 +629,9 @@ public class OwnerCont {
 
     int count = this.ownerProc.list_search_count(word, type);
     // 일련 번호 생성
-    int num = count - ((now_page - 1) * Restaurant.RECORD_PER_PAGE);
-    ArrayList<OwnerVO> ownerList = this.ownerProc.list_search_paging(word, type, now_page, Customer.RECORD_PER_PAGE);
-    String paging = this.ownerProc.pagingBox(now_page, word, type, "/customer/list", count, Customer.RECORD_PER_PAGE, Customer.PAGE_PER_BLOCK);
+    int num = count - ((now_page - 1) * Owner.RECORD_PER_PAGE);
+    ArrayList<OwnerVO> ownerList = this.ownerProc.list_search_paging(word, type, now_page, Owner.RECORD_PER_PAGE);
+    String paging = this.ownerProc.pagingBox(now_page, word, type, "/customer/list", count, Owner.RECORD_PER_PAGE, Owner.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("count", count);
