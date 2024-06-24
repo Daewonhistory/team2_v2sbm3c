@@ -44,6 +44,8 @@ CREATE TABLE RESTAURANT(
     private double lat;
     
     private double lng;
+
+    private int botareano;
     
     private int reserve_range;
     /** 사업자 번호 */

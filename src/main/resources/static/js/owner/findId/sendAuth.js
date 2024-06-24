@@ -1,15 +1,15 @@
 function sendid() {
   // 입력 요소 가져오기
-  let cname_r = document.getElementById('cname2');
+  let oname_r = document.getElementById('oname2');
   let id_r = document.getElementById('id');
 
   // 입력 요소에서 값 가져오기
-  let cname = cname_r.value;
+  let oname = oname_r.value;
   let id = id_r.value;
 
   // 고객 객체 생성
   const customerVO = {
-    cname: cname,
+    oname: oname,
     id: id
   };
 
@@ -32,7 +32,7 @@ function sendid() {
           let url2 = './send_email';
 
           // 입력 필드를 읽기 전용으로 설정
-          cname_r.readOnly = true;
+          oname_r.readOnly = true;
           id_r.readOnly = true;
 
           // 두 번째 요청에 보낼 객체 생성

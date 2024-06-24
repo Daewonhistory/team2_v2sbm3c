@@ -109,4 +109,14 @@ public interface OwnerDAOInter {
 
   public int list_search_count(HashMap<String,Object> map);
 
+
+  public String findNamePhone(HashMap<String , Object> map) ;
+
+  public String findNameEmail(HashMap<String , Object> map) ;
+
+  public int checkNamePhone(HashMap<String , Object> map) ;
+
+  public int checkNameEmail(HashMap<String , Object> map) ;
+
+  public int passwd_updates(HashMap<String, Object> map);
 }

@@ -3,8 +3,8 @@
 
 
 
-
-  <table class="table table-striped" >
+  <div class="manager-user">
+  <table class="manager-user-list" >
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 15%;'/>
@@ -14,7 +14,7 @@
       <col style='width: 10%;'/>
     </colgroup>
     <thead>
-    <tr>
+    <tr class="manager-header">
       <th class="th_bs">선택</th>
       <th class="th_bs">번호</th>
       <th class="th_bs">아이디</th>
@@ -30,7 +30,7 @@
 
 
     <!-- Iterate over your data -->
-    <tr th:each="customerVO,status : ${searchlist}">
+    <tr class="manager-data" th:each="customerVO,status : ${searchlist}">
 
       <td class="td_bs"><input type="checkbox" name="selectedcustomergories" th:value="${customerVO.custno}"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
@@ -324,4 +324,4 @@
   <div class="Bottom_menu" th:utext="${paging}"></div>
 </div>
 
-
+</div>

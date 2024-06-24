@@ -321,4 +321,45 @@ public class OwnerProC implements OwnerProInter {
     return str.toString();
   }
 
+  @Override
+  public String findNamePhone(String oname, String phone) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("oname", oname);
+    map.put("phone", phone);
+
+    return this.onwerDAO.findNamePhone(map);
+  }
+
+  @Override
+  public String findNameEmail(String oname, String email) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("oname", oname);
+    map.put("email", email);
+    return this.onwerDAO.findNameEmail(map);
+  }
+
+  @Override
+  public int checkNamePhone(String oname, String phone) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("oname", oname);
+    map.put("phone", phone);
+    return this.onwerDAO.checkNamePhone(map);
+  }
+
+  @Override
+  public int checkNameEmail(String oname, String email) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("oname", oname);
+    map.put("email", email);
+    return this.onwerDAO.checkNameEmail(map);
+  }
+
+  @Override
+  public int passwd_updates(String id, String passwd) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("id", id);
+    map.put("passwd", passwd);
+    return this.onwerDAO.passwd_updates(map);
+  }
+
 }

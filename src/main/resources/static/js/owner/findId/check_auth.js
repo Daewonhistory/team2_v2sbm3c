@@ -35,8 +35,8 @@ function check_auth(type) {
             nexte.style.display = "flex";
             let auth_btn_email = document.getElementById('auth_btn_email');
             auth_btn_email.disabled = true;
-            let cname2 = document.getElementById('cname2');
-            cname2.readOnly = true;
+            let oname2 = document.getElementById('oname2');
+            oname2.readOnly = true;
             email_r.readOnly = true;
             console.log('Email authentication successful');
             alert('인증이 완료되었습니다 다음을 눌러주세요')
@@ -79,11 +79,11 @@ function check_auth(type) {
             alert('인증이 완료되었습니다 다음을 눌러주세요')
             // Disable the button if authentication is successful
             let auth_btn_phone = document.getElementById('auth_btn_phone');
-            let cnamer = document.getElementById('cname');
+            let onamer = document.getElementById('oname');
             let nextp = document.getElementById('next-phone');
             nextp.style.display = "flex";
             phone_r.readOnly = true;
-            cnamer.readOnly = true;
+            onamer.readOnly = true;
 
             auth_btn_phone.disabled = true;
             // Additional actions upon successful phone authentication can be added here

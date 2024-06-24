@@ -9,8 +9,29 @@
         WHERE id=#{id}
     </select>
 
+    <select id="findNameEmail" resultType="String" >
+        SELECT id as cnt
+        FROM owner
+        WHERE oname = #{oname} AND email = #{email}
+    </select>
 
+    <select id="findNamePhone" >
+        SELECT id
+        FROM owner
+        WHERE oname = #{oname} AND phone = #{phone}
+    </select>
 
+    <select id="checkNameEmail" resultType="int" >
+        SELECT COUNT(email) as cnt
+        FROM owner
+        WHERE oname = #{oname} AND email = #{email}
+    </select>
+
+    <select id="checkNamePhone" resultType="int" >
+        SELECT COUNT(id) as cnt
+        FROM owner
+        WHERE oname = #{oname} AND phone = #{phone}
+    </select>
 
     <insert id="create" parameterType="dev.mvc.owner.OwnerVO">
         INSERT INTO owner(ownerno, id, email, passwd, oname,phone,tel,zipcode, address1, address2, grade, nickname,
@@ -119,14 +140,14 @@
 
 <!--    &lt;!&ndash; ownerno로 회원 정보 조회 &ndash;&gt;-->
     <select id="read" resultType="dev.mvc.owner.OwnerVO" parameterType="int">
-        SELECT ownerno, id, passwd, oname, tel,phone , address1, address2, reg_date, grade
+        SELECT ownerno, id, passwd, oname, tel,phone , address1, address2, reg_date, grade,CERTIFI_IMAGE,IDENTI_CARD_IMAGE,BUSINESSNO
         FROM owner
         WHERE ownerno = #{ownerno}
     </select>
 
     <!-- id(이메일)로 회원 정보 조회 -->
     <select id="readById" resultType="dev.mvc.owner.OwnerVO" parameterType="String">
-        SELECT ownerno, id, passwd, oname, tel,phone ,zipcode, address1, address2,image, reg_date, grade
+        SELECT ownerno, id, passwd, oname, tel,phone ,zipcode, address1, address2,image, reg_date, grade,CERTIFI_IMAGE,IDENTI_CARD_IMAGE,BUSINESSNO
         FROM owner
         WHERE id = #{id}
     </select>
@@ -177,6 +198,12 @@
         UPDATE owner
         SET grade=#{grade}
         WHERE ownerno=#{ownerno}
+    </update>
+
+    <update id="passwd_updates" parameterType="HashMap">
+        UPDATE owner
+        SET passwd=#{passwd}
+        WHERE id = #{id}
     </update>
 
 
