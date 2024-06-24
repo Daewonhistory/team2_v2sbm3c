@@ -128,6 +128,30 @@ public interface OwnerProInter {
 
   public String pagingBox(int now_page, String word,String type, String list_file, int search_count,int record_per_page, int page_per_block);
 
+
+  public String findNamePhone(String oname, String phone);
+
+
+  public String findNameEmail(String oname, String email) ;
+
+  /**
+   * 아이디 찾기 시 회원 조회
+   * @param oname
+   * @param phone
+   * @return 추가한 레코드 갯수
+   */
+  public int checkNamePhone(String oname, String phone);
+
+  /**
+   * 아이디 찾기 시 회원 조회
+   * @param oname
+   * @param email
+   * @return 추가한 레코드 갯수
+   */
+  public int checkNameEmail(String oname, String email);
+
+  public int passwd_updates(String id, String passwd);
+
 }
 
 

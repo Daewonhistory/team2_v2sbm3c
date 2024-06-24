@@ -24,9 +24,6 @@ public interface CustomerProInter {
    */
   public int checkNamePhone(String cname, String phone);
 
-  public String findNamePhone(String cname, String phone);
-
-
   /**
    * 아이디 찾기 시 회원 조회
    * @param cname
@@ -35,7 +32,15 @@ public interface CustomerProInter {
    */
   public int checkNameEmail(String cname, String email);
 
+
+  public String findNamePhone(String cname, String phone);
+
+
   public String findNameEmail(String cname, String email) ;
+
+
+
+
 
 
   public ArrayList<CustomerVO> list_search_paging(String word, String type, int now_page, int record_per_page);

@@ -1,122 +1,190 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+
   <div th:text="${fail}">
 
   </div>
   <script>
-
-
+    $(function(){
+      $('.select2-selection__rendered').css({'font-size':'15px'});
+    });
 
     fetch("/category/catelist", {
       method: 'GET'
     })
-      .then(response => response.json())
-      .then(rdata => {
-        const selectElement = document.getElementById('categoryno');
+        .then(response => response.json())
+        .then(rdata => {
+          const selectElement = document.getElementById('categoryno');
 
-        // 받은 데이터에서 categoryno 값을 옵션으로 추가
-        rdata.forEach(item => {
-          const option = document.createElement('option');
-          option.value = item.categoryno;
-          option.text = item.name; // 이 부분을 변경하셔서 원하는 텍스트로 설정하세요.
-          selectElement.appendChild(option);
+          // 받은 데이터에서 categoryno 값을 옵션으로 추가
+          rdata.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.categoryno;
+            option.text = item.name; // 이 부분을 변경하셔서 원하는 텍스트로 설정하세요.
+            selectElement.appendChild(option);
+          });
         });
-      });
-
-  </script>
-  <script>
-
-    // 보내려는 ownerno 값
-
-    // 보내려는 ownerno 값
-    const ownerno = 8;
-
-    // fetch를 사용하여 POST 요청 보내기
-    fetch('/certifi/list', {
-      method: 'POST', // HTTP 메서드를 POST로 설정
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded' // URL 인코딩 형식의 데이터 전송을 명시
-      },
-      body: `ownerno=${ownerno}` // URL 인코딩된 데이터 포함
-    })
-      .then(response => response.json()) // 응답을 JSON 형식으로 파싱
-      .then(rdata => {
-        const selectElement = document.getElementById('businessno');
-
-        // 받은 데이터에서 businessno 값을 옵션으로 추가
-        rdata.forEach(item => {
-          const option = document.createElement('option');
-          option.value = item.businessno;
-          option.text = item.businessno;
-          selectElement.appendChild(option);
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
 
   </script>
 
-  <div class='menu_line'></div>
 
-  <div style="width: 60%; margin: 0px auto ">
-    <div class="title_line">식당 등록(<span class="required">* </span>는 필수 )</div>
-    <form id="frm" name="frm" th:object="${restaurantVO}" enctype="multipart/form-data" method="post"
-          action="/restaurant/create">
-
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label>식당 이미지</label>
-        <input type='file' class="form-control" name='file1MF' id='rest_img1' value='' placeholder="파일 선택">
-      </div>
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label>식당 이미지</label>
-        <input type='file' class="form-control" name='file2MF' id='rest_img2' value='' placeholder="파일 선택">
-      </div>
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label>식당 이미지</label>
-        <input type='file' class="form-control" name='file3MF' id='rest_img3' value='' placeholder="파일 선택">
-      </div>
-      <div class="form-group" style="margin-top: 10px;">
-        <label>식당 이름</label>
-        <input type='text' class="form-control" name='name' id='name' value='' placeholder="식당이름">
-      </div>
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label>식당 카테고리</label>
-        <select style="border: black 1px solid;" class="form-control" name='categoryno' id='categoryno' placeholder="파일 선택">
-
-        </select>
-      </div>
-      <div class="form-group" style="margin-top: 10px;">
-        <label>사업자 번호</label>
-        <select style="border: black 1px solid;" class="form-control" name='businessno' id='businessno' placeholder="파일 선택">
-
-        </select>
-      </div>
-
-        <input type="hidden" style="border: black 1px solid;" class="form-control" name='ownerno' id='ownerno' value="7" placeholder="파일 선택">
-
-<!--      th:value="${session.ownerno}"-->
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label>식당 전화번호</label>
-        <input type="text" style="border: black 1px solid;" class="form-control" name='tel' id='tel'  placeholder="파일 선택">
+  <div class="container">
+    <div class="form-container">
+      <div class="title_line">식당 등록(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" th:object="${restaurantVO}" enctype="multipart/form-data" method="post"
+            action="/restaurant/create">
+        <div class="form-group">
+          <label for="rest_img1">식당 이미지</label>
+          <input type="file" class="form-control" name="file1MF" id="rest_img1" placeholder="파일 선택">
+        </div>
+        <div class="form-group">
+          <label for="rest_img2">식당 이미지</label>
+          <input type="file" class="form-control" name="file2MF" id="rest_img2" placeholder="파일 선택">
+        </div>
+        <div class="form-group">
+          <label for="rest_img3">식당 이미지</label>
+          <input type="file" class="form-control" name="file3MF" id="rest_img3" placeholder="파일 선택">
+        </div>
+        <div class="form-group">
+          <label for="name">식당 이름</label>
+          <input type="text" class="form-control" name="name" id="name" placeholder="식당 이름">
+        </div>
+        <div class="form-group">
+          <label for="name">예약 범위</label>
+          <input type="number" class="form-control" name="reserve_range" id="reserve_range" placeholder="예약 범위">
+        </div>
+        <div class="form-group">
+          <label for="categoryno">식당 카테고리</label>
+          <select class="form-control" name="categoryno" id="categoryno">
+            <!-- Options should be populated here -->
+          </select>
+        </div>
 
 
-      </div>
+        <input type="hidden" class="form-control" name="ownerno" id="ownerno" value="7">
+        <div class="form-group">
+          <label for="tel">식당 전화번호</label>
+          <input type="text" class="form-control" name="tel" id="tel" placeholder="식당 전화번호">
+        </div>
+        <label for="name" style="margin-top: 10px;">식당 주소</label>
+        <div style="display: flex ;">
+
+          <div id="midarea_div" style="width: 25%;">
 
 
+            <select id="midAreaSelect" name="midAreaSelect" onchange="selectMidArea(this)" class="form-control">
+              <option th:each="midAreaVO : ${midAreaList}" th:value="${midAreaVO.midareano}"
+                      th:text="${midAreaVO.name}"></option>
+            </select>
+          </div>
 
-      <div class="form-group" style="margin-top: 10px;">
-        <button type="submit" class="btn btn-primary"  id="btn_send">회원가입</button>
-        <button type="button" class="btn btn-primary" onclick="location.href = '/';" id="btn_cancel">취소</button>
-      </div>
+            <div id="botarea_div" style="display:none; width: 25%; ">
+          </div>
+          <div id="address1" style="display:none; width: 50%; margin-left: 10px;  ">
+            <input class="form-control" id="addressv" type="text" name="addressv">
+            <input  class="form-control" id="alladdress" type="hidden" name="address">
+            <input class="form-control" id="lng" type="hidden" name="lng">
+            <input class="form-control" id="lat" type="hidden" name="lat">
+            <button type="button" id="searchButton" onclick="searchAddress()">위치 확인</button>
+          </div>
+        </div>
+        <div id="map" style="width:100%;height:350px;"></div>
 
-    </form>
+        <script src="/js/restaurant/create/SelectMidArea.js"></script>
+        <script>
+          $(document).ready(function () {
+            // Kakao Maps API 초기화
+            kakao.maps.load(function () {
+              // Select2 초기화
+              $('select').select2({
+                placeholder: '검색해주세요',
+                allowClear: false,
+                language: {
+                  noResults: function () {
+                    return '결과가 없습니다'; // 결과가 없을 때 표시할 메시지
+                  }
+                }
+              });
+            });
+          })
+
+              // midAreaSelect가 변경될 때 실행되는 함수
+
+        </script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6&libraries=services&autoload=false"></script>
+
+        <script>
+          function searchAddress() {
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                  center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                  level: 3 // 지도의 확대 레벨
+                };
+
+// 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 주소-좌표 변환 객체를 생성합니다
+            var geocoder = new kakao.maps.services.Geocoder();
+            const midarea = document.getElementById("midAreaSelect");
+            const midselectedOption = midarea.options[midarea.selectedIndex];
+            const midvalue = midselectedOption.text;
+
+            const botarea = document.getElementById("botarea");
+            const botareaselectedOption = botarea.options[botarea.selectedIndex];
+            const botvalue = botareaselectedOption.text;
+
+
+            const addressvalue = document.getElementById('addressv').value;
+
+            const allarea = midvalue + " " + botvalue + " " + addressvalue;
+            const submitaddress = document.getElementById('alladdress');
+            submitaddress.value = allarea;
+
+
+            console.log(allarea);
+            // 주소로 좌표를 검색합니다
+            geocoder.addressSearch(allarea, function(result, status) {
+
+              // 정상적으로 검색이 완료됐으면
+              if (status === kakao.maps.services.Status.OK) {
+
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                // 결과값으로 받은 위치를 마커로 표시합니다
+                var marker = new kakao.maps.Marker({
+                  map: map,
+                  position: coords
+                });
+
+                // 인포윈도우로 장소에 대한 설명을 표시합니다
+                var infowindow = new kakao.maps.InfoWindow({
+                  content: '<div style="width:150px;text-align:center;padding:6px 0;">사업자 식당</div>'
+                });
+                infowindow.open(map, marker);
+
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+
+                let lat = document.getElementById('lat');
+                lat.value = result[0].y;
+
+                let lng = document.getElementById('lng');
+                lng.value = result[0].x;
+
+                console.log(coords);
+              }
+            });
+          }
+
+        </script>
+        <div class="form-group buttons">
+          <button type="submit" class="btn btn-primary" id="btn_send">등록</button>
+          <button type="button" class="btn btn-secondary" onclick="location.href = '/';" id="btn_cancel">취소</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 </html>

@@ -22,7 +22,6 @@ public interface CustomerDAOInter {
    * @param phone
    * @return 추가한 레코드 갯수
    */
-  public int checkNamePhone(HashMap<String , Object> map) ;
 
   public String findNamePhone(HashMap<String , Object> map) ;
 
@@ -30,6 +29,7 @@ public interface CustomerDAOInter {
 
   public int passwd_updates(HashMap<String, Object> map);
 
+  public int checkNamePhone(HashMap<String , Object> map) ;
 
   public int checkNameEmail(HashMap<String , Object> map) ;
 

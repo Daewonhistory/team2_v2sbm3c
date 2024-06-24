@@ -260,10 +260,11 @@ input{
 
 .title_line {
   text-align: left;
-  border-bottom: solid 3px #555555;
   width: 100%;
   margin: 20px auto;
   font-size: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .title_link:link{  /* 방문전 상태 */

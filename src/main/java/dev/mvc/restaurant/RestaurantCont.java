@@ -84,6 +84,9 @@ public class RestaurantCont {
   public String create(Model model, RestaurantVO restaurantVO, HttpSession session) {
     String type = "s";
 
+    ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
+    model.addAttribute("midAreaList",midAreaVOS);
+
     if (type == null) {
       return "redirect:/";
     } else {

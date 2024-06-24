@@ -1,17 +1,17 @@
 function sendcode(type) {
   // Retrieve the input elements
-  let cname_r = document.getElementById('cname2');
+  let oname_r = document.getElementById('oname2');
   let email_r = document.getElementById('email');
   let phone_r = document.getElementById('phone');
 
   if (type === 'email') {
     // Get the values from the input elements
-    let cname = cname_r.value;
+    let oname = oname_r.value;
     let email = email_r.value;
 
     // Create the customer object
     const customerVO = {
-      cname: cname,
+      oname: oname,
       email: email
     };
 
@@ -34,7 +34,7 @@ function sendcode(type) {
             let url2 = './send_email';
 
             // Make the input fields read-only
-            cname_r.readOnly = true;
+            oname_r.readOnly = true;
             email_r.readOnly = true;
 
             // Create the object to be sent in the second request
@@ -72,12 +72,12 @@ function sendcode(type) {
 
   } else if (type === 'phone') {
     // Get the values from the input elements
-    let cname = document.getElementById('cname').value;
+    let oname = document.getElementById('oname').value;
     let phone = phone_r.value;
 
     // Create the customer object
     const customerVO = {
-      cname: cname,
+      oname: oname,
       phone: phone
     };
 

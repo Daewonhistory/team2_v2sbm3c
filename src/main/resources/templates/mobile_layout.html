@@ -56,7 +56,7 @@
         <a th:if="${session.id == null }" href="/customer/login" class="nav-item profile">
           <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
         </a>
-        <a th:if="${session.type == 'owner' || session.type == 'NotCerti'}" href="/owner/my_page" class="nav-item profile">
+        <a th:if="${session.type == 'owner' || session.type == 'NotCerti' || session.type == 'ready'}" href="/owner/my_page" class="nav-item profile">
           <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
         </a>
         <a th:if="${session.type == 'customer' }" href="/customer/my_page" class="nav-item profile">
