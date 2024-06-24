@@ -24,7 +24,7 @@
 	<delete id="delete">
 		DELETE FROM botarea WHERE botareano = #{botareano}
 	</delete>
-	<!-- 카테고리별 검색 + 페이징 목록 -->
+
   <select id="list_search_paging" resultType="dev.mvc.botarea.BotAreaVO" parameterType="HashMap">
     SELECT botareano, name, midareaname, r
 	  FROM (

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속-->
+
+  <div layout:fragment="content">
+  	<style type='text/css'>
+	    #paging {text-align: center; margin-top: 5px; font-size: 1em;}
+	    #paging A:link {text-decoration:none; color:black; font-size: 1em;}
+	    #paging A:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}
+	    #paging A:visited {text-decoration:none;color:black; font-size: 1em;}
+	    .span_box_1{
+		    text-align: center;
+		    font-size: 1em;
+		    border: 1px;
+		    border-style: solid;
+		    border-color: #cccccc; 
+		    padding:1px 6px 1px 6px;
+		    margin:1px 2px 1px 2px;
+	    }
+	    .span_box_2{
+	      text-align: center;
+	      background-color: #668db4;
+	      color: #FFFFFF;
+	      font-size: 1em;
+	      border: 1px;
+	      border-style: solid;
+	      border-color: #cccccc;
+	      padding:1px 6px 1px 6px; 
+	      margin:1px 2px 1px 2px;
+	    } 
+	  </style>
+    
+    
+    <div class="title_line">
+
+      
+    </div>
+    
+		
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+    </aside>
+    <!--
+    <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
+		-->
+    
+  	<input type="hidden" name="now_page" th:value="${now_page}">
+  	<div class="menu_line"></div>
+  	<form name='frm' method='post' th:object="${midAreaVO}" action='./create'>
+  		<input type="text" name="name" placeholder="지역명">
+  		<button type="submit">중분류지역 생성</button>
+  	</form>
+  	<div class="menu_line"></div>
+    <table class="table table-striped">
+      <colgroup>
+        <col style="width: 20%" />
+        <col style="width: 50%" />
+        <col style="width: 30%" />
+      </colgroup>
+      <tbody id="tbody">
+        
+      </tbody>
+    </table>
+
+    <div id="bottom"></div>
+		<script>
+			let now_page_value = 1;
+      window.onload = function () {
+        console.log("Page is fully loaded");
+        send();
+        now_page_value = parseInt(document.querySelector("#now_page").dataset.page);
+      };
+      function search() {
+        now_page_value = 1;
+        send();
+      }
+      
+      // 페이지 이동
+      function pageMove(movePage) {
+        now_page_value =  parseInt(movePage.dataset.page);
+        send();
+      }
+      
+      function pageGrpMove(movePageGrp){
+		  	now_page_value =  parseInt(movePage.dataset.page);
+        send();
+	  	}
+	  	
+      function send() {
+        const bottom = document.getElementById("bottom");
+        bottom.innerHTML = "";
+				
+				if (now_page_value == null){
+					now_page_value = 1;
+					console.log("Aaa");
+				}
+        fetch(
+          "/midarea/list",
+          {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+					"now_page": now_page_value
+					})
+          }
+        )
+          .then((response) => response.json())
+          .then((rdata) => {
+            const resultBody = document.getElementById("tbody");
+            resultBody.innerHTML = `
+							<tr>
+					        <th class='th_bs'>번호</th>
+					        <th class='th_bs'>중분류</th>
+					        <th class='th_bs'>수정 / 삭제</th>
+					    </tr>
+						`;
+            const bottommenu = document.createElement("div");
+            rdata.midAreaList.forEach((midAreaVO) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+                  <td class="td_basic">
+                      <span>${midAreaVO.midareano}</span>
+                  </td>
+                  <td class="td_basic">
+                      <span>${midAreaVO.name}</span>
+                  </td>
+                  <td class="td_bs">
+                      <a onclick="updateCheck(${midAreaVO.midareano}, '${midAreaVO.name}')">
+                          <img src="/cate/images/update.png" class="icon">
+                      </a>
+                      <a onclick="deleteCheck(${midAreaVO.midareano}, ${now_page_value})">
+                          <img src="/cate/images/delete.png" class="icon">
+                      </a>
+                  </td>
+                `;
+
+              resultBody.appendChild(row);
+            });
+
+            bottommenu.innerHTML = rdata.paging;
+
+            bottom.appendChild(bottommenu);
+          });
+      }
+    </script>
+    <script>
+      function deleteCheck(midareano, now_page) {
+        if (confirm("정말 삭제하시겠습니까??") == true) {
+          //확인
+          let f = document.createElement("form");
+          let obj1;
+          obj1 = document.createElement("input");
+          obj1.type = "hidden";
+          obj1.name = "midareano";
+          obj1.value = midareano;
+
+          f.appendChild(obj1);
+          f.setAttribute("method", "post");
+          f.setAttribute("action", "/midarea/delete");
+          document.body.appendChild(f);
+          f.submit();
+        } else {
+          //취소
+          return;
+        }
+      }
+      function updateCheck(midareano, name){
+		  	let newName = prompt(`변경 전 지역명: ${name}`, `수정 후 지역명을 작성해주세요` );
+		  	if(newName != null){
+				  let f = document.createElement("form");
+	        let obj1;
+	        obj1 = document.createElement("input");
+	        obj1.type = "hidden";
+	        obj1.name = "midareano";
+	        obj1.value = midareano;
+					let obj2;
+					obj2 = document.createElement("input");
+					obj2.type = "hidden";
+					obj2.name = "name";
+					obj2.value = newName;
+	        f.appendChild(obj1);
+	        f.appendChild(obj2);
+	        f.setAttribute("method", "post");
+	        f.setAttribute("action", "/midarea/update");
+	        document.body.appendChild(f);
+	        f.submit();
+			  }else{
+				  return;
+			  }
+		  	
+	  }
+    </script>
+  </div>
+</html>

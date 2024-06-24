@@ -45,7 +45,7 @@ CREATE TABLE RESTAURANT(
     
     private double lng;
     
-    private int reserveRange;
+    private int reserve_range;
     /** 사업자 번호 */
     private int ownerno;
     /** 카테고리 번호 번호 */

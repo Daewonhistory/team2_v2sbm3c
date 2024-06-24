@@ -4,7 +4,7 @@
 <mapper namespace="dev.mvc.midarea.MidAreaDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 	<insert id="create">
 		INSERT INTO midarea(midareano, name)
-		VALUES (midarea_seq.nextval, #{name});
+		VALUES (midarea_seq.nextval, #{name})
 	</insert>
 	<select id="read">
 		SELECT midareano, name FROM midarea WHERE midareano = #{midareano}
@@ -22,6 +22,20 @@
 		DELETE FROM midarea WHERE midareano = #{midareano}
 	</delete>
 	
+	<select id="list_paging" resultType="dev.mvc.midarea.MidAreaVO" parameterType="HashMap">
+    SELECT midareano, name, r
+		FROM (
+		    SELECT midareano, name, rownum as r
+		    FROM midarea
+		    ORDER BY name ASC 
+		)
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+  </select>
+  
+  <select id="list_count" resultType="int">
+    SELECT COUNT(*) as cnt
+    FROM midarea
+  </select>  
 </mapper>
 
 
