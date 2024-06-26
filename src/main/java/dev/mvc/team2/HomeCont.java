@@ -38,8 +38,9 @@ public class HomeCont {
   @GetMapping("/")
   public String Home(Model model) {
     ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
-
+	ArrayList<CategoryVO> categoryList = this.categoryProc.list();
 	model.addAttribute("midAreaList", midAreaList);
+	model.addAttribute("categoryList", categoryList);
     return "mobile";
   }
 
@@ -94,14 +95,16 @@ public class HomeCont {
   }
 
   @GetMapping("/modal")
-  public String modal() {
+  public String modal(Model model) {
+	  ArrayList<CategoryVO> list = this.categoryProc.list();
+	  model.addAttribute("list", list);
 	  return "/modal";
   }
 
-  @GetMapping("/error")
-  public String handleError() {
-    // 에러 페이지로 이동
-    return "error"; // error.html로 이동
-  }
+//  @GetMapping("/error")
+//  public String handleError() {
+//    // 에러 페이지로 이동
+//    return "error"; // error.html로 이동
+//  }
 
 }

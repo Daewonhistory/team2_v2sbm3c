@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+  <!-- layout.html 상속-->
+
+  <div layout:fragment="content">
+  	<style type='text/css'>
+	    #paging {text-align: center; margin-top: 5px; font-size: 1em;}
+	    #paging A:link {text-decoration:none; color:black; font-size: 1em;}
+	    #paging A:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}
+	    #paging A:visited {text-decoration:none;color:black; font-size: 1em;}
+	    .span_box_1{
+		    text-align: center;
+		    font-size: 1em;
+		    border: 1px;
+		    border-style: solid;
+		    border-color: #cccccc; 
+		    padding:1px 6px 1px 6px;
+		    margin:1px 2px 1px 2px;
+	    }
+	    .span_box_2{
+	      text-align: center;
+	      background-color: #668db4;
+	      color: #FFFFFF;
+	      font-size: 1em;
+	      border: 1px;
+	      border-style: solid;
+	      border-color: #cccccc;
+	      padding:1px 6px 1px 6px; 
+	      margin:1px 2px 1px 2px;
+	    } 
+	  </style>
+    
+    
+    <div class="title_line"></div>
+		<!--
+      <div
+        th:if="${word.length() > 0}"
+        class="title_line"
+        th:text="|> 「${word}」 검색 ${search_count} 건|"
+      ></div>
+    </div>
+    -->
+		
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class="menu_divide">│</span>
+      <a th:href="@{|/admitperson/create|}">등록</a>
+    </aside>
+    <!--
+    <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
+		-->
+    
+		
+		<div style="text-align: right; clear:both;">
+    
+      <input type="date" name="start_date" id="start_date" onchange="send()">
+      <input type="date" name="end_date" id="end_date" onchange="send()">
+      <input type="hidden" name="now_page" th:value="${now_page}">
+      <button type='button' onclick="search()" class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>  
+      <button type='button' th:onclick="|location.href='/admitperson/list|"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
+		
+  	</div>
+  	<div class="menu_line"></div>
+  	<div>
+      <form name="frm">
+        <select id="restno" onchange="send()">
+          <option th:if="${type.equals('admin')}" value="0">전체 식당</option>
+          <option
+            th:each="restaurantVO, status : ${restaurantList}"
+            th:value="${restaurantVO.restno}"
+            th:text="${restaurantVO.name}"
+          ></option>
+        </select>
+      </form>
+    </div>
+  	<div class="menu_line"></div>
+  	<div class="manager-user">
+	    <table class="manager-user-list">
+	      <colgroup>
+	        <col style="width: 10%" />
+	        <col style="width: 20%" />
+	        <col style="width: 20%" />
+	        <col style="width: 10%" />
+	        <col style="width: 10%" />
+	        <col style="width: 10%" />
+	        <col style="width: 20%" />
+	      </colgroup>
+	      <thead>
+	      	<tr class="manager-header">
+		        <th class='th_bs'>번호</th>
+		        <th class='th_bs'>식당명</th>
+		        <th class='th_bs'>예약일</th>
+		        <th class='th_bs'>시간</th>
+		        <th class='th_bs'>허용인원</th>
+		        <th class='th_bs'>현재예약인원</th>
+		        <th class='th_bs'>수정 / 삭제</th>
+			    </tr>
+	      </thead>
+	      <tbody id="tbody">
+	        
+	      </tbody>
+	    </table>
+  	</div>
+    <div id="bottom"></div>
+    <script src="/js/today.js"></script>
+		<script>
+			let now_page_value = 1;
+      window.onload = function () {
+        console.log("Page is fully loaded");
+        const start_date = document.getElementById("start_date");
+        start_date.value = getTodayDate();
+        const end_date = document.getElementById("end_date");
+        end_date.value = getTodayDate();
+        send();
+        now_page_value = parseInt(document.querySelector("#now_page").dataset.page);
+      };
+      function search() {
+        now_page_value = 1;
+        send();
+      }
+      
+      // 페이지 이동
+      function pageMove(movePage) {
+        now_page_value =  parseInt(movePage.dataset.page);
+        send();
+      }
+      
+      function pageGrpMove(movePageGrp){
+		  	now_page_value =  parseInt(movePage.dataset.page);
+        send();
+	  	}
+	  	
+      function send() {
+        const start_date = document.getElementById("start_date");
+        const end_date = document.getElementById("end_date");
+        const restno = document.getElementById("restno");
+        let restno_value = parseInt(restno.value);
+        console.log(restno_value);
+        
+        const bottom = document.getElementById("bottom");
+        
+        bottom.innerHTML = "";
+				
+				if (now_page_value == null){
+					now_page_value = 1;
+					console.log("Aaa");
+				}
+        fetch(
+          "/admitperson/list_search",
+          {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+					"start_date": start_date.value,
+					"end_date": end_date.value,
+					"now_page": now_page_value,
+					"restno": restno_value
+					})
+          }
+        )
+          .then((response) => response.json())
+          .then((rdata) => {
+            const resultBody = document.getElementById("tbody");
+            resultBody.innerHTML = ``;
+            const bottommenu = document.createElement("div");
+            rdata.admitPersonList.forEach((admitPersonVO) => {
+              const row = document.createElement("tr");
+							row.classList.add("manager-data");
+              row.innerHTML = `
+                  <td class="td_basic" onclick="location.href='/admitperson/read?admitpersonno=${
+                    admitPersonVO.admitpersonno
+                  }&now_page=${now_page_value}'">
+                      <span>${admitPersonVO.admitpersonno}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/admitperson/read?admitpersonno=${
+                    admitPersonVO.admitpersonno
+                  }'">
+                      <span>${admitPersonVO.restname}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/admitperson/read?admitpersonno=${
+                    admitPersonVO.admitpersonno
+                  }&now_page=${now_page_value}'">
+                      <span>${admitPersonVO.reserve_date}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/admitperson/read?admitpersonno=${
+                    admitPersonVO.admitpersonno
+                  }&now_page=${now_page_value}'">
+                      <span>${admitPersonVO.time}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/admitperson/read?admitpersonno=${
+                    admitPersonVO.admitpersonno
+                  }&now_page=${now_page_value}'">
+                      <span>${admitPersonVO.admit_person}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/admitperson/read?admitpersonno=${
+                    admitPersonVO.admitpersonno
+                  }&now_page=${now_page_value}'">
+                      <span>${admitPersonVO.curr_person}</span>
+                  </td>
+                  <td class="td_bs">
+                      <a href="/admitperson/update?admitpersonno=${admitPersonVO.admitpersonno}">
+                          <img src="/cate/images/update.png" class="icon">
+                      </a>
+                      <a onclick="delete_check(${admitPersonVO.admitpersonno})">
+                          <img src="/cate/images/delete.png" class="icon">
+                      </a>
+                  </td>
+                `;
+
+              resultBody.appendChild(row);
+            });
+
+            bottommenu.innerHTML = rdata.paging;
+
+            bottom.appendChild(bottommenu);
+          });
+      }
+    </script>
+    <script>
+      function delete_check(admitpersonno) {
+        if (confirm("정말 삭제하시겠습니까??") == true) {
+          //확인
+          let f = document.createElement("form");
+          let obj1;
+          obj1 = document.createElement("input");
+          obj1.type = "hidden";
+          obj1.name = "admitpersonno";
+          obj1.value = admitpersonno;
+
+          f.appendChild(obj1);
+          f.setAttribute("method", "post");
+          f.setAttribute("action", "/admitperson/delete");
+          document.body.appendChild(f);
+          f.submit();
+        } else {
+          //취소
+          return;
+        }
+      }
+    </script>
+  </div>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+	<style>
+		.schedule-condition {
+			display: flex;
+			flex-direction: column;
+		}
+	</style>
+  <div class="container">
+    <div class="form-container">
+      <div class="title_line">식당 스케줄 등록(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" method="post" action="/schedule/create">
+        <input type="hidden" name="restno" th:value="${restaurantVO.restno}">
+        <label for="restname">식당 이름: </label>
+        <span id="restname" th:text="${restaurantVO.name}"></span>
+        <button type="button" onclick="addClock()">예약 시각 추가</button>
+      	<div id="schedule-div" class="form-group">
+      		<div class="schedule-condition">
+        		<input type="number" class="form-control times" name="times" min="0" max="23" placeholder="예약 시각">
+        		<input type="number" class="form-control" name="admit_persons" min="0" placeholder="예약 허용 인원">
+        	</div>
+      	</div>
+        
+
+        <div class="form-group buttons">
+          <button type="button" class="btn btn-primary" id="btn_send" onclick="send()">등록</button>
+          <button type="button" class="btn btn-secondary" onclick="location.href = '/';" id="btn_cancel">취소</button>
+        </div>
+      </form>
+    </div>
+    <script>
+  	function send(){
+		  let check = checkClock();
+		  if(!check){
+			  return;
+		  }
+			document.querySelector('#frm').submit();
+		}
+  	function checkClock(){
+			const timeInputs = document.querySelectorAll('.times');
+			console.log(timeInputs.length);
+			let times = [];
+			for(timeInput of timeInputs){
+				times.push(timeInput.value);
+			}
+			console.log(times);
+			for(let i=0; i<timeInputs.length - 1; i++){
+				console.log(times.slice(i+1));
+				const hasTime = times.slice(i+1).includes(timeInputs[i].value);
+				
+				if(hasTime){
+					alert('동일시각의 조건이 있습니다. 수정해주세요.');
+					timeInput.focus();
+					return false;
+				}
+			}
+			
+ 			return true;
+		}
+		
+  	function addClock(){
+			const scheduleConditionList = document.querySelectorAll('.schedule-condition');
+			
+			if(scheduleConditionList.length >= 24){
+				alert('24개 이상의 스케줄 등록은 불가능합니다.');
+				return;
+			}
+			const scheduleDiv = document.querySelector('#schedule-div');
+			
+			const scheduleCondition = document.createElement('div');
+			scheduleCondition.classList.add('schedule-condition');
+			
+			const time = document.createElement('input');
+			time.type = 'number'
+			time.classList.add('times');
+			time.min = '0';
+			time.max = '23';
+			time.name = 'times';
+			time.placeholder = '시각'
+			time.classList.add('form-control');
+			
+			const admitPerson = document.createElement('input');
+			admitPerson.type = 'number'
+			admitPerson.min = '0';
+			admitPerson.name = 'admit_persons';
+			admitPerson.placeholder = '예약 허용 인원'
+			admitPerson.classList.add('form-control');
+			
+			scheduleCondition.appendChild(time);
+			scheduleCondition.appendChild(admitPerson);
+			
+			scheduleDiv.appendChild(scheduleCondition);
+		}
+    </script>
+  </div>
+</div>
+</html>
+
+
+
+

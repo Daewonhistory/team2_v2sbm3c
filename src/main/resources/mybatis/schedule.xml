@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.schedule.ScheduleDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+    <insert id="create" parameterType="dev.mvc.schedule.ScheduleVO">
+      INSERT INTO schedule(scheduleno, admit_person, time, restno)
+			VALUES(schedule_seq.nextval, #{admit_person}, #{time}, #{restno})
+    </insert>
+    
+    <select id="list_all">
+    	SELECT scheduleno, admit_person, time, restno
+			FROM schedule
+			ORDER BY restno ASC, time ASC
+    </select>
+    
+    <select id="list_by_restno">
+    	SELECT scheduleno, amdit_person, time, restno
+			FROM schedule
+			WHERE restno = #{restno}
+			ORDER BY time ASC
+    </select>
+    
+    <select id="read">
+    	SELECT scheduleno, amdit_person, time, restno
+			FROM schedule
+			WHERE scheduleno = #{scheduleno}
+    </select>
+    
+    <update id="update" parameterType="dev.mvc.schedule.ScheduleVO">
+    	UPDATE schedule
+			SET admit_person = #{admit_person}
+			WHERE scheduleno = #{scheduleno}
+    </update>
+    
+		<delete id="delete">
+			DELETE FROM schedule 
+			WHERE schedule = #{schedule}
+		</delete>
+
+
+</mapper>

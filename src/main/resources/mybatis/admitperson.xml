@@ -3,9 +3,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.admitperson.AdmitPersonDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 	
+	<insert id="create" parameterType="dev.mvc.admitperson.AdmitPersonVO">
+		INSERT INTO admitperson (admitpersonno, time, admit_person, curr_person, restno, reserve_date)
+		VALUES (admitperson_seq.nextval, #{time}, #{admit_person}, 0, #{restno}, #{reserve_date})
+	</insert>
+	
 	<select id="list_all">
 		SELECT admitpersonno, reserve_date, time, admit_person, curr_person, restno
 		FROM admitperson
+	</select>
+	
+	<select id="list_search_paging">
+		SELECT admitpersonno, reserve_date, time, admit_person, curr_person, ad.restno, res.name as restname, r
+		FROM (
+			SELECT admitpersonno, reserve_date, time, admit_person, curr_person, restno, ROWNUM as r
+			FROM admitperson
+			WHERE <![CDATA[ reserve_date >= #{start_date} AND reserve_date <= #{end_date}]]>
+			<if test="restno != 0">
+				AND restno = #{restno}
+			</if>
+		 ) ad
+		JOIN restaurant res
+		ON ad.restno = res.restno
+		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num}]]>
+	</select>
+	
+	<select id="list_search_count">
+		SELECT COUNT(*) as cnt
+    FROM admitperson
+    <choose>
+      <when test="(start_date == null || start_date == '') and (end_date == null || end_date == '')"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE <![CDATA[ reserve_date >= #{start_date} AND reserve_date <= #{end_date}]]>
+        <if test="restno != 0">
+					AND restno = #{restno}
+				</if>
+      </otherwise>
+    </choose>
 	</select>
 	<select id="admit_list" parameterType="HashMap">
 		SELECT admitpersonno, reserve_date, time, admit_person, curr_person, restno
@@ -37,4 +72,7 @@
 		WHERE admitpersonno = #{admitpersonno}
 	</update>
 	
+	<delete id="delete">
+		DELETE FROM admitperson WHERE admitpersonno = #{admitpersonno}
+	</delete>
 </mapper>

@@ -22,4 +22,5 @@ public class AdmitPersonVO {
 	private int admit_person;
 	private int curr_person;
 	private int restno; 
+	private String restname;
 }
