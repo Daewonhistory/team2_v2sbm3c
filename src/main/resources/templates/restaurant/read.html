@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+  <div class='title_line'>
+	<span>메뉴정보</span>
+  </div>
+  
+  
+  <aside class="aside_right">
+    <!-- 관리자로 로그인해야 메뉴가 출력됨 -->
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./create?restno=1|}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./update?menuno=${menuVO.menuno}&now_page=${now_page}&word=${word}|}">글 수정</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./delete?menusno=${menuVO.menuno}&now_page=${now_page}&word=${word}|}">삭제</a>  
+    <span class='menu_divide' >│</span>
+    
+  </aside> 
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>    
+    <a th:href="@{|./list_search_paging?menuno=${menuVO.menuno }&word=${word}&now_page=${now_page}|}">목록</a>
+  </aside>
+  <div class='menu_line'></div>
+  <div>
+  	<ul>
+	  <li>
+	    <div style="width: 50%;">
+	      <div th:if="${menuVO.image.endsWith('jpg') || menuVO.image.endsWith('JPG') || menuVO.image.endsWith('png') || menuVO.image.endsWith('PNG') || menuVO.image.endsWith('gif')}">
+	        <img th:src="@{|/menu/storage/${menuVO.image}|}" style="width: 50%;margin-top: 0.5%; margin-right: 1%;">
+	      </div>
+	      <div th:if="${menuVO.image == null}">
+	        <img src="/contents/images/none1.png" style="width: 50%;margin-top: 0.5%; margin-right: 1%">
+	      </div>
+	    </div>
+	  </li>
+	  <li>
+	  	<span th:text="|메뉴명 : ${menuVO.name}|"></span>
+	  </li>
+	  <li class="li_none">
+	  	<span th:text="|가격: ${menuVO.price}|"></span>
+	  </li>
+	  <li>
+	  	<span>재료:</span>
+		<div style = "background-color: gray; border-radius: 50%;  text-align: center;width:150px" th:each="IngredVO, status : ${IngredNameList}">
+	  		<span th:text="${IngredVO.name}" style="color: white;"></span>
+	  	</div>
+	  </li>
+	  
+	</ul>
+  </div>
+	
+
+</div>
+ 
+</html>

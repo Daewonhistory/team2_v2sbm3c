@@ -83,3 +83,8 @@ button:focus {
 .navigate-btn .icon {
     text-align: left;
 }
+#wrapper {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+}

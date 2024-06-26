@@ -1,0 +1,112 @@
+<!DOCTYPE html> 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+
+  
+  
+
+
+
+  <div style="width: 60%; margin: 0px auto "  th:object="${restFullData}">
+  <div class="title_line"  th:text="@{|${restFullData.name} 식당 정보 조회 수정 (*는 필수)|}">  </div>
+  <form   id="frm" name="frm" method="post" action="/restaurant/update">
+    <div style="align-items: center; display: none;">
+
+      <input class="form-control form-control-sm"  id="custno" name="custno" th:value="${restFullData.restno}" style=" width: 27%;" readonly></input>
+
+    </div>
+
+    <label>식당 이름</label>
+
+    <div style="display: flex; align-items: center;">
+
+      <input class="form-control form-control-sm"  name="name" th:value="${restFullData.name}" style=" width: 27%;" id='name_msg' readonly></input>
+
+    </div>
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>카테고리</label>
+      <select id="categoryno" name="categoryno" class="form-control form-control-sm" style="width: 27%;">
+        <!-- 옵션이 여기에 동적으로 추가될 것입니다. -->
+      </select>
+    </div>
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>예약 범위</label>
+      <input type="number" id="reserve_range" name="reserve_range" class="form-control form-control-sm" th:value="${restFullData.reserve_range}" style="width: 27%;">
+        <!-- 옵션이 여기에 동적으로 추가될 것입니다. -->
+      </input>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        fetch("/category/catelist", {
+          method: 'GET'
+        })
+            .then(response => response.json())
+            .then(rdata => {
+              console.log("Received data:", rdata); // 응답 데이터 콘솔 출력
+
+              const selectElement = document.getElementById('categoryno');
+              /*<![CDATA[*/
+              const selectedCategoryno =[[${restFullData.categoryno}]]; // 서버에서 전달받은 카테고리 번호
+
+              // 받은 데이터에서 categoryno 값을 옵션으로 추가
+              rdata.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.categoryno;
+                option.text = item.name;
+                selectElement.appendChild(option);
+              });
+
+              // 서버에서 전달받은 카테고리 번호와 일치하는 옵션 선택
+              selectElement.value = selectedCategoryno;
+
+              console.log("Selected category:", selectedCategoryno);
+              console.log("Select element value:", selectElement.value); // 선택된 값 콘솔 출력
+            })
+            .catch(error => {
+              console.error("Error fetching data:", error);
+            });
+      });
+    </script>
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>전화 번호</label>
+      <input type='text' name='tel'  th:value="${restFullData.tel}" id='tel' value=''
+             placeholder="전화번호" class="form-control form-control-sm" style="width: 27%;">
+
+    </div>
+
+
+
+
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <button type="button" class="btn btn-primary" onclick="return send()" id="btn_send">수정</button>
+      <a  class="btns" th:href="@{|./update_map?restno=${restFullData.restno}&now_page=${now_page}&word=${word}|}"  id="updatemap">지도 수정</a>
+
+      <button type="button" class="btn btn-primary" onclick="handleButtonClick()" id="btn_cancel">취소</button>
+    </div>
+<script>
+  function handleButtonClick() {
+    history.back();
+  }
+</script>
+  </form>
+</div>
+
+	
+
+</div>
+ 
+</html>
