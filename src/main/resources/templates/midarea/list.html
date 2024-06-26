@@ -34,55 +34,35 @@
     
     <div class="title_line">
 
-      <div
-        th:if="${word.length() > 0}"
-        class="title_line"
-        th:text="|> 「${word}」 검색 ${search_count} 건|"
-      ></div>
+      
     </div>
     
 		
     <aside class="aside_right">
       <a href="javascript:location.reload();">새로고침</a>
-      <span class="menu_divide">│</span>
-      <a th:href="@{|/botarea/create?word=${word}&now_page=${now_page}|}">등록</a>
     </aside>
     <!--
     <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
 		-->
     
-		
-		<div style="text-align: right; clear:both;">
-    
-      <input type="text" name="word" id="word" th:value="${word}" >
-      <input type="hidden" name="now_page" th:value="${now_page}">
-      <button type='button' onclick="search()" class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>  
-      <button type='button' th:onclick="|location.href='/botarea/list|"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
-		
-  	</div>
+  	<input type="hidden" name="now_page" th:value="${now_page}">
   	<div class="menu_line"></div>
-  	<form name='frm' method='post' th:object="${botAreaVO}" action='./create'>
-  		<select name="midareano" >
-  			<option th:each="midAreaVO, stauts:${midAreaList}" th:text="${midAreaVO.name}" th:value="${midAreaVO.midareano}"></option>
-  		</select>
-  		<input type="text" name="name">
-  		<button type="submit">소분류지역 생성</button>
+  	<form name='frm' method='post' th:object="${midAreaVO}" action='./create'>
+  		<input type="text" name="name" placeholder="지역명">
+  		<button type="submit">중분류지역 생성</button>
   	</form>
   	<div class="menu_line"></div>
   	<div class="manager-user">
 	    <table class="manager-user-list">
 	      <colgroup>
 	        <col style="width: 20%" />
+	        <col style="width: 50%" />
 	        <col style="width: 30%" />
-	        <col style="width: 30%" />
-	        <col style="width: 10%" />
-	        <col style="width: 10%" />
 	      </colgroup>
 	      <thead>
 	      	<tr class="manager-header">
 		        <th class='th_bs'>번호</th>
 		        <th class='th_bs'>중분류</th>
-		        <th class='th_bs'>소분류</th>
 		        <th class='th_bs'>수정 / 삭제</th>
 			    </tr>
 	      </thead>
@@ -90,7 +70,7 @@
 	        
 	      </tbody>
 	    </table>
-  	</div>
+		</div>
     <div id="bottom"></div>
 		<script>
 			let now_page_value = 1;
@@ -116,7 +96,6 @@
 	  	}
 	  	
       function send() {
-        const word = document.getElementById("word");
         const bottom = document.getElementById("bottom");
         bottom.innerHTML = "";
 				
@@ -125,12 +104,11 @@
 					console.log("Aaa");
 				}
         fetch(
-          "/botarea/list",
+          "/midarea/list",
           {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-					"word": word.value,
 					"now_page": now_page_value
 					})
           }
@@ -140,30 +118,21 @@
             const resultBody = document.getElementById("tbody");
             resultBody.innerHTML = ``;
             const bottommenu = document.createElement("div");
-            rdata.botAreaList.forEach((botAreaVO) => {
+            rdata.midAreaList.forEach((midAreaVO) => {
               const row = document.createElement("tr");
 							row.classList.add("manager-data");
               row.innerHTML = `
-                  <td class="td_basic" onclick="location.href='/botarea/read?botareano=${
-                    botAreaVO.botareano
-                  }&word=${word.value}&now_page=${now_page_value}'">
-                      <span>${botAreaVO.botareano}</span>
+                  <td class="td_basic">
+                      <span>${midAreaVO.midareano}</span>
                   </td>
-                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
-                    botAreaVO.botareano
-                  }&word=${word.value}&now_page=${now_page_value}'">
-                      <span>${botAreaVO.midareaname}</span>
-                  </td>
-                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
-                    botAreaVO.botareano
-                  }&word=${word.value}&now_page=${now_page_value}'">
-                      <span>${botAreaVO.name}</span>
+                  <td class="td_basic">
+                      <span>${midAreaVO.name}</span>
                   </td>
                   <td class="td_bs">
-                      <a href="/botarea/update?botareano=${botAreaVO.botareano}">
+                      <a onclick="updateCheck(${midAreaVO.midareano}, '${midAreaVO.name}')">
                           <img src="/cate/images/update.png" class="icon">
                       </a>
-                      <a onclick="delete_check(${botAreaVO.botareano}, '${word.value}', ${now_page_value})">
+                      <a onclick="deleteCheck(${midAreaVO.midareano}, ${now_page_value})">
                           <img src="/cate/images/delete.png" class="icon">
                       </a>
                   </td>
@@ -179,19 +148,19 @@
       }
     </script>
     <script>
-      function delete_check(botareano, word, now_page) {
+      function deleteCheck(midareano, now_page) {
         if (confirm("정말 삭제하시겠습니까??") == true) {
           //확인
           let f = document.createElement("form");
           let obj1;
           obj1 = document.createElement("input");
           obj1.type = "hidden";
-          obj1.name = "botareano";
-          obj1.value = botareano;
+          obj1.name = "midareano";
+          obj1.value = midareano;
 
           f.appendChild(obj1);
           f.setAttribute("method", "post");
-          f.setAttribute("action", "/botarea/delete");
+          f.setAttribute("action", "/midarea/delete");
           document.body.appendChild(f);
           f.submit();
         } else {
@@ -199,6 +168,31 @@
           return;
         }
       }
+      function updateCheck(midareano, name){
+		  	let newName = prompt(`변경 전 지역명: ${name}`, `수정 후 지역명을 작성해주세요` );
+		  	if(newName != null){
+				  let f = document.createElement("form");
+	        let obj1;
+	        obj1 = document.createElement("input");
+	        obj1.type = "hidden";
+	        obj1.name = "midareano";
+	        obj1.value = midareano;
+					let obj2;
+					obj2 = document.createElement("input");
+					obj2.type = "hidden";
+					obj2.name = "name";
+					obj2.value = newName;
+	        f.appendChild(obj1);
+	        f.appendChild(obj2);
+	        f.setAttribute("method", "post");
+	        f.setAttribute("action", "/midarea/update");
+	        document.body.appendChild(f);
+	        f.submit();
+			  }else{
+				  return;
+			  }
+		  	
+	  }
     </script>
   </div>
 </html>

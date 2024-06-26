@@ -1,6 +1,8 @@
 package dev.mvc.midarea;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public interface MidAreaDAOInter {
 	/**
@@ -43,4 +45,8 @@ public interface MidAreaDAOInter {
 	 * @return
 	 */
 	public int delete(int midareano);
+	
+	public ArrayList<MidAreaVO> list_paging(HashMap<String, Object> map);
+	
+	public int list_count();
 }
