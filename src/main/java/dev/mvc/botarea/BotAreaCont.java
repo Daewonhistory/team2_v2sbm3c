@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/botarea")
-public class BotAreaController{
+public class BotAreaCont{
 	@Autowired
 	@Qualifier("dev.mvc.botarea.BotAreProc")
 	BotAreaProcInter botAreaProc;
@@ -32,7 +32,7 @@ public class BotAreaController{
 	@Qualifier("dev.mvc.midarea.MidAreaProc")
 	MidAreaProcInter midAreaProc;
 	
-	public BotAreaController() {
+	public BotAreaCont() {
 		System.out.println("-> BotAreaCont Created.");
 	}
 	
@@ -105,7 +105,7 @@ public class BotAreaController{
 		
 		// 관리자 확인
 		if(accessType != null) {
-			return "redierect:/manager";
+			return "redierect:/";
 		}else{
 			ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
 			model.addAttribute("midAreaList", midAreaList);

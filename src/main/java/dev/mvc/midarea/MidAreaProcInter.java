@@ -1,6 +1,7 @@
 package dev.mvc.midarea;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface MidAreaProcInter {
 	/**
@@ -43,4 +44,10 @@ public interface MidAreaProcInter {
 	 * @return
 	 */
 	public int delete(int midareano);
+	
+	public ArrayList<MidAreaVO> list_paging(HashMap<String, Object> map);
+	
+	public String pagingBox(int now_page, int search_count, int record_per_page, int page_per_block);
+	
+	public int list_count();
 }
