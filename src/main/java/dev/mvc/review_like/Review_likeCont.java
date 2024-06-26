@@ -30,24 +30,28 @@ public class Review_likeCont {
 
   @PostMapping(value = "/like")
   @ResponseBody
-  public Map<String, Object> likes(HttpSession session, Model model, @RequestBody Map<String, String> map) {
-    CustomerVO customerVO = (CustomerVO) session.getAttribute("login");
+  public Map<String, Object> likes(HttpSession session, @RequestBody Map<String, Object> payload) {
+    Integer custno = (Integer) session.getAttribute("custno");
     Map<String, Object> response = new HashMap<>();
-    int reviewno = Integer.parseInt(map.get("reviewno"));
-    if (customerVO != null) {
-      int custno = customerVO.getCustno();
-      if (Boolean.parseBoolean(map.get("liked"))) { // decrease
-        this.review_likeProc.decreased_likes(reviewno, custno);
+
+    if (custno != null) {
+      int reviewno = Integer.parseInt(payload.get("reviewno").toString());
+      boolean liked = Boolean.parseBoolean(payload.get("liked").toString());
+
+      if (liked) { // decrease
+        review_likeProc.decreased_likes(reviewno, custno);
         response.put("success", "decreased");
-      } else {
-        this.review_likeProc.increased_likes(reviewno, custno);
+      } else { // increase
+        review_likeProc.increased_likes(reviewno, custno);
         response.put("success", "increased");
       }
+
+      int likes_count = review_likeProc.likes_count(reviewno);
+      response.put("likes_count", likes_count);
     } else {
       response.put("fail", "login");
+      System.out.println("Login fail: No custno found in session");
     }
-    int likes_count = this.review_likeProc.likes_count(reviewno);
-    response.put("likes_count", likes_count);
     return response;
   }
 

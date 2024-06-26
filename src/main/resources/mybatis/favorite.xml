@@ -22,11 +22,16 @@
       ORDER BY f.favoriteno ASC
   </select>
   
-      <!-- 특정 사용자가 특정 식당을 이미 즐겨찾기했는지 확인 -->
-  <select id="isFavorited" resultType="Integer">
-    SELECT COUNT(*) 
-    FROM favorite 
-    WHERE restno = #{restno} AND custno = #{custno}
+    <select id="list_by_custno" parameterType="int" resultType="dev.mvc.favorite.FavoriteVO">
+      SELECT * FROM favorite WHERE custno = #{custno}
   </select>
+  
+      <!-- 특정 사용자가 특정 식당을 이미 즐겨찾기했는지 확인 -->
+    <select id="isFavorited" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM favorite
+        WHERE custno = #{custno} AND restno = #{restno}
+    </select>
+
 
 </mapper>

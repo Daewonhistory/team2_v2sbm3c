@@ -1,10 +1,9 @@
 package dev.mvc.reserve;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-import dev.mvc.admitperson.AdmitPersonVO;
+import dev.mvc.dto.ReserveDTO;
 
 public interface ReserveDAOInter {
   
@@ -16,10 +15,23 @@ public interface ReserveDAOInter {
   int create(ReserveVO reserve);
   
   /**
-   * 모든 예약 조회
+   * 예약 조회
    * @return
    */
   public ArrayList<ReserveVO> list_all();
+  
+  /**
+   * 전체 예약 수 조회
+   * @return
+   */
+  int count_all();
+  
+  /**
+   * 페이징을 적용한 예약 조회
+   * @param params
+   * @return
+   */
+  public ArrayList<ReserveDTO> list_reserve_paging(Map<String, Object> map);
   
   
   /**

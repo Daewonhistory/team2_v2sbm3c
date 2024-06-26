@@ -42,7 +42,7 @@
             <div>
                 <div>
                     <span id="rest_name" th:text="${restaurantVO.name}"></span>
-                    <button type="button" id="favorite-btn" onclick="addFavorite()">즐겨찾기 추가</button>
+                    <button type="button" id="favorite-btn" onclick="toggleFavorite()">즐겨찾기 추가</button>
                     <img id="favorite-img" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" />
                 </div>
                 <div>
@@ -142,14 +142,10 @@
             });
         </script>
         <script>
-            function addFavorite() {
+            function toggleFavorite() {
                 const restno = document.getElementById('restno').value;
                 const custno = document.getElementById('custno').value;
                 const restaurantName = document.getElementById('rest_name').innerText; // 식당 이름 가져오기
-
-                console.log("restno: " + restno);
-                console.log("custno: " + custno);
-                console.log("restaurantName: " + restaurantName);
 
                 const favorite = {
                     restno: restno,
@@ -157,7 +153,7 @@
                     restaurantName: restaurantName // 식당 이름 추가
                 };
 
-                fetch('/favorite/create', {
+                fetch('/favorite/toggle', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -168,16 +164,15 @@
                 .then(data => {
                     if (data.message) {
                         alert(data.message);
-                        if (data.message === '즐겨찾기가 저장되었습니다.') {
-                            document.getElementById('favorite-img').src = '/images/favorite_down.png';
-                        }
+                        const favoriteImg = document.getElementById('favorite-img');
+                        favoriteImg.src = data.message === '즐겨찾기가 저장되었습니다.' ? '/images/favorite_down.png' : '/images/favorite_up.png';
                     } else {
-                        alert('즐겨찾기 추가에 실패했습니다.');
+                        alert('즐겨찾기 토글에 실패했습니다.');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+                    alert('즐겨찾기 토글 중 오류가 발생했습니다.');
                 });
             }
         </script>

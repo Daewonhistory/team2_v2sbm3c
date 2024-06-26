@@ -45,8 +45,10 @@
     <![CDATA[
     SELECT *
     FROM (
-      SELECT re.reviewno, re.content, re.rate, re.rdate, res.name AS restname, 
-             ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
+      SELECT re.reviewno, re.content, re.rate, re.rdate, res.name AS restname, -- 여기에 쉼표 추가
+             ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3,
+             (SELECT COUNT(*) FROM review_like rl WHERE rl.reviewno = re.reviewno) AS likes_count,
+             ROWNUM AS rnum
       FROM review re
       LEFT JOIN restaurant res ON re.restno = res.restno
       LEFT JOIN (
@@ -63,9 +65,10 @@
       ) ri3 ON re.reviewno = ri3.reviewno AND ri3.rn = 3
       ORDER BY re.rdate DESC 
     )
-    WHERE rnum <= #{end_num} AND rnum >= #{start_num}
+    WHERE rnum <= #{end_num} AND rnum >= #{start_num} 
     ]]>
     </select>
+
 
     
     <select id="list_count" resultType="int" parameterType="int">
@@ -121,6 +124,14 @@
         WHERE re.custno = #{custno}
         ORDER BY re.rdate DESC
         ]]>
+    </select>
+    
+    <select id="Avg_score" resultType="float">
+      <![CDATA[
+      SELECT NVL(AVG(rate), 0) 
+      FROM review 
+      WHERE restno = #{restno}
+      ]]>
     </select>
 
     

@@ -98,10 +98,10 @@ public class HomeCont {
 	  return "/modal";
   }
 
-  @GetMapping("/error")
-  public String handleError() {
-    // 에러 페이지로 이동
-    return "error"; // error.html로 이동
-  }
+//  @GetMapping("/error")
+//  public String handleError() {
+//    // 에러 페이지로 이동
+//    return "error"; // error.html로 이동
+//  }
 
 }

@@ -357,31 +357,29 @@ public class RestaurantCont {
   
   @GetMapping("/main_page")
   public String main_page(Model model, HttpSession session, int restno, @RequestParam(defaultValue="2")int person, String date) {
-      String accessType = (String) session.getAttribute("type");
-      int custno = 0;
-      boolean isFavorited = false;
-
-      if (accessType != null && accessType.equals("customer")) {
-          custno = (int) session.getAttribute("custno");
-          model.addAttribute("custno", custno);
-          isFavorited = favoriteProc.isFavorited(restno, custno);
-      }
-      
-      RestFullData restFullData = this.restaurantProc.readFullData(restno);
-      System.out.println(restFullData.getName());
-      model.addAttribute("restaurantVO", restFullData);
-      model.addAttribute("isFavorited", isFavorited);
-
-      ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
-      model.addAttribute("noticeList", noticeList);
-
-      model.addAttribute("accessType", accessType);
-      model.addAttribute("restno", restno);
-      model.addAttribute("person", person);
-      model.addAttribute("date", date);
-
-      return "/restaurant_page";
+    String accessType = (String) session.getAttribute("type");
+    if(accessType != null && accessType.equals("customer")) {
+      int custno = (int) session.getAttribute("custno");
+      model.addAttribute("custno", custno);
+    }
+   
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    System.out.println(restFullData.getName());
+    model.addAttribute("restaurantVO", restFullData);
+    
+    ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
+    model.addAttribute("noticeList", noticeList);
+    
+    model.addAttribute("accessType", accessType);
+    model.addAttribute("restno", restno);
+    model.addAttribute("person", person);
+    
+    model.addAttribute("date", date);
+    
+    return "/restaurant_page";
   }
+
+
 
   
   @PostMapping("/coordinate_search_list")

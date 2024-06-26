@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.customer.CustomerVO;
 import dev.mvc.dto.ReviewDTO;
 import dev.mvc.restaurant.RestaurantProC;
 import dev.mvc.review_like.Review_likeProcInter;
@@ -266,12 +267,29 @@ public class ReviewCont {
     }
     
     @GetMapping("/reviewAllList")
-    public String reviewAllList(Model model, @RequestParam("restno") int restno, @RequestParam("person") int person, @RequestParam("date") String date) {
-        ArrayList<ReviewDTO> list = this.reviewProc.list_by_restno(restno);
+    public String reviewAllList(HttpSession session, Model model,
+                                @RequestParam(name = "restno") int restno,
+                                @RequestParam(name = "person") int person,
+                                @RequestParam(name = "date") String date) {
+        List<ReviewDTO> list = reviewProc.list_by_restno(restno);
+
+        // 좋아요 수 및 사용자의 좋아요 여부를 설정
+        CustomerVO customerVO = (CustomerVO) session.getAttribute("customerVO");
+        for (ReviewDTO review : list) {
+            int likesCount = review_likeProc.likes_count(review.getReviewno());
+            review.setLikes_count(likesCount);
+
+            if (customerVO != null) {
+                int myLike = review_likeProc.mylikes(review.getReviewno(), customerVO.getCustno());
+                review.setMylike(myLike);
+            }
+        }
+
         model.addAttribute("list", list);
         model.addAttribute("restno", restno);
         model.addAttribute("person", person);
         model.addAttribute("date", date);
+
         return "review/review_list";
     }
     

@@ -1,8 +1,11 @@
 package dev.mvc.favorite;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 
 @Service("dev.mvc.favorite.FavoriteProc")
 public class FavoriteProc implements FavoriteProcInter {
@@ -28,8 +31,15 @@ public class FavoriteProc implements FavoriteProcInter {
   }
   
   @Override
-  public boolean isFavorited(int restno, int custno) {
-    Integer count = this.favoriteDAO.isFavorited(restno, custno);
-    return count != null && count > 0;
+  public ArrayList<FavoriteVO> list_by_custno(int custno) {
+      return favoriteDAO.list_by_custno(custno);
+  }
+  
+  @Override
+  public boolean isFavorited(int custno, int restno) {
+      Map<String, Object> params = new HashMap<>();
+      params.put("custno", custno);
+      params.put("restno", restno);
+      return favoriteDAO.isFavorited(params) > 0; // 여기서 int를 boolean으로 변환
   }
 }

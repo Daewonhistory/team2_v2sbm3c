@@ -1,5 +1,7 @@
 package dev.mvc.favorite;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/favorite")
 @Controller
@@ -45,6 +47,17 @@ public class FavoriteCont {
     }
   }
   
+  @PostMapping("/toggle")
+  @ResponseBody
+  public ResponseEntity<?> toggle(@RequestBody FavoriteVO favoriteVO) {
+    boolean isFavorited = favoriteProc.isFavorited(favoriteVO.getCustno(), favoriteVO.getRestno());
+    if (isFavorited) {
+        return delete(favoriteVO);
+    } else {
+        return create(favoriteVO);
+    }
+  }
+  
   @GetMapping("/favorite_list")
   public String favorite_list(Model model) {
       List<FavoriteVO> list = favoriteProc.favorite_list();
@@ -54,10 +67,21 @@ public class FavoriteCont {
   }
   
   @GetMapping("/favorite_list_mobile")
-  public String favorite_list_mobile(Model model) {
-      List<FavoriteVO> list = favoriteProc.favorite_list();
-      System.out.println("Favorite list for mobile: " + list);
-      model.addAttribute("list", list);
+  public String favorite_list_mobile(Model model, HttpSession session) {
+      String accessType = (String) session.getAttribute("type");
+      if (accessType != null && accessType.equals("customer")) {
+          int custno = (int) session.getAttribute("custno");
+          System.out.println("custno :" + custno);
+         
+          List<FavoriteVO> list = favoriteProc.list_by_custno(custno);
+          System.out.println("Favorite list for mobile: " + list);
+          System.out.println("listsize : "+ list.size());
+          model.addAttribute("list", list);
+          model.addAttribute("custno", custno);
+      } else {
+          // 로그인되지 않은 상태일 경우 처리
+          return "redirect:/login"; // 로그인 페이지로 리다이렉트
+      }
       return "favorite/favorite_list_mobile"; // 해당 HTML 파일 경로
   }
 

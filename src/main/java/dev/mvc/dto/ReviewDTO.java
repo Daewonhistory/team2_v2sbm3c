@@ -10,8 +10,6 @@ public class ReviewDTO {
   /** 리뷰 번호 */
   private int reviewno;
 
-  /** 제목 */
-
 
   /** 내용 */
   private String content = "";

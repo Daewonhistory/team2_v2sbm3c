@@ -100,19 +100,18 @@
                     <svg th:class="${reviewDTO.mylike > 0} ? 'filled-heart' : 'empty-heart'" viewBox="0 0 20 20">
                         <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.828a4 4 0 010-5.656z"/>
                     </svg>
-                    <span th:text="'좋아요 ' + ${reviewDTO.likes}"></span>
+                    <span th:text="'좋아요 ' + ${reviewDTO.likes_count}"></span>
                 </div>
             </div>
         </div>
         <div class="Bottom_menu" th:utext="${paging}"></div>
-    </div>
-<script>
+ <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.like-button').forEach(button => {
             button.addEventListener('click', function() {
                 const reviewno = this.getAttribute('data-reviewno');
                 const liked = this.getAttribute('data-liked') === 'true';
-                const url = '/review_like/like';  // 수정된 URL
+                const url = '/review_like/like';
                 const payload = {
                     reviewno: reviewno,
                     liked: liked
@@ -149,6 +148,6 @@
         });
     });
 </script>
-
+    </div>
 </body>
 </html>

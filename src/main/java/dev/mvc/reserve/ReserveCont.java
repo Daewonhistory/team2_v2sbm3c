@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.admitperson.AdmitPersonProcInter;
 import dev.mvc.admitperson.AdmitPersonVO;
+import dev.mvc.dto.ReserveDTO;
 import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.restaurant.RestaurantVO;
 import jakarta.servlet.http.HttpSession;
@@ -99,6 +101,29 @@ public class ReserveCont {
     return "reservation/list_all";
   }
   
+  @GetMapping("/list_reserve_paging")
+  public String list_reserve_paging(HttpSession session, 
+                                Model model, 
+                               @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+      
+      if (now_page < 1) {
+          now_page = 1;
+      }
+      
+      ArrayList<ReserveDTO> list = this.reserveProc.list_reserve_paging(now_page, Reserve.RECORD_PER_PAGE);
+      model.addAttribute("list", list);
+
+      int count = this.reserveProc.count_all();
+      model.addAttribute("count", count);
+
+      String paging = this.reserveProc.pagingBox(now_page, "/reservation/list_reserve_paging", count, Reserve.RECORD_PER_PAGE, Reserve.PAGE_PER_BLOCK);
+      model.addAttribute("paging", paging);
+
+      model.addAttribute("now_page", now_page);
+
+      return "reservation/list_reserve_paging";
+  }
+  
 
   @PostMapping("/delete")
   public String delete(@RequestParam("reserveno") int reserveno) {
@@ -106,6 +131,18 @@ public class ReserveCont {
       if (cnt == 1) {
           // 성공적으로 삭제된 경우 처리
           return "redirect:/reservation/list_all";
+      } else {
+          // 실패한 경우 처리
+          return "error/500";
+      }
+  }
+  
+  @PostMapping("/delete_site")
+  public String deleteSite(@RequestParam("reserveno") int reserveno, @RequestParam("now_page") int now_page, RedirectAttributes redirectAttributes) {
+      int cnt = reserveProc.delete(reserveno);
+      if (cnt == 1) {
+          redirectAttributes.addAttribute("now_page", now_page); // 현재 페이지 번호를 전달
+          return "redirect:/reservation/list_reserve_paging";
       } else {
           // 실패한 경우 처리
           return "error/500";

@@ -42,7 +42,8 @@
             <a href="javascript:location.reload();">새로고침</a>
         </aside>
         <div class='menu_line'></div>
-        <table class="table table-striped" style='width: 100%;'>
+        <div class="manager-user">
+        <table class="manager-user-list" style='width: 100%;'>
             <colgroup>
                 <col style='width: 15%;'/>
                 <col style='width: 45%;'/>
@@ -50,7 +51,7 @@
                 <col style='width: 15%;'/>
                 <col style='width: 10%;'/>
             </colgroup>
-            <tr>
+            <tr class="manager-header">
                 <th class='th_bs hidden'>번호</th>
                 <th class='th_bs'>식당명</th>
                 <th class='th_bs'>내용</th>
@@ -58,7 +59,7 @@
                 <th class='th_bs'>날짜</th>
                 <th class='th_bs'>수정/삭제</th>
             </tr>
-            <tr th:each="reviewDTO : ${list}">
+            <tr class="manager-data" th:each="reviewDTO : ${list}">
                 <td class='td_basic hidden' th:text="${reviewDTO.reviewno}"></td>
                 <td class='td_left' th:text="${reviewDTO.restname}"></td>
                 <td class='td_left'>
@@ -136,6 +137,7 @@
             }
         }
     </script>
+    </div>
     <div class="Bottom_menu" th:utext="${paging}"></div>
 </body>
 </html>
