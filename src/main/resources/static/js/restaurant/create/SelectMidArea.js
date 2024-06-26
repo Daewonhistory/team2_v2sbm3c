@@ -52,9 +52,11 @@ function selectMidArea(selectedMidArea) {
         // Display botarea_div
         divBotAreas.style.display = "block";
 
-        let address = document.getElementById('address1');
+        let address = document.getElementById('addresshi');
         address.style.display = "block";
 
+        let findbutton = document.getElementById('findbutton');
+        findbutton.style.display = "block";
       })
       .catch(error => {
         console.error('Error fetching botarea_list:', error);
