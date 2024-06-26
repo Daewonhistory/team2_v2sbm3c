@@ -21,6 +21,13 @@ public interface FavoriteProcInter {
   public int delete(FavoriteVO favoriteVO);
   
   /**
+   * 즐겨찾기 삭제(모바일)
+   * @param favoriteVO
+   * @return
+   */
+  int delete_favorite_rest(FavoriteVO favoriteVO);
+  
+  /**
    * 모든 즐겨찾기 조회
    * @return
    */

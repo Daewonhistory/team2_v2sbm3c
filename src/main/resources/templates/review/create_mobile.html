@@ -67,7 +67,8 @@
             </div>
             <div class="mt-6">
                 <label class="block text-gray-700">내용</label>
-                <textarea name="content" class="w-full border border-gray-300 p-2 rounded h-32" placeholder="최대 200자까지 입력 가능합니다."></textarea>
+                <textarea id="content" name="content" class="w-full border border-gray-300 p-2 rounded h-32" placeholder="최대 200자까지 입력 가능합니다."></textarea>
+                <div class="text-right text-sm text-gray-500"><span id="charCount">0</span>/200</div>
             </div>
             <div class="flex justify-between items-center mt-6">
                 <button type="button" class="flex items-center text-gray-700" onclick="history.back();">
@@ -78,6 +79,22 @@
             </div>
         </form>
     </div>
+    <script>
+    const textarea = document.getElementById('content');
+    const charCount = document.getElementById('charCount');
+
+    textarea.addEventListener('input', function() {
+        const text = textarea.value;
+        const textLength = text.length;
+
+        if (textLength > 200) {
+            textarea.value = text.slice(0, 200);
+        }
+
+        charCount.textContent = textarea.value.length;
+    });
+</script>
 </div>
+
 </body>
 </html>

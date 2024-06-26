@@ -45,6 +45,9 @@ public class ReviewDTO {
   
   private int likes_count;
   
+  /** 프로필 사진*/
+  private String user_image; 
+  
 
   
 

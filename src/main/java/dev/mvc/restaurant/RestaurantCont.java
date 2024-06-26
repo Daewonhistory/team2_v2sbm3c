@@ -356,10 +356,18 @@ public class RestaurantCont {
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, HttpSession session, int restno, @RequestParam(defaultValue="2")int person, String date) {
+  public String main_page(Model model, HttpSession session, 
+                          int restno, @RequestParam(defaultValue="2")int person, 
+                          String date) {
     String accessType = (String) session.getAttribute("type");
+    
+    int custno = -1; //초기값 설정, 비로그인 상태
+    boolean isFavorited = false;
+    
     if(accessType != null && accessType.equals("customer")) {
-      int custno = (int) session.getAttribute("custno");
+      custno = (int) session.getAttribute("custno");
+      
+      isFavorited = favoriteProc.isFavorited(custno, restno);
       model.addAttribute("custno", custno);
     }
    
@@ -373,8 +381,9 @@ public class RestaurantCont {
     model.addAttribute("accessType", accessType);
     model.addAttribute("restno", restno);
     model.addAttribute("person", person);
-    
     model.addAttribute("date", date);
+    
+    model.addAttribute("isFavorited", isFavorited); 
     
     return "/restaurant_page";
   }

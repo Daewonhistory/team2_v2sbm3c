@@ -103,17 +103,18 @@ public class ReserveCont {
   
   @GetMapping("/list_reserve_paging")
   public String list_reserve_paging(HttpSession session, 
-                                Model model, 
-                               @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-      
+                                    Model model, 
+                                    @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
       if (now_page < 1) {
           now_page = 1;
       }
       
       ArrayList<ReserveDTO> list = this.reserveProc.list_reserve_paging(now_page, Reserve.RECORD_PER_PAGE);
+      System.out.println("Reserve List: " + list);
       model.addAttribute("list", list);
 
       int count = this.reserveProc.count_all();
+      System.out.println("Total Count: " + count);
       model.addAttribute("count", count);
 
       String paging = this.reserveProc.pagingBox(now_page, "/reservation/list_reserve_paging", count, Reserve.RECORD_PER_PAGE, Reserve.PAGE_PER_BLOCK);
@@ -123,6 +124,7 @@ public class ReserveCont {
 
       return "reservation/list_reserve_paging";
   }
+
   
 
   @PostMapping("/delete")

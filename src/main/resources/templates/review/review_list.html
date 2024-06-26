@@ -2,7 +2,7 @@
 <html lang="en" layout:decorate="~{mobile_layout}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -73,9 +73,14 @@
         <div class='menu_line'></div>
         
         <div class="max-w-xl mx-auto">
+            <div>
+                <span>평균 평점:</span>
+                <span id="average-rating" th:text="${averageRating}">0.0</span>
+                <img src="star" alt="별이미지">
+            </div>
             <div th:each="reviewDTO : ${list}" class="bg-white p-4 mb-4 rounded-lg shadow-md">
                 <div class="flex items-center mb-4">
-                    <img th:src="@{/path/to/avatar/${reviewDTO.nickname}.png}" class="w-12 h-12 bg-gray-300 rounded-full" alt="Avatar">
+                    <img th:src="@{|/customer/storage/${reviewDTO.user_image}|}" class="w-12 h-12 bg-gray-300 rounded-full" alt="Avatar">
                     <div class="ml-4">
                         <div class="text-lg font-bold" th:text="${reviewDTO.nickname}"></div>
                     </div>
@@ -100,7 +105,7 @@
                     <svg th:class="${reviewDTO.mylike > 0} ? 'filled-heart' : 'empty-heart'" viewBox="0 0 20 20">
                         <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.828a4 4 0 010-5.656z"/>
                     </svg>
-                    <span th:text="'좋아요 ' + ${reviewDTO.likes_count}"></span>
+                    <span th:text="'좋아요 ' + ${reviewDTO.likes}"></span>
                 </div>
             </div>
         </div>

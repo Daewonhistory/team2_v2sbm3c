@@ -10,6 +10,25 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
+
+        .favorite-icon {
+            width: 24px; /* 원하는 크기로 설정 */
+            height: 24px; /* 원하는 크기로 설정 */
+            margin-left: 8px; /* 버튼과 이미지 사이의 간격 설정 */
+            vertical-align: middle; /* 이미지와 텍스트가 중간에 정렬되도록 설정 */
+        }
+
+        /* 추가적으로 버튼을 조절할 수 있습니다 */
+        #favorite-btn {
+            font-size: 14px;
+            padding: 4px 8px;
+        }
+
+        /* 이미지와 버튼을 동일한 줄에 배치하기 위한 컨테이너 스타일 */
+        #restaurant_info_section div {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -40,15 +59,13 @@
         </section>
         <section id="restaurant_info_section">
             <div>
-                <div>
-                    <span id="rest_name" th:text="${restaurantVO.name}"></span>
-                    <button type="button" id="favorite-btn" onclick="toggleFavorite()">즐겨찾기 추가</button>
-                    <img id="favorite-img" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" />
-                </div>
-                <div>
-                    <img src="star" alt="별이미지">
-                    <span id="rate">5.0</span>
-                </div>
+                <span id="rest_name" th:text="${restaurantVO.name}"></span>
+                <button type="button" id="favorite-btn" onclick="checkLoginAndAddFavorite()">즐겨찾기</button>
+                <img id="favorite-img" th:data-is-favorited="${isFavorited}" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" class="favorite-icon" />
+            </div>
+            <div>
+                <img src="star" alt="별이미지">
+                <span id="rate">5.0</span>
             </div>
         </section>
         <section id="sec_reserve_condition">
@@ -89,8 +106,8 @@
                 document.getElementById('reserve_date').setAttribute('min', getTodayDate());
 
                 // Set favorite image based on isFavorited value
-                const isFavorited = /*[[${isFavorited}]]*/ false;
                 const favoriteImg = document.getElementById('favorite-img');
+                const isFavorited = favoriteImg.getAttribute('data-is-favorited') === 'true';
                 favoriteImg.src = isFavorited ? '/images/favorite_down.png' : '/images/favorite_up.png';
             }
 
@@ -142,10 +159,20 @@
             });
         </script>
         <script>
-            function toggleFavorite() {
+            function checkLoginAndAddFavorite() {
                 const restno = document.getElementById('restno').value;
                 const custno = document.getElementById('custno').value;
                 const restaurantName = document.getElementById('rest_name').innerText; // 식당 이름 가져오기
+
+                console.log("restno: " + restno);
+                console.log("custno: " + custno);
+                console.log("restaurantName: " + restaurantName);
+
+                if (!custno) {
+                    alert('로그인 한 후 이용할 수 있습니다');
+                    window.location.href = '/customer/login';
+                    return;
+                }
 
                 const favorite = {
                     restno: restno,
@@ -164,15 +191,15 @@
                 .then(data => {
                     if (data.message) {
                         alert(data.message);
-                        const favoriteImg = document.getElementById('favorite-img');
-                        favoriteImg.src = data.message === '즐겨찾기가 저장되었습니다.' ? '/images/favorite_down.png' : '/images/favorite_up.png';
-                    } else {
-                        alert('즐겨찾기 토글에 실패했습니다.');
+                        if (data.message === '즐겨찾기가 저장되었습니다.') {
+                            document.getElementById('favorite-img').src = '/images/favorite_down.png';
+                        } else if (data.message === '즐겨찾기가 삭제되었습니다.') {
+                            document.getElementById('favorite-img').src = '/images/favorite_up.png';
+                        }
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('즐겨찾기 토글 중 오류가 발생했습니다.');
                 });
             }
         </script>

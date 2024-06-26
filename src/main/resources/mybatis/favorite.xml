@@ -13,6 +13,12 @@
     DELETE FROM favorite
     WHERE favoriteno = #{favoriteno}
   </delete>
+  
+    <!-- 즐겨찾기 제거 (모바일용) -->
+  <delete id="delete_favorite_rest" parameterType="dev.mvc.favorite.FavoriteVO">
+      DELETE FROM favorite
+      WHERE custno = #{custno} AND restno = #{restno}
+  </delete>
 
   <!-- 즐겨찾기 목록 조회 -->
   <select id="favorite_list" resultType="dev.mvc.favorite.FavoriteVO">
@@ -23,8 +29,11 @@
   </select>
   
     <select id="list_by_custno" parameterType="int" resultType="dev.mvc.favorite.FavoriteVO">
-      SELECT * FROM favorite WHERE custno = #{custno}
-  </select>
+        SELECT f.favoriteno, f.restno, f.custno, r.name AS restname
+        FROM favorite f
+        JOIN RESTAURANT r ON f.restno = r.restno
+        WHERE f.custno = #{custno}
+    </select>
   
       <!-- 특정 사용자가 특정 식당을 이미 즐겨찾기했는지 확인 -->
     <select id="isFavorited" parameterType="map" resultType="int">

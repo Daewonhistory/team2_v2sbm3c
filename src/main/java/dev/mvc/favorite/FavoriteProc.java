@@ -22,6 +22,11 @@ public class FavoriteProc implements FavoriteProcInter {
   public int delete(FavoriteVO favoriteVO) {
     return this.favoriteDAO.delete(favoriteVO);
   }
+  
+  @Override
+  public int delete_favorite_rest(FavoriteVO favoriteVO) {
+      return favoriteDAO.delete_favorite_rest(favoriteVO); 
+  }
 
   @Override
   public ArrayList<FavoriteVO> favorite_list() {

@@ -46,14 +46,16 @@
         <table class="manager-user-list" style='width: 100%;'>
             <colgroup>
                 <col style='width: 15%;'/>
-                <col style='width: 45%;'/>
                 <col style='width: 15%;'/>
+                <col style='width: 40%;'/>
+                <col style='width: 5%;'/>
                 <col style='width: 15%;'/>
                 <col style='width: 10%;'/>
             </colgroup>
             <tr class="manager-header">
                 <th class='th_bs hidden'>번호</th>
                 <th class='th_bs'>식당명</th>
+                <th class='th_bs'>작성자</th>
                 <th class='th_bs'>내용</th>
                 <th class='th_bs'>평점</th>
                 <th class='th_bs'>날짜</th>
@@ -62,6 +64,7 @@
             <tr class="manager-data" th:each="reviewDTO : ${list}">
                 <td class='td_basic hidden' th:text="${reviewDTO.reviewno}"></td>
                 <td class='td_left' th:text="${reviewDTO.restname}"></td>
+                <td class='td_basic' th:text="${reviewDTO.nickname}"></td>
                 <td class='td_left'>
                     <span class="content-preview" th:if="${reviewDTO.content.length() > 100}" 
                           th:text="|${reviewDTO.content.substring(0, 100)}...|"></span>
