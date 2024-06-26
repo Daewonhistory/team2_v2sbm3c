@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+  	허용인원 > 수정
+  </div>
+  <aside class="aside_right">
+    <a th:href="@{/admitperson/list}">목록</a>
+    <span class="menu_divide">┃</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  <form name="frm" th:object="${admitPersonVO}" method="post" action="/admitperson/update" style="width: 50%; margin: 5px auto;">
+    <div>
+      <input type="hidden" name="admitpersonno" th:value="${admitPersonVO.admitpersonno}">
+      <div><span th:text="|식당:${restname}|"></span></div>
+      <div><span th:text="|날짜:${admitPersonVO.reserve_date}|"></span></div>
+      <div><span th:text="|시간:${admitPersonVO.time}|"></span></div>
+      
+      <label>허용인원:</label>
+      <input type="text" name="name" style="border-color: black;" th:value="${admitPersonVO.admit_person}" autofocus="autofocus"
+             class="form-control fom-control-sm">
+      <div><span th:text="|현재인원:${admitPersonVO.curr_person}|"></span></div>  
+    </div>
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="button" th:attr="onclick=|location.href='/admitperson/list'|" class="btn btn-secondary btn-sm">취소</button>
+    </div>
+  
+  </form>  
+  <div class="menu_line"></div>
+  <!-- /ingredient/list_all_component파일의 list_all_fragment를 삽입
+  <div th:replace="~{ingredient/list_all_component::list_all_fragment}"></div>
+   -->
+</div>
+</html>
+

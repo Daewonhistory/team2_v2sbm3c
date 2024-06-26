@@ -24,6 +24,9 @@ import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.RestFullData;
+import dev.mvc.ingredient.IngredientVO;
+import dev.mvc.menu.MenuVO;
+import dev.mvc.menuingred.MenuIngredVO;
 import dev.mvc.favorite.FavoriteProcInter;
 import dev.mvc.midarea.MidAreaProcInter;
 import dev.mvc.midarea.MidAreaVO;
@@ -166,7 +169,35 @@ public class RestaurantCont {
 
 
   }
+  @GetMapping("/read")
+  public String read(Model model, String word, int now_page, int restno) {
+    // 메뉴 정보
 
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    model.addAttribute("restFullData", restFullData);
+    // 메뉴의 재료 목록
+
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+    return "restaurant/read";
+  }
+
+
+  @GetMapping("/update_map")
+  public String update_map(Model model, String word, int now_page, int restno) {
+    // 메뉴 정보
+    ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
+    model.addAttribute("midAreaList",midAreaVOS);
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    model.addAttribute("restFullData", restFullData);
+    // 메뉴의 재료 목록
+
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+    return "restaurant/update_map";
+  }
 
   @GetMapping("/search_b")
   public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
@@ -304,6 +335,43 @@ public class RestaurantCont {
 	  
 	  return "/search_list";
   }
+
+
+  @PostMapping("/update_map")
+  public String update_map(RestFullData restFullData, RedirectAttributes ra ,String restno, String word,  String now_page) {
+
+
+    int count = restaurantProc.update_map(restFullData);
+
+    if (count == 1) {
+      return "redirect:/restaurant/update_map?restno=" + restno+"&now_page="+now_page+"&word="+word;
+
+    } else {
+      return "redirect:/";
+    }
+
+
+
+  }
+
+  @PostMapping("/update")
+  public String update(RestFullData restFullData, RedirectAttributes ra ,String restno, String word,  String now_page) {
+
+
+    int count = restaurantProc.update(restFullData);
+
+    if (count == 1) {
+      return "redirect:/restaurant/read?restno=" + restno+"&now_page="+now_page+"&word="+word;
+
+    } else {
+      return "redirect:/";
+    }
+
+
+
+  }
+
+
 
   @PostMapping("/search_list")
   @ResponseBody

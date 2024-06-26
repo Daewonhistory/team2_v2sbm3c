@@ -17,9 +17,10 @@
     <tr>
       <th class="th_bs">선택</th>
       <th class="th_bs">번호</th>
+      <th class="th_bs">식당이름</th>
       <th class="th_bs">카테고리번호</th>
       <th class="th_bs">사업자번호</th>
-      <th class="th_bs">식당이름</th>
+
 
       <th class="th_bs">기타</th>
     </tr>
@@ -34,11 +35,11 @@
 
       <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${restDTO.restno}"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
+      <td class="td_bs">
+        <a th:href="@{|/restaurant/read?restno=${restDTO.restno}&word=${word}&type=${type}&now_page=${now_page}|}" th:text="${restDTO.name}" style="display: block;"></a>
+      </td>
       <td class="td_bs"  th:text="${restDTO.categoryno}" id="categoryno"></td>
       <td class="td_bs"  th:text="${restDTO.ownerno}" id="ownerno"></td>
-
-      <td class="td_bs"><a th:href="@{|/cate/read/${restDTO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
-                           th:text="${restDTO.name}"></a></td>
 
       <td th:if="${restDTO.image1 != null and (restDTO.image1.endsWith('jpg') or restDTO.image1.endsWith('JPG') or restDTO.image1.endsWith('png') or restDTO.image1.endsWith('PNG') or restDTO.image1.endsWith('gif'))}">
         <!--/*@thymesVar id="certifi_image" type=""*/-->

@@ -28,16 +28,16 @@
   <link href="/css/style.css" rel="Stylesheet" type="text/css" />
 
   <link href="/css/manager.css" rel="Stylesheet" type="text/css" />
-
+	
   <!-- /static 기준 -->
 </head>
 <body>
 <div class="manager-container">
   <div class="manager-side">
-    <div class="manager-title">Eay Days 관리자</div>
+    <div class="manager-title"><a style="font-size: 20px;" href="/manager">Eay Days 관리자</a></div>
     <ul class="manager-menu-list">
       <li class="manager-menu">
-        <a class="manager-menu-a" href="#" onclick="toggleSubMenu('login--sub-menu', 'login--arrow')">
+        <a class="manager-menu-a"  onclick="toggleSubMenu('login--sub-menu', 'login--arrow')">
           <span id="login-arrow" class="arrow right"></span> 로그인 관련
         </a>
         <ul class="sub-menu" id="login--sub-menu">
@@ -48,7 +48,7 @@
       </li>
 
       <li class="manager-menu">
-        <a class="manager-menu-a" href="#" onclick="toggleSubMenu('customer-sub-menu', 'customer-arrow')">
+        <a class="manager-menu-a"  onclick="toggleSubMenu('customer-sub-menu', 'customer-arrow')">
           <span id="customer-arrow" class="arrow right"></span> 회원 목록 관련
         </a>
         <ul class="sub-menu" id="customer-sub-menu">
@@ -58,7 +58,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a class="manager-menu-a" href="#" onclick="toggleSubMenu('create-sub-menu', 'create-arrow')">
+        <a class="manager-menu-a"  onclick="toggleSubMenu('create-sub-menu', 'create-arrow')">
           <span id="create-arrow" class="arrow right"></span> 등록  관련
         </a>
         <ul class="sub-menu" id="create-sub-menu">
@@ -72,7 +72,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a class="manager-menu-a" href="#" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
+        <a class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
           <span id="reservation-arrow" class="arrow right"></span> 예약 목록
         </a>
         <ul class="sub-menu" id="reservation-sub-menu">
@@ -81,17 +81,17 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a class="manager-menu-a" href="#" onclick="toggleSubMenu('restaurant-sub-menu', 'restaurant-arrow')">
+        <a class="manager-menu-a"  onclick="toggleSubMenu('restaurant-sub-menu', 'restaurant-arrow')">
           <span id="restaurant-arrow" class="arrow right"></span> 식당 관련
         </a>
         <ul class="sub-menu" id="restaurant-sub-menu">
-          <li><a href="/restaurant/list/all">식당 목록</a></li>
+          <li><a href="/restaurant/search_b">식당 목록</a></li>
           <li><a href="/restaurant/create">식당 등록</a></li>
 
         </ul>
       </li>
       <li class="manager-menu">
-        <a class="manager-menu-a" href="#" onclick="toggleSubMenu('review-sub-menu', 'review-arrow')">
+        <a class="manager-menu-a"  onclick="toggleSubMenu('review-sub-menu', 'review-arrow')">
           <span id="review-arrow" class="arrow right"></span> 리뷰 목록
         </a>
         <ul class="sub-menu" id="review-sub-menu">

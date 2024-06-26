@@ -28,6 +28,10 @@ public interface RestaurantProInter {
 
 
 
+  public int update_map(RestFullData restFullData);
+
+
+  public int update(RestFullData restFullData);
 
   /**
    * 페이징 필요한 개수 반환

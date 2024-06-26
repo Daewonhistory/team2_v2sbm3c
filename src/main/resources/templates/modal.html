@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Select Box with Search</title>
+    <style>
+        .custom-select {
+            position: relative;
+            width: 200px;
+        }
+        .select-selected {
+            background-color: #f1f1f1;
+            border: 1px solid #d4d4d4;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .select-items {
+            position: absolute;
+            background-color: #f1f1f1;
+            border: 1px solid #d4d4d4;
+            display: none;
+            z-index: 99;
+            width: 100%;
+            max-height: 150px; /* 최대 높이 설정 */
+            overflow-y: auto;  /* 스크롤바 추가 */
+        }
+        .select-items div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .select-items div:hover {
+            background-color: #ddd;
+        }
+        .select-search {
+            padding: 10px;
+            width: calc(100% - 20px);
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 1px solid #d4d4d4;
+            
+        }
+        .show {
+					display:block;
+				}
+    </style>
+</head>
+<body>
+adfadsfadsf
+<div class="custom-select">
+    <div class="select-selected" >Select an option</div>
+    <div class="select-items" >
+        <input type="text" class="select-search" placeholder="Search...">
+        <div th:each="categoryVO, status: ${list}" th:value="${categoryVO.categoryno}" th:text="${categoryVO.name}"></div>
+        
+    </div>
+</div>
+sadfads
+<script>
+    const selected = document.querySelector('.select-selected');
+    const itemsContainer = document.querySelector('.select-items');
+    const searchInput = document.querySelector('.select-search');
+    const items = itemsContainer.querySelectorAll('div');
+
+    selected.addEventListener('click', function() {
+        itemsContainer.classList.toggle('show');
+    });
+
+    items.forEach(function(item) {
+        item.addEventListener('click', function() {
+            selected.textContent = this.textContent;
+            itemsContainer.classList.remove('show');
+        });
+    });
+
+    searchInput.addEventListener('keyup', function() {
+        const filter = searchInput.value.toLowerCase();
+        items.forEach(function(item) {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filter)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    window.addEventListener('click', function(e) {
+        if (!e.target.matches('.select-selected') && !e.target.matches('.select-search')) {
+            itemsContainer.classList.remove('show');
+        }
+    });
+</script>
+
+</body>
+</html>

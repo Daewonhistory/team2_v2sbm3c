@@ -83,4 +83,8 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestFullData> coordinateSearchList(Map<String, Object> map);
+
+  public int update(RestFullData restFullData);
+
+  public int update_map(RestFullData restFullData);
 }

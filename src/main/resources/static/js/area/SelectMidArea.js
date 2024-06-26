@@ -25,6 +25,7 @@ function selectMidArea(selectedMidArea){
       const botArea = document.createElement("button");
       botArea.textContent = botAreaVO.name;
       botArea.type = "button";
+      botArea.classList.add('button');
       botArea.name = "botareas";
       botArea.onclick=function() {
   			selectBotarea(botArea);

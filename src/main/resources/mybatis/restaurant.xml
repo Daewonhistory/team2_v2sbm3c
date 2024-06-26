@@ -299,4 +299,17 @@
 		    WHERE re.restno = #{restno}
 		)
 	</select>
+
+
+	<update id="update_map">
+		UPDATE restaurant
+		SET address = #{address} , lng = #{lng} , lat = #{lat} , botareano = #{botareano}
+		WHERE restno = #{restno}
+	</update>
+
+	<update id="update">
+		UPDATE restaurant
+		SET name = #{name} , categoryno = #{categoryno} , reserve_range = #{reserve_range} , tel = #{tel}
+		WHERE restno = #{restno}
+	</update>
 </mapper>

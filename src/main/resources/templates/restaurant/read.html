@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+
+
+
+
+
+
+  <div style="width: 60%; margin: 0px auto "  th:object="${restFullData}">
+  <div class="title_line"  th:text="@{|${restFullData.name} 식당 정보 조회 수정 (*는 필수)|}">  </div>
+  <form   id="frm" name="frm" method="post" action="/restaurant/update">
+    <div style="align-items: center; display: none;">
+
+      <input class="form-control form-control-sm"  id="restno" name="restno" th:value="${restFullData.restno}" style=" width: 50%;" readonly></input>
+
+    </div>
+
+    <label>식당 이름</label>
+
+    <div style="display: flex; align-items: center;">
+      <input class="form-control form-control-sm"  name="name" th:value="${restFullData.name}" style=" width: 50%;" id='name_msg'></input>
+
+
+
+
+    </div>
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>카테고리</label>
+      <select id="categoryno" name="categoryno" class="form-control form-control-sm" style="width: 50%;">
+        <!-- 옵션이 여기에 동적으로 추가될 것입니다. -->
+      </select>
+    </div>
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>예약 범위</label>
+      <input type="number" id="reserve_range" name="reserve_range" class="form-control form-control-sm" th:value="${restFullData.reserve_range}" style="width: 50%;">
+        <!-- 옵션이 여기에 동적으로 추가될 것입니다. -->
+      </input>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        fetch("/category/catelist", {
+          method: 'GET'
+        })
+            .then(response => response.json())
+            .then(rdata => {
+              console.log("Received data:", rdata); // 응답 데이터 콘솔 출력
+
+              const selectElement = document.getElementById('categoryno');
+              /*<![CDATA[*/
+              const selectedCategoryno =[[${restFullData.categoryno}]]; // 서버에서 전달받은 카테고리 번호
+
+              // 받은 데이터에서 categoryno 값을 옵션으로 추가
+              rdata.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.categoryno;
+                option.text = item.name;
+                selectElement.appendChild(option);
+              });
+
+              // 서버에서 전달받은 카테고리 번호와 일치하는 옵션 선택
+              selectElement.value = selectedCategoryno;
+
+              console.log("Selected category:", selectedCategoryno);
+              console.log("Select element value:", selectElement.value); // 선택된 값 콘솔 출력
+            })
+            .catch(error => {
+              console.error("Error fetching data:", error);
+            });
+      });
+    </script>
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>전화 번호</label>
+      <input type='text' name='tel'  th:value="${restFullData.tel}" id='tel' value=''
+             placeholder="전화번호" class="form-control form-control-sm" style="width: 50%;">
+
+    </div>
+
+    <input type="hidden" name="word" th:value="${word}">
+
+    <input type="hidden" name="now_page" th:value="${now_page}">
+
+
+
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <button type="submit" class="btn btn-primary"  id="btn_send">수정</button>
+
+      <button type="button" class="btn btn-primary" onclick="back()" id="btn_cancel">취소</button>
+
+
+    </div>
+    <div style="margin-top: 10px;">
+      <div id="map" style="width:50%;height:350px;"></div>
+      <a style="margin-top: 10px;" class="btns" th:href="@{|./update_map?restno=${restFullData.restno}&now_page=${now_page}&word=${word}|}"  id="updatemap">지도 수정</a>
+    </div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6&libraries=services"></script>
+
+    <script th:inline="javascript">
+
+      var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+
+          mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+          };
+      var map = new kakao.maps.Map(mapContainer, mapOption);
+
+      // 지도를 생성합니다
+
+      // 주소-좌표 변환 객체를 생성합니다
+      var geocoder = new kakao.maps.services.Geocoder();
+
+      // 주소로 좌표를 검색합니다
+      /*<![CDATA[*/
+      geocoder.addressSearch([[${restFullData.address}]], function(result, status) {
+
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+
+          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+          // 결과값으로 받은 위치를 마커로 표시합니다
+          var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+
+          // 인포윈도우로 장소에 대한 설명을 표시합니다
+          var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
+          });
+          infowindow.open(map, marker);
+
+          // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          map.setCenter(coords);
+        }
+      });
+    </script>
+
+<script>
+  function back() {
+    history.back();
+  }
+</script>
+  </form>
+</div>
+
+
+
+
+</div>
+
+</html>
