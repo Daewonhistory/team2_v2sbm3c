@@ -8,7 +8,7 @@
 	</div>
 	<div>
 		<section>
-			<button type="button" onclick="location.href='../map'" style="width:100%">주변지역 레스토랑 보기</button>
+			<button type="button" onclick="location.href='../map'" style="width:100%">주변지역 레스토랑 보기</b>
 		</section>
 		<form id="frm" name='frm' method='get' action='./search_list'>
 			
@@ -16,31 +16,31 @@
 				<span class="section_name">예약 조건</span><br>
 				<label>인원:</label><input type="number" name="person" value="2">명
 				<input type="date" id="reserve_date" name="date">
-				<div class="vertical_scroll" id="scrollContainer">
-					<button type="button" class="timebutton" onclick="selectTime(0, this)">0:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(1, this)">1:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(2, this)">2:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(3, this)">3:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(4, this)">4:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(5, this)">5:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(6, this)">6:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(7, this)">7:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(8, this)">8:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(9, this)">9:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(10, this)">10:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(11, this)">11:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(12, this)">12:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(13, this)">13:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(14, this)">14:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(15, this)">15:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(16, this)">16:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(17, this)">17:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(18, this)">18:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(19, this)">19:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(20, this)">20:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(21, this)">21:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(22, this)">22:00</button>
-					<button type="button" class="timebutton" onclick="selectTime(23, this)">23:00</button>								
+				<div class="vertical_scroll" id="scrollContainer" style="margin-top: 10px;">
+					<button   type="button" class="buttontime" onclick="selectTime(0, this)">0:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(1, this)">1:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(2, this)">2:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(3, this)">3:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(4, this)">4:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(5, this)">5:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(6, this)">6:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(7, this)">7:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(8, this)">8:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(9, this)">9:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(10, this)">10:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(11, this)">11:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(12, this)">12:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(13, this)">13:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(14, this)">14:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(15, this)">15:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(16, this)">16:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(17, this)">17:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(18, this)">18:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(19, this)">19:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(20, this)">20:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(21, this)">21:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(22, this)">22:00</button>
+					<button  type="button" class="buttontime" onclick="selectTime(23, this)">23:00</button>
 				</div>
 				<input type="hidden" id="selected_time" name="time" value="">
 				
@@ -49,7 +49,7 @@
 			<section id="sec_location">
 				<span class="section_name">지역선택</span><span>(미선택시 전국기반)</span><br>
 		        <div id="midarea_div" >
-		        	<button type="button"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto; margin: 1px;"></button>
+		        	<button  type="buttontime"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto; margin: 1px;"></button>
 		        </div>
 		        
 		        <div id="botarea_div" style="display:none">
@@ -59,7 +59,7 @@
 			</section>
 			<section id="sec_category" >
 				<span class="section_name">카테고리</span><span>(미선택시 모든카테고리)</span><br>
-				<button type="button"th:each="categoryVO, status : ${cateList}" th:onclick="|selectCategory(${categoryVO.categoryno}, this)|" th:text="${categoryVO.name}" style="flex:1 0 auto; margin: 1px;"></button>
+				<button  type="button" th:each="categoryVO, status : ${cateList}" th:onclick="|selectCategory(${categoryVO.categoryno}, this)|" th:text="${categoryVO.name}" style="flex:1 0 auto; margin: 1px;"></button>
 				<input type="hidden" id="categoryno" name="categoryno">
 			</section>
 			<section id="sec_price">
@@ -73,7 +73,7 @@
 			</section>
 			
 			<div style="width: 100%;text-align: center;">
-				<button type="submit" style="width:100px;margin:0px auto;">검색</button>
+				<button  type="submit" style="width:100px;margin:0px auto;">검색</button>
 			</div>
 			
 		</form>
@@ -88,8 +88,8 @@
 	   // 폼 데이터 가져오기
         const botareaBox = document.getElementsByName('botarea')[0];
         botareaBox.value = "";
-        let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
-        for(let botareaButton of all_botarea_button){
+        let all_botarea_buttontime  = document.getElementById('botarea_div').querySelectorAll('buttontime');
+        for(let botareaButton of all_botarea_buttontime){
 			console.log(botareaButton.value);
 			if(botareaButton.classList.contains('btn_red')){
 				botareaBox.value += botareaButton.value + "_";
@@ -103,7 +103,7 @@
 </script>
 	<script>
 		window.onload=()=>{
-			document.querySelectorAll('.timebutton')[1].click();
+			document.querySelectorAll('.buttontime')[1].click();
 			document.getElementById('reserve_date').value= new Date().toISOString().substring(0, 10);	
 			const form = document.getElementById('frm');
     	const time1 = document.getElementById('time1');
@@ -152,20 +152,20 @@
 			let selected_botarea_btn = eventButton;
 			console.log(selected_botarea_btn.value);
 			if(selected_botarea_btn.value == 0){
-				let all_botarea_button = document.getElementById('botarea_div').querySelectorAll('button');
+				let all_botarea_buttontime  = document.getElementById('botarea_div').querySelectorAll('buttontime');
 				if(selected_botarea_btn.classList.contains('btn_red')){
-					for(const button of all_botarea_button){
-						button.classList.remove('btn_red');
+					for(const buttontime  of all_botarea_buttontime){
+						buttontime.classList.remove('btn_red');
 					}
 				}else{
-					for(const button of all_botarea_button){
-						button.classList.add('btn_red');
+					for(const buttontime  of all_botarea_buttontime){
+						buttontime.classList.add('btn_red');
 					}
 				}
 			}else{
 				if(selected_botarea_btn.classList.contains('btn_red')){
-					let button = document.getElementById('botarea_div').querySelector('button');
-					button.classList.remove('btn_red');
+					let buttontime  = document.getElementById('botarea_div').querySelector('buttontime');
+					buttontime.classList.remove('btn_red');
 				}
 				selected_botarea_btn.classList.toggle('btn_red');
 			}

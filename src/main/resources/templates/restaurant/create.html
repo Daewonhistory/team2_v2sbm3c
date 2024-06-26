@@ -5,10 +5,8 @@
   <div th:text="${fail}">
 
   </div>
-  <script>
-    $(function(){
-      $('.select2-selection__rendered').css({'font-size':'15px'});
-    });
+  <script th:inline="javascript">
+
 
     fetch("/category/catelist", {
       method: 'GET'
@@ -35,17 +33,16 @@
       <form id="frm" name="frm" th:object="${restaurantVO}" enctype="multipart/form-data" method="post"
             action="/restaurant/create">
         <div class="form-group">
-          <label for="rest_img1">식당 이미지</label>
-          <input type="file" class="form-control" name="file1MF" id="rest_img1" placeholder="파일 선택">
+          <input type="file" class="form-control" name="file1MF" id="rest_img1" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file2MF" id="rest_img2" placeholder="파일 선택"  style="display: none">
+          <input type="file" class="form-control" name="file3MF" id="rest_img3" placeholder="파일 선택"  style="display: none">
+
         </div>
-        <div class="form-group">
-          <label for="rest_img2">식당 이미지</label>
-          <input type="file" class="form-control" name="file2MF" id="rest_img2" placeholder="파일 선택">
+        <div class="drop-zone" id="drop-zone">
+          여기에 사진을 드래그 앤 드롭 하세요
         </div>
-        <div class="form-group">
-          <label for="rest_img3">식당 이미지</label>
-          <input type="file" class="form-control" name="file3MF" id="rest_img3" placeholder="파일 선택">
-        </div>
+        <div class="preview" id="preview"></div>
+
         <div class="form-group">
           <label for="name">식당 이름</label>
           <input type="text" class="form-control" name="name" id="name" placeholder="식당 이름">
@@ -81,15 +78,17 @@
 
             <div id="botarea_div" style="display:none; width: 25%; ">
           </div>
-          <div id="address1" style="display:none; width: 50%; margin-left: 10px;  ">
+          <div id="addresshi" style="display:none; width: 50%; margin-left: 10px;  ">
             <input class="form-control" id="addressv" type="text" name="addressv">
             <input  class="form-control" id="alladdress" type="hidden" name="address">
             <input class="form-control" id="lng" type="hidden" name="lng">
             <input class="form-control" id="lat" type="hidden" name="lat">
-            <button type="button" id="searchButton" onclick="searchAddress()">위치 확인</button>
+          </div>
+          <div id="findbutton" style="display: none; margin-left: 10px;">
+            <button class="btns" type="button" id="searchButton" onclick="searchAddress()" style="margin: 0 auto;">위치 확인</button>
           </div>
         </div>
-        <div id="map" style="width:100%;height:350px;"></div>
+        <div id="map" style="width:100%;height:350px; display: none; margin-top: 10px; "></div>
 
         <script src="/js/restaurant/create/SelectMidArea.js"></script>
         <script>
@@ -116,8 +115,11 @@
 
         <script>
           function searchAddress() {
+            let maps = document.getElementById('map');
+            maps.style.display = "block";
             var mapContainer = document.getElementById('map'), // 지도를 표시할 div
                 mapOption = {
+
                   center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
                   level: 3 // 지도의 확대 레벨
                 };
@@ -181,9 +183,98 @@
         </script>
         <div class="form-group buttons">
           <button type="submit" class="btn btn-primary" id="btn_send">등록</button>
-          <button type="button" class="btn btn-secondary" onclick="location.href = '/';" id="btn_cancel">취소</button>
+          <button type="button" class="btn btn-secondary" onclick="back()" id="btn_cancel">취소</button>
         </div>
       </form>
+      <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('rest_imgs');
+        const preview = document.getElementById('preview');
+
+        dropZone.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (event) => {
+          event.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+          dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+          event.preventDefault();
+          dropZone.classList.remove('dragover');
+
+          const files = event.dataTransfer.files;
+          handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+          const files = event.target.files;
+          handleFiles(files);
+        });
+
+        function handleFiles(files) {
+          // Create a DataTransfer object
+          const dataTransfer = new DataTransfer();
+
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            // Validate the file type
+            if (!file.type.startsWith('image/')) {
+              alert('이미지 파일만 업로드할 수 있습니다!');
+              continue;
+            }
+
+            // Add the file to the DataTransfer object
+            dataTransfer.items.add(file);
+
+            // Create a FileReader to display the image preview
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const previewItem = document.createElement('div');
+              previewItem.classList.add('preview-item');
+
+              const img = document.createElement('img');
+              img.src = event.target.result;
+
+              const removeBtn = document.createElement('button');
+              removeBtn.classList.add('remove-btn');
+              removeBtn.textContent = 'X';
+              removeBtn.addEventListener('click', () => {
+                preview.removeChild(previewItem);
+
+                // Remove the file from DataTransfer object
+                const dtFiles = Array.from(dataTransfer.files);
+                const index = dtFiles.indexOf(file);
+                if (index > -1) {
+                  dtFiles.splice(index, 1);
+                  const newDataTransfer = new DataTransfer();
+                  dtFiles.forEach(f => newDataTransfer.items.add(f));
+                  fileInput.files = newDataTransfer.files;
+                }
+              });
+
+              previewItem.appendChild(img);
+              previewItem.appendChild(removeBtn);
+              preview.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+          }
+
+          // Update the file input with the new files
+          fileInput.files = dataTransfer.files;
+        }
+
+        function back() {
+          history.back();
+        }
+      </script>
+
     </div>
   </div>
 </div>

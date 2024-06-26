@@ -94,6 +94,15 @@ public class RestaurantProC implements RestaurantProInter {
     return list;
   }
 
+  @Override
+  public int update_map(RestFullData restFullData) {
+    return this.restDAO.update_map(restFullData);
+  }
+
+  @Override
+  public int update(RestFullData restFullData) {
+    return this.restDAO.update(restFullData);
+  }
 
   /**
    * 페이징 필요한 개수 반환

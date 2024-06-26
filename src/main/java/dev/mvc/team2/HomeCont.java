@@ -39,7 +39,8 @@ public class HomeCont {
   public String Home(Model model) {
     ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();
 
-	model.addAttribute("midAreaList", midAreaList);
+    model.addAttribute("midAreaList", midAreaList);
+
     return "mobile";
   }
 
@@ -98,10 +99,10 @@ public class HomeCont {
 	  return "/modal";
   }
 
-  @GetMapping("/error")
-  public String handleError() {
-    // 에러 페이지로 이동
-    return "error"; // error.html로 이동
-  }
+//  @GetMapping("/error")
+//  public String handleError() {
+//    // 에러 페이지로 이동
+//    return "error"; // error.html로 이동
+//  }
 
 }
