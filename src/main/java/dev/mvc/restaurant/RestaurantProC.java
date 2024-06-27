@@ -182,7 +182,7 @@ public class RestaurantProC implements RestaurantProInter {
   }
 
   @Override
-  public int foreign(int ownerno) {
+  public Integer foreign(int ownerno) {
     return this.restDAO.foreign(ownerno);
   }
 

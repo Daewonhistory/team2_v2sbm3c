@@ -2,7 +2,7 @@ package dev.mvc.restaurant;
 
 import java.io.File;
 
-public class Restaurant {
+public class  Restaurant {
   public static int RECORD_PER_PAGE = 8;
 
   /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */

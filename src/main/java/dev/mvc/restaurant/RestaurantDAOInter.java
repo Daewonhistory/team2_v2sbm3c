@@ -30,7 +30,7 @@ public interface RestaurantDAOInter {
 
   public int list_search_count(Map<String, Object> search);
 
-  public int foreign(int ownerno);
+  public Integer foreign(int ownerno);
 
   public int next(String businessno);
   /**

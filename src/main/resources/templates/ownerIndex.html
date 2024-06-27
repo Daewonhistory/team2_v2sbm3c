@@ -2,92 +2,104 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
-  <meta
-          name="viewport"
-          content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0, width=device-width"
-  />
-  <title>포 데이즈</title>
+  <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0, width=device-width" />
+  <title>잇 데이즈</title>
   <link rel="icon" href="img/logo/favicon.png" />
-  <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-  />
-  <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
   <link href="/css/style.css" rel="Stylesheet" type="text/css" />
-
-
-  <!-- /static 기준 -->
+  <link href="/css/owner.css" rel="Stylesheet" type="text/css" />
 </head>
 <body>
-<div class="container_main">
-  <div class="navbar">
-    <div class="dropdown"><a href="/static"> 포 데이즈 (홈)</a> </div>
-    <div th:if="${session.id == null}" class="auth-buttons">
-      <a href="/register">로그인</a> | <a href="/sign-up">회원가입</a>
-    </div>
+<div class="owner-container">
+  <div class="owner-side">
+    <div class="owner-title"><a style="font-size: 20px;" href="/owner">Eay Days 사업자</a></div>
+    <ul class="owner-menu-list">
 
+      <li class="owner-menu">
+        <a class="owner-menu-a" onclick="toggleSubMenu('create-sub-menu', 'create-arrow')">
+          <span id="create-arrow" class="arrow right"></span> 식당 관련
+        </a>
+        <ul class="sub-menu" id="create-sub-menu" style="display: none;">
+          <li><a href="/restaurant/create">식당 등록</a></li>
+          <li><a href="/restaurant/create">식당 관리</a></li>
+          <li><a href="/restaurant/create">식당 수정</a></li>
+          <li><a th:href="@{|/schedule/update?restno=${restno}|}">스케줄 관리</a></li>
 
-    <div  class="auth-buttons">
+        </ul>
+      </li>
+      <li class="owner-menu">
+        <a class="owner-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
+          <span id="reservation-arrow" class="arrow right"></span> 예약 관련
+        </a>
+        <ul class="sub-menu" id="reservation-sub-menu" style="display: none;">
+          <li><a href="/reservation/list/all">전체 예약 </a></li>
+        </ul>
+      </li>
+      <li class="owner-menu">
+        <a class="owner-menu-a" onclick="toggleSubMenu('restaurant-sub-menu', 'restaurant-arrow')">
+          <span id="restaurant-arrow" class="arrow right"></span> 리뷰 관련
+        </a>
+        <ul class="sub-menu" id="restaurant-sub-menu" style="display: none;">
+          <li><a href="/restaurant/search_b">식당 목록</a></li>
+          <li><a href="/restaurant/create">식당 등록</a></li>
 
+        </ul>
+      </li>
 
-      <a   th:href="@{/restaurant/create}">식당 등록</a>
-      |
-      <a th:if="${session.grade == 'NotCerti'}" th:href="@{/owner/certifi}">사업자 정보 등록</a>
-      |
-      <a  th:text="${session.oname}"  th:href="@{/owner/my_page}"></a>
-      |
-      <a th:href="@{/review/list_paging}">리뷰 리스트</a>
-      |
-      <a th:href="@{/favorite/favorite_list}">즐겨찾기 리스트</a>
-      |
-      <a th:href="@{/customer/logininfo}"> logininfo</a>
-      |
-      <a th:href="@{/owner/logout}"> 로그아웃</a>
-
-
+    </ul>
+  </div>
+  <div class="owner-main">
+    <h1 class="owner-main-title">사업자 페이지</h1>
+    <div class="owner-main-detail">
+      <th:block layout:fragment="content"></th:block>
     </div>
   </div>
-  <div class="content_body">
-
-    <script th:inline="javascript">
-      /*<![CDATA[*/
-      // 변수 come에 들어있는 값을 확인하고 널이 아니면 alert 창으로 표시합니다.
-      if ([[${come}]]) {
-        alert([[${come}]]);
-      }
-      /*]]>*/
-
-      if ([[${login}]]) {
-        alert([[${login}]]);
-      }
-
-      if ([[${logout}]]) {
-        alert([[${logout}]]);
-      }
-
-      if ([[${update}]]) {
-        alert([[${update}]]);
-      }
-      if ([[${Abnormal}]]) {
-        alert([[${Abnormal}]]);
-      }
-    </script>
-
-    <th:block layout:fragment="content"></th:block>
-    <div class="bottom_menu">
-      <hr />
-      Copyright K Digital, 국가기간 전략산업 직종 직업 훈련 All rights
-      reserved.
-    </div>
-  </div>
-  <!-- container_main 종료 -->
 </div>
+
+<script>
+  function toggleSubMenu(menuId, arrowId) {
+    var subMenu = document.getElementById(menuId);
+    var arrow = document.getElementById(arrowId);
+
+    if (subMenu && arrow) {
+      if (subMenu.style.display === 'none' || subMenu.style.display === '') {
+        subMenu.style.display = 'block';
+        arrow.classList.remove('right');
+        arrow.classList.add('down');
+      } else {
+        subMenu.style.display = 'none';
+        arrow.classList.remove('down');
+        arrow.classList.add('right');
+      }
+    } else {
+      console.error("Element not found for menuId: " + menuId + " or arrowId: " + arrowId);
+    }
+  }
+</script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  if ([[${come}]]) {
+    alert([[${come}]]);
+  }
+  if ([[${login}]]) {
+    alert([[${login}]]);
+  }
+  if ([[${logout}]]) {
+    alert([[${logout}]]);
+  }
+  if ([[${update}]]) {
+    alert([[${update}]]);
+  }
+  if ([[${Abnormal}]]) {
+    alert([[${Abnormal}]]);
+  }
+  /*]]>*/
+</script>
 </body>
 </html>
