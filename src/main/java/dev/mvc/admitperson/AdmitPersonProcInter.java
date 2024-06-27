@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.mvc.schedule.ScheduleVO;
+
 public interface AdmitPersonProcInter {
 	public int create(AdmitPersonVO admitPersonVO);
 	/**
@@ -51,4 +53,6 @@ public interface AdmitPersonProcInter {
 	public int delete(int admitpersonno);
 	
 	public String pagingBox(int now_page, int search_count, int record_per_page, int page_per_block);
+	
+	public int createBeginning(int restno, int reserveRange, ArrayList<ScheduleVO> scheduleVOList);
 }

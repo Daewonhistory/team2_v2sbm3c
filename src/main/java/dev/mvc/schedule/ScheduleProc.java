@@ -64,8 +64,19 @@ public class ScheduleProc implements ScheduleProcInter {
 	}
 	
 	@Override
-	public int updateFullSchedule(int[] admitPersons, int[] times, int restno) {
-		return 1;
+	public int updateFullSchedule(int[] admitPersons, int[] schedulenos) {
+		int cnt = 0;
+		for(int i=0; i<schedulenos.length; i++) {
+			ScheduleVO scheduleVO = new ScheduleVO();
+			scheduleVO.setScheduleno(schedulenos[i]);
+			scheduleVO.setAdmit_person(admitPersons[i]);
+
+			cnt = this.scheduleDAO.update(scheduleVO);
+			if(cnt == 0) {
+				System.out.println(scheduleVO.getRestno() + "번 레스토랑 " + scheduleVO.getTime() + "시 스케줄 수정 실패");
+			}
+		}
+		return cnt;
 	}
 	
 	@Override

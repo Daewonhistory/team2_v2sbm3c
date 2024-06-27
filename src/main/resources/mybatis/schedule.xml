@@ -14,7 +14,7 @@
     </select>
     
     <select id="list_by_restno">
-    	SELECT scheduleno, amdit_person, time, restno
+    	SELECT scheduleno, admit_person, time, restno
 			FROM schedule
 			WHERE restno = #{restno}
 			ORDER BY time ASC
