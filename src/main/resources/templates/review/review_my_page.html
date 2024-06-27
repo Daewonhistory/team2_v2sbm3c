@@ -45,6 +45,8 @@
             background-color: #ffffff;
             border: none;
             cursor: pointer;
+            font-size: 1rem;
+            color: #000;
         }
         .menu button:hover {
             background-color: #f3f4f6;
@@ -95,7 +97,7 @@
                 <span th:text="${reviewDTO.content}">우엑</span>
             </div>
             <div class="flex items-center">
-                <span class="text-gray-500">좋아요</span>
+                <span class="text-gray-500">도움이 되었어요</span>
                 <span class="text-gray-500 ml-2" th:text="${reviewDTO.likes_count}">0</span>
                 <button class="ml-auto" onclick="toggleMenu(this)">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,8 +106,8 @@
                 </button>
             </div>
             <div class="menu" style="display: none;">
-                <button th:onclick="|location.href='/review/update?reviewno=' + ${reviewDTO.reviewno} + '|'">수정하기</button>
-                <button th:onclick="'delete_check(' + ${reviewDTO.reviewno} + ')'">삭제하기</button>
+                <button th:onclick="|location.href='/review/update_mobile?reviewno=' + ${reviewDTO.reviewno}|">수정하기</button>
+                <button th:onclick="|delete_check(${reviewDTO.reviewno})|">삭제하기</button>
             </div>
         </div>
     </div>

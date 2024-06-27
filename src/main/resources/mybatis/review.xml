@@ -40,10 +40,10 @@
     </select>
 
     
-  <select id="list_paging" resultType="dev.mvc.dto.ReviewDTO">
-      <![CDATA[
-      SELECT * 
-      FROM (
+<select id="list_paging" resultType="dev.mvc.dto.ReviewDTO">
+    <![CDATA[
+    SELECT * 
+    FROM (
         SELECT re.reviewno, re.content, re.rate, re.rdate, rt.name as restname, cu.nickname,
                ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, 
                (SELECT COUNT(*) FROM review_like rl WHERE rl.reviewno = re.reviewno) AS likes_count, 
@@ -61,13 +61,13 @@
             SELECT reviewno, imagefile, ROW_NUMBER() OVER (PARTITION BY reviewno ORDER BY review_imgno) AS rn 
             FROM reviewimage
         ) ri3 ON re.reviewno = ri3.reviewno AND ri3.rn = 3 
-        LEFT JOIN customer cu ON cu.custno = re.custno 
-        LEFT JOIN restaurant rt ON rt.restno = re.restno 
+        LEFT JOIN customer cu ON re.custno = cu.custno
+        LEFT JOIN restaurant rt ON re.restno = rt.restno 
         ORDER BY re.rdate DESC 
-      ) 
-      WHERE rnum <= #{end_num} AND rnum >= #{start_num}
-      ]]>
-  </select>
+    ) 
+    WHERE rnum <= #{end_num} AND rnum >= #{start_num}
+    ]]>
+</select>
 
 
 

@@ -64,7 +64,7 @@
             <tr class="manager-data" th:each="reviewDTO : ${list}">
                 <td class='td_basic hidden' th:text="${reviewDTO.reviewno}"></td>
                 <td class='td_left' th:text="${reviewDTO.restname}"></td>
-                <td class='td_basic' th:text="${reviewDTO.nickname}"></td>
+                <td class='td_left' th:text="${reviewDTO.nickname}"></td>
                 <td class='td_left'>
                     <span class="content-preview" th:if="${reviewDTO.content.length() > 100}" 
                           th:text="|${reviewDTO.content.substring(0, 100)}...|"></span>

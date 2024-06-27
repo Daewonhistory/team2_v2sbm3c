@@ -328,6 +328,33 @@ public class ReviewCont {
         }
         return response;
     }
+    
+    @GetMapping("/update_mobile")
+    public String update_mobile(Model model, @RequestParam("reviewno") int reviewno) {
+        ReviewVO reviewVO = this.reviewProc.read(reviewno);
+        model.addAttribute("reviewVO", reviewVO);
+        return "review/update_mobile";
+    }
+
+    @PostMapping("/update_mobile")
+    public String update_mobile_process(Model model, @Valid ReviewVO reviewVO, BindingResult bindingResult, 
+                                        ReviewimgVO reviewimgVO, RedirectAttributes ra, 
+                                        MultipartFile file1MF, MultipartFile file2MF, MultipartFile file3MF,
+                                        HttpSession session) {
+        if (session.getAttribute("custno") == null) {
+            return "redirect:/customer/login";
+        }
+        int custno = (int) session.getAttribute("custno");
+        reviewVO.setCustno(custno);
+
+        int cnt = this.reviewProc.update_review(reviewVO);
+        if (cnt == 1) {
+            return "redirect:/review/review_my_page";
+        } else {
+            model.addAttribute("code", "update_fail");
+            return "review/msg";
+        }
+    }
 
 
 

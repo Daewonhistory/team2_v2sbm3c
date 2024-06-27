@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <head>
   <style>
@@ -69,11 +68,20 @@
     document.addEventListener("DOMContentLoaded", function() {
         const textarea = document.querySelector('textarea[name="content"]');
         const contentHelp = document.getElementById('contentHelp');
+        const maxLength = 200;
 
-        textarea.addEventListener('input', function() {
-            const remaining = 200 - textarea.value.length;
+        const updateRemainingChars = () => {
+            const remaining = maxLength - textarea.value.length;
             contentHelp.textContent = `최대 200자까지 입력 가능합니다. (남은 글자 수: ${remaining})`;
-        });
+
+            if (textarea.value.length > maxLength) {
+                textarea.value = textarea.value.substring(0, maxLength);
+            }
+        };
+
+        updateRemainingChars();
+
+        textarea.addEventListener('input', updateRemainingChars);
     });
 </script>
 </html>
