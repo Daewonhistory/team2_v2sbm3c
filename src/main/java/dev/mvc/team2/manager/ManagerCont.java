@@ -1,6 +1,7 @@
 package dev.mvc.team2.manager;
 
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,9 +22,17 @@ public class ManagerCont {
 
 
 
-  @GetMapping(value = {"", "/manager/**"})
-  public String forward() {
-    return "/layout";
+  @GetMapping(value = {"", "/manager"})
+  public String forward(HttpSession session) {
+    String type = (String) session.getAttribute("type");
+    if (type == "manager") {
+      return "/layout";
+    } else {
+      return "redirect:/";
+    }
+
+
+
   }
 
 }

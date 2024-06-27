@@ -164,9 +164,9 @@
 }
 
 .down {
-  transform: rotate(135deg);
+  transform: rotate(-45deg);
 
-  -webkit-transform: rotate(135deg);
+  -webkit-transform: rotate(-45deg);
 }
 
 /* 서브 메뉴 스타일 */

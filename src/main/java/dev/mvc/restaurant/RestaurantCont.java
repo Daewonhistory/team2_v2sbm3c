@@ -98,7 +98,7 @@ public class RestaurantCont {
 
   @PostMapping("/create")
   public String restaurant(Model model, HttpSession session,RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
-	int ownerno = (int) session.getAttribute("ownerno");
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
     restaurantVO.setOwnerno(ownerno);
 
 

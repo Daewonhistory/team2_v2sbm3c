@@ -18,7 +18,7 @@
     </insert>
     
 	
-    <select id="foreign" resultType="int">
+    <select id="foreign" >
       select restno from  restaurant where ownerno = #{ownerno}
     </select>
 

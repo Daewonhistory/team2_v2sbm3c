@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
   <div th:text="${fail}">
@@ -33,13 +33,15 @@
       <form id="frm" name="frm" th:object="${restaurantVO}" enctype="multipart/form-data" method="post"
             action="/restaurant/create">
         <div class="form-group">
-          <input type="file" class="form-control" name="file1MF" id="rest_img1" placeholder="파일 선택" style="display: none">
-          <input type="file" class="form-control" name="file2MF" id="rest_img2" placeholder="파일 선택"  style="display: none">
-          <input type="file" class="form-control" name="file3MF" id="rest_img3" placeholder="파일 선택"  style="display: none">
-
+          <input type="file" class="form-control" name="file1MF" id="file1MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file2MF" id="file2MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file3MF" id="file3MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" id="rest_imgs" placeholder="파일 선택" style="display: none">
         </div>
+
+        <label>식당 이미지</label>
         <div class="drop-zone" id="drop-zone">
-          여기에 사진을 드래그 앤 드롭 하세요
+          여기에 사진을 드래그 앤 드롭 하세요 최대 3개 업로드 할 수 있습니다
         </div>
         <div class="preview" id="preview"></div>
 
@@ -190,6 +192,8 @@
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('rest_imgs');
         const preview = document.getElementById('preview');
+        const maxFiles = 3;
+        let currentFiles = [];
 
         dropZone.addEventListener('click', () => {
           fileInput.click();
@@ -207,38 +211,32 @@
         dropZone.addEventListener('drop', (event) => {
           event.preventDefault();
           dropZone.classList.remove('dragover');
-
-          const files = event.dataTransfer.files;
+          const files = Array.from(event.dataTransfer.files);
           handleFiles(files);
         });
 
         fileInput.addEventListener('change', (event) => {
-          const files = event.target.files;
+          const files = Array.from(event.target.files);
           handleFiles(files);
         });
 
         function handleFiles(files) {
-          // Create a DataTransfer object
-          const dataTransfer = new DataTransfer();
-
-          for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-
-            // Validate the file type
+          files.forEach(file => {
             if (!file.type.startsWith('image/')) {
               alert('이미지 파일만 업로드할 수 있습니다!');
-              continue;
+              return;
             }
 
-            // Add the file to the DataTransfer object
-            dataTransfer.items.add(file);
+            if (currentFiles.length >= maxFiles) {
+              alert(`최대 ${maxFiles}개의 이미지 파일만 업로드할 수 있습니다!`);
+              return;
+            }
 
-            // Create a FileReader to display the image preview
+            currentFiles.push(file);
             const reader = new FileReader();
             reader.onload = (event) => {
               const previewItem = document.createElement('div');
               previewItem.classList.add('preview-item');
-
               const img = document.createElement('img');
               img.src = event.target.result;
 
@@ -247,16 +245,8 @@
               removeBtn.textContent = 'X';
               removeBtn.addEventListener('click', () => {
                 preview.removeChild(previewItem);
-
-                // Remove the file from DataTransfer object
-                const dtFiles = Array.from(dataTransfer.files);
-                const index = dtFiles.indexOf(file);
-                if (index > -1) {
-                  dtFiles.splice(index, 1);
-                  const newDataTransfer = new DataTransfer();
-                  dtFiles.forEach(f => newDataTransfer.items.add(f));
-                  fileInput.files = newDataTransfer.files;
-                }
+                currentFiles = currentFiles.filter(f => f !== file);
+                updateFileInputs();
               });
 
               previewItem.appendChild(img);
@@ -264,16 +254,25 @@
               preview.appendChild(previewItem);
             };
             reader.readAsDataURL(file);
-          }
+          });
+          updateFileInputs();
+        }
 
-          // Update the file input with the new files
-          fileInput.files = dataTransfer.files;
+        function updateFileInputs() {
+          const inputs = ['file1MF', 'file2MF', 'file3MF'].map(id => document.getElementById(id));
+          inputs.forEach(input => input.value = ''); // Clear all inputs first
+          currentFiles.forEach((file, index) => {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            inputs[index].files = dataTransfer.files;
+          });
         }
 
         function back() {
           history.back();
         }
       </script>
+
 
     </div>
   </div>

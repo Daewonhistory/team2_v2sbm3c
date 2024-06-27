@@ -10,6 +10,7 @@ import dev.mvc.ownerhistory.OwnerHistoryVO;
 import dev.mvc.phoneAuth.PhoneAuthVO;
 import dev.mvc.restaurant.Restaurant;
 
+import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,10 @@ public class OwnerCont {
   @Qualifier("dev.mvc.owner.OwnerProc")
   private OwnerProInter ownerProc;
 
+  @Autowired
+  @Qualifier("dev.mvc.restaurant.RestaurantProc")
+  private RestaurantProInter restproC;
+
 
   @Autowired
   @Qualifier("dev.mvc.ownerhistory.OwnerHistoryProc")
@@ -66,6 +71,21 @@ public class OwnerCont {
   @GetMapping()
   public String owner(Model model,HttpSession session) {
     String type = (String) session.getAttribute("type");
+
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    System.out.println("owner ownerno ->" + ownerno);
+
+
+
+    if (type == null || ownerno == null) {
+      return "redirect:/";
+    }
+
+
+    Integer restno = this.restproC.foreign(ownerno);
+
+
+    model.addAttribute("restno", restno);
 
     if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") ||  publicTools.isOwner(type).equals("ready")) {
       return "/ownerIndex";
@@ -328,6 +348,7 @@ public class OwnerCont {
 
       if (ownerVO.getGrade() == 1) {
         session.setAttribute("type", "owner");
+        System.out.println("ownerno"+ownerVO.getOwnerno());
         session.setAttribute("ownerno", ownerVO.getOwnerno());
         session.setAttribute("id", ownerVO.getId());
         session.setAttribute("oname", ownerVO.getOname());
@@ -337,6 +358,8 @@ public class OwnerCont {
 
       } else if (ownerVO.getGrade() == 10)  {
         session.setAttribute("ownerno", ownerVO.getOwnerno());
+        System.out.println("ownerno"+ownerVO.getOwnerno());
+
         session.setAttribute("id", ownerVO.getId());
         session.setAttribute("oname", ownerVO.getOname());
         session.setAttribute("grade", "ready");
@@ -347,6 +370,8 @@ public class OwnerCont {
         return "redirect:/owner";
       } else {
         session.setAttribute("type", "NotCerti");
+        System.out.println("ownerno"+ownerVO.getOwnerno());
+
         session.setAttribute("ownerno", ownerVO.getOwnerno());
         session.setAttribute("id", ownerVO.getId());
         session.setAttribute("oname", ownerVO.getOname());
