@@ -1,0 +1,427 @@
+:root {
+  --color-primary: #203442;
+}
+
+.manager-container {
+  display: flex;
+  height: 200vh;
+}
+
+.manager-side {
+  width: 15%;
+  padding: 3rem 1rem;
+  text-align: center;
+  background-color: var(--color-primary);
+  user-select: none;
+
+  color: white; /* 추가된 부분: 텍스트 색상을 흰색으로 설정 */
+}
+
+.manager-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin-bottom: 50px;
+  cursor: pointer;
+  color: #FFFFFF;
+}
+
+.manager-menu-list {
+  list-style: none;
+  padding: 0;
+
+}
+
+.manager-menu {
+  font-size: 1.3rem;
+  margin: 20px 0;
+  cursor: pointer;
+  color: #FFFFFF;
+}
+
+.manager-menu > a {
+  font-size: 1.3rem;
+  margin: 20px 0;
+  cursor: pointer;
+  color: #FFFFFF;
+}
+
+.manager-main {
+  padding: 3rem 0;
+  width: 100%;
+}
+
+.manager-main-title {
+  width: 100%;
+  font-size: 2.5rem;
+  text-align: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-primary);
+
+}
+
+.manager-search {
+  width: 80%;
+  margin: 0 auto;
+  padding: 1rem 0;
+  gap: 1rem;
+  display: flex;
+}
+
+.manager-search select {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.manager-search input {
+  width: 100%;
+  height: 50px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 0 1rem;
+}
+
+.manager-search button {
+  width: 80px;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 5px;
+}
+
+.manager-user-list {
+  margin: 0 auto;
+  width: 80%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* 각 행의 위아래 간격 조정 */
+}
+
+.manager-header {
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+.manager-header th {
+  width: 300px;
+  text-align: left;
+  background-color: var(--color-primary); /* 헤더 배경색 설정 */
+  color: #FFFFFF;
+}
+
+.manager-header th,
+.manager-data td {
+  padding: 8px; /* 셀 안의 콘텐츠와 셀 테두리 사이의 간격 설정 */
+  border: 1px solid #dddddd; /* 테이블 테두리 설정 */
+}
+
+.manager-user-list .manager-data td {
+  background-color: #ffffff; /* 데이터 셀 배경색 설정 */
+}
+
+.sub-menu {
+  display: none;
+  list-style: none;
+  padding-left: 20px;
+}
+
+.manager-menu-a {
+  cursor: pointer;
+}
+
+.manager-menu-a:visited {
+  color: inherit; /* 방문한 링크 색상 유지 */
+}
+
+.sub-menu {
+  display: none;
+  list-style: none;
+  padding-left: 20px;
+}
+
+.manager-menu-a {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.manager-menu {
+  position: relative;
+}
+
+.arrow {
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 5px;
+  margin-right: 25px;
+
+  transition: transform 0.3s ease;
+}
+
+.right {
+  transform: rotate(45deg);
+  margin-left: 20px;
+  -webkit-transform: rotate(45deg);
+}
+
+.down {
+  transform: rotate(-45deg);
+
+  -webkit-transform: rotate(-45deg);
+}
+
+/* 서브 메뉴 스타일 */
+.sub-menu li {
+
+  margin-top: 5px;
+}
+
+.sub-menu a {
+  text-decoration: none;
+  color: lightcyan;
+
+  padding: 5px 17px;
+  display: block;
+}
+
+.sub-menu a:hover {
+  color: #007BFF;
+}
+
+
+.container {
+  width: 60%;
+
+  margin-top: 20px;
+}
+
+.form-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.title_line {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.required {
+  color: red;
+}
+
+.form-group {
+  margin-top: 10px;
+}
+
+.form-group label {
+  font-weight: bold;
+
+}
+#frm > div > label {
+  margin-bottom: 8px;
+}
+#frm > label {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+.form-group select {
+  font-weight: bold;
+  border: black 1px solid;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#botarea_div {
+  margin-left: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  color: white;
+}
+#midAreaSelect {
+  border: black 1px solid;
+
+}
+
+
+#botarea_div select {
+  border: black 1px solid;
+
+}
+
+/* Select2 컨테이너 스타일 */
+.select2-container {
+  width: 100% !important;
+}
+
+/* Select2 선택된 항목 스타일 */
+
+
+/* Select2 드롭다운 메뉴 스타일 */
+.select2-dropdown {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+/* Select2 드롭다운 메뉴 항목 스타일 */
+.select2-results__option {
+  padding: 8px;
+  color: #000; /* 드롭다운 메뉴 텍스트 색상 */
+}
+#frm > div > span > span.selection > span {
+  height: 50px;
+  border: black 1px solid;
+
+}
+#select2-categoryno-container {
+  margin-top: 10px;
+}
+#select2-midAreaSelect-container {
+  font-size: 13px;
+  margin-top: 10px;
+}
+#midarea_div > span > span.selection > span {
+  height: 50px;
+  border: black 1px solid;
+  font-size: 10px;
+
+
+}
+#frm > div > span > span.selection > span > span.select2-selection__arrow {
+  margin-top: 10px;
+
+}
+
+#midarea_div > div > span > span.selection > span > span.select2-selection__arrow {
+  margin-top: 10px;
+}
+
+#select2-7lfk-container {
+  font-size: 13px;
+  margin-top: 10px;
+
+}
+
+#botarea_div > span > span.selection > span {
+  height: 50px;
+  border: black 1px solid;
+  font-size: 10px;
+}
+#midarea_div > span > span.selection > span > span.select2-selection__arrow {
+  margin-top: 10px;
+
+}
+#botarea_div > span > span.selection > span > span.select2-selection__arrow {
+  margin-top: 10px;
+
+}
+
+#select2-botarea-container {
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+a.btns {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #FFFFFF;
+  background-color: #007BFF;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+.btns {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #FFFFFF;
+  background-color: #007BFF;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+a.btns:hover  {
+  background-color: #0056b3;
+  color: #FFFFFF;
+}
+
+.manager-title > a {
+   color: #FFFFFF;
+ }
+
+.drop-zone {
+  width: 300px;
+  height: 300px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  color: #aaa;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.drop-zone.dragover {
+  border-color: #333;
+  background-color: #eee;
+}
+.preview {
+  display: flex;
+  flex-wrap: wrap;
+}
+.preview .preview-item {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+}
+.preview .preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.preview .preview-item .remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 20px;
+  color: #000; /* "X" 표시를 검은색으로 설정 */
+}
