@@ -10,8 +10,6 @@ public class ReviewDTO {
   /** 리뷰 번호 */
   private int reviewno;
 
-  /** 제목 */
-
 
   /** 내용 */
   private String content = "";
@@ -39,10 +37,18 @@ public class ReviewDTO {
   /** 유저 이름*/
   private String nickname;
   
-  /** 좋아요 여부 추가*/
-  private boolean myLike; 
   
-  private int likes_count;  // 좋아요 개수 필드 추가
+  private int likes = 0;
+  
+  /** 사용자가 해당 리뷰를 좋아요 했는지 여부 */
+  private int mylike = 0;
+  
+  private int likes_count;
+  
+  /** 프로필 사진*/
+  private String user_image; 
+  
+
   
 
 }

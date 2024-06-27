@@ -1,9 +1,9 @@
 package dev.mvc.favorite;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-import dev.mvc.reserve.ReserveVO;
+import org.springframework.data.repository.query.Param;
 
 public interface FavoriteDAOInter {
   
@@ -22,10 +22,34 @@ public interface FavoriteDAOInter {
   public int delete(FavoriteVO favoriteVO);
   
   /**
+   * 즐겨찾기 삭제(모바일)
+   * @param favoriteVO
+   * @return
+   */
+  int delete_favorite_rest(FavoriteVO favoriteVO);
+  
+  /**
    * 모든 예약 조회
    * @return
    */
   public ArrayList<FavoriteVO> favorite_list();
+  
+  /**
+   * 사용자에 따른 즐겨찾기 조회
+   * @param custno
+   * @return
+   */
+  public ArrayList<FavoriteVO> list_by_custno(int custno); 
+  
+  /**
+   * 특정 사용자가 특정 식당을 이미 즐겨찾기했는지 확인
+   * @param custno
+   * @param restno
+   * @return
+   */
+  public int isFavorited(Map<String, Object> params);
+
+
 }
 
 

@@ -41,7 +41,7 @@ public interface ScheduleProcInter {
 	 * @param scheduleList
 	 * @return
 	 */
-	public int updateFullSchedule(int[] admitPersons, int[] times, int restno);
+	public int updateFullSchedule(int[] admitPersons, int[] schedulenos);
 	
 	/**
 	 * 스케줄 삭제

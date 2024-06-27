@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev.mvc.admitperson.AdmitPersonProcInter;
 import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.restaurant.RestaurantVO;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,10 @@ public class ScheduleCont {
 	@Autowired
 	@Qualifier("dev.mvc.restaurant.RestaurantProc")
 	private RestaurantProInter restaurantProc;
+	
+	@Autowired
+	@Qualifier("dev.mvc.admitperson.AdmitPersonProc")
+	private AdmitPersonProcInter admitPersonProc;
 	
 	public ScheduleCont() {
 		System.out.println("-> ScheduleCont Created.");
@@ -68,6 +73,67 @@ public class ScheduleCont {
 			return "redirect:/schedule/update?restno=" + restno;
 			
 		}else if(accessType.equals("owner")) { // 사장 접속
+			RestaurantVO RestaurantVO = this.restaurantProc.read(restno);
+			
+			// 현재 수정할 식당의 사장이 아니라면 되돌려보냄
+			if((int) session.getAttribute("ownerno") != RestaurantVO.getOwnerno()) {
+				return "redirect:/manager";
+			}
+			
+			int cnt = this.scheduleProc.createFullSchedule(admit_persons, times, restno);
+			if(cnt == 1) {
+				
+			}
+			return "redirect:/schedule/update?restno=" + restno;
+		}else {
+			return "redirect:/manager";
+		}
+		
+	}
+	
+	@GetMapping("/update")
+	public String update(Model model, HttpSession session, int restno) {
+		ArrayList<ScheduleVO> scheduleList = this.scheduleProc.list_by_restno(restno);
+		
+		if(scheduleList.size() == 0) {	//스케줄이 생성되지 않은 경우 스케줄 등록페이지로
+			return "redirect:/schedule/create?restno=" + restno;
+		}else {
+			String accessType = (String) session.getAttribute("type");
+			if(accessType == null) { // 관리자 접속
+				RestaurantVO restaurantVO = this.restaurantProc.read(restno);
+				model.addAttribute("restaurantVO", restaurantVO);
+				model.addAttribute("scheduleList", scheduleList);
+				return "/schedule/update";
+				
+			}else if(accessType.equals("owner")) { // 사장 접속
+				int ownernoOfRestaurant = this.restaurantProc.read(restno).getOwnerno();
+				
+				// 현재 식당의 사장이 아니라면 되돌려보냄
+				if((int) session.getAttribute("ownerno") != ownernoOfRestaurant) {
+					return "redirect:/manager";
+				}
+				
+				RestaurantVO restaurantVO = this.restaurantProc.read(restno);
+				model.addAttribute("restaurantVO", restaurantVO);
+				model.addAttribute("scheduleList", scheduleList);
+				return "/schedule/update";
+			}else {
+				return "redirect:/manager";
+			}
+		}
+		
+	}
+	
+	@PostMapping("/update")
+	public String updateProc(HttpSession session, int restno, @RequestParam("admit_persons")int[] admit_persons, @RequestParam("schedulenos")int[] schedulenos) {
+		String accessType = (String) session.getAttribute("type");
+		if(accessType == null) { // 관리자 접속
+			int cnt = this.scheduleProc.updateFullSchedule(admit_persons, schedulenos);
+			
+			
+			return "redirect:/schedule/update?restno=" + restno;
+			
+		}else if(accessType.equals("owner")) { // 사장 접속
 			int ownernoOfRestaurant = this.restaurantProc.read(restno).getOwnerno();
 			
 			// 현재 식당의 사장이 아니라면 되돌려보냄
@@ -75,7 +141,7 @@ public class ScheduleCont {
 				return "redirect:/manager";
 			}
 			
-			int cnt = this.scheduleProc.createFullSchedule(admit_persons, times, restno);
+			int cnt = this.scheduleProc.updateFullSchedule(admit_persons, schedulenos);
 			
 			return "redirect:/schedule/update?restno=" + restno;
 		}else {

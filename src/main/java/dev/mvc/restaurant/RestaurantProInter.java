@@ -102,6 +102,7 @@ public interface RestaurantProInter {
    */
   public RestFullData readFullData(int restno);
   
+  
   public String test(String date);
   
   /**

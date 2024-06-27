@@ -1,10 +1,9 @@
 package dev.mvc.reserve;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-import dev.mvc.admitperson.AdmitPersonVO;
+import dev.mvc.dto.ReserveDTO;
 
 public interface ReserveProcInter {
   
@@ -17,7 +16,7 @@ public interface ReserveProcInter {
   
   
   /**
-   * 모든 예약 조회
+   *  예약 조회
    * @return
    */
   public ArrayList<ReserveVO> list_all();
@@ -43,8 +42,34 @@ public interface ReserveProcInter {
    * @return
    */
   public int delete(int reserveno);
+  
+  /**
+   * 페이징을 적용한 예약 조회
+   * @param 
+   * @param 
+   * @return
+   */
+  public ArrayList<ReserveDTO> list_reserve_paging(int now_page, int record_per_page);
+
+  /**
+   * 전체 예약 수 조회
+   * @return
+   */
+  public int count_all();
+
+  /**
+   * 페이징 박스 생성
+   * @param now_page 현재 페이지 번호
+   * @param list_file 목록 파일명
+   * @param total_count 전체 레코드 수
+   * @param record_per_page 페이지당 레코드 수
+   * @param page_per_block 블록당 페이지 수
+   * @return 페이징 박스 HTML
+   */
+  String pagingBox(int now_page, String list_file, int total_count, int record_per_page, int page_per_block);
+}
 
 
   
-}
+
 

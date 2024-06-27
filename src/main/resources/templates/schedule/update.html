@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+	<style>
+		.schedule-condition {
+			display: flex;
+			flex-direction: row;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			align-items: center;
+		}
+		.form-control{
+			width:auto;
+		}
+	</style>
+  <div class="container">
+    <div class="form-container">
+      <div class="title_line">식당 스케줄 수정(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" method="post" action="/schedule/update">
+        <input type="hidden" name="restno" th:value="${restaurantVO.restno}">
+        <label for="restname">식당 이름: </label>
+        <span id="restname" th:text="${restaurantVO.name}"></span>
+      	<div id="schedule-div" class="form-group">
+      		<div class="schedule-condition" th:each="scheduleVO, status:${scheduleList}">
+      			<input type="hidden" name="schedulenos" th:value=${scheduleVO.scheduleno}>
+      			<label>시각:</label>
+        		<input type="number" class="form-control times" name="times" th:value="${scheduleVO.time}" min="0" max="23" readonly>
+        		<label>허용인원:</label>
+        		<input type="number" class="form-control" name="admit_persons" th:value="${scheduleVO.admit_person}" min="0" placeholder="예약 허용 인원">
+        	</div>
+      	</div>
+        
+
+        <div class="form-group buttons">
+          <button type="submit" class="btn btn-primary" id="btn_send">수정</button>
+          <button type="button" class="btn btn-secondary" onclick="location.href = '/restaurant/search_b';" id="btn_cancel">취소</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+</html>
+
+
+
+

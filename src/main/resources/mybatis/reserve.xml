@@ -40,5 +40,26 @@
      DELETE FROM reserve 
      WHERE reserveno = #{reserveno} 
    </delete>
+   
+    <!-- 페이징을 적용한 예약 조회 -->
+    <select id="list_reserve_paging" resultType="dev.mvc.dto.ReserveDTO">
+    <![CDATA[
+        SELECT * FROM (
+            SELECT ROWNUM AS rnum, r.reserveno, r.sub_date, r.person, r.custno, r.admitpersonno, 
+                   c.nickname AS nickname, rest.name AS restname
+            FROM reserve r
+            LEFT JOIN customer c ON r.custno = c.custno
+            LEFT JOIN admitperson a ON r.admitpersonno = a.admitpersonno
+            LEFT JOIN restaurant rest ON a.restno = rest.restno
+            WHERE ROWNUM <= #{end_num}
+            ORDER BY r.reserveno DESC
+        )
+        WHERE rnum >= #{start_num}
+    ]]>
+    </select>
+
+    <select id="count_all" resultType="int">
+        SELECT COUNT(*) FROM reserve
+    </select>
     
 </mapper>

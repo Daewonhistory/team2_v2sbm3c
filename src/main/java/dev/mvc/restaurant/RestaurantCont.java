@@ -1,14 +1,33 @@
 package dev.mvc.restaurant;
 
-import dev.mvc.botarea.BotAreaVO;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
-
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.RestFullData;
 import dev.mvc.ingredient.IngredientVO;
 import dev.mvc.menu.MenuVO;
 import dev.mvc.menuingred.MenuIngredVO;
+import dev.mvc.favorite.FavoriteProcInter;
 import dev.mvc.midarea.MidAreaProcInter;
 import dev.mvc.midarea.MidAreaVO;
 import dev.mvc.notice.NoticeProcInter;
@@ -19,21 +38,6 @@ import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -43,6 +47,10 @@ public class RestaurantCont {
   @Autowired
   @Qualifier("dev.mvc.restaurant.RestaurantProc")
   private RestaurantProInter restaurantProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.favorite.FavoriteProc")
+  private FavoriteProcInter favoriteProc;
 
 
   @Autowired
@@ -416,21 +424,40 @@ public class RestaurantCont {
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, HttpSession session, int restno, @RequestParam(defaultValue="2")int person, String date) {
-	  String accessType = (String) session.getAttribute("type");
-	  RestFullData restFullData = this.restaurantProc.readFullData(restno);
-	  System.out.println(restFullData.getName());
-	  model.addAttribute("restaurantVO", restFullData);
-	  
-	  ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
-	  model.addAttribute("noticeList", noticeList);
-	  
-	  model.addAttribute("accessType", accessType);
-	  model.addAttribute("restno", restno);
-	  model.addAttribute("person", person);
-	  model.addAttribute("date", date);
-	  return "/restaurant_page";
+  public String main_page(Model model, HttpSession session, 
+                          int restno, @RequestParam(defaultValue="2")int person, 
+                          String date) {
+    String accessType = (String) session.getAttribute("type");
+    
+    int custno = -1; //초기값 설정, 비로그인 상태
+    boolean isFavorited = false;
+    
+    if(accessType != null && accessType.equals("customer")) {
+      custno = (int) session.getAttribute("custno");
+      
+      isFavorited = favoriteProc.isFavorited(custno, restno);
+      model.addAttribute("custno", custno);
+    }
+   
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    System.out.println(restFullData.getName());
+    model.addAttribute("restaurantVO", restFullData);
+    
+    ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
+    model.addAttribute("noticeList", noticeList);
+    
+    model.addAttribute("accessType", accessType);
+    model.addAttribute("restno", restno);
+    model.addAttribute("person", person);
+    model.addAttribute("date", date);
+    
+    model.addAttribute("isFavorited", isFavorited); 
+    
+    return "/restaurant_page";
   }
+
+
+
   
   @PostMapping("/coordinate_search_list")
   @ResponseBody

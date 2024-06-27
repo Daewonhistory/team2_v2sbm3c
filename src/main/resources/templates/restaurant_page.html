@@ -1,134 +1,208 @@
 <!DOCTYPE html>
-<html layout:decorate="~{mobile_layout}">
-<div layout:fragment="content" style="padding:0">
-	<nav>
-      <ul>
-          <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
-          <li><a th:href="|/menu/menuAllList?restno=${restaurantVO.restno}&person=${person}&date=${date}|">메뉴</a></li>
-          <li><a href="#section3">리뷰</a></li>
-      </ul>
-  </nav>
-	<div>
-		<span class="page_name">레스토랑</span>
-	</div>
-	
-	<section id="home" style="height: 300px; margin:0; padding:0">
-    <div class="slider" id="slider">
-		  <div class="slide"><img th:src="|/restaurant/storage/${restaurantVO.image1}|" alt="Slide"></div>
-		  <div class="slide" th:if="${restaurantVO.image2 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image2}|" alt="Slide"></div>
-		  <div class="slide" th:if="${restaurantVO.image3 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image3}|" alt="Slide"></div>
-		  <!-- Add more slides as needed -->
-		  <button class="arrow left" id="prev">&lt;</button>
-		  <button class="arrow right" id="next">&gt;</button>
-		</div>
-		<div style="height: 15%;display: flex;justify-content: center;align-items: center;">
-			<div class="radio_buttons" id="radio_buttons"></div>
-		</div>
-			
-    </section>
-	<section id="restaurant_info_section">
-		<div>
-			<div>
-				<span id="rest_name" th:text="${restaurantVO.name}"></span>
-			</div>
-			<div>
-				<img src="star" alt="별이미지">
-				<span id="rate">5.0</span>
-			</div>
-		</div>	
-	</section>
-	<section id="sec_reserve_condition">
-			<span class="section_name">예약 조건</span><br>
-				<input type="hidden" name="admit_personno">
-				<input type="hidden" id="restno" name="restno" th:value="${restaurantVO.restno}"><br>
-				<label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()">명<br>
-				<label>날짜:</label><input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
-				<input type="hidden" name="time" value="2">
-				<input type="text" th:value="${accessType}" id="access-type">
-				<div class="vertical_scroll" id="scrollContainer">
-					
-							
-				</div>
-	</section>
-	<section>
-		<h2>식당 공지</h2>
-		<div id="notice_area" style="height: 200px; overflow-x: hidden ; overflow-y: scroll; padding:4px">
-			<div id="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; margin:3px; overflow: hidden; overflow-wrap: break-word;">
-				<h3 th:text="${noticeVO.title}"></h3>
-				<span th:text="${noticeVO.content}"></span>
-			</div>
-		</div>
-	</section>
-	<section id="map-section">
-		<h2>지도</h2>
-		<span th:text="|주소: ${restaurantVO.address}|"></span>
-  	<div id="map"></div>
-		
-	</section>
-	<script src="/js/restaurant/main_page/ImageSlide.js"></script>
-	<script src="/js/restaurant/main_page/SearchPossibleTime.js"></script>
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6"></script>
-	<script src="/js/today.js"></script>
-	<script>
-		window.onload = () => {
-			searchPossibleTime();
-			document.getElementById('reserve_date').setAttribute('min', getTodayDate());
-		}
-		let lat = [[${restaurantVO.lat}]];
-		let lng = [[${restaurantVO.lng}]];
-		
-		console.log(lat + " " + lng);
-		let markerPosition  = new kakao.maps.LatLng(lat, lng);
-		let marker = new kakao.maps.Marker({
-      position: markerPosition
-    });
-		var staticMapContainer  = document.getElementById('map'), // 이미지 지도를 표시할 div  
-    staticMapOption = { 
-        center: new kakao.maps.LatLng(lat, lng), // 이미지 지도의 중심좌표
-        level: 3, // 이미지 지도의 확대 레벨
-        marker: marker // 이미지 지도에 표시할 마커 
-    };    
+<html lang="en" layout:decorate="~{mobile_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레스토랑 페이지</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
 
-		// 이미지 지도를 생성합니다
-		var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-		
-		
-		
-    
-		
-	</script>
-	<script>
-        const scrollContainer = document.getElementById('scrollContainer');
-        
-        let isDown2 = false;
-        let startX2;
-        let scrollLeft;
+        .favorite-icon {
+            width: 24px; /* 원하는 크기로 설정 */
+            height: 24px; /* 원하는 크기로 설정 */
+            margin-left: 8px; /* 버튼과 이미지 사이의 간격 설정 */
+            vertical-align: middle; /* 이미지와 텍스트가 중간에 정렬되도록 설정 */
+        }
 
-        scrollContainer.addEventListener('mousedown', (e) => {
-						
-            isDown2 = true;
-            scrollContainer.classList.add('active');
-            startX2 = e.pageX - scrollContainer.offsetLeft;
-            scrollLeft = scrollContainer.scrollLeft;
-        });
+        /* 추가적으로 버튼을 조절할 수 있습니다 */
+        #favorite-btn {
+            font-size: 14px;
+            padding: 4px 8px;
+        }
 
-        scrollContainer.addEventListener('mouseleave', () => {
-            isDown2 = false;
-            scrollContainer.classList.remove('active');
-        });
+        /* 이미지와 버튼을 동일한 줄에 배치하기 위한 컨테이너 스타일 */
+        #restaurant_info_section div {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div layout:fragment="content" style="padding:0">
+        <nav>
+            <ul>
+                <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
+                <li><a th:href="|/menu/menuAllList?restno=${restaurantVO.restno}&person=${person}&date=${date}|">메뉴</a></li>
+                <li><a th:href="|/review/reviewAllList?restno=${restno}&person=${person}&date=${date}|">리뷰</a></li>
+            </ul>
+        </nav>
+        <div>
+            <span class="page_name">레스토랑</span>
+        </div>
 
-        scrollContainer.addEventListener('mouseup', () => {
-            isDown2 = false;
-            scrollContainer.classList.remove('active');
-        });
+        <section id="home" style="height: 300px; margin:0; padding:0">
+            <div class="slider" id="slider">
+                <div class="slide"><img th:src="|/restaurant/storage/${restaurantVO.image1}|" alt="Slide"></div>
+                <div class="slide" th:if="${restaurantVO.image2 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image2}|" alt="Slide"></div>
+                <div class="slide" th:if="${restaurantVO.image3 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image3}|" alt="Slide"></div>
+                <!-- Add more slides as needed -->
+                <button class="arrow left" id="prev">&lt;</button>
+                <button class="arrow right" id="next">&gt;</button>
+            </div>
+            <div style="height: 15%;display: flex;justify-content: center;align-items: center;">
+                <div class="radio_buttons" id="radio_buttons"></div>
+            </div>
+        </section>
+        <section id="restaurant_info_section">
+            <div>
+                <span id="rest_name" th:text="${restaurantVO.name}"></span>
+                <button type="button" id="favorite-btn" onclick="checkLoginAndAddFavorite()">즐겨찾기</button>
+                <img id="favorite-img" th:data-is-favorited="${isFavorited}" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" class="favorite-icon" />
+            </div>
+            <div>
+                <img src="star" alt="별이미지">
+                <span id="rate">5.0</span>
+            </div>
+        </section>
+        <section id="sec_reserve_condition">
+            <span class="section_name">예약 조건</span><br>
+            <input type="hidden" name="admit_personno">
+            <input type="hidden" id="restno" name="restno" th:value="${restaurantVO.restno}"><br>
+            <label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()">명<br>
+            <label>날짜:</label><input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
+            <input type="hidden" name="time" value="2">
+            <input type="text" th:value="${accessType}" id="access-type">
+            <div class="vertical_scroll" id="scrollContainer"></div>
+        </section>
+        <section>
+            <h2>식당 공지</h2>
+            <div id="notice_area" style="height: 200px; overflow-x: hidden ; overflow-y: scroll; padding:4px">
+                <div id="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; margin:3px; overflow: hidden; overflow-wrap: break-word;">
+                    <h3 th:text="${noticeVO.title}"></h3>
+                    <span th:text="${noticeVO.content}"></span>
+                </div>
+            </div>
+        </section>
+        <section id="map-section">
+            <h2>지도</h2>
+            <span th:text="|주소: ${restaurantVO.address}|"></span>
+            <div id="map"></div>
+        </section>
 
-        scrollContainer.addEventListener('mousemove', (e) => {
-            if(!isDown2) return;
-            e.preventDefault();
-            const x = e.pageX - scrollContainer.offsetLeft;
-            const walk = (x - startX2) * 3; //scroll-fast
-            scrollContainer.scrollLeft = scrollLeft - walk;
-        });
-    </script>
-</div>
+        <input type="hidden" id="custno" th:value="${custno}" /> <!-- 숨겨진 필드 -->
+        <input type="hidden" id="restno" th:value="${restaurantVO.restno}" />
+
+        <script src="/js/restaurant/main_page/ImageSlide.js"></script>
+        <script src="/js/restaurant/main_page/SearchPossibleTime.js"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6"></script>
+        <script src="/js/today.js"></script>
+        <script>
+            window.onload = () => {
+                searchPossibleTime();
+                document.getElementById('reserve_date').setAttribute('min', getTodayDate());
+
+                // Set favorite image based on isFavorited value
+                const favoriteImg = document.getElementById('favorite-img');
+                const isFavorited = favoriteImg.getAttribute('data-is-favorited') === 'true';
+                favoriteImg.src = isFavorited ? '/images/favorite_down.png' : '/images/favorite_up.png';
+            }
+
+            let lat = [[${restaurantVO.lat}]];
+            let lng = [[${restaurantVO.lng}]];
+            let markerPosition  = new kakao.maps.LatLng(lat, lng);
+            let marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+            var staticMapContainer  = document.getElementById('map'), // 이미지 지도를 표시할 div  
+                staticMapOption = { 
+                    center: new kakao.maps.LatLng(lat, lng), // 이미지 지도의 중심좌표
+                    level: 3, // 이미지 지도의 확대 레벨
+                    marker: marker // 이미지 지도에 표시할 마커 
+                };    
+
+            // 이미지 지도를 생성합니다
+            var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+        </script>
+        <script>
+            const scrollContainer = document.getElementById('scrollContainer');
+            let isDown2 = false;
+            let startX2;
+            let scrollLeft;
+
+            scrollContainer.addEventListener('mousedown', (e) => {
+                isDown2 = true;
+                scrollContainer.classList.add('active');
+                startX2 = e.pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+            });
+
+            scrollContainer.addEventListener('mouseleave', () => {
+                isDown2 = false;
+                scrollContainer.classList.remove('active');
+            });
+
+            scrollContainer.addEventListener('mouseup', () => {
+                isDown2 = false;
+                scrollContainer.classList.remove('active');
+            });
+
+            scrollContainer.addEventListener('mousemove', (e) => {
+                if (!isDown2) return;
+                e.preventDefault();
+                const x = e.pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX2) * 3; //scroll-fast
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+        </script>
+        <script>
+            function checkLoginAndAddFavorite() {
+                const restno = document.getElementById('restno').value;
+                const custno = document.getElementById('custno').value;
+                const restaurantName = document.getElementById('rest_name').innerText; // 식당 이름 가져오기
+
+                console.log("restno: " + restno);
+                console.log("custno: " + custno);
+                console.log("restaurantName: " + restaurantName);
+
+                if (!custno) {
+                    alert('로그인 한 후 이용할 수 있습니다');
+                    window.location.href = '/customer/login';
+                    return;
+                }
+
+                const favorite = {
+                    restno: restno,
+                    custno: custno,
+                    restaurantName: restaurantName // 식당 이름 추가
+                };
+
+                fetch('/favorite/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(favorite)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        if (data.message === '즐겨찾기가 저장되었습니다.') {
+                            document.getElementById('favorite-img').src = '/images/favorite_down.png';
+                        } else if (data.message === '즐겨찾기가 삭제되었습니다.') {
+                            document.getElementById('favorite-img').src = '/images/favorite_up.png';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        </script>
+    </div>
+</body>
 </html>
