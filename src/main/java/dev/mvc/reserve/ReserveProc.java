@@ -95,6 +95,21 @@ public class ReserveProc implements ReserveProcInter {
       System.out.println(end_num);
       return list;
     }
+    
+    @Override
+    public ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date) {
+        int begin_of_page = (now_page - 1) * record_per_page;
+        int start_num = begin_of_page + 1;
+        int end_num = begin_of_page + record_per_page;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("start_num", start_num);
+        map.put("end_num", end_num);
+        map.put("reserve_date", reserve_date); // reserve_date 추가
+
+        ArrayList<ReserveDTO> list = this.reserveDAO.list_owner_page(map);
+        return list;
+    }
 
     @Override
     public int count_all() {

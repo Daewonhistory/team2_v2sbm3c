@@ -1,6 +1,7 @@
 package dev.mvc.reserve;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -124,6 +125,37 @@ public class ReserveCont {
 
       return "reservation/list_reserve_paging";
   }
+  
+  @GetMapping("/list_owner_page")
+  public String list_owner_page(HttpSession session, 
+                                Model model, 
+                                @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+                                @RequestParam(name = "reserve_date", required = false) String reserve_date) {
+
+      if (now_page < 1) {
+          now_page = 1;
+      }
+
+      if (reserve_date == null || reserve_date.isEmpty()) {
+          reserve_date = LocalDate.now().toString(); // 기본값 설정: 오늘 날짜
+      }
+
+      ArrayList<ReserveDTO> list = this.reserveProc.list_owner_page(now_page, Reserve.RECORD_PER_PAGE, reserve_date);
+      model.addAttribute("list", list);
+
+      int count = this.reserveProc.count_all();
+      model.addAttribute("count", count);
+
+      String paging = this.reserveProc.pagingBox(now_page, "/reservation/list_owner_page", count, Reserve.RECORD_PER_PAGE, Reserve.PAGE_PER_BLOCK);
+      model.addAttribute("paging", paging);
+
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("reserve_date", reserve_date);
+
+      return "reservation/list_owner_page";
+  }
+
+
 
   
 
@@ -145,6 +177,19 @@ public class ReserveCont {
       if (cnt == 1) {
           redirectAttributes.addAttribute("now_page", now_page); // 현재 페이지 번호를 전달
           return "redirect:/reservation/list_reserve_paging";
+      } else {
+          // 실패한 경우 처리
+          return "error/500";
+      }
+  }
+  
+  @PostMapping("/delete_owner_page")
+  public String deleteOwnerPage(@RequestParam("reserveno") int reserveno, @RequestParam("now_page") int now_page, @RequestParam("reserve_date") String reserve_date, RedirectAttributes redirectAttributes) {
+      int cnt = reserveProc.delete(reserveno);
+      if (cnt == 1) {
+          redirectAttributes.addAttribute("now_page", now_page); // 현재 페이지 번호를 전달
+          redirectAttributes.addAttribute("reserve_date", reserve_date); // 예약 날짜를 전달
+          return "redirect:/reservation/list_owner_page";
       } else {
           // 실패한 경우 처리
           return "error/500";

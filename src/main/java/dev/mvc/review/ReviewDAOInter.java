@@ -84,6 +84,13 @@ public interface ReviewDAOInter {
    */
   public ArrayList<ReviewDTO> list_by_custno(int custno);
   
+  /**
+   * 식당 평점 평균
+   * @param restno
+   * @return
+   */
+  Float avg_Rate(int restno);
+  
 
   
 

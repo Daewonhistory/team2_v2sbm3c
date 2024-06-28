@@ -258,10 +258,10 @@ public class ReviewCont {
     }
     
     @PostMapping("/delete_mobile")
-    public String review_delete_mobile(Model model, @RequestParam("reviewno") int reviewno) {
+    public String review_delete_mobile(Model model, @RequestParam("reviewno") int reviewno, @RequestParam("redirect") String redirect) {
         int cnt = this.reviewProc.delete_review(reviewno);
         if (cnt == 1) {
-            return "redirect:/review_my_page";
+            return "redirect:" + redirect;
         }
         return "review/review_my_page";
     }

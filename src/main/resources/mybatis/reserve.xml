@@ -57,6 +57,10 @@
         WHERE rnum >= #{start_num}
     ]]>
     </select>
+    
+    
+    
+
 
     <select id="count_all" resultType="int">
         SELECT COUNT(*) FROM reserve

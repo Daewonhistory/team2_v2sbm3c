@@ -130,12 +130,8 @@
     </select>
 
     
-    <select id="Avg_score" resultType="float">
-      <![CDATA[
-      SELECT NVL(AVG(rate), 0) 
-      FROM review 
-      WHERE restno = #{restno}
-      ]]>
+    <select id="avg_Rate" resultType="float" parameterType="int">
+        SELECT NVL(AVG(rate), 0) FROM review WHERE restno = #{restno}
     </select>
 
     

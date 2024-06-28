@@ -49,10 +49,25 @@ public interface ReserveDAOInter {
   ArrayList<ReserveVO> list_search_by_reserve_date(Map<String, Object> params);
   
   /**
+   * 특정 날짜의 예약 조회
+   * @param now_page
+   * @param record_per_page
+   * @param reserve_date
+   * @return
+   */
+  public ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date);
+  
+  /**
    * 예약 취소
    * @param reserve
    * @return
    */
   public int delete(int reserveno);
+  
+  
+  /**
+   *사업자의 날짜 예약 조회
+   */
+  public ArrayList<ReserveDTO> list_owner_page(Map<String, Object> map);
 }
 

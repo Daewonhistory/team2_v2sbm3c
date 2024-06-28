@@ -192,6 +192,11 @@ public class ReviewProc implements ReviewProcInter {
         return this.reviewDAO.list_by_custno(custno);
     }
 
+    @Override
+    public Float avg_Rate(int restno) {
+      return this.reviewDAO.avg_Rate(restno);
+    }
+
  }
 
 

@@ -11,6 +11,27 @@
             font-family: "Roboto", sans-serif;
             margin: 0 auto;
         }
+        .nav-bar {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .nav-bar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-bar li {
+            margin: 0 15px;
+        }
+        .nav-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
         .star-rating {
             display: flex;
         }
@@ -57,12 +78,27 @@
         .empty-heart {
             fill: #ddd;
         }
+        .small-star-icon {
+            width: 16px;
+            height: 16px;
+            background-image: url('/images/star.jpg');
+            background-size: cover;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
     <div layout:fragment="content" style="padding:0">
         <c:import url="/menu/top.do" />
         <div class='title_line'>리뷰</div>
+        <nav class="nav-bar">
+            <ul>
+                <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
+                <li><a th:href="|/menu/menuAllList?restno=${restaurantVO != null ? restaurantVO.restno : restno}&person=${person}&date=${date}|">메뉴</a></li>
+                <li><a th:href="|/review/reviewAllList?restno=${restno}&person=${person}&date=${date}|">리뷰</a></li>
+            </ul>
+        </nav>
         <aside class="aside_right">
             <a th:href="@{|/review/create_mobile?restno=${restno}&person=${person}&date=${date}|}" class="review-button">
                 <img src="/path/to/icon.png" alt="">리뷰 쓰기
@@ -76,7 +112,7 @@
             <div>
                 <span>평균 평점:</span>
                 <span id="average-rating" th:text="${averageRating}">0.0</span>
-                <img src="star" alt="별이미지">
+                <div class="small-star-icon"></div>
             </div>
             <div th:each="reviewDTO : ${list}" class="bg-white p-4 mb-4 rounded-lg shadow-md">
                 <div class="flex items-center mb-4">

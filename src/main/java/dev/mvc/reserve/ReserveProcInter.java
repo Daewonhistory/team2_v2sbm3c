@@ -50,6 +50,15 @@ public interface ReserveProcInter {
    * @return
    */
   public ArrayList<ReserveDTO> list_reserve_paging(int now_page, int record_per_page);
+  
+  /**
+   * 특정 날짜의 예약 조회
+   * @param now_page
+   * @param record_per_page
+   * @param reserve_date
+   * @return
+   */
+  public ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date);
 
   /**
    * 전체 예약 수 조회
@@ -67,6 +76,11 @@ public interface ReserveProcInter {
    * @return 페이징 박스 HTML
    */
   String pagingBox(int now_page, String list_file, int total_count, int record_per_page, int page_per_block);
+
+
+
+
+
 }
 
 
