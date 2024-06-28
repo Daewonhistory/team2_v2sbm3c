@@ -74,7 +74,7 @@ public class MenuCont {
 			Model model,
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
-
+		
 		String accessType = (String) session.getAttribute("type");
 		System.out.println("=>accessType:" + accessType);
 		int restno = 0;
@@ -89,8 +89,8 @@ public class MenuCont {
 		}
 
 		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
+		model.addAttribute("accessType", accessType);
 		model.addAttribute("list", list);
-
 		model.addAttribute("restno", 4);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
@@ -196,8 +196,13 @@ public class MenuCont {
 	}
 
 	@GetMapping("read")
-	public String read(Model model, String word, int now_page, int menuno) {
-		// 메뉴 정보
+	public String read(Model model, HttpSession session, String word, int now_page, int menuno) {
+		String accessType = (String) session.getAttribute("type");
+		
+		if(accessType != null && !accessType.equals("owner")) {
+			return "redirect:/owner";
+		}
+		
 		MenuVO menuVO = this.menuProc.read(menuno);
 		model.addAttribute("menuVO", menuVO);
 		// 메뉴의 재료 목록
@@ -208,9 +213,10 @@ public class MenuCont {
 			IngredList.add(ingredientVO);
 		}
 		model.addAttribute("IngredNameList", IngredList);
-
+		model.addAttribute("accessType", accessType);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
+		
 		return "menu/read";
 	}
 

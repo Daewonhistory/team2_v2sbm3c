@@ -11,7 +11,7 @@
   width: 15%;
   padding: 3rem 1rem;
   text-align: center;
-  background-color: var(--color-primary);
+  background-color: #085561;
   user-select: none;
 
   color: white; /* 추가된 부분: 텍스트 색상을 흰색으로 설정 */

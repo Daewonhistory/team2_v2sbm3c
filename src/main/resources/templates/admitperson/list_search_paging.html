@@ -65,7 +65,7 @@
   	<div>
       <form name="frm">
         <select id="restno" onchange="send()">
-          <option th:if="${type.equals('admin')}" value="0">전체 식당</option>
+          <option th:if="${accessType == null}" value="0">전체 식당</option>
           <option
             th:each="restaurantVO, status : ${restaurantList}"
             th:value="${restaurantVO.restno}"
@@ -113,7 +113,6 @@
         const end_date = document.getElementById("end_date");
         end_date.value = getTodayDate();
         send();
-        now_page_value = parseInt(document.querySelector("#now_page").dataset.page);
       };
       function search() {
         now_page_value = 1;

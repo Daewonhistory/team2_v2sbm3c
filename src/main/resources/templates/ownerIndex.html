@@ -48,7 +48,7 @@
         <ul class="sub-menu" id="restaurant-sub-menu" style="display: none;">
           <li><a href="/restaurant/search_b">식당 목록</a></li>
           <li><a href="/restaurant/create">식당 등록</a></li>
-
+					<li th:if="${accessType.equals('owner')}">testtest</li>
         </ul>
       </li>
 
