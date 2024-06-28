@@ -4,11 +4,11 @@
   <!-- layout.html 상속-->
 
   <div layout:fragment="content">
-    
+    <link rel="stylesheet" href="/css/paging.css">
     <div class="title_line">
       <span th:text="${menuVO?.name}" class="title_line_text"></span>
       <div
-        th:if="${word.length() > 0}"
+        th:if="${word?.length() > 0}"
         class="title_line"
         th:text="|> 「${word}」 검색 ${search_count} 건|"
       ></div>
@@ -28,7 +28,7 @@
     <aside class="aside_right">
       <a href="javascript:location.reload();">새로고침</a>
       <span class="menu_divide">│</span>
-      <a th:href="@{|/menu/create?word=${word}&now_page=${now_page}|}">등록</a>
+      <a href="/menu/create">등록</a>
     </aside>
     <div th:replace="~{menu/list_search_component::list_search_fragment}"></div>
 
@@ -58,163 +58,161 @@
 		</div>
     <div id="bottom" th:utext="${paging}"></div>
 	<script>
-      window.onload = function () {
-        console.log("Page is fully loaded");
-        send();
-      };
-      
-      $(document).ready(function () {
-        // Select2 초기화
-        $('#restno').select2({
-          placeholder: '검색해주세요',
-          allowClear: false,
-          language: {
-            noResults: function () {
-              return '결과가 없습니다'; // 결과가 없을 때 표시할 메시지
-            }
-        	}
-      	})
-      })
-      // 페이지 이동
-      function pageMove(movePage) {
-        const now_page = document.getElementById("now_page");
-        console.log("ccc" + document.getElementById("now_page").innerText);
-        now_page.removeAttribute("id");
-        movePage.id = "now_page";
-        console.log("bbb" + document.getElementById("now_page").innerText);
-        console.log(movePage.innerText);
-        send();
-      }
-      function send() {
-        const restno = document.getElementById("restno");
-        const word = document.getElementById("word");
-        const now_page_tag = document.getElementById("now_page");
-        const bottom = document.getElementById("bottom");
-        bottom.innerHTML = "";
-        let now_page_value = 0;
-        if (now_page_tag == null) {
-          now_page_value = 1;
-          console.log("nowpage없음");
-        } else {
-          now_page_value = parseInt(now_page_tag.innerText);
-        }
-
-        fetch(
-          "/menu/menulist",
-          {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-	            body: JSON.stringify({
-					"restno": restno.value,
-					"word": word.value,
-					"now_page": now_page_value
-					})
+	let now_page_value = 1;
+    window.onload = function () {
+      console.log("Page is fully loaded");
+      send();
+    };
+    
+    $(document).ready(function () {
+      // Select2 초기화
+      $('#restno').select2({
+        placeholder: '검색해주세요',
+        allowClear: false,
+        language: {
+          noResults: function () {
+            return '결과가 없습니다'; // 결과가 없을 때 표시할 메시지
           }
-        )
-          .then((response) => response.json())
-          .then((rdata) => {
-            const resultBody = document.getElementById("tbody");
-            resultBody.innerHTML = `
-			
-			`;
-            const bottommenu = document.createElement("div");
-            rdata.menuList.forEach((menuVO) => {
-              const row = document.createElement("tr");
-							row.classList.add("manager-data");
-              row.innerHTML = `
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
-                      menuVO.menuno
-                    }&word=${word.value}&now_page=${now_page_value}'">
-                        <div ${
-                          menuVO.image.endsWith("jpg") ||
-                          menuVO.image.endsWith("JPG") ||
-                          menuVO.image.endsWith("png") ||
-                          menuVO.image.endsWith("PNG") ||
-                          menuVO.image.endsWith("gif")
-                            ? ""
-                            : 'style="display: none;"'
-                        }>
-                            <img src="/menu/storage/${
-                              menuVO.image
-                            }" style="width: 120px; height: 90px;">
-                        </div>
-                    </td>
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
-                      menuVO.menuno
-                    }&word=${word.value}&now_page=${now_page_value}'">
-                        <span>${menuVO.restname}</span>
-                    </td>
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
-                      menuVO.menuno
-                    }&word=${word.value}&now_page=${now_page_value}'">
-                        <span>${menuVO.name}</span>
-                    </td>
-                    <td class="td_basic" onclick="location.href='/menu/read?menuno=${
-                      menuVO.menuno
-                    }&word=${word.value}&now_page=${now_page_value}'">
-                        <span>${menuVO.price}</span>
-                    </td>
-                    <td class="td_bs">
-                        <a href="/menu/update?menuno=${menuVO.menuno}&word=${
-                word.value
-              }&now_page=${now_page_value}">
-                            <img src="/cate/images/update.png" class="icon">
-                        </a>
-                        <a onclick="delete_check(${menuVO.menuno}, '${
-                word.value
-              }', ${now_page_value})">
-                            <img src="/cate/images/delete.png" class="icon">
-                        </a>
-                    </td>
+      	}
+    	})
+    })
+    function search() {
+      now_page_value = 1;
+      send();
+    }
+    
+    // 페이지 이동
+    function pageMove(movePage) {
+      now_page_value =  parseInt(movePage.dataset.page);
+      send();
+    }
+    
+    function pageGrpMove(movePageGrp){
+	  	now_page_value =  parseInt(movePage.dataset.page);
+      send();
+  	}
+    function send() {
+      const restno = document.getElementById("restno");
+      const word = document.getElementById("word");
+      const bottom = document.getElementById("bottom");
+      bottom.innerHTML = "";
 
-
-
-                `;
-
-              resultBody.appendChild(row);
-            });
-
-            bottommenu.innerHTML = rdata.paging;
-
-            bottom.appendChild(bottommenu);
-            // 받은 데이터에서 categoryno 값을 옵션으로 추가
-          });
-      }
-    </script>
-    <script>
-      function delete_check(menuno, word, now_page) {
-        if (confirm("정말 삭제하시겠습니까??") == true) {
-          //확인
-          let f = document.createElement("form");
-          let obj1;
-          obj1 = document.createElement("input");
-          obj1.type = "hidden";
-          obj1.name = "menuno";
-          obj1.value = menuno;
-          let obj2;
-          obj2 = document.createElement("input");
-          obj2.type = "hidden";
-          obj2.name = "word";
-          obj2.value = word;
-
-          let obj3;
-          obj3 = document.createElement("input");
-          obj3.type = "hidden";
-          obj3.name = "now_page";
-          obj3.value = now_page;
-
-          f.appendChild(obj1);
-          f.appendChild(obj2);
-          f.appendChild(obj3);
-          f.setAttribute("method", "post");
-          f.setAttribute("action", "/menu/delete");
-          document.body.appendChild(f);
-          f.submit();
-        } else {
-          //취소
-          return;
+      fetch(
+        "/menu/menulist",
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+				"restno": restno.value,
+				"word": word.value,
+				"now_page": now_page_value
+				})
         }
+      )
+        .then((response) => response.json())
+        .then((rdata) => {
+          const resultBody = document.getElementById("tbody");
+          resultBody.innerHTML = `
+		
+		`;
+          const bottommenu = document.createElement("div");
+          rdata.menuList.forEach((menuVO) => {
+            const row = document.createElement("tr");
+						row.classList.add("manager-data");
+            row.innerHTML = `
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    menuVO.menuno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <div ${
+                        menuVO.image.endsWith("jpg") ||
+                        menuVO.image.endsWith("JPG") ||
+                        menuVO.image.endsWith("png") ||
+                        menuVO.image.endsWith("PNG") ||
+                        menuVO.image.endsWith("gif")
+                          ? ""
+                          : 'style="display: none;"'
+                      }>
+                          <img src="/menu/storage/${
+                            menuVO.image
+                          }" style="width: 120px; height: 90px;">
+                      </div>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    menuVO.menuno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${menuVO.restname}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    menuVO.menuno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${menuVO.name}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    menuVO.menuno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${menuVO.price}</span>
+                  </td>
+                  <td class="td_bs">
+                      <a href="/menu/update?menuno=${menuVO.menuno}&word=${
+              word.value
+            }&now_page=${now_page_value}">
+                          <img src="/cate/images/update.png" class="icon">
+                      </a>
+                      <a onclick="delete_check(${menuVO.menuno}, '${
+              word.value
+            }', ${now_page_value})">
+                          <img src="/cate/images/delete.png" class="icon">
+                      </a>
+                  </td>
+
+
+
+              `;
+
+            resultBody.appendChild(row);
+          });
+
+          bottommenu.innerHTML = rdata.paging;
+
+          bottom.appendChild(bottommenu);
+          // 받은 데이터에서 categoryno 값을 옵션으로 추가
+        });
+    }
+  	</script>
+  	<script>
+    function delete_check(menuno, word, now_page) {
+      if (confirm("정말 삭제하시겠습니까??") == true) {
+        //확인
+        let f = document.createElement("form");
+        let obj1;
+        obj1 = document.createElement("input");
+        obj1.type = "hidden";
+        obj1.name = "menuno";
+        obj1.value = menuno;
+        let obj2;
+        obj2 = document.createElement("input");
+        obj2.type = "hidden";
+        obj2.name = "word";
+        obj2.value = word;
+
+        let obj3;
+        obj3 = document.createElement("input");
+        obj3.type = "hidden";
+        obj3.name = "now_page";
+        obj3.value = now_page;
+
+        f.appendChild(obj1);
+        f.appendChild(obj2);
+        f.appendChild(obj3);
+        f.setAttribute("method", "post");
+        f.setAttribute("action", "/menu/delete");
+        document.body.appendChild(f);
+        f.submit();
+      } else {
+        //취소
+        return;
       }
+    }
     </script>
   </div>
 </html>

@@ -2,17 +2,22 @@ package dev.mvc.ingredient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
@@ -30,15 +35,15 @@ public class IngredientCont {
 		System.out.println("-> IngredeintCont created.");
 	}
 	
-	@GetMapping(value="/list_search")
-	public String list_search(Model model, @Valid IngredientVO ingredientVO,@RequestParam(name="word", defaultValue="") String word) {
-		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);
-		model.addAttribute("list", list);
-		model.addAttribute("word", word);
-		return  "ingredient/list_search";
-	}
+//	@GetMapping(value="/list")
+//	public String list_search(Model model, @Valid IngredientVO ingredientVO,@RequestParam(name="word", defaultValue="") String word) {
+//		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);
+//		model.addAttribute("list", list);
+//		model.addAttribute("word", word);
+//		return  "ingredient/list_search";
+//	}
 	
-	@GetMapping(value="/list_search_paging")
+	@GetMapping(value="/list")
 	public String list_search_paging(Model model, @Valid IngredientVO ingredientVO, 
 			@RequestParam(name="word", defaultValue="") String word, 
 			@RequestParam(name="now_page", defaultValue="1") int now_page) {
@@ -48,8 +53,8 @@ public class IngredientCont {
 	    
 	    ArrayList<IngredientVO> list = this.ingredientProc.list_search_paging(hashMap);
 	    model.addAttribute("list", list);
-	    
 	    int search_count = this.ingredientProc.list_search_count(word);
+	    
 	    model.addAttribute("search_count", search_count);
 	    String paging = this.ingredientProc.pagingBox(now_page, word, "/ingredient/list_search_paging", search_count, Ingredient.RECORD_PER_PAGE, Ingredient.PAGE_PER_BLOCK);
 	    model.addAttribute("paging", paging);
@@ -61,28 +66,45 @@ public class IngredientCont {
 		return  "ingredient/list_search_paging";
 	}
 	
+	@PostMapping("list")
+	@ResponseBody
+	public ResponseEntity<Map<String,Object>> list(@RequestBody Map<String, Object> requestBody){
+		String word = (String) requestBody.get("word");
+		int nowPage = (int) requestBody.get("now_page");
+		System.out.println(nowPage);
+		
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+	    hashMap.put("word", word);
+	    hashMap.put("now_page", nowPage);
+	    
+	    ArrayList<IngredientVO> list = this.ingredientProc.list_search_paging(hashMap);
+	    int search_count = this.ingredientProc.list_search_count(word);
+	    
+	    String paging = this.ingredientProc.pagingBox(nowPage, word, "/ingredient/list_search_paging", search_count, Ingredient.RECORD_PER_PAGE, Ingredient.PAGE_PER_BLOCK);
+	    
+		Map<String, Object> response = new HashMap<String,Object>();
+		response.put("ingredientList", list);
+		response.put("paging", paging);
+		
+		return new ResponseEntity<Map<String,Object>>(response, HttpStatus.OK);
+	}
+	
 	// create
 	// https://localhost/ingredient/list_serarch
-	@PostMapping(value="/list_search_paging")
+	@PostMapping(value="/create")
 	public String create(Model model, @Valid IngredientVO ingredientVO, 
 			@RequestParam(name="word", defaultValue="") String word) {
-		System.out.println("check");
-		
+
 		int cnt = this.ingredientProc.create(ingredientVO);
-		System.out.println("check3");
-		// 페이징 목록
-		ArrayList<IngredientVO> list = this.ingredientProc.list_search(word);    
-		model.addAttribute("list", list);
-		System.out.println("check2");
 		
 		
 		if (cnt == 1) { // 등록 성공
 		 
-		  return "redirect:/ingredient/list_search_paging?word=" + Tool.encode(word) + "&now_page=1"; // /cate/list_all.html
+		  return "redirect:/ingredient/list";
 		 
 		} else { // 실패
 		  model.addAttribute("code", "create_fail");
-		  return "ingredient/msg"; // /templates/cate/msg.html
+		  return "ingredient/msg";
 		}
 	}
 	
@@ -136,7 +158,7 @@ public class IngredientCont {
 			       now_page = 1; // 시작 페이지
 			     }
 			   }
-			return "redirect:/ingredient/list_search_paging?word=" + Tool.encode(word) + "&now_page=" + now_page;
+			return "redirect:/ingredient/list";
 		} else {
 			model.addAttribute("code", "delete_fail");
 			return "ingredient/msg"; // /templates/cate/msg.html

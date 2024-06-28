@@ -57,6 +57,7 @@ public class ScheduleCont {
 			
 			return "/schedule/create";
 		}else {
+			System.out.println("다른사람");
 			return "redirect:/manager";
 		}
 	}
@@ -66,10 +67,16 @@ public class ScheduleCont {
 		String accessType = (String) session.getAttribute("type");
 		System.out.println("허용인원 갯수:" + admit_persons.length);
 		System.out.println("시각 갯수:" + times.length);
+		RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 		if(accessType == null) { // 관리자 접속
 			int cnt = this.scheduleProc.createFullSchedule(admit_persons, times ,restno);
-			
-			
+
+			System.out.println(cnt);
+			if(cnt == 1) {
+				System.out.println("허용인원 생성");
+				ArrayList<ScheduleVO> scheduleList = this.scheduleProc.list_by_restno(restno);
+				this.admitPersonProc.createBeginning(restno, restaurantVO.getReserve_range(), scheduleList);
+			}
 			return "redirect:/schedule/update?restno=" + restno;
 			
 		}else if(accessType.equals("owner")) { // 사장 접속
@@ -81,11 +88,16 @@ public class ScheduleCont {
 			}
 			
 			int cnt = this.scheduleProc.createFullSchedule(admit_persons, times, restno);
+			System.out.println(cnt);
 			if(cnt == 1) {
-				
+				System.out.println("허용인원 생성");
+				ArrayList<ScheduleVO> scheduleList = this.scheduleProc.list_by_restno(restno);
+				this.admitPersonProc.createBeginning(restno, restaurantVO.getReserve_range(), scheduleList);
 			}
 			return "redirect:/schedule/update?restno=" + restno;
 		}else {
+			
+
 			return "redirect:/manager";
 		}
 		
@@ -96,6 +108,8 @@ public class ScheduleCont {
 		ArrayList<ScheduleVO> scheduleList = this.scheduleProc.list_by_restno(restno);
 		
 		if(scheduleList.size() == 0) {	//스케줄이 생성되지 않은 경우 스케줄 등록페이지로
+			System.out.println("다른사람");
+
 			return "redirect:/schedule/create?restno=" + restno;
 		}else {
 			String accessType = (String) session.getAttribute("type");
@@ -110,14 +124,18 @@ public class ScheduleCont {
 				
 				// 현재 식당의 사장이 아니라면 되돌려보냄
 				if((int) session.getAttribute("ownerno") != ownernoOfRestaurant) {
+					System.out.println("not same owner");
 					return "redirect:/manager";
 				}
 				
 				RestaurantVO restaurantVO = this.restaurantProc.read(restno);
+				model.addAttribute("accessType", accessType);
 				model.addAttribute("restaurantVO", restaurantVO);
 				model.addAttribute("scheduleList", scheduleList);
 				return "/schedule/update";
 			}else {
+				System.out.println("다른사람");
+				
 				return "redirect:/manager";
 			}
 		}

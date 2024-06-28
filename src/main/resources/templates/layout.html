@@ -80,6 +80,24 @@
           <li><a href="/review/list/negative">부정 리뷰</a></li>
         </ul>
       </li>
+      <li class="manager-menu">
+        <a class="manager-menu-a" onclick="toggleSubMenu('menu-sub-menu', 'menu-arrow')">
+          <span id="menu-arrow" class="arrow right"></span> 메뉴 관련
+        </a>
+        <ul class="sub-menu" id="menu-sub-menu" style="display: none;">
+          <li><a href="/menu/list">전체 메뉴</a></li>
+          <li><a href="/menu/create">메뉴 등록</a></li>
+        </ul>
+      </li>
+      <li class="manager-menu">
+        <a class="manager-menu-a" onclick="toggleSubMenu('area-sub-menu', 'area-arrow')">
+          <span id="area-arrow" class="arrow right"></span> 지역 관련
+        </a>
+        <ul class="sub-menu" id="area-sub-menu" style="display: none;">
+          <li><a href="/midarea/list">중분류 지역 목록</a></li>
+          <li><a href="/botarea/list">소분류 지역 목록</a></li>
+        </ul>
+      </li>
     </ul>
   </div>
   <div class="manager-main">
