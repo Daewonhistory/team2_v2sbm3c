@@ -2,12 +2,12 @@ package dev.mvc.admitperson;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.menu.Menu;
@@ -130,19 +130,26 @@ public class AdmitPersonProc implements AdmitPersonProcInter{
 	@Override
 	public int createBeginning(int restno, int reserveRange, ArrayList<ScheduleVO> scheduleVOList) {
 		for(int i=0;i<reserveRange;i++) {
-			ScheduleVO scheduleVO = scheduleVOList.get(i);
 			AdmitPersonVO admitPersonVO = new AdmitPersonVO();
-			admitPersonVO.setAdmit_person(scheduleVO.getAdmit_person());
+			
 			LocalDate now = LocalDate.now();
-			now.plusDays(i);
-			java.sql.Date sqlDate = java.sql.Date.valueOf(now);
-//			admitPersonVO.setReserve_date(date);
-//			for(int j=0;j<24;j++) {
-//				this.admitPersonProc.create();
-//			}
+			System.out.println(now);
+			LocalDate addDate = now.plusDays(i);
+			System.out.println(addDate);
+			java.sql.Date sqlDate = java.sql.Date.valueOf(addDate);
+			admitPersonVO.setReserve_date(sqlDate);
+			
+			admitPersonVO.setRestno(restno);
+			
+			for(int j=0;j<scheduleVOList.size();j++) {
+				ScheduleVO scheduleVO = scheduleVOList.get(j);
+				admitPersonVO.setTime(scheduleVO.getTime());
+				admitPersonVO.setAdmit_person(scheduleVO.getAdmit_person());
+				this.create(admitPersonVO);
+			}
 			
 		}
-		return 0;
+		return 1;
 	}
 
 	

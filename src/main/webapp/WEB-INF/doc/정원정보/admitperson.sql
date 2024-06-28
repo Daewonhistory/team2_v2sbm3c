@@ -63,4 +63,5 @@ WHERE restno = 1
 AND time = 1;
 
 -- DELETE
-
+DELETE FROM admitperson
+WHERE restno = 4710;

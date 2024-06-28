@@ -1,4 +1,8 @@
 function selectMidArea(selectedMidArea){
+	if(document.querySelector('.button_selected')!=null){
+		document.querySelector('.button_selected').classList.remove('button_selected');
+	};
+	selectedMidArea.classList.add('button_selected');
 	fetch(
         "/botarea/botarea_list",
         {
@@ -6,17 +10,16 @@ function selectMidArea(selectedMidArea){
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({"midareano": selectedMidArea.value})
         }
-      )
-        .then((response) => response.json())
-        .then((rdata) => {
-          const divBotAreas = document.getElementById("botarea_div");
-          divBotAreas.innerHTML = '<h4>지역 소분류 선택</h4>';
-          let allSelect = document.createElement("button");
-          allSelect.type = "button";
-		allSelect.value = 0;
-		allSelect.onclick=function() {
-			selectBotarea(allSelect);
-		};
+      ).then((response) => response.json())
+      .then((rdata) => {
+        const divBotAreas = document.getElementById("botarea_div");
+        divBotAreas.innerHTML = '<h4>지역 소분류 선택</h4>';
+        let allSelect = document.createElement("button");
+        allSelect.type = "button";
+				allSelect.value = 0;
+				allSelect.onclick=function() {
+					selectBotarea(allSelect);
+				};
 		allSelect.classList.add('btn_botarea');
     allSelect.textContent = "모든 지역";
     

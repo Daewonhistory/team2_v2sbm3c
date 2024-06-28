@@ -22,7 +22,7 @@
     <div>
     <label>식당</label>
     <select id="restno" name="restno">
-		<option th:each="restaurantVO, status : ${ownerRestList}" th:value="${restaurantVO.restno}" th:text="${restaurantVO.name}"></option>
+		<option th:each="restaurantVO, status : ${restaurantList}" th:value="${restaurantVO.restno}" th:text="${restaurantVO.name}"></option>
 	</select>
        <label>메뉴명</label>
        <input type='text' name='name' value='백반' required="required" 
@@ -50,6 +50,18 @@
   
   </form>
 	<script>
+		$(document).ready(function () {
+      // Select2 초기화
+      $('#restno').select2({
+        placeholder: '검색해주세요',
+        allowClear: false,
+        language: {
+          noResults: function () {
+            return '결과가 없습니다'; // 결과가 없을 때 표시할 메시지
+          }
+      	}
+    	})
+    })
 		function handleSelectChange(selectElement) {
             const selectedOption = selectElement.options[selectElement.selectedIndex];
             addIngredient(selectedOption.value, selectedOption.text);

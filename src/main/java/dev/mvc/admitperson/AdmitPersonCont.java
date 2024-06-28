@@ -134,6 +134,7 @@ public class AdmitPersonCont {
 		int cnt = this.admitPersonProc.delete(admitpersonno);
 		return "redirect:/admitperson/list";
 	}
+	
 	@PostMapping("/searchPossibleTime")
 	@ResponseBody
 	public ResponseEntity<ArrayList<AdmitPersonVO>> searchPossibleTime(@RequestBody Map<String, Object> requestBody){

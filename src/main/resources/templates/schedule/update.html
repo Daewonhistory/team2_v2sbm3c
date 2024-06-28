@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html th:if="${accessType != null && accessType.equals('owner')}" layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
+<html th:if="${accessType == null}" layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
 	<style>
@@ -27,7 +28,7 @@
       			<label>시각:</label>
         		<input type="number" class="form-control times" name="times" th:value="${scheduleVO.time}" min="0" max="23" readonly>
         		<label>허용인원:</label>
-        		<input type="number" class="form-control" name="admit_persons" th:value="${scheduleVO.admit_person}" min="0" placeholder="예약 허용 인원">
+        		<input type="number" class="form-control " name="admit_persons" th:value="${scheduleVO.admit_person}" min="0" placeholder="예약 허용 인원">
         	</div>
       	</div>
         
