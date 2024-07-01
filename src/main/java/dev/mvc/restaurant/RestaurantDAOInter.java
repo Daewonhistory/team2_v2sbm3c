@@ -29,6 +29,8 @@ public interface RestaurantDAOInter {
    */
 
   public int list_search_count(Map<String, Object> search);
+  
+  public ArrayList<RestDTO> list_by_ownerno(int ownerno);
 
   public Integer foreign(int ownerno);
 

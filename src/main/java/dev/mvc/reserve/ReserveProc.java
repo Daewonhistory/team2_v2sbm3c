@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.dto.ReserveDTO;
-
+import dev.mvc.dto.RestDTO;
 
 @Service("reserveProc")
 public class ReserveProc implements ReserveProcInter {
@@ -18,86 +18,31 @@ public class ReserveProc implements ReserveProcInter {
 
     @Override
     public int create(ReserveVO reserve) {
-        int cnt =  this.reserveDAO.create(reserve);
-        return cnt;
+        return reserveDAO.create(reserve);
     }
 
     @Override
     public ArrayList<ReserveVO> list_all() {
-      ArrayList<ReserveVO> list = this.reserveDAO.list_all();
-      return list;
-
+        return reserveDAO.list_all();
     }
 
     @Override
     public ArrayList<ReserveVO> list_search_by_custno(int custno) {
-      ArrayList<ReserveVO> list = this.reserveDAO.list_search_by_custno(custno);
-      return list;
+        return reserveDAO.list_search_by_custno(custno);
     }
-    
+
     @Override
     public ArrayList<ReserveVO> list_search_by_reserve_date(Map<String, Object> params) {
-        return this.reserveDAO.list_search_by_reserve_date(params);
+        return reserveDAO.list_search_by_reserve_date(params);
     }
 
     @Override
     public int delete(int reserveno) {
-      int cnt = this.reserveDAO.delete(reserveno);
-      return cnt;
+        return reserveDAO.delete(reserveno);
     }
-    
+
     @Override
     public ArrayList<ReserveDTO> list_reserve_paging(int now_page, int record_per_page) {
-      /*
-      예) 페이지당 10개의 레코드 출력
-      1 page: WHERE r >= 1 AND r <= 10
-      2 page: WHERE r >= 11 AND r <= 20
-      3 page: WHERE r >= 21 AND r <= 30
-
-       예) 페이지당 3개의 레코드 출력
-      1 page: WHERE r >= 1 AND r <= 3
-      2 page: WHERE r >= 4 AND r <= 6
-      3 page: WHERE r >= 7 AND r <= 9
-
-      페이지에서 출력할 시작 레코드 번호 계산 기준값, nowPage는 1부터 시작
-      1 페이지 시작 rownum: now_page = 1, (1 - 1) * 10 --> 0
-      2 페이지 시작 rownum: now_page = 2, (2 - 1) * 10 --> 10
-      3 페이지 시작 rownum: now_page = 3, (3 - 1) * 10 --> 20
-      */
-      int begin_of_page = (now_page - 1) * record_per_page;
-
-      // 시작 rownum 결정
-      // 1 페이지 = 0 + 1: 1
-      // 2 페이지 = 10 + 1: 11
-      // 3 페이지 = 20 + 1: 21
-      int start_num = begin_of_page + 1;
-
-      //  종료 rownum
-      // 1 페이지 = 0 + 10: 10
-      // 2 페이지 = 10 + 10: 20
-      // 3 페이지 = 20 + 10: 30
-      int end_num = begin_of_page + record_per_page;
-      /*
-      1 페이지: WHERE r >= 1 AND r <= 10
-      2 페이지: WHERE r >= 11 AND r <= 20
-      3 페이지: WHERE r >= 21 AND r <= 30
-      */
-
-      // System.out.println("begin_of_page: " + begin_of_page);
-      // System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
-      Map<String, Object> map = new HashMap<String, Object>();
-
-      map.put("start_num", start_num);
-      map.put("end_num", end_num);
-      ArrayList<ReserveDTO> list = this.reserveDAO.list_reserve_paging(map);
-      
-      System.out.println(start_num);
-      System.out.println(end_num);
-      return list;
-    }
-    
-    @Override
-    public ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date) {
         int begin_of_page = (now_page - 1) * record_per_page;
         int start_num = begin_of_page + 1;
         int end_num = begin_of_page + record_per_page;
@@ -105,10 +50,28 @@ public class ReserveProc implements ReserveProcInter {
         Map<String, Object> map = new HashMap<>();
         map.put("start_num", start_num);
         map.put("end_num", end_num);
-        map.put("reserve_date", reserve_date); // reserve_date 추가
+        return reserveDAO.list_reserve_paging(map);
+    }
 
-        ArrayList<ReserveDTO> list = this.reserveDAO.list_owner_page(map);
-        return list;
+    @Override
+    public ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date, int ownerno, int restno) {
+        int begin_of_page = (now_page - 1) * record_per_page;
+        int start_num = begin_of_page + 1;
+        int end_num = begin_of_page + record_per_page;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("start_num", start_num);
+        map.put("end_num", end_num);
+        map.put("reserve_date", reserve_date);
+        map.put("ownerno", ownerno);
+        map.put("restno", restno);
+
+        return reserveDAO.list_owner_page(map);
+    }
+
+    @Override
+    public int count_by_owner(int ownerno) {
+        return reserveDAO.count_by_owner(ownerno);
     }
 
     @Override
@@ -162,7 +125,9 @@ public class ReserveProc implements ReserveProcInter {
         return str.toString();
     }
 
-
-
-
+    @Override
+    public int count_by_restno(int restno) {
+        return reserveDAO.count_by_restno(restno);
+    }
+    
 }

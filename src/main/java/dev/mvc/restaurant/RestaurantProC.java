@@ -93,6 +93,11 @@ public class RestaurantProC implements RestaurantProInter {
     ArrayList<RestDTO> list = this.restDAO.list_search_paging(map);
     return list;
   }
+  
+  @Override
+  public ArrayList<RestDTO> list_by_ownerno(int ownerno) {
+      return restDAO.list_by_ownerno(ownerno);
+  }
 
   @Override
   public int update_map(RestFullData restFullData) {

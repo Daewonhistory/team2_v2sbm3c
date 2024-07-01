@@ -1,7 +1,6 @@
 package dev.mvc.reserve;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import dev.mvc.admitperson.AdmitPersonProcInter;
 import dev.mvc.admitperson.AdmitPersonVO;
 import dev.mvc.dto.ReserveDTO;
+import dev.mvc.dto.RestDTO;
 import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.restaurant.RestaurantVO;
 import jakarta.servlet.http.HttpSession;
@@ -110,6 +110,11 @@ public class ReserveCont {
           now_page = 1;
       }
       
+      
+      
+      String accessType = (String) session.getAttribute("type");
+      model.addAttribute("accessType", accessType);
+       
       ArrayList<ReserveDTO> list = this.reserveProc.list_reserve_paging(now_page, Reserve.RECORD_PER_PAGE);
       System.out.println("Reserve List: " + list);
       model.addAttribute("list", list);
@@ -130,37 +135,41 @@ public class ReserveCont {
   public String list_owner_page(HttpSession session, 
                                 Model model, 
                                 @RequestParam(name = "now_page", defaultValue = "1") int now_page,
-                                @RequestParam(name = "reserve_date", required = false) String reserve_date) {
+                                @RequestParam(name = "reserve_date", required = false) String reserve_date,
+                                @RequestParam(name = "restno", defaultValue = "0") int restno) {
+      int ownerno = (int) session.getAttribute("ownerno");
 
       if (now_page < 1) {
           now_page = 1;
       }
 
       if (reserve_date == null || reserve_date.isEmpty()) {
-          reserve_date = LocalDate.now().toString(); // 기본값 설정: 오늘 날짜
+          reserve_date = java.time.LocalDate.now().toString();
       }
 
-      ArrayList<ReserveDTO> list = this.reserveProc.list_owner_page(now_page, Reserve.RECORD_PER_PAGE, reserve_date);
+      ArrayList<ReserveDTO> list = reserveProc.list_owner_page(now_page, Reserve.RECORD_PER_PAGE, reserve_date, ownerno, restno);
       model.addAttribute("list", list);
 
-      int count = this.reserveProc.count_all();
+      int count = (restno == 0) ? reserveProc.count_by_owner(ownerno) : reserveProc.count_by_restno(restno);
       model.addAttribute("count", count);
 
-      String paging = this.reserveProc.pagingBox(now_page, "/reservation/list_owner_page", count, Reserve.RECORD_PER_PAGE, Reserve.PAGE_PER_BLOCK);
+      String paging = reserveProc.pagingBox(now_page, "/reservation/list_owner_page", count, Reserve.RECORD_PER_PAGE, Reserve.PAGE_PER_BLOCK);
       model.addAttribute("paging", paging);
 
       model.addAttribute("now_page", now_page);
       model.addAttribute("reserve_date", reserve_date);
+      model.addAttribute("restno", restno);
+
+      ArrayList<RestDTO> restList = restaurantProc.list_by_ownerno(ownerno);
+      model.addAttribute("RestList", restList);
 
       return "reservation/list_owner_page";
   }
-
-
-
   
 
+  
   @PostMapping("/delete")
-  public String delete(@RequestParam("reserveno") int reserveno) {
+  public String delete(@RequestParam("re=serveno") int reserveno) {
       int cnt = reserveProc.delete(reserveno);
       if (cnt == 1) {
           // 성공적으로 삭제된 경우 처리

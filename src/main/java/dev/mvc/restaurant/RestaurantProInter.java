@@ -40,6 +40,8 @@ public interface RestaurantProInter {
    */
 
   public int list_search_count(String word, String type);
+  
+  public ArrayList<RestDTO> list_by_ownerno(int ownerno);
 
   /**
    *

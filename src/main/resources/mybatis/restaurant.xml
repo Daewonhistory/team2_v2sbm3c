@@ -312,4 +312,5 @@
 		SET name = #{name} , categoryno = #{categoryno} , reserve_range = #{reserve_range} , tel = #{tel}
 		WHERE restno = #{restno}
 	</update>
+	
 </mapper>
