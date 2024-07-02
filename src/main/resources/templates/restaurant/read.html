@@ -156,10 +156,28 @@
     history.back();
   }
 </script>
+    <label style="margin-top: 10px;">식당 이미지1</label>
+    <label style="margin-top: 10px; margin-left: 230px;">식당 이미지2</label>
+    <label style="margin-top: 10px;  margin-left: 230px;">식당 이미지3</label>
+    <div style="display: flex; ">
+
+    <div style="width: 100%" th:if="${restFullData.image1 != null and (restFullData.image1.endsWith('jpg') or restFullData.image1.endsWith('JPG') or restFullData.image1.endsWith('png') or restFullData.image1.endsWith('PNG') or restFullData.image1.endsWith('gif'))}">
+      <img th:src="@{|/restaurant/storage/${restFullData.image1}|}" style="width: 70%; height: 200px;">
+    </div>
+
+    <div   style="width: 100%"  th:if="${restFullData.image2 != null and (restFullData.image2.endsWith('jpg') or restFullData.image2.endsWith('JPG') or restFullData.image2.endsWith('png') or restFullData.image2.endsWith('PNG') or restFullData.image2.endsWith('gif'))}">
+      <img th:src="@{|/restaurant/storage/${restFullData.image2}|}" style="width: 70%; height: 200px;">
+    </div>
+    <div  style="width: 100%"   th:if="${restFullData.image3 != null and (restFullData.image3.endsWith('jpg') or restFullData.image3.endsWith('JPG') or restFullData.image3.endsWith('png') or restFullData.image3.endsWith('PNG') or restFullData.image3.endsWith('gif'))}">
+      <img th:src="@{|/restaurant/storage/${restFullData.image3}|}" style="width: 70%; height: 200px;">
+    </div>
+
+  </div>
+    <div style="margin-top: 10px;">
+      <a style="margin-top: 10px;" class="btns" th:href="@{|./update_img?restno=${restFullData.restno}&now_page=${now_page}&word=${word}|}"  id="updateimg">이미지 수정</a>
+    </div>
   </form>
 </div>
-
-
 
 
 </div>

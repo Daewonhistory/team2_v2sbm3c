@@ -24,12 +24,12 @@ public class ManagerCont {
 
   @GetMapping(value = {"", "/manager"})
   public String forward(HttpSession session) {
-    String type = (String) session.getAttribute("type");
-    if (type == "manager") {
+//    String type = (String) session.getAttribute("type");
+//    if (type == "manager") {
       return "/layout";
-    } else {
-      return "redirect:/";
-    }
+//    } else {
+//      return "redirect:/";
+//    }
 
 
 

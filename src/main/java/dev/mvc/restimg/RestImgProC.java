@@ -1,9 +1,12 @@
 package dev.mvc.restimg;
 
+import dev.mvc.dto.RestFullData;
 import dev.mvc.restaurant.RestaurantVO;
 import dev.mvc.tool.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("dev.mvc.restimg.RestImgProC")
 public class RestImgProC implements RestImgProInter {
@@ -28,6 +31,16 @@ public class RestImgProC implements RestImgProInter {
   @Override
   public int create(RestimgVO restimgVO) {
     return this.restimgDAO.create(restimgVO);
+  }
+
+  @Override
+  public int updateImage(RestFullData restFullData) {
+    return this.restimgDAO.updateImage(restFullData);
+  }
+
+  @Override
+  public List<RestFullData> getImagesByRestno(Integer restno) {
+    return this.restimgDAO.getImagesByRestno(restno);
   }
 
 

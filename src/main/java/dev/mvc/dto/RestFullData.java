@@ -2,11 +2,14 @@ package dev.mvc.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 public class RestFullData {
 
+
+  private int rest_imgno;
   /** 식당 번호 */
   private int restno;
 
@@ -40,4 +43,7 @@ public class RestFullData {
 
   private String image3;
 
+  private MultipartFile file1MF;
+  private MultipartFile file2MF;
+  private MultipartFile file3MF;
 }

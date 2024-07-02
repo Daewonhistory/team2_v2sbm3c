@@ -3,8 +3,11 @@ package dev.mvc.restaurant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import dev.mvc.owner.Owner;
+import dev.mvc.owner.OwnerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -145,26 +148,26 @@ public class RestaurantCont {
 
                 int saved = this.restimgproc.create(restimgVO);
                 if (saved != 1) {
-                  return "redirect:/restaurant/search_b";
+                  return "redirect:/schedule/create?restno=" + restno;
                 }
               } else {
-                return "redirect:/restaurant/search_b"; // 파일이 이미지가 아닐 경우 리다이렉트
+                return "redirect:/schedule/create?restno=" + restno; // 파일이 이미지가 아닐 경우 리다이렉트
               }
             } else {
-              return "redirect:/restaurant/search_b"; // 파일 크기가 0일 경우 리다이렉트
+              return "redirect:/schedule/create?restno=" + restno; // 파일 크기가 0일 경우 리다이렉트
             }
           } else {
             ra.addFlashAttribute("cnt", 0);
             ra.addFlashAttribute("code", "check_upload_file_fail");
             ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
-            return "redirect:/contents/msg";
+            return "redirect:/restaurant/msg";
           }
         }
       }
 
-      return "redirect:/restaurant/search_b";
+      return "redirect:/schedule/create?restno=" + restno;
     } else {
-      return "redirect:/restaurant/create";
+      return "redirect:/schedule/create?restno=" + restno;
     }
 
 
@@ -198,6 +201,99 @@ public class RestaurantCont {
     model.addAttribute("now_page", now_page);
     return "restaurant/update_map";
   }
+
+
+  @GetMapping("/update_img")
+  public String update_img(Model model, String word, int now_page, int restno) {
+    // 메뉴 정보
+
+
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    model.addAttribute("restFullData", restFullData);
+    // 메뉴의 재료 목록
+
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+    return "restaurant/update_img";
+  }
+
+//  @PostMapping("/update_img")
+//  public String updateProfile(HttpSession session, RedirectAttributes ra, RestFullData restFullData, RestaurantVO restaurantVO, RestimgVO restimgVO) {
+//    Integer ownerno = (Integer) session.getAttribute("ownerno");
+//    restaurantVO.setOwnerno(ownerno);
+//    String id = (String) session.getAttribute("id");
+//    OwnerVO owner_old = this.ownerProc.readById(id);
+//
+//    // -------------------------------------------------------------------
+//    // 파일 삭제 시작
+//    // -------------------------------------------------------------------
+//    String file1saved = owner_old.getImage();  // 실제 저장된 파일명
+//
+//    String modifiedFileName = file1saved.replace("_t", "");
+//
+//
+//    long size1 = 0;
+//
+//    String upDir = Owner.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
+//
+//    Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
+//
+//    Tool.deleteFile(upDir, modifiedFileName);
+//    // -------------------------------------------------------------------
+//    // 파일 삭제 종료
+//    // -------------------------------------------------------------------
+//
+//    // -------------------------------------------------------------------
+//    // 파일 전송 시작
+//    // -------------------------------------------------------------------
+//    String file1 = "";          // 원본 파일명 image
+//
+//    // 전송 파일이 없어도 file1MF 객체가 생성됨.
+//    // <input type='file' class="form-control" name='file1MF' id='file1MF'
+//    //           value='' placeholder="파일 선택">
+//    MultipartFile mf = ownerVO.getFile1MF();
+//
+//    file1 = mf.getOriginalFilename(); // 원본 파일명
+//    size1 = mf.getSize();  // 파일 크기
+//
+//    if (size1 > 0) { // 폼에서 새롭게 올리는 파일이 있는지 파일 크기로 체크 ★
+//      // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
+//      String exe = file1.split("\\.")[1];
+//      String newFileName = "owner_" + owner_old.getOwnerno() + "." + exe;
+//      file1saved = Upload.saveFileSpring(mf, upDir,newFileName);
+//
+//      if (Tool.isImage(file1saved)) { // 이미지인지 검사
+//        // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
+//        file1 = Tool.preview(upDir, file1saved, 150, 150);
+//      }  else {
+//        ra.addFlashAttribute("success","이미지가 아닙니다!");
+//        return "redirect:/owner/my_page";
+//      }
+//
+//    } else { // 파일이 삭제만 되고 새로 올리지 않는 경우
+//      file1 = "";
+//      file1saved = "";
+//      size1 = 0;
+//    }
+//
+//    ownerVO.setImage(file1);
+//    ownerVO.setId(id);
+//    // -------------------------------------------------------------------
+//    // 파일 전송 코드 종료
+//    // -------------------------------------------------------------------
+//
+//    int count = this.ownerProc.updateProfile(ownerVO);// Oracle 처리
+//
+//    if (count ==1 ){
+//      ra.addFlashAttribute("success","프로필 수정이 완료되었습니다.");
+//      return "redirect:/owner/my_page";
+//    } else {
+//      return "redirect:/";
+//    }
+//  }
+
+
 
   @GetMapping("/search_b")
   public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
