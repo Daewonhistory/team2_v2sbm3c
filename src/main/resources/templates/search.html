@@ -49,7 +49,7 @@
 			<section id="sec_location">
 				<span class="section_name">지역선택</span><span>(미선택시 전국기반)</span><br>
 		        <div id="midarea_div" >
-		        	<button  type="buttontime"th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto; margin: 1px;"></button>
+		        	<button type="button" class="button" th:each="midAreaVO, status : ${midAreaList}"th:value="${midAreaVO.midareano}" th:text="${midAreaVO.name}"onclick="selectMidArea(this)" style="flex:1 0 auto; margin: 1px;"></button>
 		        </div>
 		        
 		        <div id="botarea_div" style="display:none">
@@ -86,13 +86,14 @@
 	});
 	function submitForm(){
 	   // 폼 데이터 가져오기
-        const botareaBox = document.getElementsByName('botarea')[0];
-        botareaBox.value = "";
-        let all_botarea_buttontime  = document.getElementById('botarea_div').querySelectorAll('buttontime');
-        for(let botareaButton of all_botarea_buttontime){
-			console.log(botareaButton.value);
-			if(botareaButton.classList.contains('btn_red')){
-				botareaBox.value += botareaButton.value + "_";
+      const botareaBox = document.getElementsByName('botarea')[0];
+      botareaBox.value = "";
+      let all_botarea_button  = document.querySelectorAll('.btn_botarea');
+      alert(all_botarea_button.length);
+      for(let botareaButton of all_botarea_button){
+				console.log(botareaButton.value);
+				if(botareaButton.classList.contains('button_selected')){
+					botareaBox.value += botareaButton.value + "_";
 			}
 		}     
 	    
@@ -121,12 +122,12 @@
 		
 		//시간버튼 클릭 이벤트
 		function selectTime(time, eventButton){
-			let allBtnRed = document.getElementsByClassName('btn_red');
+			let allBtnRed = document.getElementsByClassName('buttontime_selected');
 			let inputSelectedTime = document.getElementById('selected_time') 
 			if(allBtnRed.length != 0){
-				allBtnRed[0].classList.remove('btn_red');	
+				allBtnRed[0].classList.remove('buttontime_selected');	
 			}
-			eventButton.classList.add('btn_red');
+			eventButton.classList.add('buttontime_selected');
 			inputSelectedTime.value = time;
 		}
 		
@@ -152,22 +153,23 @@
 			let selected_botarea_btn = eventButton;
 			console.log(selected_botarea_btn.value);
 			if(selected_botarea_btn.value == 0){
-				let all_botarea_buttontime  = document.getElementById('botarea_div').querySelectorAll('buttontime');
-				if(selected_botarea_btn.classList.contains('btn_red')){
-					for(const buttontime  of all_botarea_buttontime){
-						buttontime.classList.remove('btn_red');
+				let all_botarea_button  = document.getElementById('botarea_div').querySelectorAll('.btn_botarea');
+				if(selected_botarea_btn.classList.contains('button_selected')){
+					for(const button of all_botarea_button){
+						button.classList.remove('button_selected');
 					}
 				}else{
-					for(const buttontime  of all_botarea_buttontime){
-						buttontime.classList.add('btn_red');
+					for(const button  of all_botarea_button){
+						button.classList.add('button_selected');
+						
 					}
 				}
 			}else{
-				if(selected_botarea_btn.classList.contains('btn_red')){
-					let buttontime  = document.getElementById('botarea_div').querySelector('buttontime');
-					buttontime.classList.remove('btn_red');
+				if(selected_botarea_btn.classList.contains('button_selected')){
+					let button  = document.getElementById('botarea_div').querySelector('button');
+					button.classList.remove('button_selected');
 				}
-				selected_botarea_btn.classList.toggle('btn_red');
+				selected_botarea_btn.classList.toggle('button_selected');
 			}
 			
 		}

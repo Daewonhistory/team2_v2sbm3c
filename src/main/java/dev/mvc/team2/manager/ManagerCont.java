@@ -24,7 +24,7 @@ public class ManagerCont {
 
   @GetMapping(value = {"", "/manager"})
   public String forward(HttpSession session) {
-//    String type = (String) session.getAttribute("type");
+    String type = (String) session.getAttribute("type");
 //    if (type == "manager") {
       return "/layout";
 //    } else {

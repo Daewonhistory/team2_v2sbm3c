@@ -74,23 +74,23 @@ public class MenuCont {
 			Model model,
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
-
-		String type = (String) session.getAttribute("type");
-		System.out.println("=>type:" + type);
+		
+		String accessType = (String) session.getAttribute("type");
+		System.out.println("=>accessType:" + accessType);
 		int restno = 0;
-		if (type == null) {
-			restno = 0;
-		} else if (type.equals("owner")) {
+		if (accessType == null) {
+			ArrayList<RestaurantVO> restaurantList = this.restaurantProc.list_all();
+			model.addAttribute("restaurantList", restaurantList);
+		} else if (accessType.equals("owner")) {
 
 			int ownerno = (int) session.getAttribute("ownerno");
-			ArrayList<RestaurantVO> ownersRestList = this.restaurantProc.findByOwnerR(ownerno);
-			System.out.println("=>레스토랑리스트 사이즈: " + ownersRestList.size());
-			model.addAttribute("ownerRestList", ownersRestList);
+			ArrayList<RestaurantVO> ownerRestList = this.restaurantProc.findByOwnerR(ownerno);
+			model.addAttribute("restaurantList", ownerRestList);
 		}
 
 		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
+		model.addAttribute("accessType", accessType);
 		model.addAttribute("list", list);
-
 		model.addAttribute("restno", 4);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
@@ -187,17 +187,22 @@ public class MenuCont {
 				}
 
 			}
-			ra.addAttribute("word", word);
-			ra.addAttribute("now_page", now_page);
-			return "redirect:/menu/list_search_paging"; // ra.addAttribute 사용시 url에 직접 작성 안함
+			ra.addFlashAttribute("word", word);
+			ra.addFlashAttribute("now_page", now_page);
+			return "redirect:/menu/list"; // ra.addAttribute 사용시 url에 직접 작성 안함
 
 		}
 
 	}
 
 	@GetMapping("read")
-	public String read(Model model, String word, int now_page, int menuno) {
-		// 메뉴 정보
+	public String read(Model model, HttpSession session, String word, int now_page, int menuno) {
+		String accessType = (String) session.getAttribute("type");
+		
+		if(accessType != null && !accessType.equals("owner")) {
+			return "redirect:/owner";
+		}
+		
 		MenuVO menuVO = this.menuProc.read(menuno);
 		model.addAttribute("menuVO", menuVO);
 		// 메뉴의 재료 목록
@@ -208,56 +213,40 @@ public class MenuCont {
 			IngredList.add(ingredientVO);
 		}
 		model.addAttribute("IngredNameList", IngredList);
-
+		model.addAttribute("accessType", accessType);
 		model.addAttribute("word", word);
 		model.addAttribute("now_page", now_page);
+		
 		return "menu/read";
 	}
 
 	// http://localhost:9093/menu/list_search_paging
-	@GetMapping("list_search_paging")
+	@GetMapping("list")
 	public String list_search_paging(Model model,
 			HttpSession session,
 			@RequestParam(defaultValue = "") String word,
 			@RequestParam(defaultValue = "1") int now_page) {
-		String type = (String) session.getAttribute("type");
+		String accessType = (String) session.getAttribute("type");
 		
 		int restno = 0;
 		ArrayList<RestaurantVO> RestList = null;
 		int ownerno = 0;
-		if (type == null) { // 관리자 접속
+		if (accessType == null) { // 관리자 접속
 			System.out.println("admin");
 			RestList = this.restaurantProc.list_all();
 			ownerno = 0;
 			
-		}else if(type.equals("owner")) {	// 사업자 접속
+		}else if(accessType.equals("owner")) {	// 사업자 접속
 			ownerno = (int)session.getAttribute("ownerno");
 			System.out.println("Owner" + ownerno);
 			RestList = this.restaurantProc.findByOwnerR(ownerno);
 			System.out.println("ownerRestList"+ RestList.size());
 		}else {
-			return "redierect:/";
+			return "redirect:/";
 		}
+		model.addAttribute("accessType", accessType);
 		model.addAttribute("RestList", RestList);
-//		System.out.println("restno:" + restno);
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("word", word);
-//		map.put("now_page", now_page);
-//		map.put("restno", restno);
-//		map.put("ownerno", ownerno);
-//
-//		
-//		int search_count = this.menuProc.list_search_count(word);
-//		model.addAttribute("search_count", search_count);
-//		String paging = this.menuProc.pagingBox(now_page, word, "/menu/list_search_paging", search_count,
-//				Menu.RECORD_PER_PAGE, Menu.PAGE_PER_BLOCK);
-//		model.addAttribute("paging", paging);
-//		
-		model.addAttribute("type", type);
-		model.addAttribute("word", word);
-		model.addAttribute("now_page", now_page);
-//		model.addAttribute("search_count", search_count);
-
+		
 		return "menu/list_search_paging";
 	}
 
@@ -433,7 +422,7 @@ public class MenuCont {
 		ArrayList<MenuVO> list = this.menuProc.list_search_paging(map);
 
 		int search_count = this.menuProc.list_by_restno_search_count(map);
-
+		System.out.println("search_count:" + search_count);
 		MenuResponse response = new MenuResponse();
 		String paging = this.menuProc.pagingBox(nowPage, word, word, search_count, Menu.RECORD_PER_PAGE,
 				Menu.PAGE_PER_BLOCK);

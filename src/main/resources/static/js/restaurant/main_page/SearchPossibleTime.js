@@ -6,7 +6,7 @@ function searchPossibleTime(){
 	console.log(reserveDate.value + " " + personnel.value + " " + restno.value);
 	
 	fetch(
-        "/admitPerson/searchPossibleTime",
+        "/admitperson/searchPossibleTime",
         {
           method: "POST",
           headers: {"Content-Type": "application/json"},

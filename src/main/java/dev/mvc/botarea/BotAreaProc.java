@@ -114,7 +114,7 @@ public class BotAreaProc implements BotAreaProcInter {
 	      if (now_page == i){ // 목록에 출력하는 페이지가 현재페이지와 같다면 CSS 강조(차별을 둠)
 	        str.append("<span class='span_box_2' id='now_page'>"+i+"</span>"); // 현재 페이지, 강조 
 	      }else{
-	          str.append("<span class='span_box_1' onclick='pageMove(this)' data-page='"+i+"'>"+i+"</span>");
+            str.append("<span class='span_box_1' onclick='pageMove(this)' data-page='"+i+"'>"+i+"</span>");
 	      } 
 	    } 
 	 
@@ -125,7 +125,7 @@ public class BotAreaProc implements BotAreaProcInter {
 	    // 현재 페이지 25일경우 -> 현재 3그룹: (3 * 10) + 1 = 4그룹의 시작페이지 31
 	    _now_page = (now_grp * page_per_block)+1; //  최대 페이지수 + 1 
 	    if (now_grp < total_grp){ 
-	        str.append("<span class='span_box_1' onclick='pageGrpMove(this)' data-page='"+_now_page+"' >다음</span>");
+          str.append("<span class='span_box_1' onclick='pageGrpMove(this)' data-page='"+_now_page+"' >다음</span>");
 	    } 
 	    str.append("</div>"); 
 	     

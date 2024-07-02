@@ -59,11 +59,12 @@
   <select id="list_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
     FROM menu
+    WHERE restno IS NOT NULL
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
       </when>
       <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
-        WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+        AND UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
         
       </otherwise>
     </choose>
@@ -72,9 +73,10 @@
   <select id="list_by_restno_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
     FROM menu
+    WHERE restno IS NOT NULL
     <choose>
     <when test="restno != 0">
-    	 WHERE restno = #{restno}
+    	 AND restno = #{restno}
     	 <if test="word != null and word != ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
       		AND UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
   		</if>

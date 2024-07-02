@@ -31,9 +31,11 @@ public class MidAreaCont {
 		String accessType = (String) session.getAttribute("type");
 		
 		if(accessType == null) {
+			model.addAttribute("accessType", accessType);
 			return "/midarea/create";
 		}else {
-			return "/manager";
+			
+			return "redirect:/manager";
 		}
 		
 	}
@@ -53,10 +55,11 @@ public class MidAreaCont {
 		
 		// 관리자 확인
 		if(accessType != null) {
-			return "redierect:/manager";
-		}else{
+			model.addAttribute("accessType", accessType);
 			model.addAttribute("now_page", now_page);
 			return "/midarea/list";
+		}else{
+			return "redierect:/manager";
 		}
 		
 	}
