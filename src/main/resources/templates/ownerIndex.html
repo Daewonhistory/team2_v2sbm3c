@@ -26,9 +26,9 @@
           <span id="create-arrow" class="arrow right"></span> 식당 관련
         </a>
         <ul class="sub-menu" id="create-sub-menu" style="display: none;">
-          <li><a href="/restaurant/create">식당 등록</a></li>
-          <li><a href="/restaurant/create">식당 관리</a></li>
-          <li><a href="/restaurant/create">식당 수정</a></li>
+          <li th:if="${session.type == 'Norest' }"><a href="/restaurant/create">식당 등록</a></li>
+          <li><a href="/owner/restaurant">식당 관리</a></li>
+
           <li><a th:href="@{|/schedule/update?restno=${restno}|}">스케줄 관리</a></li>
 
         </ul>

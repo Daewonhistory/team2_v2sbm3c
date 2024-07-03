@@ -18,7 +18,7 @@ public class Tool {
    * null 문자열(객체)을 null 값 해제
    * static: 객체 생성 필요 없음, synchronized: 동시 접속 문제 해결
    * 
-   * @param obj
+   * @param
    * @return
    */
   public static synchronized String checkNull(String str) {
@@ -139,17 +139,17 @@ public class Tool {
     String srcname = src.getName(); // 원본 파일명 추출
 
     // 순수 파일명 추출, mt.jpg -> mt 만 추출
-    String _dest = srcname.substring(0, srcname.indexOf("."));
+    String baseName = srcname.substring(0, srcname.lastIndexOf('.'));
+    String extension = srcname.substring(srcname.lastIndexOf('.') + 1).toLowerCase();
 
-    // 축소 이미지 조합 /upDir/mt_t.jpg
-    File dest = new File(upDir + "/" + _dest + "_t.jpg");
+    // 축소 이미지 조합 /upDir/mt_t.확장자
+    File dest = new File(upDir + "/" + baseName + "_t." + extension);
 
     Image srcImg = null;
 
-    String name = src.getName().toLowerCase(); // 파일명을 추출하여 소문자로 변경
     // 이미지 파일인지 검사
-    if (name.endsWith("jpg") || name.endsWith("bmp") || name.endsWith("png")
-        || name.endsWith("gif") || name.endsWith("jfif")) {
+    if (extension.equals("jpg") || extension.equals("bmp") || extension.equals("png")
+            || extension.equals("gif") || extension.equals("jfif")) {
       try {
         srcImg = ImageIO.read(src); // 메모리에 원본 이미지 생성
         int srcWidth = srcImg.getWidth(null); // 원본 이미지 너비 추출
@@ -181,20 +181,17 @@ public class Tool {
         }
 
         // 메모리에 대상 이미지 생성
-        Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight,
-            Image.SCALE_SMOOTH);
+        Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH);
         int pixels[] = new int[destWidth * destHeight];
-        PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth,
-            destHeight, pixels, 0, destWidth);
+        PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth, destHeight, pixels, 0, destWidth);
 
         pg.grabPixels();
 
-        BufferedImage destImg = new BufferedImage(destWidth, destHeight,
-            BufferedImage.TYPE_INT_RGB);
+        BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
         destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
 
         // 파일에 기록
-        ImageIO.write(destImg, "jpg", dest);
+        ImageIO.write(destImg, extension, dest);
 
         System.out.println(dest.getName() + " 이미지를 생성했습니다.");
       } catch (Exception e) {
@@ -204,6 +201,9 @@ public class Tool {
 
     return dest.getName();
   }
+
+
+
 
   /**
    * 전송 가능한 파일인지 검사
@@ -331,12 +331,17 @@ public class Tool {
     boolean sw = false;
 
     try {
-      if (folder != null && fileName != null && fileName.startsWith("basic")  && fileName.startsWith("ownerbasic")) { // 값이 있는지 확인
+      if (folder != null && fileName != null) { // Check if folder and fileName are not null
         File file = new File(folder + fileName);
         System.out.println(file.getAbsolutePath() + " 삭제");
 
-        if (file.exists() && file.isFile()) { // 존재하는 파일인지 검사
-          sw = file.delete(); // 파일 삭제
+        if (file.exists() && file.isFile()) { // Check if the file exists and is a file
+          sw = file.delete(); // Delete the file
+          if (sw) {
+            System.out.println("-> 파일 삭제 성공");
+          } else {
+            System.out.println("-> 파일 삭제 실패");
+          }
         } else {
           System.out.println("-> 삭제할 파일이 없음");
         }

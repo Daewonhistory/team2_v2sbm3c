@@ -43,6 +43,16 @@ public class RestImgProC implements RestImgProInter {
     return this.restimgDAO.getImagesByRestno(restno);
   }
 
+  @Override
+  public int delete(int rest_imgno) {
+    return this.restimgDAO.delete(rest_imgno);
+  }
+
+  @Override
+  public List<RestimgVO> findByFileName(String fileName) {
+    return this.restimgDAO.findByFileName(fileName);
+  }
+
 
 }
 

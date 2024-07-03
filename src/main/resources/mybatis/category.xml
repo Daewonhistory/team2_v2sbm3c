@@ -18,6 +18,12 @@
         FROM category
     </select>
 
+    <select id="list_by_categoryno" resultType="dev.mvc.category.CategoryVO">
+        SELECT categoryno, name
+        FROM category
+        where categoryno = #{categoryno}
+    </select>
+
     <select id="listbycate" resultType="dev.mvc.category.CategoryVO">
         SELECT  name
         FROM category where #{categoryno}

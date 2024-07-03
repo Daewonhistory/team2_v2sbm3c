@@ -1,0 +1,198 @@
+<!DOCTYPE html> 
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+
+  
+  
+
+
+
+  <div style="width: 60%; margin: 0px auto "  th:object="${restFullData}">
+  <div class="title_line"  th:text="@{|${restFullData.name} 식당  지도 수정 (*는 필수)|}">  </div>
+  <form   id="frm" name="frm" method="post" action="/restaurant/update_map">
+    <div style="align-items: center; display: none;">
+
+      <input class="form-control form-control-sm"  id="restno" name="restno" th:value="${restFullData.restno}" style=" width: 27%;" readonly></input>
+
+    </div>
+
+
+    <input type="hidden" th:value="${restFullData.botareano}" name="botareano">
+
+    <label for="address1" style="margin-top: 10px;">식당 수정 주소 찾기</label>
+    <div style="display: flex ;">
+
+      <div id="midarea_div" style="width: 25%;">
+
+
+        <select id="midAreaSelect" name="midAreaSelect" onchange="selectMidArea(this)" class="form-control">
+          <option th:each="midAreaVO : ${midAreaList}" th:value="${midAreaVO.midareano}"
+                  th:text="${midAreaVO.name}"></option>
+        </select>
+      </div>
+
+      <div id="botarea_div" style="display:none; width: 25%; ">
+      </div>
+      <div id="addresshi" style="display:none; width: 25%; margin-left: 10px;  ">
+        <input class="form-control" id="addressv" type="text" name="addressv">
+        <input class="form-control"  th:value="${restFullData.lng}"id="lng" type="hidden" name="lng">
+        <input class="form-control" th:value="${restFullData.lat}" id="lat" type="hidden" name="lat">
+
+      </div>
+      <div id="findbutton" style="display: none; margin-left: 10px;">
+      <button class="btns" type="button" id="searchButton" onclick="searchAddress()" style="margin: 0 auto;">위치 확인</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <label>식당 과거 주소</label>
+      <input type='text' name='address1'  th:value="${restFullData.address}" id='address1' value=''
+             placeholder="식당 주소" class="form-control form-control-sm" style="width: 50%;" readonly>
+
+    </div>
+    <div id="daadd" class="form-group" style="margin-top: 10px; display: none;"  >
+      <label>식당 수정 주소</label>
+      <input  class="form-control" id="alladdress"  th:value="${restFullData.address}" type="text" name="address" readonly>
+
+
+    </div>
+
+    <div id="map" style="width:100%;height:350px; display: none; margin-top: 10px; "></div>
+
+    <script src="/js/restaurant/create/SelectMidArea.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Kakao Maps API 초기화
+        kakao.maps.load(function () {
+          // Select2 초기화
+          $('select').select2({
+            placeholder: '검색해주세요',
+            allowClear: false,
+            language: {
+              noResults: function () {
+                return '결과가 없습니다'; // 결과가 없을 때 표시할 메시지
+              }
+            }
+          });
+        });
+      })
+
+      // midAreaSelect가 변경될 때 실행되는 함수
+
+    </script>
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6&libraries=services&autoload=false"></script>
+
+    <script>
+      function searchAddress() {
+        let maps = document.getElementById('map');
+        maps.style.display = "block";
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+              center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+              level: 3 // 지도의 확대 레벨
+            };
+
+// 지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+        const midarea = document.getElementById("midAreaSelect");
+        const midselectedOption = midarea.options[midarea.selectedIndex];
+        const midvalue = midselectedOption.text;
+
+        const botarea = document.getElementById("botarea");
+        const botareaselectedOption = botarea.options[botarea.selectedIndex];
+        const botvalue = botareaselectedOption.text;
+
+
+        const addressvalue = document.getElementById('addressv').value;
+
+        const allarea = midvalue + " " + botvalue + " " + addressvalue;
+        const submitaddress = document.getElementById('alladdress');
+        submitaddress.value = allarea;
+
+
+        console.log(allarea);
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(allarea, function(result, status) {
+
+          // 정상적으로 검색이 완료됐으면
+          if (status === kakao.maps.services.Status.OK) {
+
+            let dadd = document.getElementById('daadd');
+            dadd.style.display = "block";
+
+
+
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            var marker = new kakao.maps.Marker({
+              map: map,
+              position: coords
+            });
+
+
+            // 인포윈도우로 장소에 대한 설명을 표시합니다
+            var infowindow = new kakao.maps.InfoWindow({
+              content: '<div style="width:150px;text-align:center;padding:6px 0;">사업자 식당</div>'
+            });
+            infowindow.open(map, marker);
+
+            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+            map.setCenter(coords);
+
+            let lat = document.getElementById('lat');
+            lat.value = result[0].y;
+
+            let lng = document.getElementById('lng');
+            lng.value = result[0].x;
+
+            console.log(coords);
+          } else {
+            alert('주소 검색이 안됩니다.')
+          }
+        });
+      }
+
+    </script>
+
+
+
+
+
+    <div class="form-group" style="margin-top: 10px;">
+      <button type="submit" class="btn btn-primary"  id="btn_send">수정</button>
+
+      <button type="button" class="btn btn-primary" onclick="handleButtonClick()" id="btn_cancel">취소</button>
+    </div>
+<script>
+  function handleButtonClick() {
+    history.back();
+  }
+</script>
+  </form>
+</div>
+
+	
+
+</div>
+ 
+</html>

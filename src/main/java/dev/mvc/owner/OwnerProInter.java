@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 public interface OwnerProInter {
 
@@ -121,6 +122,9 @@ public interface OwnerProInter {
   public int updateProfile(OwnerVO ownerVO);
 
   public ArrayList<OwnerVO> list_search_paging(String word, String type, int now_page, int record_per_page);
+
+
+
 
 
   public int list_search_count(String word, String type);

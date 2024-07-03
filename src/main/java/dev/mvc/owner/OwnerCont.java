@@ -2,15 +2,18 @@ package dev.mvc.owner;
 
 
 import dev.mvc.category.CategoryVO;
-import dev.mvc.customer.Customer;
 import dev.mvc.dto.HistoryDTO;
+import dev.mvc.dto.RestDTO;
+import dev.mvc.dto.RestFullData;
 import dev.mvc.emailAuth.EmailAuthVO;
+import dev.mvc.midarea.MidAreaProcInter;
+import dev.mvc.midarea.MidAreaVO;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.ownerhistory.OwnerHistoryVO;
 import dev.mvc.phoneAuth.PhoneAuthVO;
-import dev.mvc.restaurant.Restaurant;
 
 import dev.mvc.restaurant.RestaurantProInter;
+import dev.mvc.restimg.RestImgProInter;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +52,17 @@ public class OwnerCont {
   @Qualifier("dev.mvc.ownerhistory.OwnerHistoryProc")
   private OwnerHistoryProcInter ownerhisProc;
 
+  @Autowired
+  @Qualifier("dev.mvc.restaurant.RestaurantProc")
+  private RestaurantProInter restaurantProc;
+
+  @Autowired
+  @Qualifier("dev.mvc.restimg.RestImgProC")
+  private RestImgProInter restimgproc;
+
+  @Autowired
+  @Qualifier("dev.mvc.midarea.MidAreaProc")
+  private MidAreaProcInter midAreaProc;
 
   @Autowired
   private Security security;
@@ -75,6 +89,7 @@ public class OwnerCont {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     System.out.println("owner ownerno ->" + ownerno);
 
+    model.addAttribute("accessType", type);
 
 
     if (type == null || ownerno == null) {
@@ -347,14 +362,28 @@ public class OwnerCont {
 
 
       if (ownerVO.getGrade() == 1) {
-        session.setAttribute("type", "owner");
-        System.out.println("ownerno"+ownerVO.getOwnerno());
-        session.setAttribute("ownerno", ownerVO.getOwnerno());
-        session.setAttribute("id", ownerVO.getId());
-        session.setAttribute("oname", ownerVO.getOname());
-        session.setAttribute("grade", "owner");
-        session.setAttribute("ownerVO", ownerVO);
-        return "redirect:/";
+        session.setAttribute("restcount", this.restaurantProc.restaurantCount(ownerVO.getOwnerno()));
+        Integer restcount = this.restaurantProc.restaurantCount(ownerVO.getOwnerno());
+        if (restcount == 0) {
+          session.setAttribute("type", "Norest");
+          session.setAttribute("ownerno", ownerVO.getOwnerno());
+          session.setAttribute("id", ownerVO.getId());
+          session.setAttribute("oname", ownerVO.getOname());
+          session.setAttribute("grade", "Norest");
+          session.setAttribute("ownerVO", ownerVO);
+          return "redirect:/";
+        }else {
+          session.setAttribute("type", "owner");
+          System.out.println("ownerno"+ownerVO.getOwnerno());
+          session.setAttribute("ownerno", ownerVO.getOwnerno());
+          session.setAttribute("id", ownerVO.getId());
+          session.setAttribute("oname", ownerVO.getOname());
+          session.setAttribute("grade", "owner");
+          session.setAttribute("ownerVO", ownerVO);
+          return "redirect:/";
+        }
+
+
 
       } else if (ownerVO.getGrade() == 10)  {
         session.setAttribute("ownerno", ownerVO.getOwnerno());
@@ -449,7 +478,7 @@ public class OwnerCont {
     // -------------------------------------------------------------------
     String file1saved = owner_old.getImage();  // 실제 저장된 파일명
 
-    String modifiedFileName = file1saved.replace("_t", "");
+    String modifiedFileName = file1saved.replace(".png", "_t.png");
 
 
     long size1 = 0;
@@ -511,8 +540,38 @@ public class OwnerCont {
       return "redirect:/";
     }
   }
+  @GetMapping("/restread")
+  public String restread(HttpSession session,Model model,  int restno) {
+    // 메뉴 정보
+    String type = (String) session.getAttribute("type");
+    if (type == "owner" ) {
+      model.addAttribute("accessType", type);
+      RestFullData restFullData = this.restaurantProc.readFullData(restno);
+      model.addAttribute("restFullData", restFullData);
+      // 메뉴의 재료 목록
 
 
+      return "owner/restread";
+    } else {
+      return "redirect:/";
+    }
+
+  }
+
+
+  @GetMapping("/update_map")
+  public String update_map(Model model, int restno) {
+    // 메뉴 정보
+    ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
+    model.addAttribute("midAreaList",midAreaVOS);
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    model.addAttribute("restFullData", restFullData);
+    // 메뉴의 재료 목록
+
+
+
+    return "owner/update_map";
+  }
 
   /**
    * 로그인  접속 기록 메서드
@@ -522,7 +581,20 @@ public class OwnerCont {
    * @param session
    * @return
    */
-  
+  @GetMapping("/restaurant")
+  public String byOwner(HttpSession session, Model model) {
+    String type = (String) session.getAttribute("type");
+    if (type == null) {
+      return "redirect:/owner/login";
+    }
+    model.addAttribute("accessType",type);
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    RestDTO restDTO = this.restaurantProc.restaurant_ownerno(ownerno);
+    model.addAttribute("searchlist", restDTO);
+    return "owner/restaurant_by_owner";
+
+
+  }
 
   @GetMapping("/logininfo")
   public String moble(Model model, OwnerHistoryVO loginHistoryVO, HttpSession session) {

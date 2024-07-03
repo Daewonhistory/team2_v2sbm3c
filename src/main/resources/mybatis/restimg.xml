@@ -24,5 +24,20 @@
         WHERE restno = #{restno}
     </select>
 
+    <delete id="delete" >
+        DELETE
+        FROM restimage
+        WHERE rest_imgno =#{rest_imgno}
+    </delete>
+
+
+
+
+    <select id="findByFileName">
+        SELECT rest_imgno,imagefile
+        FROM restimage
+        WHERE imagefile =#{imagefile}
+    </select>
+
 
 </mapper>

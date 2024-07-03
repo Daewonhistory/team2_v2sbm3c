@@ -3,6 +3,7 @@ package dev.mvc.restaurant;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.RestFullData;
+import dev.mvc.owner.OwnerVO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +67,9 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestFullData> SearchRestaurantWithImg(Map<String, Object> map);
-  
+
+  public RestDTO restaurant_ownerno(Integer ownerno);
+
   /**
    * 레스토랑의 모든 데이터 조회
    * @param restno
@@ -87,4 +90,11 @@ public interface RestaurantDAOInter {
   public int update(RestFullData restFullData);
 
   public int update_map(RestFullData restFullData);
+
+  /**
+   * 사업자 식당 여부 메소드
+   * @param ownerno
+   * @return
+   */
+  public int restaurantCount(Integer ownerno);
 }

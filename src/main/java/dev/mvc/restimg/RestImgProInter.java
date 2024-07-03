@@ -19,6 +19,11 @@ public interface RestImgProInter {
 
   public List<RestFullData> getImagesByRestno(Integer restno);
 
+  public int delete(int rest_imgno);
+
+  public List<RestimgVO> findByFileName(String fileName);
+
+
 }
 
 

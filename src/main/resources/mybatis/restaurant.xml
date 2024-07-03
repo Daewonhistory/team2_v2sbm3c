@@ -19,8 +19,18 @@
     
 	
     <select id="foreign" >
-      select restno from  restaurant where ownerno = #{ownerno}
+      SELECT restno
+      FROM  restaurant
+      WHERE ownerno = #{ownerno}
     </select>
+
+
+	<select id="restaurantCount">
+		SELECT COUNT(*)
+		FROM restaurant
+		WHERE ownerno = #{ownerno}
+	</select>
+
 
   <select id="list_search_paging" parameterType="map" resultType="dev.mvc.dto.RestDTO">
     <if test="type == 100">
@@ -169,7 +179,29 @@
     SELECT *
     FROM restaurant
   </select>
-	
+
+	<select id="restaurant_ownerno" resultType="dev.mvc.dto.RestDTO">
+  <![CDATA[
+		SELECT re.restno, re.name, re.tel, re.categoryno, re.ownerno,
+					 ri1.imagefile AS image1,
+					 ri2.imagefile AS image2,
+					 ri3.imagefile AS image3
+		FROM restaurant re
+					 LEFT JOIN (
+			SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+			FROM restimage
+		) ri1 ON re.restno = ri1.restno AND ri1.rn = 1
+					 LEFT JOIN (
+			SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+			FROM restimage
+		) ri2 ON re.restno = ri2.restno AND ri2.rn = 2
+					 LEFT JOIN (
+			SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+			FROM restimage
+		) ri3 ON re.restno = ri3.restno AND ri3.rn = 3
+		WHERE re.ownerno = #{ownerno}
+		]]>
+</select>
 	<!-- 변경 예정 create-->
 	<!--
 	<insert id="create" parameterType="dev.mvc.restaurant.RestaurantVO">

@@ -4,6 +4,7 @@ package dev.mvc.team2.manager;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,11 @@ public class ManagerCont {
 
 
   @GetMapping(value = {"", "/manager"})
-  public String forward(HttpSession session) {
+  public String forward(HttpSession session, Model model) {
+
     String type = (String) session.getAttribute("type");
+    model.addAttribute("accessType", type);
+
 //    if (type == "manager") {
       return "/layout";
 //    } else {
