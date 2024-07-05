@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
+<html layout:decorate="~{ownerIndex}">
+<!-- layout.html 상속-->
 <div layout:fragment="content">
   <div th:text="${fail}"></div>
 
@@ -11,9 +12,8 @@
           <input type="file" class="form-control" name="file1MF" id="file1MF" placeholder="파일 선택" style="display: none">
           <input type="file" class="form-control" name="file2MF" id="file2MF" placeholder="파일 선택" style="display: none">
           <input type="file" class="form-control" name="file3MF" id="file3MF" placeholder="파일 선택" style="display: none">
-          <input type="file" class="form-control" id="rest_imgs" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" id="rest_imgs" multiple accept="image/*" placeholder="파일 선택" style="display: none">
           <input type="hidden" id="deletedImageFiles" name="deletedImageFiles">
-
         </div>
 
         <label>식당 이미지</label>
@@ -36,13 +36,7 @@
           </div>
         </div>
 
-        <!-- 삭제할 이미지의 파일 이름을 저장할 hidden input 태그 추가 -->
-
-
         <input type="hidden" th:value="${restFullData.restno}" name="restno">
-
-
-        <!-- 수정할 식당 번호(hidden input) -->
 
         <div class="form-group buttons">
           <button type="submit" class="btn btn-primary" id="btn_send">이미지 수정</button>
@@ -86,6 +80,10 @@
           files.forEach(file => {
             if (!file.type.startsWith('image/')) {
               alert('이미지 파일만 업로드할 수 있습니다!');
+              return;
+            }
+            if (file.type === 'image/webp' || file.type === 'image/jfif') {
+              alert('WEBP와 JFIF 형식의 파일은 업로드할 수 없습니다!');
               return;
             }
 
