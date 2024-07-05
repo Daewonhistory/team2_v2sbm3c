@@ -6,7 +6,7 @@
   <div class="container">
     <div class="form-container">
       <div class="title_line">식당 이미지 수정(<span class="required">*</span>는 필수)</div>
-      <form id="frm" name="frm" th:object="${restFullData}" enctype="multipart/form-data" method="post" action="/restaurant/update_imgs">
+      <form id="frm" name="frm" th:object="${restFullData}" enctype="multipart/form-data" method="post" action="/owner/update_imgs">
         <div class="form-group">
           <input type="file" class="form-control" name="file1MF" id="file1MF" placeholder="파일 선택" style="display: none">
           <input type="file" class="form-control" name="file2MF" id="file2MF" placeholder="파일 선택" style="display: none">

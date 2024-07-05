@@ -334,3 +334,24 @@ height: 400px;
  ㅂ 박스
  */
 
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.star-rating input {
+  display: none;
+}
+.star-rating label {
+  font-size: 2rem;
+  color: #ddd;
+  cursor: pointer;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #f5c518;
+}
+.star-rating input:checked ~ label,
+.star-rating input:checked ~ label ~ label {
+  color: #f5c518;
+}

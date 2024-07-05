@@ -30,7 +30,7 @@
   <div th:if="${delete != null}" class="alert alert-danger" role="alert">
     <span th:text="${delete}"></span>
   </div>
-  <div class="title_line">식당 리스트</div>
+  <div class="title_line">식당 조회</div>
 
   <aside class="aside_right">
     <a href="javascript:location.reload();" > 새로고침</a>
@@ -42,7 +42,7 @@
 
 
   <!-- /cate/list_all_compoent.html 파일의 list_all_fragment import -->
-  <div th:replace="~{owner/owner_all_component::owner_all_fragment}"></div>
+  <div th:replace="~{owner/owner_rest_component::owner_rest_fragment}"></div>
 
 
 </div>

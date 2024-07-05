@@ -26,7 +26,7 @@
           <span id="create-arrow" class="arrow right"></span> 식당 관련
         </a>
         <ul class="sub-menu" id="create-sub-menu" style="display: none;">
-          <li th:if="${session.type == 'Norest' }"><a href="/restaurant/create">식당 등록</a></li>
+          <li th:if="${session.type == 'Norest' }"><a href="/owner/rest_create">식당 등록</a></li>
           <li><a href="/owner/restaurant">식당 관리</a></li>
 
           <li><a th:href="@{|/schedule/update?restno=${restno}|}">스케줄 관리</a></li>
@@ -47,11 +47,16 @@
         </a>
         <ul class="sub-menu" id="restaurant-sub-menu" style="display: none;">
           <li><a href="/restaurant/search_b">식당 목록</a></li>
-          <li><a href="/restaurant/create">식당 등록</a></li>
+          <li><a href="/owner/rest_create">식당 등록</a></li>
 					<li th:if="${accessType.equals('owner')}">testtest</li>
         </ul>
       </li>
+      <li th:if="${session.id != null}"class="owner-menu">
+        <a  class="owner-menu-a" onclick="logout()">
+          <span style="margin-left: 50px;" ></span> 로그아웃
+        </a>
 
+      </li>
     </ul>
   </div>
   <div class="owner-main">
@@ -61,6 +66,9 @@
     </div>
   </div>
 </div>
+<form id="postForm" action="/owner/logout" method="post" style="display: none;">
+  <!-- This form will be submitted when the logout button is clicked -->
+</form>
 
 <script>
   function toggleSubMenu(menuId, arrowId) {
@@ -100,6 +108,13 @@
     alert([[${Abnormal}]]);
   }
   /*]]>*/
+
+
+
+    function logout() {
+    document.getElementById('postForm').submit();
+  }
+</script>
 </script>
 </body>
 </html>

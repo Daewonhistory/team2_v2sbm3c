@@ -1,5 +1,5 @@
 <!DOCTYPE html> 
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
 
 <div layout:fragment="content">
 
@@ -10,7 +10,7 @@
 
   <div style="width: 60%; margin: 0px auto "  th:object="${restFullData}">
   <div class="title_line"  th:text="@{|${restFullData.name} 식당  지도 수정 (*는 필수)|}">  </div>
-  <form   id="frm" name="frm" method="post" action="/restaurant/update_map">
+  <form   id="frm" name="frm" method="post" action="/owner/update_map">
     <div style="align-items: center; display: none;">
 
       <input class="form-control form-control-sm"  id="restno" name="restno" th:value="${restFullData.restno}" style=" width: 27%;" readonly></input>

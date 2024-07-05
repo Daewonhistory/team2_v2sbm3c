@@ -12,8 +12,11 @@ import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.ownerhistory.OwnerHistoryVO;
 import dev.mvc.phoneAuth.PhoneAuthVO;
 
+import dev.mvc.restaurant.Restaurant;
 import dev.mvc.restaurant.RestaurantProInter;
+import dev.mvc.restaurant.RestaurantVO;
 import dev.mvc.restimg.RestImgProInter;
+import dev.mvc.restimg.RestimgVO;
 import dev.mvc.tool.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,6 +88,7 @@ public class OwnerCont {
   @GetMapping()
   public String owner(Model model,HttpSession session) {
     String type = (String) session.getAttribute("type");
+    System.out.println("type-> "+ type);
 
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     System.out.println("owner ownerno ->" + ownerno);
@@ -140,6 +144,97 @@ public class OwnerCont {
 
 
     return "/owner/create";
+  }
+
+
+  @GetMapping("/rest_create")
+  public String create(Model model, RestaurantVO restaurantVO, HttpSession session) {
+    String type = (String) session.getAttribute("type");
+    model.addAttribute("accessType", type);
+
+    ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
+    model.addAttribute("midAreaList",midAreaVOS);
+
+
+    if (type == null) {
+      return "redirect:/";
+    } else {
+      return "owner/rest_create";
+    }
+
+  }
+
+  /*
+   * 식당 등록 처리 메서드
+   *
+   *
+   */
+
+  @PostMapping("/rest_create")
+  public String restaurant(Model model, HttpSession session,RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    restaurantVO.setOwnerno(ownerno);
+
+
+    int count = this.restaurantProc.create(restaurantVO);
+
+    int restno = this.restaurantProc.foreign(restaurantVO.getOwnerno());
+
+    if (count == 1) {
+
+      String upDir = Restaurant.getUploadDir(); // 파일을 업로드할 폴더 준비
+      session.setAttribute("type", "owner");
+      System.out.println("-> upDir: " + upDir);
+
+      MultipartFile mf1 = restimgVO.getFile1MF();
+      MultipartFile mf2 = restimgVO.getFile2MF();
+      MultipartFile mf3 = restimgVO.getFile3MF(); // 파일 3 추가
+
+      String[] fileNames = {mf1.getOriginalFilename(), mf2.getOriginalFilename(), mf3.getOriginalFilename()};
+      MultipartFile[] files = {mf1, mf2, mf3};
+
+      for (int i = 0; i < files.length; i++) {
+        if (!fileNames[i].isEmpty()) {
+          if (Tool.checkUploadFile(fileNames[i])) {
+            long size = files[i].getSize();
+
+            if (size > 0) {
+              String exe = fileNames[i].split("\\.")[1];
+              String newFileName = "rest_" +restaurantVO.getOwnerno()+"_"+(i + 1) + "." + exe;
+              String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
+
+              if (Tool.isImage(fileSaved)) {
+                String thumb = Tool.preview(upDir, fileSaved, 200, 150);
+
+                restimgVO.setRestno(restno);
+                restimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
+                restimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
+
+                int saved = this.restimgproc.create(restimgVO);
+                if (saved != 1) {
+                  return "redirect:/schedule/create?restno=" + restno;
+                }
+              } else {
+                return "redirect:/schedule/create?restno=" + restno; // 파일이 이미지가 아닐 경우 리다이렉트
+              }
+            } else {
+              return "redirect:/schedule/create?restno=" + restno; // 파일 크기가 0일 경우 리다이렉트
+            }
+          } else {
+            ra.addFlashAttribute("cnt", 0);
+            ra.addFlashAttribute("code", "check_upload_file_fail");
+            ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
+            return "redirect:/owner/msg";
+          }
+        }
+      }
+
+      return "redirect:/schedule/create?restno=" + restno;
+    } else {
+      return "redirect:/schedule/create?restno=" + restno;
+    }
+
+
   }
 
   /**
@@ -560,18 +655,157 @@ public class OwnerCont {
 
 
   @GetMapping("/update_map")
-  public String update_map(Model model, int restno) {
+  public String update_map(Model model, int restno,HttpSession session) {
     // 메뉴 정보
-    ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
-    model.addAttribute("midAreaList",midAreaVOS);
+    String type = (String) session.getAttribute("type");
+    if (type == "owner" ) {
+      model.addAttribute("accessType", type);
+      ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
+      model.addAttribute("midAreaList",midAreaVOS);
+      RestFullData restFullData = this.restaurantProc.readFullData(restno);
+      model.addAttribute("restFullData", restFullData);
+      // 메뉴의 재료 목록
+
+
+
+      return "owner/update_map";
+    } else{
+      return "redirect:/";
+
+    }
+
+  }
+  @PostMapping("/update_map")
+  public String update_map(RestFullData restFullData, RedirectAttributes ra ,String restno,HttpSession session) {
+
+    String type = (String) session.getAttribute("type");
+    if (type == "owner" ) {
+      int count = restaurantProc.update_map(restFullData);
+
+      if (count == 1) {
+        return "redirect:/owner/update_map?restno=" + restno;
+
+      } else {
+        return "redirect:/";
+      }
+    } else {
+      return "redirect:/";
+
+    }
+
+
+
+
+
+  }
+
+  @GetMapping("/update_imgs")
+  public String update_imgs(Model model, int restno,HttpSession session) {
+    // 메뉴 정보
+    String type = (String) session.getAttribute("type");
+    if (type == null) {
+      return "redirect:/";
+    }
+    model.addAttribute("accessType", type);
+
     RestFullData restFullData = this.restaurantProc.readFullData(restno);
     model.addAttribute("restFullData", restFullData);
     // 메뉴의 재료 목록
 
 
-
-    return "owner/update_map";
+    return "owner/update_imgs";
   }
+  @PostMapping("/update_imgs")
+  public String updateRestaurant(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestFullData restFullData, RestimgVO restimgVO, @RequestParam("deletedImageFiles") String deletedImageFiles) {
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    restFullData.setOwnerno(ownerno);
+    String upDir = Restaurant.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
+
+
+
+
+    int restno = restFullData.getRestno();  // 업데이트할 식당 번호
+
+    // 삭제할 이미지 처리
+    if (deletedImageFiles != null && !deletedImageFiles.isEmpty()) {
+      String[] deletedFileNames = deletedImageFiles.split(",");
+      for (String fileName : deletedFileNames) {
+        if (!fileName.isEmpty()) {
+          List<RestimgVO> imagesToDelete = this.restimgproc.findByFileName(fileName.trim());
+
+          for (RestimgVO imageToDelete : imagesToDelete) {
+            System.out.println("->"+imageToDelete.getImagefile());
+            String fileToDelete = imageToDelete.getImagefile(); // Assuming this is the file name
+
+            System.out.println("이미지 이름->" + fileToDelete);
+            int dotIndex = fileToDelete.lastIndexOf(".");
+            if (dotIndex > 0 && dotIndex < fileToDelete.length() - 1) {
+              String baseName = fileToDelete.substring(0, dotIndex);
+              String extension = fileToDelete.substring(dotIndex);
+
+              // 확장자 앞에 '_t'를 추가합니다.
+              String modifiedFileName = baseName + "_t" + extension;
+
+              Tool.deleteFile(upDir, fileToDelete); // 원본 파일 삭제
+              Tool.deleteFile(upDir, modifiedFileName); // '_t'가 추가된 파일 이름으로 삭제
+              int delete = this.restimgproc.delete(imageToDelete.getRest_imgno());
+              System.out.println("delete:" + delete);
+            } else {
+              System.out.println("-> 유효하지 않은 파일 이름: " + fileToDelete);
+            }
+          }
+        }
+      }
+    }
+
+
+
+    MultipartFile mf1 = restimgVO.getFile1MF();
+    MultipartFile mf2 = restimgVO.getFile2MF();
+    MultipartFile mf3 = restimgVO.getFile3MF(); // 파일 3 추가
+
+    String[] fileNames = {mf1.getOriginalFilename(), mf2.getOriginalFilename(), mf3.getOriginalFilename()};
+    MultipartFile[] files = {mf1, mf2, mf3};
+
+    for (int i = 0; i < files.length; i++) {
+      if (!fileNames[i].isEmpty()) {
+        if (Tool.checkUploadFile(fileNames[i])) {
+          long size = files[i].getSize();
+
+          if (size > 0) {
+            String exe = fileNames[i].split("\\.")[1];
+            String newFileName = "rest_" + restFullData.getOwnerno() + "_" + (i + 1) + "." + exe;
+            String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
+
+            if (Tool.isImage(fileSaved)) {
+              String thumb = Tool.preview(upDir, fileSaved, 200, 150);
+
+              restimgVO.setRestno(restno);
+              restimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
+              restimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
+
+              int saved = this.restimgproc.create(restimgVO);
+              if (saved != 1) {
+                return "redirect:/owner/restread?restno="+restno;
+              }
+            } else {
+              return "redirect:/owner/restread?restno="+restno;
+            }
+          } else {
+            return "redirect:/owner/restread?restno="+restno;
+          }
+        } else {
+          redirectAttributes.addFlashAttribute("cnt", 0);
+          redirectAttributes.addFlashAttribute("code", "check_upload_file_fail");
+          redirectAttributes.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
+          return "redirect:/owner/msg";
+        }
+      }
+    }
+
+    return "redirect:/owner/restread?restno="+restno;
+  }
+
 
   /**
    * 로그인  접속 기록 메서드
@@ -620,7 +854,7 @@ public class OwnerCont {
   }
 
 
-  @GetMapping("/logout")
+  @PostMapping("/logout")
   public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
     // 세션을 무효화합니다.
     session.invalidate();
