@@ -107,6 +107,8 @@ public interface OwnerDAOInter {
 
   public ArrayList<OwnerVO> list_search_paging(Map<String,Object> map);
 
+
+
   public int list_search_count(HashMap<String,Object> map);
 
 

@@ -10,5 +10,34 @@
         VALUES (restimg_seq.nextval, #{imagefile}, #{thumbfile}, #{restno})
     </insert>
 
+    <update id="updateImage" parameterType="dev.mvc.dto.RestFullData">
+        UPDATE restimage
+        SET
+            image = #{image},
+            thumbnail = #{thumbnail}
+        WHERE restno = #{restno} AND id = #{id}
+    </update>
+
+    <select id="getImagesByRestno" parameterType="int" resultType="dev.mvc.dto.RestFullData">
+        SELECT id, image, thumbnail, restno
+        FROM restimage
+        WHERE restno = #{restno}
+    </select>
+
+    <delete id="delete" >
+        DELETE
+        FROM restimage
+        WHERE rest_imgno =#{rest_imgno}
+    </delete>
+
+
+
+
+    <select id="findByFileName">
+        SELECT rest_imgno,imagefile
+        FROM restimage
+        WHERE imagefile =#{imagefile}
+    </select>
+
 
 </mapper>

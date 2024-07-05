@@ -41,7 +41,7 @@ public class ScheduleCont {
 		if(accessType == null) { // 관리자 접속
 			RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 			model.addAttribute("restaurantVO", restaurantVO);
-			
+			model.addAttribute("accessType", accessType);
 			return "/schedule/create";
 			
 		}else if(accessType.equals("owner")) { // 사장 접속
@@ -54,7 +54,7 @@ public class ScheduleCont {
 			
 			RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 			model.addAttribute("restaurantVO", restaurantVO);
-			
+			model.addAttribute("accessType", accessType);
 			return "/schedule/create";
 		}else {
 			System.out.println("다른사람");

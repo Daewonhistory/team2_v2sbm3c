@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
 
 <div layout:fragment="content">
 
@@ -105,7 +105,7 @@
     </div>
     <div style="margin-top: 10px;">
       <div id="map" style="width:50%;height:350px;"></div>
-      <a style="margin-top: 10px;" class="btns" th:href="@{|./update_map?restno=${restFullData.restno}&now_page=${now_page}&word=${word}|}"  id="updatemap">지도 수정</a>
+      <a style="margin-top: 10px;" class="btns" th:href="@{|./update_map?restno=${restFullData.restno}|}"  id="updatemap">지도 수정</a>
     </div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6&libraries=services"></script>
 
@@ -174,7 +174,7 @@
 
   </div>
     <div style="margin-top: 10px;">
-      <a style="margin-top: 10px;" class="btns" th:href="@{|./update_img?restno=${restFullData.restno}&now_page=${now_page}&word=${word}|}"  id="updateimg">이미지 수정</a>
+      <a style="margin-top: 10px;" class="btns" th:href="@{|./update_imgs?restno=${restFullData.restno}|}"  id="updateimg">이미지 수정</a>
     </div>
   </form>
 </div>

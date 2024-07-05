@@ -3,6 +3,7 @@ package dev.mvc.restaurant;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.RestFullData;
+import dev.mvc.owner.OwnerVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,10 +243,14 @@ public class RestaurantProC implements RestaurantProInter {
 		RestFullData searchRestDTO = this.restDAO.readFullData(restno);
 		return searchRestDTO;
 	}
-	
-	
 
-	public ArrayList<RestFullData> coordinateSearchList(double westLat, double eastLat, double southLng, double northLng){
+  @Override
+  public RestDTO restaurant_ownerno(Integer ownerno) {
+    return this.restDAO.restaurant_ownerno(ownerno);
+  }
+
+
+  public ArrayList<RestFullData> coordinateSearchList(double westLat, double eastLat, double southLng, double northLng){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("westLat", westLat);
 		map.put("eastLat", eastLat);
@@ -254,6 +259,17 @@ public class RestaurantProC implements RestaurantProInter {
 		ArrayList<RestFullData> list = this.restDAO.coordinateSearchList(map);
 	  return list;
 	}
+
+
+  /**
+   * 사업자 식당 여부 메소드
+   * @param ownerno
+   * @return
+   */
+  @Override
+  public int restaurantCount(Integer ownerno) {
+    return this.restDAO.restaurantCount(ownerno);
+  }
 
 
 }

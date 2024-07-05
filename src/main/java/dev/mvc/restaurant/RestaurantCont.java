@@ -3,6 +3,7 @@ package dev.mvc.restaurant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,34 +148,35 @@ public class RestaurantCont {
 
                 int saved = this.restimgproc.create(restimgVO);
                 if (saved != 1) {
-                  return "redirect:/restaurant/search_b";
+                  return "redirect:/schedule/create?restno=" + restno;
                 }
               } else {
-                return "redirect:/restaurant/search_b"; // 파일이 이미지가 아닐 경우 리다이렉트
+                return "redirect:/schedule/create?restno=" + restno; // 파일이 이미지가 아닐 경우 리다이렉트
               }
             } else {
-              return "redirect:/restaurant/search_b"; // 파일 크기가 0일 경우 리다이렉트
+              return "redirect:/schedule/create?restno=" + restno; // 파일 크기가 0일 경우 리다이렉트
             }
           } else {
             ra.addFlashAttribute("cnt", 0);
             ra.addFlashAttribute("code", "check_upload_file_fail");
             ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
-            return "redirect:/contents/msg";
+            return "redirect:/restaurant/msg";
           }
         }
       }
 
-      return "redirect:/restaurant/search_b";
+      return "redirect:/schedule/create?restno=" + restno;
     } else {
-      return "redirect:/restaurant/create";
+      return "redirect:/schedule/create?restno=" + restno;
     }
 
 
   }
   @GetMapping("/read")
-  public String read(Model model, String word, int now_page, int restno) {
+  public String read(HttpSession session,Model model, String word, int now_page, int restno) {
     // 메뉴 정보
-
+    String type = (String) session.getAttribute("type");
+    model.addAttribute("accessType", type);
     RestFullData restFullData = this.restaurantProc.readFullData(restno);
     model.addAttribute("restFullData", restFullData);
     // 메뉴의 재료 목록
@@ -184,6 +186,7 @@ public class RestaurantCont {
     model.addAttribute("now_page", now_page);
     return "restaurant/read";
   }
+
 
 
   @GetMapping("/update_map")
@@ -201,11 +204,36 @@ public class RestaurantCont {
     return "restaurant/update_map";
   }
 
+
+
+
+  @GetMapping("/update_img")
+  public String update_img(Model model, String word, int now_page, int restno) {
+    // 메뉴 정보
+
+
+    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    model.addAttribute("restFullData", restFullData);
+    // 메뉴의 재료 목록
+
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+    return "restaurant/update_img";
+  }
+
+
+
+
+
+
+
+
   @GetMapping("/search_b")
   public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
           categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
-
+    model.addAttribute("accessType", type);
     String id = (String) session.getAttribute("id");
     String grade = (String) session.getAttribute("grade");
 
@@ -266,6 +294,7 @@ public class RestaurantCont {
     model.addAttribute("cateList", cateList);
     return "/search";
   }
+
 
 //  @GetMapping("/search_list")
 //  public String search_list(Model model,

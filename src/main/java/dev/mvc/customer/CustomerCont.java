@@ -458,16 +458,21 @@ public class CustomerCont {
     String id = (String) session.getAttribute("id");
     CustomerVO customer_old = customerProc.readById(id);
 
+
+
+
     // -------------------------------------------------------------------
     // 파일 삭제 시작
     // -------------------------------------------------------------------
     String file1saved = customer_old.getImage();  // 실제 저장된 파일명
-
+    String modifiedFileName = file1saved.replace(".png", "_t.png");
     long size1 = 0;
 
     String upDir = Customer.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
 
     Tool.deleteFile(upDir, file1saved);  // 실제 저장된 파일삭제
+
+    Tool.deleteFile(upDir, modifiedFileName);
     // -------------------------------------------------------------------
     // 파일 삭제 종료
     // -------------------------------------------------------------------

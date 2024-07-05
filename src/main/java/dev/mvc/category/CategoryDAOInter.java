@@ -31,6 +31,8 @@ public interface CategoryDAOInter {
    */
   public Optional<CategoryVO> read(int cateno);
 
+  public ArrayList<CategoryVO> list_by_categoryno(Integer categoryno);
+
   /**
    * 기존 카테고리를 업데이트합니다.
    *

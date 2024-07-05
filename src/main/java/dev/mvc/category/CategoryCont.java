@@ -548,6 +548,12 @@ public class CategoryCont {
     ArrayList<CategoryVO> list = this.categoryProc.list();
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
+  @GetMapping("/catelist_no")
+
+  public ResponseEntity<ArrayList<CategoryVO>> catelist(@RequestParam("categoryno")  Integer categoryno) {
+    ArrayList<CategoryVO> list = this.categoryProc.list_by_categoryno(categoryno);
+    return new ResponseEntity<>(list, HttpStatus.OK);
+  }
 
 
 }

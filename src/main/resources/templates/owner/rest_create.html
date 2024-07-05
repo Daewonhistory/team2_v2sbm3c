@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div th:text="${fail}">
+
+  </div>
+  <script src="/js/owner/rest_create/category.js" th:inline="javascript">  </script>
+
+  <div class="container">
+    <div class="form-container">
+      <div class="title_line">식당 등록(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" th:object="${restaurantVO}" enctype="multipart/form-data" method="post"
+            action="/owner/rest_create">
+        <div class="form-group">
+          <input type="file" class="form-control" name="file1MF" id="file1MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file2MF" id="file2MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file3MF" id="file3MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" id="rest_imgs" placeholder="파일 선택" style="display: none" multiple>
+        </div>
+
+        <label>식당 이미지</label>
+        <div class="drop-zone" id="drop-zone">
+          여기에 사진을 드래그 앤 드롭 하세요 최대 3개 업로드 할 수 있습니다
+        </div>
+        <div class="preview" id="preview"></div>
+
+        <div class="form-group">
+          <label for="name">식당 이름</label>
+          <input type="text" class="form-control" name="name" id="name" placeholder="식당 이름" minlength="2" required>
+        </div>
+        <div class="form-group">
+          <label for="name">예약 범위</label>
+          <input type="number" class="form-control" name="reserve_range" id="reserve_range" placeholder="예약 범위" required>
+        </div>
+        <div class="form-group">
+          <label for="categoryno">식당 카테고리</label>
+          <select class="form-control" name="categoryno" id="categoryno">
+            <!-- Options should be populated here -->
+          </select>
+        </div>
+
+        <input type="hidden" class="form-control" name="ownerno" id="ownerno" value="7">
+        <div class="form-group">
+          <label for="tel">식당 전화번호</label>
+          <input type="text" class="form-control" name="tel" id="tel" placeholder="식당 전화번호" pattern="\d*" required>
+        </div>
+        <label for="name" style="margin-top: 10px;">식당 주소</label>
+        <div style="display: flex ;">
+
+          <div id="midarea_div" style="width: 25%;">
+
+            <select id="midAreaSelect" name="midAreaSelect" onchange="selectMidArea(this)" class="form-control">
+              <option th:each="midAreaVO : ${midAreaList}" th:value="${midAreaVO.midareano}"
+                      th:text="${midAreaVO.name}"></option>
+            </select>
+          </div>
+
+          <div id="botarea_div" style="display:none; width: 25%; ">
+          </div>
+          <div id="addresshi" style="display:none; width: 50%; margin-left: 10px;  ">
+            <input class="form-control" id="addressv" type="text" name="addressv">
+            <input  class="form-control" id="alladdress" type="hidden" name="address">
+            <input class="form-control" id="lng" type="hidden" name="lng">
+            <input class="form-control" id="lat" type="hidden" name="lat">
+          </div>
+          <div id="findbutton" style="display: none; margin-left: 10px;">
+            <button class="btns" type="button" id="searchButton" onclick="searchAddress()" style="margin: 0 auto;">위치 확인</button>
+          </div>
+        </div>
+        <div id="map" style="width:100%;height:350px; display: none; margin-top: 10px; "></div>
+
+        <script src="/js/restaurant/create/SelectMidArea.js"></script>
+        <script src="/js/owner/rest_create/select.js">
+
+
+        </script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6b1da0a4ed6afcc9cf9d6743c38f8aa6&libraries=services&autoload=false"></script>
+
+        <script src="/js/owner/rest_create/map.js"> </script>
+        <script src="/js/owner/rest_create/send.js"> </script>
+
+        <div class="form-group buttons">
+          <button type="button" class="btn btn-primary" id="btn_send" onclick="send()">등록</button>
+          <button type="button" class="btn btn-secondary" onclick="back()" id="btn_cancel">취소</button>
+        </div>
+      </form>
+      <script src="/js/owner/rest_create/imgUpload.js"> </script>
+      <script src="/js/owner/rest_create/etc.js"> </script>
+    </div>
+  </div>
+</div>
+</html>

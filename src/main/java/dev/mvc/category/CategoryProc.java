@@ -39,6 +39,11 @@ public class CategoryProc implements CategoryProcInter {
   }
 
   @Override
+  public ArrayList<CategoryVO> list_by_categoryno(Integer categoryno) {
+    return this.categoryDAO.list_by_categoryno(categoryno);
+  }
+
+  @Override
   public Optional<CategoryVO> read(int categoryno) {
 
     Optional<CategoryVO> categoryVO = this.categoryDAO.read(categoryno);

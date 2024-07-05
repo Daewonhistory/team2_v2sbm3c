@@ -3,6 +3,7 @@ package dev.mvc.restaurant;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.RestFullData;
+import dev.mvc.owner.OwnerVO;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
@@ -103,8 +104,10 @@ public interface RestaurantProInter {
    * @return
    */
   public RestFullData readFullData(int restno);
-  
-  
+
+  public RestDTO restaurant_ownerno(Integer ownerno);
+
+
   public String test(String date);
   
   /**
@@ -114,6 +117,14 @@ public interface RestaurantProInter {
    * @return
    */
   public ArrayList<RestFullData> coordinateSearchList(double westLat, double eastLat, double southLng, double northLng);
+
+  /**
+   * 사업자 식당 여부 메소드
+   * @param ownerno
+   * @return
+   */
+  public int restaurantCount(Integer ownerno);
+
 
 }
 

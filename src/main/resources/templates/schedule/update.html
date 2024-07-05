@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html th:if="${accessType != null && accessType.equals('owner')}" layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
-<html th:if="${accessType == null}" layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
 	<style>

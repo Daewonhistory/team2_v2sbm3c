@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div th:text="${fail}"></div>
+
+  <div class="container">
+    <div class="form-container">
+      <div class="title_line">식당 이미지 수정(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" th:object="${restFullData}" enctype="multipart/form-data" method="post" action="/owner/update_imgs">
+        <div class="form-group">
+          <input type="file" class="form-control" name="file1MF" id="file1MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file2MF" id="file2MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file3MF" id="file3MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" id="rest_imgs" placeholder="파일 선택" style="display: none">
+          <input type="hidden" id="deletedImageFiles" name="deletedImageFiles">
+
+        </div>
+
+        <label>식당 이미지</label>
+        <div class="drop-zone" id="drop-zone">
+          여기에 사진을 드래그 앤 드롭 하세요 최대 3개 업로드 할 수 있습니다
+        </div>
+        <div class="preview" id="preview">
+          <!-- 기존 이미지를 미리보기로 표시 -->
+          <div th:if="${restFullData.image1 != null}" class="preview-item" data-existing="true" data-index="0">
+            <img th:src="@{|/restaurant/storage/${restFullData.image1}|}" alt="Image 1">
+            <button type="button" class="remove-btn" onclick="removeExistingImage(0)">X</button>
+          </div>
+          <div th:if="${restFullData.image2 != null}" class="preview-item" data-existing="true" data-index="1">
+            <img th:src="@{|/restaurant/storage/${restFullData.image2}|}" alt="Image 2">
+            <button type="button" class="remove-btn" onclick="removeExistingImage(1)">X</button>
+          </div>
+          <div th:if="${restFullData.image3 != null}" class="preview-item" data-existing="true" data-index="2">
+            <img th:src="@{|/restaurant/storage/${restFullData.image3}|}" alt="Image 3">
+            <button type="button" class="remove-btn" onclick="removeExistingImage(2)">X</button>
+          </div>
+        </div>
+
+        <!-- 삭제할 이미지의 파일 이름을 저장할 hidden input 태그 추가 -->
+
+
+        <input type="hidden" th:value="${restFullData.restno}" name="restno">
+
+
+        <!-- 수정할 식당 번호(hidden input) -->
+
+        <div class="form-group buttons">
+          <button type="submit" class="btn btn-primary" id="btn_send">이미지 수정</button>
+          <button type="button" class="btn btn-secondary" onclick="back()" id="btn_cancel">취소</button>
+        </div>
+      </form>
+      <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('rest_imgs');
+        const preview = document.getElementById('preview');
+        const maxFiles = 3;
+        let currentFiles = [];
+        let existingImagesCount = document.querySelectorAll('.preview-item[data-existing="true"]').length;
+
+        dropZone.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (event) => {
+          event.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+          dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+          event.preventDefault();
+          dropZone.classList.remove('dragover');
+          const files = Array.from(event.dataTransfer.files);
+          handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+          const files = Array.from(event.target.files);
+          handleFiles(files);
+        });
+
+        function handleFiles(files) {
+          files.forEach(file => {
+            if (!file.type.startsWith('image/')) {
+              alert('이미지 파일만 업로드할 수 있습니다!');
+              return;
+            }
+
+            if (currentFiles.length + existingImagesCount >= maxFiles) {
+              alert(`최대 ${maxFiles}개의 이미지 파일만 업로드할 수 있습니다!`);
+              return;
+            }
+
+            currentFiles.push(file);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const previewItem = document.createElement('div');
+              previewItem.classList.add('preview-item');
+              const img = document.createElement('img');
+              img.src = event.target.result;
+
+              const removeBtn = document.createElement('button');
+              removeBtn.classList.add('remove-btn');
+              removeBtn.textContent = 'X';
+              removeBtn.addEventListener('click', () => {
+                preview.removeChild(previewItem);
+                currentFiles = currentFiles.filter(f => f !== file);
+                updateFileInputs();
+              });
+
+              previewItem.appendChild(img);
+              previewItem.appendChild(removeBtn);
+              preview.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+          });
+          updateFileInputs();
+        }
+
+        function updateFileInputs() {
+          const inputs = ['file1MF', 'file2MF', 'file3MF'].map(id => document.getElementById(id));
+          inputs.forEach((input, index) => {
+            const dataTransfer = new DataTransfer();
+            if (currentFiles[index]) {
+              dataTransfer.items.add(currentFiles[index]);
+              input.files = dataTransfer.files;
+            } else {
+              input.value = '';
+            }
+          });
+        }
+
+        function removeExistingImage(index) {
+          const previewItems = document.querySelectorAll('.preview-item[data-existing="true"]');
+          const itemToRemove = Array.from(previewItems).find(item => item.getAttribute('data-index') == index);
+          if (itemToRemove) {
+            const imageUrl = itemToRemove.querySelector('img').src;
+            const imageFile = imageUrl.split('/').pop(); // 파일 이름 추출
+            const deletedImageFilesInput = document.getElementById('deletedImageFiles');
+            if (deletedImageFilesInput.value) {
+              deletedImageFilesInput.value += "," + imageFile;
+            } else {
+              deletedImageFilesInput.value = imageFile;
+            }
+            itemToRemove.parentElement.removeChild(itemToRemove);
+            existingImagesCount--;
+          }
+        }
+
+        function back() {
+          history.back();
+        }
+      </script>
+    </div>
+  </div>
+</div>
+</html>
