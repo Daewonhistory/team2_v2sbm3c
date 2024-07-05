@@ -27,12 +27,6 @@ public interface ReserveDAOInter {
      */
     ArrayList<ReserveVO> list_search_by_reserve_date(Map<String, Object> params);
     
-    /**
-     * 특정 식당의 예약 수 조회
-     * @param restno
-     * @return 예약 수
-     */
-    int count_by_restno(int restno);
     
     /**
      * 특정 고객의 예약 조회
@@ -55,23 +49,24 @@ public interface ReserveDAOInter {
      */
     ArrayList<ReserveDTO> list_reserve_paging(Map<String, Object> params);
     
+
+    ArrayList<ReserveDTO> list_owner_paging(Map<String, Object> map);
+
+    
     /**
      * 특정 사업자의 예약 수 조회
      * @param params
      * @return 예약 수
      */
-    int count_by_owner(int ownerno);
+    int count_by_owner(Map<String, Object> map);
 
-    /**
-     * 사업자별 예약 목록 조회 (페이징, 날짜 및 식당 필터 포함)
-     * @param params
-     * @return 예약 목록
-     */
-    ArrayList<ReserveDTO> list_owner_page(Map<String, Object> map);
+
     
     /**
      * 전체 예약 수 조회
      * @return 예약 수
      */
     int count_all();
+    
+    
 }

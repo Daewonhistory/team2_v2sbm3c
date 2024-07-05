@@ -89,4 +89,9 @@ public interface RestaurantDAOInter {
   public int update(RestFullData restFullData);
 
   public int update_map(RestFullData restFullData);
+  
+  
+
+
+  
 }

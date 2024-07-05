@@ -458,6 +458,14 @@ public class RestaurantCont {
       
       return "restaurant_page";
   }
+  
+  @GetMapping("/list_by_owner")
+  public String listByOwner(HttpSession session, Model model) {
+    int ownerno = (int) session.getAttribute("ownerno");
+    ArrayList<RestDTO> restaurantList = restaurantProc.list_by_ownerno(ownerno);
+    model.addAttribute("restaurantList", restaurantList);
+    return "restaurant/list_by_owner";
+  }
 
 
 

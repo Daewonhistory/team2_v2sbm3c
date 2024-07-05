@@ -190,6 +190,7 @@ public class RestaurantProC implements RestaurantProInter {
   public Integer foreign(int ownerno) {
     return this.restDAO.foreign(ownerno);
   }
+  
 
   @Override
   public int next(String businessno) {

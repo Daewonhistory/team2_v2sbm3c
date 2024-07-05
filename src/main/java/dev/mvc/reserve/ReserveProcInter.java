@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import dev.mvc.dto.ReserveDTO;
-import dev.mvc.reserve.ReserveVO;
+import dev.mvc.restaurant.RestaurantVO;
 
 public interface ReserveProcInter {
     /**
@@ -27,12 +27,6 @@ public interface ReserveProcInter {
      */
     ArrayList<ReserveVO> list_search_by_reserve_date(Map<String, Object> params);
     
-    /**
-     * 특정 식당의 예약 수 조회
-     * @param restno
-     * @return 예약 수
-     */
-    int count_by_restno(int restno);
     
     /**
      * 특정 고객의 예약 조회
@@ -56,23 +50,18 @@ public interface ReserveProcInter {
     ArrayList<ReserveDTO> list_reserve_paging(int now_page, int record_per_page);
     
     /**
-     * 특정 사업자의 예약 수 조회
-     * @param params
-     * @return 예약 수
-     */
-    int count_by_owner(int ownerno);
-
-    /**
-     * 사업자별 예약 목록 조회 (페이징, 날짜 및 식당 필터 포함)
+     * 사업자의 식당 예약 
+     * @param ownerno
      * @param now_page
      * @param record_per_page
-     * @param reserve_date
-     * @param ownerno
-     * @param restno
-     * @return 예약 목록
+     * @return
      */
-    ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date, int ownerno, int restno); // 수정된 메서드 시그니처    ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date, int ownerno, int restno);
+    ArrayList<ReserveDTO> list_owner_paging(int ownerno, String reserve_date,int now_page, int record_per_page);
     
+    int count_by_owner(int ownerno,String reserve_date);
+
+
+ 
     /**
      * 전체 예약 수 조회
      * @return 예약 수
@@ -89,4 +78,6 @@ public interface ReserveProcInter {
      * @return 페이징 HTML
      */
     String pagingBox(int now_page, String list_file, int total_count, int record_per_page, int page_per_block);
+
+    
 }

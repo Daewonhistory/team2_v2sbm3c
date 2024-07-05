@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.dto.ReserveDTO;
-import dev.mvc.dto.RestDTO;
+import dev.mvc.restaurant.RestaurantDAOInter;
+import dev.mvc.restaurant.RestaurantVO;
 
 @Service("reserveProc")
 public class ReserveProc implements ReserveProcInter {
 
     @Autowired
     private ReserveDAOInter reserveDAO;
+    
+    @Autowired
+    private RestaurantDAOInter restaurantDAO;
 
     @Override
     public int create(ReserveVO reserve) {
@@ -52,27 +56,34 @@ public class ReserveProc implements ReserveProcInter {
         map.put("end_num", end_num);
         return reserveDAO.list_reserve_paging(map);
     }
-
+    
     @Override
-    public ArrayList<ReserveDTO> list_owner_page(int now_page, int record_per_page, String reserve_date, int ownerno, int restno) {
+    public ArrayList<ReserveDTO> list_owner_paging(int ownerno, String reserve_date, int now_page, int record_per_page) {
         int begin_of_page = (now_page - 1) * record_per_page;
         int start_num = begin_of_page + 1;
         int end_num = begin_of_page + record_per_page;
 
         Map<String, Object> map = new HashMap<>();
+        map.put("ownerno", ownerno);
+        map.put("reserve_date", reserve_date);
         map.put("start_num", start_num);
         map.put("end_num", end_num);
-        map.put("reserve_date", reserve_date);
-        map.put("ownerno", ownerno);
-        map.put("restno", restno);
 
-        return reserveDAO.list_owner_page(map);
+        return reserveDAO.list_owner_paging(map);
     }
 
     @Override
-    public int count_by_owner(int ownerno) {
-        return reserveDAO.count_by_owner(ownerno);
+    public int count_by_owner(int ownerno, String reserve_date) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("ownerno", ownerno);
+        map.put("reserve_date", reserve_date);
+
+        return reserveDAO.count_by_owner(map);
     }
+    
+
+    
+
 
     @Override
     public int count_all() {
@@ -125,9 +136,8 @@ public class ReserveProc implements ReserveProcInter {
         return str.toString();
     }
 
-    @Override
-    public int count_by_restno(int restno) {
-        return reserveDAO.count_by_restno(restno);
-    }
+
+
+
     
 }

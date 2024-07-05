@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=yes, initial-scale=3.0, width=device-width" />
+    <title>사업자 예약 목록</title>
+    <link rel="shortcut icon" href="/images/shortcut.png" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<div layout:fragment="content">
+    <div>
+        <c:import url="/menu/top.do" />
+        <div class='title_line'>사업자 예약 목록</div>
+        <div class='menu_line'></div>
+        <div class="manager-user">
+            <form method="get" action="/reservation/list_owner_paging">
+                <input type="date" name="reserve_date" value="${reserve_date}">
+                <button type="submit">검색</button>
+            </form>
+            <table class="manager-user-list" style='width: 100%;'>
+                <colgroup>
+                    <col style='width: 10%;'/>
+                    <col style='width: 20%;'/>
+                    <col style='width: 10%;'/>
+                    <col style='width: 20%;'/>
+                    <col style='width: 20%;'/>
+                    <col style='width: 20%;'/>
+                </colgroup>
+                <tr class="manager-header">
+                    <th class='th_bs'>예약 번호</th>
+                    <th class='th_bs'>예약 날짜</th>
+                    <th class='th_bs'>인원수</th>
+                    <th class='th_bs'>고객 이름</th>
+                    <th class='th_bs'>식당 이름</th>
+                    <th class='th_bs'>수정/삭제</th>
+                </tr>
+                <tr th:if="${list.isEmpty()}" class="no-reservations-message">
+                    <td colspan="6" class="td_basic" style="text-align:center; font-size:20px; padding:20px;">
+                        예약된 일정이 없습니다
+                    </td>
+                </tr>
+                <tr class="manager-data" th:each="reserve : ${list}">
+                    <td class='td_basic' th:text="${reserve.reserveno}"></td>
+                    <td class='td_basic' th:text="${reserve.reserveDate}"></td> <!-- 수정된 부분 -->
+                    <td class='td_basic' th:text="${reserve.person}"></td>
+                    <td class='td_basic' th:text="${reserve.nickname}"></td>
+                    <td class='td_basic' th:text="${reserve.restname}"></td>
+                    <td class='td_bs'>
+                        <a th:href="@{|/reservation/update?reserveno=${reserve.reserveno}&now_page=${now_page}|}"><img src="/cate/images/update.png" class="icon"></a>
+                        <a th:attr="onclick=|delete_check_site(${reserve.reserveno}, ${now_page})|"><img src="/cate/images/delete.png" class="icon"></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="Bottom_menu" th:utext="${paging}"></div>
+    </div>
+    <script>
+        function delete_check_site(reserveno, now_page) {
+            if (confirm("정말 삭제하시겠습니까?") == true) { // 확인
+                let f = document.createElement('form');
+                let obj1 = document.createElement('input');
+                obj1.type = 'hidden';
+                obj1.name = 'reserveno';
+                obj1.value = reserveno;
+                let obj2 = document.createElement('input');
+                obj2.type = 'hidden';
+                obj2.name = 'now_page';
+                obj2.value = now_page;
+                f.appendChild(obj1);
+                f.appendChild(obj2);
+                f.setAttribute('method', 'post');
+                f.setAttribute('action', '/reservation/delete_site');
+                document.body.appendChild(f);
+                f.submit();
+            } else { // 취소
+                return;
+            }
+        }
+    </script>
+</body>
+</html>
