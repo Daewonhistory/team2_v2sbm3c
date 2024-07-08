@@ -76,7 +76,10 @@ public interface RestaurantDAOInter {
    * @return
    */
   public RestFullData readFullData(int restno);
-  
+
+  public RestFullData readFullDataOwner(Integer ownerno);
+
+
   public String test(String date);
   
   /**

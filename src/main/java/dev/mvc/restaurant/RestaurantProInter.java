@@ -123,6 +123,7 @@ public interface RestaurantProInter {
    */
   public int restaurantCount(Integer ownerno);
 
+  public RestFullData readFullDataOwner(Integer ownerno);
 
 }
 

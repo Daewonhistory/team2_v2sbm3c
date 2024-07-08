@@ -265,6 +265,11 @@ public class RestaurantProC implements RestaurantProInter {
     return this.restDAO.restaurantCount(ownerno);
   }
 
+  @Override
+  public RestFullData readFullDataOwner(Integer ownerno) {
+    return this.restDAO.readFullDataOwner(ownerno);
+  }
+
 
 }
 

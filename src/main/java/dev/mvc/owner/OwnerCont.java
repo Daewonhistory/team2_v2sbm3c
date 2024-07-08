@@ -150,16 +150,19 @@ public class OwnerCont {
   @GetMapping("/rest_create")
   public String create(Model model, RestaurantVO restaurantVO, HttpSession session) {
     String type = (String) session.getAttribute("type");
-    model.addAttribute("accessType", type);
-
-    ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
-    model.addAttribute("midAreaList",midAreaVOS);
 
 
-    if (type == null) {
-      return "redirect:/";
-    } else {
+
+
+    if (type.equals("Norest")) {
+      model.addAttribute("accessType", type);
+
+      ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
+      model.addAttribute("midAreaList",midAreaVOS);
       return "owner/rest_create";
+
+    } else {
+      return "redirect:/";
     }
 
   }
@@ -636,16 +639,15 @@ public class OwnerCont {
     }
   }
   @GetMapping("/restread")
-  public String restread(HttpSession session,Model model,  int restno) {
+  public String restread(HttpSession session,Model model) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
     if (type == "owner" ) {
       model.addAttribute("accessType", type);
-      RestFullData restFullData = this.restaurantProc.readFullData(restno);
+      RestFullData restFullData = this.restaurantProc.readFullDataOwner(ownerno);
       model.addAttribute("restFullData", restFullData);
       // 메뉴의 재료 목록
-
-
       return "owner/restread";
     } else {
       return "redirect:/";

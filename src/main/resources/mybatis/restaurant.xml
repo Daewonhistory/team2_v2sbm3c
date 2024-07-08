@@ -331,7 +331,26 @@
 		    WHERE re.restno = #{restno}
 		)
 	</select>
-
+	<select id="readFullDataOwner" parameterType="int" resultType="dev.mvc.dto.RestFullData">
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, image1,image2,image3
+		FROM(
+					SELECT re.restno, name, tel, grade, address, lat, lng, reserve_range, re.ownerno, categoryno, botareano, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
+					FROM restaurant re
+								 LEFT JOIN (
+						SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						FROM restimage
+					) ri1 ON re.restno = ri1.restno AND ri1.rn = 1
+								 LEFT JOIN (
+						SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						FROM restimage
+					) ri2 ON re.restno = ri2.restno AND ri2.rn = 2
+								 LEFT JOIN (
+						SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						FROM restimage
+					) ri3 ON re.restno = ri3.restno AND ri3.rn = 3
+					WHERE re.ownerno = #{ownerno}
+				)
+	</select>
 
 	<update id="update_map">
 		UPDATE restaurant
