@@ -657,14 +657,15 @@ public class OwnerCont {
 
 
   @GetMapping("/update_map")
-  public String update_map(Model model, int restno,HttpSession session) {
+  public String update_map(Model model,HttpSession session) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
     if (type == "owner" ) {
       model.addAttribute("accessType", type);
       ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
       model.addAttribute("midAreaList",midAreaVOS);
-      RestFullData restFullData = this.restaurantProc.readFullData(restno);
+      RestFullData restFullData = this.restaurantProc.readFullDataOwner(ownerno);
       model.addAttribute("restFullData", restFullData);
       // 메뉴의 재료 목록
 
@@ -685,7 +686,7 @@ public class OwnerCont {
       int count = restaurantProc.update_map(restFullData);
 
       if (count == 1) {
-        return "redirect:/owner/update_map?restno=" + restno;
+        return "redirect:/owner/update_map";
 
       } else {
         return "redirect:/";
@@ -702,15 +703,16 @@ public class OwnerCont {
   }
 
   @GetMapping("/update_imgs")
-  public String update_imgs(Model model, int restno,HttpSession session) {
+  public String update_imgs(Model model,HttpSession session) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
     if (type == null) {
       return "redirect:/";
     }
     model.addAttribute("accessType", type);
 
-    RestFullData restFullData = this.restaurantProc.readFullData(restno);
+    RestFullData restFullData = this.restaurantProc.readFullDataOwner(ownerno);
     model.addAttribute("restFullData", restFullData);
     // 메뉴의 재료 목록
 
@@ -1250,6 +1252,24 @@ public class OwnerCont {
 
     return ResponseEntity.ok((emailTool.checkAuthentication(emailAuthVO.getEmail(),emailAuthVO.getAuth())));
 
+  }
+  @PostMapping("/delete_rest")
+  public String delete_rest(HttpSession session,RedirectAttributes ra) {
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    if (ownerno == null) {
+      return "redirect:/";
+    }else  {
+      int count = this.restaurantProc.delete_rest(ownerno);
+
+      if (count == 1) {
+        session.setAttribute("type", "Norest");
+
+        ra.addFlashAttribute("cnt", 1);
+        return "redirect:/owner/restaurant";
+      } else {
+        return "redirect:/owner/restaurant";
+      }
+    }
   }
 }
 

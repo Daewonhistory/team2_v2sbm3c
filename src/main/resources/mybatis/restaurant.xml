@@ -351,7 +351,31 @@
 					WHERE re.ownerno = #{ownerno}
 				)
 	</select>
+  <!--	랭킹 조회 -->
+	<select id="ranking_rate_select">
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, image1, image2, image3,rate
+		FROM (
+					 SELECT re.restno, name, tel, grade, address, lat, lng, reserve_range, re.ownerno, categoryno, botareano,
+									ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, re.rate,
+									ROWNUM AS rnum
+					 FROM restaurant re
+									LEFT JOIN (
+						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						 FROM restimage
+					 ) ri1 ON re.restno = ri1.restno AND ri1.rn = 1
+									LEFT JOIN (
+						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						 FROM restimage
+					 ) ri2 ON re.restno = ri2.restno AND ri2.rn = 2
+									LEFT JOIN (
+						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						 FROM restimage
+					 ) ri3 ON re.restno = ri3.restno AND ri3.rn = 3
+					 WHERE re.rate > 0
+					 ORDER BY re.rate DESC
+				 )
 
+	</select>
 	<update id="update_map">
 		UPDATE restaurant
 		SET address = #{address} , lng = #{lng} , lat = #{lat} , botareano = #{botareano}
@@ -363,4 +387,9 @@
 		SET name = #{name} , categoryno = #{categoryno} , reserve_range = #{reserve_range} , tel = #{tel}
 		WHERE restno = #{restno}
 	</update>
+
+	<delete id="delete_rest">
+		DELETE FROM restaurant
+		WHERE ownerno = #{ownerno}
+	</delete>
 </mapper>
