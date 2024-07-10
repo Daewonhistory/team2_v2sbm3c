@@ -32,6 +32,12 @@ public interface RestaurantDAOInter {
   
   public ArrayList<RestDTO> list_by_ownerno(int ownerno);
 
+  /**
+   * 랭킹 조회
+   * @return
+   */
+  public ArrayList<RestFullData> ranking_rate_select();
+
   public Integer foreign(int ownerno);
 
   public int next(String businessno);
@@ -47,6 +53,9 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestaurantVO> list_all();
+
+
+
   
   /**
    * 식당 정보 조회
@@ -77,7 +86,10 @@ public interface RestaurantDAOInter {
    * @return
    */
   public RestFullData readFullData(int restno);
-  
+
+  public RestFullData readFullDataOwner(Integer ownerno);
+
+
   public String test(String date);
   
   /**
@@ -103,4 +115,6 @@ public interface RestaurantDAOInter {
   
   // updateRate 메서드 추가
   public int updateRate(Map<String, Object> map);
+
+  public int delete_rest(Integer ownerno);
 }

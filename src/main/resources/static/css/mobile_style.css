@@ -404,3 +404,68 @@ height: 400px;
 .star-rating input:checked ~ label ~ label {
   color: #f5c518;
 }
+
+
+#wrap-horizontal {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+  cursor: grab;
+}
+
+/* 스크롤바 숨기기 */
+#wrap-horizontal::-webkit-scrollbar {
+  display: none;
+}
+#wrap-horizontal {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.image-container {
+  display: inline-block;
+  margin: 10px;
+  scroll-snap-align: start;
+}
+
+.restinfo {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.stars {
+  position: relative;
+  display: inline-block;
+  font-size: 0;
+}
+
+.stars::before {
+  content: '★★★★★';
+  font-size: 20px;
+  color: #ddd;
+}
+
+.full-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #f5c518;
+  font-size: 20px;
+}
+
+.full-stars::before {
+  content: '★★★★★';
+}
+
+.rest-area {
+  display: block;
+  margin-top: 5px;
+}
+.ranking {
+  font-size: 16px;
+  font-weight: bold;
+  color: red; /* 순위 색상 */
+}

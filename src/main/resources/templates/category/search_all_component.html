@@ -3,8 +3,8 @@
 
 
 
-
-  <table class="table table-striped" >
+  <div class="manager-user">
+    <table class="manager-user-list" >
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 15%;'/>
@@ -15,7 +15,7 @@
       <col style='width: 10%;'/>
     </colgroup>
     <thead>
-    <tr>
+    <tr class="manager-header">
       <th class="th_bs">선택</th>
       <th class="th_bs">번호</th>
       <th class="th_bs">중분류</th>
@@ -32,7 +32,7 @@
 
 
     <!-- Iterate over your data -->
-    <tr th:each="categoryVO,status : ${searchlist}">
+    <tr class="manager-data" th:each="categoryVO,status : ${searchlist}">
       <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${categoryVO.categoryno}"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
       <td hidden="hidden" class="td_bs" th:text="${categoryVO.categoryno}" id="categoryno"></td>
@@ -318,7 +318,7 @@
       }
   </script>
 
-
+  </div>
 <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="Bottom_menu" th:utext="${paging}"></div>
 </div>

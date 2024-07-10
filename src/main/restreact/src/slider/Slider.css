@@ -1,0 +1,50 @@
+#section1 {
+  height: 400px;
+}
+
+#section1 h2 {
+  height: 15%;
+  margin: 0;
+}
+
+#wrap-vertical {
+  height: 85%;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.image-container {
+  display: inline-block;
+  height: 70%;
+}
+
+.image-container img {
+  height: 100%;
+}
+
+#wrap-vertical::-webkit-scrollbar {
+  display: none;
+}
+
+#wrap-horizontal {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+  cursor: grab;
+}
+
+#wrap-horizontal::-webkit-scrollbar {
+  display: none;
+}
+
+#wrap-horizontal {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.image-container {
+  display: inline-block;
+  margin: 10px;
+  scroll-snap-align: start;
+}

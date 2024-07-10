@@ -1,6 +1,7 @@
 package dev.mvc.team2;
 
 
+import dev.mvc.category.Category;
 import dev.mvc.customer.Customer;
 import dev.mvc.owner.Owner;
 import dev.mvc.restaurant.Restaurant;
@@ -31,6 +32,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         registry.addResourceHandler("/review/storage/**").addResourceLocations("file:///" +  Review.getUploadDir());
         registry.addResourceHandler("/owner/storage/**").addResourceLocations("file:///" + Owner.getUploadDir());
         registry.addResourceHandler("/customer/storage/**").addResourceLocations("file:///" + Customer.getUploadDir());
+        registry.addResourceHandler("/category/storage/**").addResourceLocations("file:///" + Category.getUploadDir());
         registry.addResourceHandler("/main/storage/**").addResourceLocations("file:///C:\\\\kd\\\\deploy\\\\team2_v2sbm3c\\\\main\\\\storage\\\\");
 
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";

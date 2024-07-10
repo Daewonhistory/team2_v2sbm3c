@@ -29,6 +29,9 @@ public interface CategoryProcInter {
 
   public ArrayList<CategoryVO> list_by_categoryno(Integer categoryno );
 
+
+  public int category_nextval();
+
   /**
    * 기능:카테고리 ID를 기준으로 카테고리를 검색합니다.
    *

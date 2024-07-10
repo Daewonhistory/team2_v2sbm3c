@@ -28,6 +28,12 @@ public interface RestaurantProInter {
   public ArrayList<RestDTO> list_search_paging(String word, String type, int now_page, int record_per_page);
 
 
+  /**
+   * 랭킹 조회
+   * @return
+   */
+  public ArrayList<RestFullData> ranking_rate_select();
+
 
   public int update_map(RestFullData restFullData);
 
@@ -127,6 +133,10 @@ public interface RestaurantProInter {
   
 //updateRate 메서드 추가
   public int updateRate(int restno, float avgRate);
+
+  public RestFullData readFullDataOwner(Integer ownerno);
+
+  public int delete_rest(Integer ownerno);
 
 
 }

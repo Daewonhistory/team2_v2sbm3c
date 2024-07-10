@@ -101,6 +101,11 @@ public class RestaurantProC implements RestaurantProInter {
   }
 
   @Override
+  public ArrayList<RestFullData> ranking_rate_select() {
+    return this.restDAO.ranking_rate_select();
+  }
+
+  @Override
   public int update_map(RestFullData restFullData) {
     return this.restDAO.update_map(restFullData);
   }
@@ -277,6 +282,16 @@ public class RestaurantProC implements RestaurantProInter {
       map.put("restno", restno);
       map.put("avg_rate", avgRate);
       return restDAO.updateRate(map);
+  }
+
+  @Override
+  public RestFullData readFullDataOwner(Integer ownerno) {
+    return this.restDAO.readFullDataOwner(ownerno);
+  }
+
+  @Override
+  public int delete_rest(Integer ownerno) {
+    return this.restDAO.delete_rest(ownerno);
   }
 
 
