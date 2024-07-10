@@ -270,6 +270,14 @@ public class RestaurantProC implements RestaurantProInter {
   public int restaurantCount(Integer ownerno) {
     return this.restDAO.restaurantCount(ownerno);
   }
+  
+  @Override
+  public int updateRate(int restno, float avgRate) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("restno", restno);
+      map.put("avg_rate", avgRate);
+      return restDAO.updateRate(map);
+  }
 
 
 }

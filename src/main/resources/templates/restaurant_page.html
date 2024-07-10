@@ -27,14 +27,6 @@
             display: flex;
             align-items: center;
         }
-
-        .star-icon {
-            width: 24px;
-            height: 24px;
-            background-image: url('/images/star.jpg');
-            background-size: cover;
-            margin-right: 5px;
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -69,7 +61,7 @@
                 <img id="favorite-img" th:data-is-favorited="${isFavorited}" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" class="favorite-icon" />
             </div>
             <div>
-                <div class="star-icon"></div>
+                <img src="star" alt="별이미지">
                 <span id="avg_rate" th:text="${rateDisplay}"></span>
             </div>
         </section>

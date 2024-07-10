@@ -1,13 +1,12 @@
 package dev.mvc.restaurant;
 
-import dev.mvc.category.CategoryVO;
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.springframework.data.repository.query.Param;
+
 import dev.mvc.dto.RestDTO;
 import dev.mvc.dto.RestFullData;
-import dev.mvc.owner.OwnerVO;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public interface RestaurantDAOInter {
 
@@ -92,6 +91,8 @@ public interface RestaurantDAOInter {
   public int update(RestFullData restFullData);
 
   public int update_map(RestFullData restFullData);
+  
+
 
   /**
    * 사업자 식당 여부 메소드
@@ -99,4 +100,7 @@ public interface RestaurantDAOInter {
    * @return
    */
   public int restaurantCount(Integer ownerno);
+  
+  // updateRate 메서드 추가
+  public int updateRate(Map<String, Object> map);
 }

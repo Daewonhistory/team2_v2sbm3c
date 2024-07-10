@@ -352,4 +352,12 @@
 		WHERE restno = #{restno}
 	</update>
 	
+    <update id="updateRate">
+        UPDATE restaurant
+        SET rate = #{avg_rate}
+        WHERE restno = #{restno}
+    </update>
+	
+	
+	
 </mapper>

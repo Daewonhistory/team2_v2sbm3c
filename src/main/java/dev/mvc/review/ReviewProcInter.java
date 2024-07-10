@@ -87,7 +87,8 @@ public interface ReviewProcInter {
    * @param restno
    * @return
    */
-  Float avg_Rate(int restno);
+  public Float avg_Rate(int restno);
+  
   
 
   

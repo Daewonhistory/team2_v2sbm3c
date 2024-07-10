@@ -89,7 +89,9 @@ public interface ReviewDAOInter {
    * @param restno
    * @return
    */
-  Float avg_Rate(int restno);
+  public float avg_Rate(@Param("restno") int restno);
+  
+  
   
 
   

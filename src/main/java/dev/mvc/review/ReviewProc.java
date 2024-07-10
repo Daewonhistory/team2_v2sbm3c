@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.dto.ReviewDTO;
+import dev.mvc.restaurant.RestaurantDAOInter;
 import dev.mvc.review_like.Review_likeProcInter;
 import dev.mvc.reviewimg.ReviewImgProcInter;
 
@@ -21,6 +22,9 @@ public class ReviewProc implements ReviewProcInter {
     @Autowired
     @Qualifier("dev.mvc.reviewimg.ReviewImgProc")
     ReviewImgProcInter reviewimgproc;  
+    
+    @Autowired
+    private RestaurantDAOInter restaurantDAO;
     
 
     @Autowired
@@ -204,7 +208,7 @@ public class ReviewProc implements ReviewProcInter {
     public Float avg_Rate(int restno) {
       return this.reviewDAO.avg_Rate(restno);
     }
-
+    
  }
 
 

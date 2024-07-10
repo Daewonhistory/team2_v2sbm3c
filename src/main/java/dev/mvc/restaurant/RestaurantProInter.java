@@ -124,6 +124,9 @@ public interface RestaurantProInter {
    * @return
    */
   public int restaurantCount(Integer ownerno);
+  
+//updateRate 메서드 추가
+  public int updateRate(int restno, float avgRate);
 
 
 }
