@@ -3,8 +3,8 @@
     
       <input type="text" name="word" id="word" th:value="${word}" >
       <input type="hidden" name="now_page" th:value="${now_page}">
-      <button type='button' onclick="send()" class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>  
-      <button type='button' th:onclick="|location.href='/menu/list_search_paging?restno=0&word='|"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
+      <button type='button' onclick="search()" class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>  
+      <button type='button' onclick="searchCancel()"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
 
   </div>
 </div>

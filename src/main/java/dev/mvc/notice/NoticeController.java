@@ -1,6 +1,7 @@
 package dev.mvc.notice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.menu.Menu;
+import dev.mvc.menu.MenuResponse;
+import dev.mvc.menu.MenuVO;
 import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.restaurant.RestaurantVO;
 import jakarta.servlet.http.HttpSession;
@@ -29,7 +33,7 @@ public class NoticeController {
 	
 	@Qualifier("dev.mvc.restaurant.RestaurantProc")
 	@Autowired
-	private RestaurantProInter restaurantPro;
+	private RestaurantProInter restaurantProc;
 	
 	@GetMapping("/create")
 	public String create(Model model, HttpSession session) {
@@ -37,8 +41,8 @@ public class NoticeController {
 		System.out.println("type:" + accessType);
 		if(accessType!=null && accessType.equals("owner")) {	// 사업자 접속
 			int ownerno = (int) session.getAttribute("ownerno");
-			ArrayList<RestaurantVO> restList = this.restaurantPro.findByOwnerR(ownerno);
-			int restno;
+			ArrayList<RestaurantVO> restList = this.restaurantProc.findByOwnerR(ownerno);
+			int restno = 0;
 			System.out.println("size=>" + restList.size());
 			if(restList.size() >= 1) {
 				restno = restList.get(0).getRestno();
@@ -48,46 +52,78 @@ public class NoticeController {
 				return "/notice/msg";
 			}
 		}else {	//관리자 접속
-			
+		  ArrayList<RestaurantVO> restList = this.restaurantProc.list_all();
+		  model.addAttribute("restList", restList);
 		}
+		model.addAttribute("accessType", accessType);
 		return "/notice/create";
 	}
 	
 	@PostMapping("/create")
 	public String createProc(Model model, NoticeVO noticeVO) {
-		int cnt = this.noticeProc.create(noticeVO);
-		if(cnt > 0) {
-			return "redirect:/notice/list";
-		}else {
-			return "redirect:/notice/msg";
-		}
+	  System.out.println(noticeVO.getRestno());
+	  int cnt = this.noticeProc.create(noticeVO);
+	  if(cnt > 0) {
+	    return "redirect:/notice/list";
+	  }else {
+	    return "redirect:/notice/msg";
+	  }
 		
 	}
 	
 	@GetMapping("/list")
 	public String list(Model model, HttpSession session) {
-		String accessType = (String) session.getAttribute("type");
-		System.out.println("type=>" + accessType);
-		ArrayList<NoticeVO> noticeList;
-		if(accessType!=null && accessType.equals("owner")) {
-			int ownerno = (int) session.getAttribute("ownerno");
-			ArrayList<RestaurantVO> restList = this.restaurantPro.findByOwnerR(ownerno);
-			if(restList.size() >= 1) {
-				int restno = restList.get(0).getRestno();
-				noticeList = this.noticeProc.list_by_restno(restno);
-				model.addAttribute("restVO", restList.get(0));
-			}else {
-				model.addAttribute("code", "not_created_restaurant");
-				return "/notice/msg";
-			}
-		}else {
-			noticeList = this.noticeProc.list_all();
-		}
-		
-		model.addAttribute("noticeList", noticeList);
-		
-		return "/notice/list";
+	  String accessType = (String) session.getAttribute("type");
+      
+      int restno = 0;
+      ArrayList<RestaurantVO> RestList = null;
+      int ownerno = 0;
+      if (accessType == null) { // 관리자 접속
+          System.out.println("admin");
+          RestList = this.restaurantProc.list_all();
+          ownerno = 0;
+          
+      }else if(accessType.equals("owner")) {  // 사업자 접속
+          ownerno = (int)session.getAttribute("ownerno");
+          System.out.println("Owner" + ownerno);
+          RestList = this.restaurantProc.findByOwnerR(ownerno);
+          System.out.println("ownerRestList"+ RestList.size());
+      }else {
+          return "redirect:/";
+      }
+      model.addAttribute("accessType", accessType);
+      model.addAttribute("RestList", RestList);
+
+      return "/notice/list";
 	}
+	
+//	@PostMapping("/list")
+//	@ResponseBody
+//	public ResponseEntity<Map<String, Object>> list(@RequestBody Map<String, Object> requestBody){
+//	  String word = ((String) requestBody.get("word")).trim();
+//      System.out.println("-> searchword:" + word);
+//      String strRestno = (String) requestBody.get("restno");
+//      int restno = Integer.parseInt(strRestno);
+//      System.out.println("-> restno:" + restno);
+//      int nowPage = (int)requestBody.get("now_page");
+//      System.out.println("-> nowPage:" + nowPage);
+//      
+//      HashMap<String, Object> map = new HashMap<String, Object>();
+//      map.put("word", word);
+//      map.put("restno", restno);
+//      map.put("now_page", nowPage);
+//      ArrayList<NoticeVO> list = this.noticeProc.list_search_paging(map);
+//
+//      int search_count = this.noticeProc.list_by_restno_search_count(map);
+//      System.out.println("search_count:" + search_count);
+//      Map<String,Object> response = new HashMap<String, Object>();
+//      String paging = this.noticeProc.pagingBox(nowPage, word, search_count, Notice.RECORD_PER_PAGE, Notice.PAGE_PER_BLOCK);
+//      response.put("noticeList", list);
+//      response.put("paging", paging);
+//
+//	  
+//	  return new ResponseEntity<>(response, HttpStatus.OK);
+//	}
 	
 	@GetMapping("/read")
 	public String read(Model model, int noticeno) {

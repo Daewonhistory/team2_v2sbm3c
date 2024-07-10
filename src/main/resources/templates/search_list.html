@@ -34,9 +34,9 @@
 			<button type="button" class="timebutton" onclick="selectTime(22, this)">22:00</button>
 			<button type="button" class="timebutton" onclick="selectTime(23, this)">23:00</button>					
 		</div>
-		<input type="text" id="selected_time" name="time" th:value="${time}" onchange="searchRestaurant()">
+		<input type="hidden" id="selected_time" name="time" th:value="${time}" onchange="searchRestaurant()">
 		<input type="hidden" id="categoryno" th:value="${categoryno}">
-		<input type="text" id="botareas" th:value="${botarea}">
+		<input type="hidden" id="botareas" th:value="${botarea}">
 		<input type="hidden" id="min_price" th:value="${min_price}">
 		<input type="hidden" id="max_price" th:value="${max_price}">
 		

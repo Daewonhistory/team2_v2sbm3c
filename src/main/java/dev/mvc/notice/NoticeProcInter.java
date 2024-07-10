@@ -42,4 +42,6 @@ public interface NoticeProcInter {
 	 * @return
 	 */
 	public int delete(int noticenno);
+	
+	public String pagingBox(int now_page, String word, int search_count, int record_per_page, int page_per_block);
 }

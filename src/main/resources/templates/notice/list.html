@@ -2,7 +2,7 @@
 
 <html layout:decorate="~{layout}">
   <!-- layout.html 상속-->
-
+  
   <div layout:fragment="content">
     <div class="title_line">
       <span th:text="${restVO?.name}" class="title_line_text"></span>
@@ -12,49 +12,132 @@
       <span class="menu_divide">│</span>
       <a th:href="@{|/notice/create|}">등록</a>
     </aside>
-
+    <select id="restno" onchange="search()">
+      <option th:if="${accessType==null || !accessType.equals('owner')}" value="0">전체 식당</option>
+      <option
+        th:each="restaurantVO, status : ${restList}"
+        th:value="${restaurantVO.restno}"
+        th:text="${restaurantVO.name}"
+      ></option>
+    </select>
     <div class="menu_line"></div>
 
-    <table style="width: 100%;">
-      <colgroup>
-        <col style="width: 30%" />
-        <col style="width: 60%" />
-        <col style="width: 10%" />
-      </colgroup>
-      <tbody id="tbody">
-        <tr>
-          <th class="th_bs">제목</th>
-          <th class="th_bs">내용</th>
-          <th class="th_bs">수정 / 삭제</th>
-        </tr>
-        <tr th:each="noticeVO, status : ${noticeList}">
-          <td class="td_basic">
-            <a th:href="|/notice/read?noticeno=${noticeVO.noticeno}|">
-            	<span th:text="${noticeVO.title}"></span>
-            </a>
-          </td>
-          <td class="td_basic">
-          	<a th:href="|/notice/read?noticeno=${noticeVO.noticeno}|">
-          		<span th:if="${noticeVO.content.length() <= 100}" th:text="${noticeVO.content}"></span>
-            	<span th:if="${noticeVO.content.length() > 100}" th:text="|${noticeVO.content.substring(0, 100)}...|"></span>
-          	</a>
-          </td>
+    <div class="manager-user">
+      <table class="manager-user-list">
+        <colgroup>
+          <col style="width: 10%" />
+          <col style="width: 10%" />
+          <col style="width: 20%" />
+          <col style="width: 50%" />
+          <col style="width: 10%" />
+        </colgroup>
+        <thead>
+          <tr class="manager-header">
+            <th class='th_bs'>공지번호</th>
+            <th class='th_bs'>레스토랑번호</th>
+            <th class='th_bs'>제목</th>
+            <th class='th_bs'>내용</th>
+            <th class='th_bs'>수정 / 삭제</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
           
-          <td class="td_bs">
-            <a
-              th:href="@{|/notice/update?noticeno=${noticeVO.noticeno}|}"
-            >
-              <img src="/cate/images/update.png" class="icon" />
-            </a>
-            <a
-              th:onclick="@{|delete_check(${noticeVO.noticeno})|}"
-            >
-              <img src="/cate/images/delete.png" class="icon" />
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
+    <div id="bottom"></div>
+    <script>
+      let now_page_value = 1;
+      window.onload = function () {
+        console.log("Page is fully loaded");
+        send();
+        now_page_value = parseInt(document.querySelector("#now_page").dataset.page);
+      };
+      function search() {
+        now_page_value = 1;
+        send();
+      }
+      
+      // 페이지 이동
+      function pageMove(movePage) {
+        now_page_value = parseInt(movePage.dataset.page);
+        send();
+      }
+      
+      function pageGrpMove(movePage){
+        now_page_value = parseInt(movePage.dataset.page);
+        send();
+      }
+      
+      function send() {
+        const word = document.getElementById("word");
+        const restno = document.getElementById("restno");
+        const bottom = document.getElementById("bottom");
+        bottom.innerHTML = "";
+        
+        if (now_page_value == null){
+          now_page_value = 1;
+        }
+        fetch(
+          "/notice/list",
+          {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+          "word": word.value,
+          "now_page": now_page_value,
+          "restno": restno.value
+          })
+          }
+        )
+          .then((response) => response.json())
+          .then((rdata) => {
+            const resultBody = document.getElementById("tbody");
+            resultBody.innerHTML = ``;
+            const bottommenu = document.createElement("div");
+            rdata.noticeList.forEach((noticeVO) => {
+              const row = document.createElement("tr");
+              row.classList.add("manager-data");
+              row.innerHTML = `
+                  <td class="td_basic" onclick="location.href='/notice/read?noticeno=${
+                    noticeVO.noticeno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${noticeVO.noticeno}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    noticeVO.noticeno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${noticeVO.restno}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    noticeVO.noticeno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${noticeVO.title}</span>
+                  </td>
+                  <td class="td_basic" onclick="location.href='/menu/read?menuno=${
+                    noticeVO.noticeno
+                  }&word=${word.value}&now_page=${now_page_value}'">
+                      <span>${noticeVO.content}</span>
+                  </td>
+                  <td class="td_bs">
+                      <a href="/notice/update?noticeno=${noticeVO.noticeno}">
+                          <img src="/cate/images/update.png" class="icon">
+                      </a>
+                      <a onclick="delete_check(${noticeVO.noticeno})">
+                          <img src="/cate/images/delete.png" class="icon">
+                      </a>
+                  </td>
+                `;
+
+              resultBody.appendChild(row);
+            });
+
+            bottommenu.innerHTML = rdata.paging;
+
+            bottom.appendChild(bottommenu);
+          });
+      }
+    </script>
 
 
     <script>

@@ -11,18 +11,34 @@
   	<div id="rest-list-container">
   	</div>
   </div>
+  <script src="/js/today.js"></script>
 	<script>
 	window.onload = () => {
 		if (navigator.geolocation) {
-	
+	   alert('위치조회에 성공했습니다.')
 			// GeoLocation을 이용해서 접속 위치를 얻어옵니다
 			navigator.geolocation.getCurrentPosition(function(position) {
 				
 				currentLat = position.coords.latitude; // 위도
 				currentLng = position.coords.longitude; // 경도
+				const test = document.createElement('span');
+				test.innerHTML = currentLat + ' ' + currentLng;
+				document.querySelector('#rest-container').appendChild(test);
 				map.setCenter(new kakao.maps.LatLng(currentLat, currentLng));
-			});
+			},
+      function(error) {
+        // 오류 처리
+        
+        alert('위치 정보를 가져오는데 실패했습니다.');
+      },
+      {
+        enableHighAccuracy: true, // 높은 정확도 요청
+        timeout: 5000, // 5초 내에 위치 정보 요청
+        maximumAge: 0 // 캐시된 위치 정보 사용 안 함
+      }
+      );
 		} else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+		  console.log('위치조회에 실패했습니다.')
 			currentLat = 37.9699349; // 위도
 			currentLng = 127.3260396; // 경도
 			map.setCenter(new kakao.maps.LatLng(currentLat, currentLng));
@@ -42,29 +58,7 @@
 	var geocoder = new kakao.maps.services.Geocoder();
 
 // 주소로 좌표를 검색합니다
-geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
-
-    // 정상적으로 검색이 완료됐으면 
-     if (status === kakao.maps.services.Status.OK) {
-		console.log(result[0].y, result[0].x)
-        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: coords
-        });
-
-        // 인포윈도우로 장소에 대한 설명을 표시합니다
-        var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
-        });
-        infowindow.open(map, marker);
-
-        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-        map.setCenter(coords);
-    } 
-});    
+  
 	let markers = [];
 	let openInfoWindow;
 	
@@ -92,7 +86,7 @@ geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function
 	        position: position
 	    });
 	    
-	    let url = `/restaurant/main_page?restno=${restaurantVO.restno}&persno=2&date=2024-06-17`;
+	    let url = `/restaurant/main_page?restno=${restaurantVO.restno}&persno=2&date=` + getTodayDate();
 	    let src = `/restaurant/storage/${restaurantVO.image1}`;
 			// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
 			let iwContent = `
@@ -128,7 +122,7 @@ geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function
 	function moveRestaurant(event){
 		let inputs = event.currentTarget.querySelector('input');
 		let restno = inputs.value;
-		location.href = "/restaurant/main_page?restno=" + restno + "&person=2&date=2024-06-21";
+		location.href = "/restaurant/main_page?restno=" + restno + "&person=2&date=" + getTodayDate();
 	}
 	function coordinateSearchList(){
 		console.log("1111");

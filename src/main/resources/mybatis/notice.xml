@@ -22,6 +22,54 @@
 		WHERE restno = #{restno}
 		ORDER BY noticeno ASC
 	</select>
+	
+	<select id="list_search_paging" resultType="dev.mvc.menu.MenuVO" parameterType="HashMap">
+    SELECT noticeno, title, content, restno, restname, r
+    FROM (
+        SELECT noticeno, title, content, restno, restname, rownum as r
+        FROM (
+          SELECT noticeno, title, content, notice.restno as restno, rest.name as restname
+          FROM notice
+          INNER JOIN restaurant rest
+          ON menu.restno = rest.restno
+          <if test="restno != 0">
+          AND rest.restno = #{restno}
+          </if>
+          <if test="word != null and word != ''">
+          WHERE UPPER(menu.name) LIKE '%' || UPPER(#{word}) || '%'
+          </if>
+          ORDER BY menuno DESC
+      )
+  )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+	
+	<!-- 관리자(restno=0) 사업자 구분-->
+  <select id="list_by_restno_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM notice
+    WHERE restno IS NOT NULL
+    <choose>
+    <when test="restno != 0">
+       AND restno = #{restno}
+       <if test="word != null and word != ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+          AND UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+       </if>
+    </when>
+    <otherwise>
+      <if test="word != null and word != ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+          WHERE UPPER(name) LIKE '%' || UPPER(#{word}) || '%'
+      </if>
+    </otherwise>
+    </choose>
+    
+    
+  </select>
+	
 	<update id="update" parameterType="dev.mvc.notice.NoticeVO">
 		UPDATE notice
 		SET title=#{title}, content = #{content}

@@ -15,8 +15,8 @@
     </div>
     <div>
       <form name="frm">
-        <select id="restno" onchange="send()">
-          <option th:if="${type==null || !type.equals('owner')}" value="0">전체 식당</option>
+        <select id="restno" onchange="search()">
+          <option th:if="${accessType==null || !accessType.equals('owner')}" value="0">전체 식당</option>
           <option
             th:each="restaurantVO, status : ${RestList}"
             th:value="${restaurantVO.restno}"
@@ -56,7 +56,7 @@
 	      </tbody>
 	    </table>
 		</div>
-    <div id="bottom" th:utext="${paging}"></div>
+    <div id="bottom"></div>
 	<script>
 	let now_page_value = 1;
     window.onload = function () {
@@ -80,15 +80,20 @@
       now_page_value = 1;
       send();
     }
-    
+    function searchCancel() {
+      now_page_value = 1;
+      const word = document.getElementById("word");
+      word.value = '';
+      send();
+    }
     // 페이지 이동
     function pageMove(movePage) {
-      now_page_value =  parseInt(movePage.dataset.page);
+      now_page_value = parseInt(movePage.dataset.page);
       send();
     }
     
-    function pageGrpMove(movePageGrp){
-	  	now_page_value =  parseInt(movePage.dataset.page);
+    function pageGrpMove(movePage){
+	  	now_page_value =parseInt(movePage.dataset.page);
       send();
   	}
     function send() {
