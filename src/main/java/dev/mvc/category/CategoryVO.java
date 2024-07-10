@@ -3,6 +3,7 @@ package dev.mvc.category;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 //list_all TABLE CATE(
 //    CATENO                            NUMBER(10)     NOT NULL    PRIMARY KEY,
@@ -26,11 +27,18 @@ public class CategoryVO {
   /**
    * 카테고리 이름
    */
-  @NotEmpty(message = "중분류명은 필수 입력 항목입니다.")
-  @Size(min = 2, max = 10, message = "중분류명의 입력 글자 수는 최소 2자에서 10자 이어야합니다.")
-  private String name;
+
+  private String name ="";
+
+  private String image = "";
+  private String thumb = "";
+  private Integer seq;
+
+  private String visible = "";
+  private String reg_date = "";
 
 
+  private MultipartFile file1MF;
 
 
 }

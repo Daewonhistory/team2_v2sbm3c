@@ -7,19 +7,25 @@
 
     <!--  C - 생성   -->
     <insert id="create" parameterType="dev.mvc.category.CategoryVO">
-        INSERT INTO category (categoryno, name)
-        VALUES (category_seq.nextval, #{name})
+        INSERT INTO category (categoryno, name,image,seq,visible,reg_date)
+        VALUES (category_seq.nextval, #{name},#{image},1,#{visible},sysdate)
 
     </insert>
 
     <!-- R - 리스트   -->
     <select id="list" resultType="dev.mvc.category.CategoryVO">
-        SELECT categoryno, name
+        SELECT categoryno, name,image,seq,visible,reg_date
         FROM category
     </select>
 
+    <select id="category_nextval">
+        SELECT category_seq.CURRVAL
+        FROM DUAL
+
+    </select>
+
     <select id="list_by_categoryno" resultType="dev.mvc.category.CategoryVO">
-        SELECT categoryno, name
+        SELECT categoryno, name,image,seq,visible,reg_date
         FROM category
         where categoryno = #{categoryno}
     </select>
@@ -30,10 +36,10 @@
     </select>
     <!-- R - 리스트 단일   -->
     <select id="read" parameterType="Integer" resultType="dev.mvc.category.CategoryVO">
-        SELECT cateno, name, namesub, cnt, rdate, seqno, visible
+        SELECT  categoryno, name,image,seq,visible,reg_date
         FROM category
-        WHERE cateno = #{cateno}
-        ORDER BY cateno ASC
+        WHERE categoryno = #{categoryno}
+        ORDER BY categoryno ASC
 
 
     </select>
@@ -41,7 +47,7 @@
 
     <!-- U - 수정-->
     <update id="update" parameterType="dev.mvc.category.CategoryVO">
-        UPDATE cate
+        UPDATE category
         SET name    = #{name},
             namesub = #{namesub},
             cnt     = #{cnt},

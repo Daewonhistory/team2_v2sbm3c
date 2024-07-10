@@ -1,0 +1,21 @@
+/* frontend/src/components/CategoryShortcut.css */
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-item {
+  width: 20%; /* 한 줄에 5개씩 배치하므로 20%로 설정 */
+  padding: 10px;
+  text-align: center;
+}
+
+.category-image {
+  margin-bottom: 5px;
+}
+
+.category-name {
+  font-size: 12px;
+}

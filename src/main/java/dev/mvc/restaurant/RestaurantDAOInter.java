@@ -31,6 +31,12 @@ public interface RestaurantDAOInter {
 
   public int list_search_count(Map<String, Object> search);
 
+  /**
+   * 랭킹 조회
+   * @return
+   */
+  public ArrayList<RestFullData> ranking_rate_select();
+
   public Integer foreign(int ownerno);
 
   public int next(String businessno);
@@ -46,6 +52,9 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestaurantVO> list_all();
+
+
+
   
   /**
    * 식당 정보 조회
@@ -100,4 +109,6 @@ public interface RestaurantDAOInter {
    * @return
    */
   public int restaurantCount(Integer ownerno);
+
+  public int delete_rest(Integer ownerno);
 }

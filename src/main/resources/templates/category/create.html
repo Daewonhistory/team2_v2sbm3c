@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div th:text="${fail}"></div>
+  <script th:inline="javascript">
+    fetch("/category/catelist", {
+      method: 'GET'
+    })
+        .then(response => response.json())
+        .then(rdata => {
+          const selectElement = document.getElementById('categoryno');
+          rdata.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.categoryno;
+            option.text = item.name;
+            selectElement.appendChild(option);
+          });
+        });
+  </script>
+
+  <div class="container">
+    <div class="form-container">
+      <div class="title_line">카테고리 등록(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" enctype="multipart/form-data" method="post" action="/category/create">
+
+
+
+        <div class="form-group">
+          <label for="name">카테고리 이름</label>
+          <input type="text" class="form-control" name="name" id="name" placeholder="카테고리 이름" required>
+        </div>
+
+        <div class="form-group">
+          <input type="file" class="form-control" name="file1MF" id="image" placeholder="이미지 선택" style="display: none">
+        </div>
+        <label>카테고리 이미지</label>
+        <div class="drop-zone" id="drop-zone">
+          여기에 사진을 드래그 앤 드롭 하세요 (최대 1개 업로드 가능)
+        </div>
+        <div class="preview" id="preview"></div>
+
+
+        <div class="form-group">
+          <label for="visible">노출 여부</label>
+          <select class="form-control" name="visible" id="visible">
+            <option value="Y">노출</option>
+            <option value="N">비노출</option>
+          </select>
+        </div>
+
+        <div class="form-group buttons">
+          <button type="submit" class="btn btn-primary" id="btn_send">등록</button>
+          <button type="button" class="btn btn-secondary" onclick="back()" id="btn_cancel">취소</button>
+        </div>
+      </form>
+
+      <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('image');
+        const preview = document.getElementById('preview');
+        let currentFile = null;
+
+        dropZone.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (event) => {
+          event.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+          dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+          event.preventDefault();
+          dropZone.classList.remove('dragover');
+          const files = Array.from(event.dataTransfer.files);
+          handleFile(files[0]);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          handleFile(file);
+        });
+
+        function handleFile(file) {
+          if (!file.type.startsWith('image/')) {
+            alert('이미지 파일만 업로드할 수 있습니다!');
+            return;
+          }
+
+          currentFile = file;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            preview.innerHTML = '';
+            const previewItem = document.createElement('div');
+            previewItem.classList.add('preview-item');
+            const img = document.createElement('img');
+            img.src = event.target.result;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.classList.add('remove-btn');
+            removeBtn.textContent = 'X';
+            removeBtn.addEventListener('click', () => {
+              preview.removeChild(previewItem);
+              currentFile = null;
+              updateFileInput();
+            });
+
+            previewItem.appendChild(img);
+            previewItem.appendChild(removeBtn);
+            preview.appendChild(previewItem);
+          };
+          reader.readAsDataURL(file);
+          updateFileInput();
+        }
+
+        function updateFileInput() {
+          const dataTransfer = new DataTransfer();
+          if (currentFile) {
+            dataTransfer.items.add(currentFile);
+          }
+          fileInput.files = dataTransfer.files;
+        }
+
+        function back() {
+          history.back();
+        }
+      </script>
+
+    </div>
+  </div>
+</div>
+</html>

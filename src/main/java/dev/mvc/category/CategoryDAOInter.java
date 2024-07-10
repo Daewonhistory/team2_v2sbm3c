@@ -131,5 +131,7 @@ public interface CategoryDAOInter {
 //  public int list_search_count(String word);
 
   public int list_search_count(Map<String, Object> search);
+
+  public int category_nextval();
 }
 

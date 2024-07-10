@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 
 import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -86,6 +88,13 @@ public class CategoryCont {
 //    }
 
   // 단일 조회
+
+  @GetMapping("/create")
+  public String create(CategoryVO categoryVO, Model model,HttpSession session) {
+
+
+    return "/category/create";
+  }
   @GetMapping("/read/{cateno}")
   public String read(Model model, @PathVariable int cateno, @RequestParam(name = "word", defaultValue = "") String word, @RequestParam(name = "type") String type, @RequestParam(defaultValue = "1") int now_page, HttpSession session) {
     String id = (String) session.getAttribute("id");
@@ -494,53 +503,50 @@ public class CategoryCont {
    * @param now_page
    * @return
    */
-  @PostMapping(value = "/create") //
-  public String create(Model model, HttpServletResponse response, @Valid CategoryVO categoryVO, BindingResult bindingResult, RedirectAttributes rttr, @RequestParam(name = "type", defaultValue = "100") String type, HttpSession session, @RequestParam(name = "word", defaultValue = "") String word, @RequestParam(defaultValue = "1") int now_page) {
+  @PostMapping("/create")
+  public String createProc(Model model, HttpSession session, RedirectAttributes redirectAttributes, CategoryVO categoryVO, RedirectAttributes ra) {
 
 
-    int count = this.categoryProc.list_search_count(word, type);
-    model.addAttribute("type", type);
-    model.addAttribute("word", word);
-    ArrayList<CategoryVO> list = this.categoryProc.list_search_paging(word, type, now_page, this.record_per_page);
 
-    int num = count - ((now_page - 1) * this.record_per_page);
-    model.addAttribute("num", num);
-    model.addAttribute("searchlist", list);
-    String paging = this.categoryProc.pagingBox(now_page, word, type, "/category/list", count, record_per_page, page_per_blcok);
-    model.addAttribute("paging", paging);
-    model.addAttribute("now_page", now_page);
-    model.addAttribute("count", count);
+      String upDir = Category.getUploadDir(); // 파일을 업로드할 폴더 준비
+      System.out.println("-> upDir: " + upDir);
 
-    model.addAttribute("num", num);
-    if (bindingResult.hasErrors()) {
-      response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-      response.setHeader("Pragma", "no-cache");
-      response.setHeader("Expires", "0");
-      rttr.addFlashAttribute("nameErrors", bindingResult.getFieldErrors("name"));
+      MultipartFile file = categoryVO.getFile1MF(); // 단일 파일만 처리
 
-      return "redirect:/category/search?word=" + Tool.encode(word) + "&type=" + Tool.encode(type) + "&now_page=" + now_page;
+      if (!file.isEmpty()) {
+        String originalFilename = file.getOriginalFilename();
+        if (Tool.checkUploadFile(originalFilename)) {
+          long size = file.getSize();
 
-    }
+          if (size > 0) {
+            String exe = originalFilename.split("\\.")[1];
+            int next_val = this.categoryProc.category_nextval();
+            String newFileName = "category_" +next_val + "." + exe;
+            String fileSaved = Upload.saveFileSpring(file, upDir, newFileName);
 
+            if (Tool.isImage(fileSaved)) {
 
-    int cnt = this.categoryProc.create(categoryVO);
-    model.addAttribute("cnt", cnt);
-    System.out.println("-> cnt: " + cnt);
+              categoryVO.setImage(fileSaved); // 저장된 파일명 설정
+              int count = this.categoryProc.create(categoryVO);
+              return "redirect:/category/list";
+            } else {
+              return "redirect:/category/create"; // 파일이 이미지가 아닐 경우 리다이렉트
+            }
+          } else {
+            return "redirect:/category/create"; // 파일 크기가 0일 경우 리다이렉트
+          }
+        } else {
+          ra.addFlashAttribute("cnt", 0);
+          ra.addFlashAttribute("code", "check_upload_file_fail");
+          ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
+          return "redirect:/category/msg";
+        }
+      }
 
-    if (cnt == 1) {
-      rttr.addFlashAttribute("create", "중분류: " + categoryVO.getName() + "" );
-//      model.addAttribute("code", "create_success");
-//      model.addAttribute("name", categoryVO.getName());
-//      model.addAttribute("namesub", categoryVO.getNamesub());
-      return "redirect:/category/search?word=" + Tool.encode(word) + "&type=" + Tool.encode(type) + "&now_page=" + now_page;
-
-    } else {
-      model.addAttribute("code", "create_fail");
-      return "cate/msg"; // /templates/category/msg.html
-    }
-
+      return "redirect:/category/list";
 
   }
+
 
   @GetMapping("/catelist")
 

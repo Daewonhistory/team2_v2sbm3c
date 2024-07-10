@@ -65,10 +65,43 @@
             <p class="card-text">카테고리: <span id="categoryname"></span></p>
             <p class="card-text">사업자 번호: <span th:text="${restDTO.ownerno}"></span></p>
             <div>
-              <a th:href="@{|/owner/restread?restno=${restDTO.restno}|}" style="color: whitesmoke;" class="btn btn-primary">상세 보기</a>
-              <a th:href="@{|./update_imgs?restno=${restDTO.restno}|}" style="color: whitesmoke;" class="btn btn-success">이미지 수정</a>
-              <a href="#"  style="color: whitesmoke;" class="btn btn-danger" th:attr="onclick=|deleterest('${restDTO.restno}','${restDTO.name}','${word}','${type}','${now_page}')|">삭제</a>
+              <a th:href="@{|/owner/restread|}" style="color: whitesmoke;" class="btn btn-primary">상세 보기</a>
+              <a th:href="@{|./update_imgs|}" style="color: whitesmoke;" class="btn btn-success">이미지 수정</a>
+              <a href="#" style="color: whitesmoke;" class="btn btn-danger" th:attr="onclick=|deleteRest('${restDTO.name}')|">삭제</a>
             </div>
+            <script>
+              function deleteRest(restName) {
+                if (confirm("정말 " + restName + "을(를) 삭제하시겠습니까?")) {
+                  // User confirmed the deletion
+
+
+                  fetch('/owner/delete_rest', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+
+                    },
+                    body: JSON.stringify({ name: restName })
+                  })
+                      .then(response => {
+                        if (response.ok) {
+                          alert(restName + "이(가) 삭제되었습니다.");
+                          location.reload(); // Refresh the page
+                          // Optionally, refresh the page or remove the item from the DOM
+                        } else {
+                          alert("삭제에 실패했습니다.");
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                        alert("삭제 중 오류가 발생했습니다.");
+                      });
+                } else {
+                  // User canceled the deletion
+                  alert("삭제가 취소되었습니다.");
+                }
+              }
+            </script>
           </div>
         </div>
       </div>

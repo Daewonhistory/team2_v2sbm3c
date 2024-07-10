@@ -39,6 +39,10 @@
             th:if="${index + i < categoryList.size()}" 
             th:text="${categoryList[index + i].name}" th:onclick="|selectCategory(${categoryList[index + i].categoryno})|"></td>
 		    	</tr>
+					<tr th:if="${categoryVO.image != null and (categoryVO.image.endsWith('jpg') or categoryVO.image.endsWith('JPG') or categoryVO.image.endsWith('png') or categoryVO.image.endsWith('PNG') or categoryVO.image.endsWith('gif'))}">
+						<!--/*@thymesVar id="certifi_image" type=""*/-->
+						<img th:src="@{|/category/storage/${categoryVO.image}|}" style="width: 50px; height: 50px;" >
+					</tr>
 		    </tbody>
         </table>
     </section>
@@ -78,34 +82,80 @@
         	
         </div>
     </section>
-    <section id="section1">
-        <h2>최고인기 식당</h2>
-        <div id="wrap-vertical">
-            <div class="image-container">
-            	<img src="/images/1.jpg" alt="Image 1">
-            	<div class="restinfo">
-            		식당명<br>평점:5.0<span class="rest-area">서울시 강남구</span>
-            	</div>
-            </div>
-            <div class="image-container">
-            	<img src="/images/1.jpg" alt="Image 1">
-            	<div class="restinfo">
-            		식당명<br>평점:5.0<span class="rest-area">서울시 강남구</span>
-            	</div>
-            </div>
-            <div class="image-container">
-            	<img src="/images/1.jpg" alt="Image 1">
-            	<div class="restinfo">
-            		식당명<br>평점:5.0<span class="rest-area">서울시 강북구</span>
-            	</div>
-            </div>
-            <div class="image-container">
-            	<img src="/images/1.jpg" alt="Image 1">
-            	<div>
-            		식당명<br>평점:5.0<span class="rest-area">서울시 구로구</span>
-            	</div>
-            </div>
-        </div>
+    <section id="section_best" >
+        <h2>최고 인기 순위 식당</h2>
+			<div id="wrap-horizontal">
+				<div th:each="restFullData, iterStat : ${restFullData}" class="image-container">
+					<div th:if="${restFullData.image1 != null and (restFullData.image1.endsWith('jpg') or restFullData.image1.endsWith('JPG') or restFullData.image1.endsWith('png') or restFullData.image1.endsWith('PNG') or restFullData.image1.endsWith('gif'))}">
+						<img th:src="@{|/restaurant/storage/${restFullData.image1}|}" style="width: 120px; height: 100px;">
+					</div>
+					<div class="restinfo">
+						<span th:text="${restFullData.name}"></span><br>
+						<div class="stars">
+							<div class="full-stars" style="width: calc(${restFullData.rate} * 20%);"></div>
+						</div>
+						<span class="rest-area" th:text="'서울시 강남구'"></span><br>
+						<span class="ranking" th:text="' ' + (${iterStat.index} + 1 +'위')"></span> <!-- Add this line for ranking -->
+					</div>
+				</div>
+			</div>
+			<script>
+				const wrapHorizontal = document.getElementById('wrap-horizontal');
+
+				let isDown = false;
+				let startX;
+				let scrollLeft;
+
+				wrapHorizontal.addEventListener('mousedown', (e) => {
+					isDown = true;
+					wrapHorizontal.classList.add('active');
+					startX = e.pageX - wrapHorizontal.offsetLeft;
+					scrollLeft = wrapHorizontal.scrollLeft;
+				});
+
+				wrapHorizontal.addEventListener('mouseleave', () => {
+					isDown = false;
+					wrapHorizontal.classList.remove('active');
+				});
+
+				wrapHorizontal.addEventListener('mouseup', () => {
+					isDown = false;
+					wrapHorizontal.classList.remove('active');
+				});
+
+				wrapHorizontal.addEventListener('mousemove', (e) => {
+					if (!isDown) return;
+					e.preventDefault();
+					const x = e.pageX - wrapHorizontal.offsetLeft;
+					const walk = (x - startX) * 3; // Adjust scroll speed
+					smoothScroll(wrapHorizontal, scrollLeft - walk);
+				});
+
+				function smoothScroll(element, target) {
+					let start = element.scrollLeft;
+					let change = target - start;
+					let duration = 300;
+					let startTime = performance.now();
+
+					function animateScroll(currentTime) {
+						let time = currentTime - startTime;
+						let val = easeInOutQuad(time, start, change, duration);
+						element.scrollLeft = val;
+						if (time < duration) {
+							requestAnimationFrame(animateScroll);
+						}
+					}
+					requestAnimationFrame(animateScroll);
+				}
+
+				function easeInOutQuad(t, b, c, d) {
+					t /= d / 2;
+					if (t < 1) return c / 2 * t * t + b;
+					t--;
+					return -c / 2 * (t * (t - 2) - 1) + b;
+				}
+
+			</script>
     </section>
     <section id="section1">
         <h2>주변인기 식당</h2>
