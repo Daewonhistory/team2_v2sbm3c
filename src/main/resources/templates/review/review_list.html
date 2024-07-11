@@ -11,6 +11,27 @@
             font-family: "Roboto", sans-serif;
             margin: 0 auto;
         }
+        .nav-bar {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .nav-bar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-bar li {
+            margin: 0 15px;
+        }
+        .nav-bar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
         .star-rating {
             display: flex;
         }
@@ -57,12 +78,27 @@
         .empty-heart {
             fill: #ddd;
         }
+        .small-star-icon {
+            width: 16px;
+            height: 16px;
+            background-image: url('/images/star.jpg');
+            background-size: cover;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
     <div layout:fragment="content" style="padding:0">
         <c:import url="/menu/top.do" />
         <div class='title_line'>리뷰</div>
+        <nav class="nav-bar">
+            <ul>
+                <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
+                <li><a th:href="|/menu/menuAllList?restno=${restaurantVO != null ? restaurantVO.restno : restno}&person=${person}&date=${date}|">메뉴</a></li>
+                <li><a th:href="|/review/reviewAllList?restno=${restno}&person=${person}&date=${date}|">리뷰</a></li>
+            </ul>
+        </nav>
         <aside class="aside_right">
             <a th:href="@{|/review/create_mobile?restno=${restno}&person=${person}&date=${date}|}" class="review-button">
                 <img src="/path/to/icon.png" alt="">리뷰 쓰기
@@ -76,7 +112,7 @@
             <div>
                 <span>평균 평점:</span>
                 <span id="average-rating" th:text="${averageRating}">0.0</span>
-                <img src="star" alt="별이미지">
+                <div class="small-star-icon"></div>
             </div>
             <div th:each="reviewDTO : ${list}" class="bg-white p-4 mb-4 rounded-lg shadow-md">
                 <div class="flex items-center mb-4">
@@ -89,7 +125,7 @@
                 <div class="flex items-center mb-4">
                     <div class="star-rating">
                         <span th:each="i : ${#numbers.sequence(1, 5)}">
-                            <svg th:class="${i <= reviewDTO.rate} ? 'filled-star' : 'empty-star'" viewBox="0 0 20 20">
+                            <svg th:class="${5 - i < reviewDTO.rate} ? 'filled-star' : 'empty-star'" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.15c.969 0 1.371 1.24.588 1.81l-3.357 2.44a1 1 0 00-.364 1.118l1.286 3.957c.3.921-.755 1.688-1.54 1.118l-3.357-2.44a1 1 0 00-1.175 0l-3.357 2.44c-.784.57-1.838-.197-1.54-1.118l1.286-3.957a1 1 0 00-.364-1.118L2.465 9.384c-.783-.57-.38-1.81.588-1.81h4.15a1 1 0 00.95-.69l1.286-3.957z"/>
                             </svg>
                         </span>
@@ -105,7 +141,7 @@
                     <svg th:class="${reviewDTO.mylike > 0} ? 'filled-heart' : 'empty-heart'" viewBox="0 0 20 20">
                         <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.828a4 4 0 010-5.656z"/>
                     </svg>
-                    <span th:text="'좋아요 ' + ${reviewDTO.likes}"></span>
+                    <span th:text="'도움이 되었어요 ' + ${reviewDTO.likes_count}"></span>
                 </div>
             </div>
         </div>
@@ -135,7 +171,7 @@
                     if (data.success) {
                         const span = this.querySelector('span');
                         const svg = this.querySelector('svg');
-                        span.textContent = '좋아요 ' + data.likes_count;
+                        span.textContent = '도움이 되었어요 ' + data.likes_count;
                         if (data.success === 'increased') {
                             svg.classList.remove('empty-heart');
                             svg.classList.add('filled-heart');

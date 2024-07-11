@@ -56,18 +56,33 @@
                 <textarea name='content' required="required" class="form-control" rows="12" maxlength="200" style='width: 100%;'></textarea>
                 <small id="contentHelp" class="form-text text-muted">최대 200자까지 입력 가능합니다.</small>
             </div>
-            <div class="form-group" style="margin-top: 10px;">
-                <label>리뷰 이미지</label>
-                <input type='file' class="form-control" name='file1MF' id='review_img1' placeholder="파일 선택">
-            </div>
-            <div class="form-group" style="margin-top: 10px;">
-                <label>리뷰 이미지</label>
-                <input type='file' class="form-control" name='file2MF' id='review_img2' placeholder="파일 선택">
-            </div>
-            <div class="form-group" style="margin-top: 10px;">
-                <label>리뷰 이미지</label>
-                <input type='file' class="form-control" name='file3MF' id='review_img3' placeholder="파일 선택">
-            </div>
+        <div class="form-group">
+          <input type="file" class="form-control" name="file1MF" id="file1MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file2MF" id="file2MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" name="file3MF" id="file3MF" placeholder="파일 선택" style="display: none">
+          <input type="file" class="form-control" id="review_imgs" placeholder="파일 선택" style="display: none">
+        </div>
+
+        <label>식당 이미지</label>
+        <div class="drop-zone" id="drop-zone">
+          여기에 사진을 드래그 앤 드롭 하세요 최대 3개 업로드 할 수 있습니다
+        </div>
+        <div class="preview" id="preview"></div>
+
+        <div class="form-group">
+          <label for="name">식당 이름</label>
+          <input type="text" class="form-control" name="name" id="name" placeholder="식당 이름">
+        </div>
+        <div class="form-group">
+          <label for="name">예약 범위</label>
+          <input type="number" class="form-control" name="reserve_range" id="reserve_range" placeholder="예약 범위">
+        </div>
+        <div class="form-group">
+          <label for="categoryno">식당 카테고리</label>
+          <select class="form-control" name="categoryno" id="categoryno">
+            <!-- Options should be populated here -->
+          </select>
+        </div>
             <div>
                 <label>평점</label>
                 <div class="rating">
@@ -95,5 +110,90 @@
             });
         });
     </script>
+    
+          <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('review_imgs');
+        const preview = document.getElementById('preview');
+        const maxFiles = 3;
+        let currentFiles = [];
+
+        dropZone.addEventListener('click', () => {
+          fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (event) => {
+          event.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+          dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+          event.preventDefault();
+          dropZone.classList.remove('dragover');
+          const files = Array.from(event.dataTransfer.files);
+          handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+          const files = Array.from(event.target.files);
+          handleFiles(files);
+        });
+
+        function handleFiles(files) {
+          files.forEach(file => {
+            if (!file.type.startsWith('image/')) {
+              alert('이미지 파일만 업로드할 수 m있습니다!');
+              return;
+            }
+
+            if (currentFiles.length >= maxFiles) {
+              alert(`최대 ${maxFiles}개의 이미지 파일만 업로드할 수 있습니다!`);
+              return;
+            }
+
+            currentFiles.push(file);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const previewItem = document.createElement('div');
+              previewItem.classList.add('preview-item');
+              const img = document.createElement('img');
+              img.src = event.target.result;
+
+              const removeBtn = document.createElement('button');
+              removeBtn.classList.add('remove-btn');
+              removeBtn.textContent = 'X';
+              removeBtn.addEventListener('click', () => {
+                preview.removeChild(previewItem);
+                currentFiles = currentFiles.filter(f => f !== file);
+                updateFileInputs();
+              });
+
+              previewItem.appendChild(img);
+              previewItem.appendChild(removeBtn);
+              preview.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+          });
+          updateFileInputs();
+        }
+
+        function updateFileInputs() {
+          const inputs = ['file1MF', 'file2MF', 'file3MF'].map(id => document.getElementById(id));
+          inputs.forEach(input => input.value = ''); // Clear all inputs first
+          currentFiles.forEach((file, index) => {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            inputs[index].files = dataTransfer.files;
+          });
+        }
+
+        function back() {
+          history.back();
+        }
+      </script>
 </body>
 </html>

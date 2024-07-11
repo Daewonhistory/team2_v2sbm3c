@@ -43,6 +43,8 @@ public interface Review_likeProcInter {
    * @return 한 리뷰의 내 좋아요 개수 
    */
   public int mylikes(int reviewno, int custno);
+  
+  public int delete_by_reviewno(int reviewno);
 
 }
 

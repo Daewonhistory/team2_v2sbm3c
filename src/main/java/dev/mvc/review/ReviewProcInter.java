@@ -82,6 +82,14 @@ public interface ReviewProcInter {
    */
   public ArrayList<ReviewDTO> list_by_restno(int restno);
   
+  /**
+   * 식당 평점 평균
+   * @param restno
+   * @return
+   */
+  public Float avg_Rate(int restno);
+  
+  
 
   
   /**

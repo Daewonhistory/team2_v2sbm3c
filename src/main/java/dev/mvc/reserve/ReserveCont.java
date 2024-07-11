@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import dev.mvc.admitperson.AdmitPersonProcInter;
 import dev.mvc.admitperson.AdmitPersonVO;
 import dev.mvc.dto.ReserveDTO;
+import dev.mvc.dto.RestDTO;
 import dev.mvc.restaurant.RestaurantProInter;
 import dev.mvc.restaurant.RestaurantVO;
 import jakarta.servlet.http.HttpSession;
@@ -109,6 +110,12 @@ public class ReserveCont {
           now_page = 1;
       }
       
+     
+      
+      
+      String accessType = (String) session.getAttribute("type");
+      model.addAttribute("accessType", accessType);
+       
       ArrayList<ReserveDTO> list = this.reserveProc.list_reserve_paging(now_page, Reserve.RECORD_PER_PAGE);
       System.out.println("Reserve List: " + list);
       model.addAttribute("list", list);
@@ -124,9 +131,35 @@ public class ReserveCont {
 
       return "reservation/list_reserve_paging";
   }
-
   
+  @GetMapping("/list_owner_paging")
+  public String list_owner_paging(HttpSession session, Model model,
+                                  @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+                                  @RequestParam(name = "reserve_date", required = false, defaultValue = "") String reserve_date) {
+      if (now_page < 1) {
+          now_page = 1;
+      }
 
+      int ownerno = (int) session.getAttribute("ownerno");
+      ArrayList<ReserveDTO> list = reserveProc.list_owner_paging(ownerno, reserve_date, now_page, Reserve.RECORD_PER_PAGE);
+      model.addAttribute("list", list);
+      model.addAttribute("reserve_date", reserve_date); // 검색 날짜를 모델에 추가
+
+      int count = reserveProc.count_by_owner(ownerno, reserve_date);
+      model.addAttribute("count", count);
+
+      if (list.isEmpty()) {
+          model.addAttribute("message", "페이지에 예약된 일정이 없습니다");
+      }
+
+      String paging = reserveProc.pagingBox(now_page, "/reservation/list_owner_paging", count, Reserve.RECORD_PER_PAGE, Reserve.PAGE_PER_BLOCK);
+      model.addAttribute("paging", paging);
+
+      model.addAttribute("now_page", now_page);
+
+      return "reservation/list_owner_paging";
+  }
+  
   @PostMapping("/delete")
   public String delete(@RequestParam("reserveno") int reserveno) {
       int cnt = reserveProc.delete(reserveno);
@@ -145,6 +178,18 @@ public class ReserveCont {
       if (cnt == 1) {
           redirectAttributes.addAttribute("now_page", now_page); // 현재 페이지 번호를 전달
           return "redirect:/reservation/list_reserve_paging";
+      } else {
+          // 실패한 경우 처리
+          return "error/500";
+      }
+  }
+  
+  @PostMapping("/delete_owner_site")
+  public String delete_owner_site(@RequestParam("reserveno") int reserveno, @RequestParam("now_page") int now_page, RedirectAttributes redirectAttributes) {
+      int cnt = reserveProc.delete(reserveno);
+      if (cnt == 1) {
+          redirectAttributes.addAttribute("now_page", now_page); // 현재 페이지 번호를 전달
+          return "redirect:/reservation/list_owner_paging";
       } else {
           // 실패한 경우 처리
           return "error/500";

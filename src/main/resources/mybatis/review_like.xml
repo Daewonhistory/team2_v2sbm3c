@@ -29,5 +29,6 @@
     FROM review_like
     WHERE reviewno = #{reviewno} AND custno = #{custno}
   </select>
+  
 
 </mapper>

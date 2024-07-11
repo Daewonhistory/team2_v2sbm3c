@@ -130,6 +130,13 @@ public class ReviewCont {
                     }
                 }
             }
+
+            // 여기서 식당의 평균 평점을 업데이트하는 로직을 추가
+            Float averageRate = reviewProc.avg_Rate(restno);
+            if (averageRate != 0) {
+                restaurantProc.updateRate(restno, averageRate);
+            }
+
             return "redirect:/customer/my_page";
         } else {
             return "redirect:/review/create_mobile";
@@ -196,6 +203,13 @@ public class ReviewCont {
                     }
                 }
             }
+
+            // 여기서 식당의 평균 평점을 업데이트하는 로직을 추가
+            Float averageRate = reviewProc.avg_Rate(restno);
+            if (averageRate != 0) {
+                restaurantProc.updateRate(restno, averageRate);
+            }
+
             return "redirect:/review/list_paging";
         } else {
             return "redirect:/review/create";
@@ -250,18 +264,30 @@ public class ReviewCont {
 
     @PostMapping("/delete")
     public String review_delete(Model model, @RequestParam("reviewno") int reviewno) {
+        ReviewVO reviewVO = this.reviewProc.read(reviewno);
+        int restno = reviewVO.getRestno();
+        
         int cnt = this.reviewProc.delete_review(reviewno);
         if (cnt == 1) {
+            // 리뷰 삭제 후 식당의 평균 평점을 갱신하는 로직 추가
+            Float averageRate = reviewProc.avg_Rate(restno);
+            restaurantProc.updateRate(restno, averageRate);
             return "redirect:/review/list_paging";
         }
         return "review/list_paging";
     }
     
     @PostMapping("/delete_mobile")
-    public String review_delete_mobile(Model model, @RequestParam("reviewno") int reviewno) {
+    public String review_delete_mobile(Model model, @RequestParam("reviewno") int reviewno, @RequestParam("redirect") String redirect) {
+        ReviewVO reviewVO = this.reviewProc.read(reviewno);
+        int restno = reviewVO.getRestno();
+        
         int cnt = this.reviewProc.delete_review(reviewno);
         if (cnt == 1) {
-            return "redirect:/review_my_page";
+            // 리뷰 삭제 후 식당의 평균 평점을 갱신하는 로직 추가
+            Float averageRate = reviewProc.avg_Rate(restno);
+            restaurantProc.updateRate(restno, averageRate);
+            return "redirect:" + redirect;
         }
         return "review/review_my_page";
     }
@@ -327,6 +353,33 @@ public class ReviewCont {
             response.put("fail", "login");
         }
         return response;
+    }
+    
+    @GetMapping("/update_mobile")
+    public String update_mobile(Model model, @RequestParam("reviewno") int reviewno) {
+        ReviewVO reviewVO = this.reviewProc.read(reviewno);
+        model.addAttribute("reviewVO", reviewVO);
+        return "review/update_mobile";
+    }
+
+    @PostMapping("/update_mobile")
+    public String update_mobile_process(Model model, @Valid ReviewVO reviewVO, BindingResult bindingResult, 
+                                        ReviewimgVO reviewimgVO, RedirectAttributes ra, 
+                                        MultipartFile file1MF, MultipartFile file2MF, MultipartFile file3MF,
+                                        HttpSession session) {
+        if (session.getAttribute("custno") == null) {
+            return "redirect:/customer/login";
+        }
+        int custno = (int) session.getAttribute("custno");
+        reviewVO.setCustno(custno);
+
+        int cnt = this.reviewProc.update_review(reviewVO);
+        if (cnt == 1) {
+            return "redirect:/review/review_my_page";
+        } else {
+            model.addAttribute("code", "update_fail");
+            return "review/msg";
+        }
     }
 
 

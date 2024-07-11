@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.dto.ReviewDTO;
+import dev.mvc.restaurant.RestaurantDAOInter;
+import dev.mvc.review_like.Review_likeProcInter;
 import dev.mvc.reviewimg.ReviewImgProcInter;
 
 @Service("dev.mvc.review.ReviewProc")
@@ -19,7 +21,15 @@ public class ReviewProc implements ReviewProcInter {
     
     @Autowired
     @Qualifier("dev.mvc.reviewimg.ReviewImgProc")
-    ReviewImgProcInter reviewimgproc;  // @Qualifier 사용하여 명확히 지정
+    ReviewImgProcInter reviewimgproc;  
+    
+    @Autowired
+    private RestaurantDAOInter restaurantDAO;
+    
+
+    @Autowired
+    @Qualifier("dev.mvc.review_like.Review_likeProc")
+    Review_likeProcInter review_likeProc;
 
     @Override
     public int create(ReviewVO reviewVO) {
@@ -35,6 +45,8 @@ public class ReviewProc implements ReviewProcInter {
 
     @Override
     public int delete_review(int reviewno) {
+        // 리뷰와 관련된 모든 리뷰 좋아요를 먼저 삭제
+        review_likeProc.delete_by_reviewno(reviewno);
         // 리뷰와 관련된 모든 리뷰 이미지를 먼저 삭제
         reviewimgproc.delete_by_reviewno(reviewno);
         // 그 후 리뷰 삭제
@@ -192,6 +204,11 @@ public class ReviewProc implements ReviewProcInter {
         return this.reviewDAO.list_by_custno(custno);
     }
 
+    @Override
+    public Float avg_Rate(int restno) {
+      return this.reviewDAO.avg_Rate(restno);
+    }
+    
  }
 
 
