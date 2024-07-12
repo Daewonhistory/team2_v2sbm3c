@@ -27,6 +27,19 @@
             display: flex;
             align-items: center;
         }
+        .notice_info {
+          text-align: center;
+          color: #FFFFFF;
+          background-color: #7a7373;
+          margin:10px 0px; 
+          padding: 5px;
+          border-radius: 10px;
+        }
+        
+        .notice_info span {
+          text-align: center;
+          color: #FFFFFF;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -78,8 +91,8 @@
         <section>
             <h2>식당 공지</h2>
             <div id="notice_area" style="height: 200px; overflow-x: hidden; overflow-y: scroll; padding:4px">
-                <div id="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; margin:3px; overflow: hidden; overflow-wrap: break-word;">
-                    <h3 th:text="${noticeVO.title}"></h3>
+                <div class="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; overflow: hidden; overflow-wrap: break-word;">
+                    <h2 th:text="${noticeVO.title}" style="font-size: 30px;"></h2>
                     <span th:text="${noticeVO.content}"></span>
                 </div>
             </div>

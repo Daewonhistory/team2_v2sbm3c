@@ -11,10 +11,16 @@
 			<button type="button" onclick="location.href='../map'" style="width:100%">주변지역 레스토랑 보기</b>
 		</section>
 		<form id="frm" name='frm' method='get' action='./search_list'>
+		  <section id="sec_search_word">
+		    <div>
+          <label for="word">식당명 검색어: </label><input type="text" name="word" placeholder="빈 상태면 검색어 X">
+        </div>
+		  </section>
 			<section id="sec_reserve_condition">
-			  <input type="text" name="word">
 				<span class="section_name">예약 조건</span><br>
-				<label>인원:</label><input type="number" name="person" value="2">명
+				<div>
+				  <label for="">인원: </label><input type="number" name="person" value="2">명
+				</div>
 				<input type="date" id="reserve_date" name="date">
 				<div class="vertical_scroll" id="scrollContainer" style="margin-top: 10px;">
 					<button   type="button" class="buttontime" onclick="selectTime(0, this)">0:00</button>
