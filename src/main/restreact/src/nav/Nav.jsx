@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./Nav.css";
 
 const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,9 +14,9 @@ const Nav = () => {
   }, []);
 
   const handleProfileClick = () => {
-    if (isOwnerLoggedIn) {
+    if (sessionStorage.getItem('isOwnerLoggedIn') === 'true') {
       window.location.href = '/owner/my_page'; // 사업자 페이지로 이동
-    } else if (isLoggedIn) {
+    } else if (sessionStorage.getItem('isLoggedIn') === 'true') {
       window.location.href = '/customer/my_page'; // 일반 사용자 페이지로 이동
     } else {
       window.location.href = '/customer/login'; // 로그인 페이지로 이동

@@ -153,6 +153,10 @@ main {
     color: #4CAF50;
 }
 
+.nav-item:hover {
+    background-color: #f9f9f9;
+}
+
 #filter_toggle {
     position: fixed;
     bottom: 80px;
