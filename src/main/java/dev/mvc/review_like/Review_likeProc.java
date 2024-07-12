@@ -57,6 +57,12 @@ public class Review_likeProc implements Review_likeProcInter{
     int cnt = this.review_likeDAO.mylikes(map);
     return cnt;
   }
+  
+
+  @Override
+  public int delete_by_reviewno(int reviewno) {
+      return review_likeDAO.delete(reviewno);
+  }
 
 
 

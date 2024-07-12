@@ -31,6 +31,9 @@ public class ReserveDTO {
   /** 유저 이름*/
   private String nickname;
   
+  /** 예약 날짜 */
+  private String reserveDate;  // 추가된 필드
+  
   
   
 

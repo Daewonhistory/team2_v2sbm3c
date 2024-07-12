@@ -12,19 +12,17 @@
         }
 
         .favorite-icon {
-            width: 24px; /* 원하는 크기로 설정 */
-            height: 24px; /* 원하는 크기로 설정 */
-            margin-left: 8px; /* 버튼과 이미지 사이의 간격 설정 */
-            vertical-align: middle; /* 이미지와 텍스트가 중간에 정렬되도록 설정 */
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
+            vertical-align: middle;
         }
 
-        /* 추가적으로 버튼을 조절할 수 있습니다 */
         #favorite-btn {
             font-size: 14px;
             padding: 4px 8px;
         }
 
-        /* 이미지와 버튼을 동일한 줄에 배치하기 위한 컨테이너 스타일 */
         #restaurant_info_section div {
             display: flex;
             align-items: center;
@@ -49,7 +47,6 @@
                 <div class="slide"><img th:src="|/restaurant/storage/${restaurantVO.image1}|" alt="Slide"></div>
                 <div class="slide" th:if="${restaurantVO.image2 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image2}|" alt="Slide"></div>
                 <div class="slide" th:if="${restaurantVO.image3 != null}"><img th:src="|/restaurant/storage/${restaurantVO.image3}|" alt="Slide"></div>
-                <!-- Add more slides as needed -->
                 <button class="arrow left" id="prev">&lt;</button>
                 <button class="arrow right" id="next">&gt;</button>
             </div>
@@ -65,7 +62,7 @@
             </div>
             <div>
                 <img src="star" alt="별이미지">
-                <span id="rate">5.0</span>
+                <span id="avg_rate" th:text="${rateDisplay}"></span>
             </div>
         </section>
         <section id="sec_reserve_condition">
@@ -80,7 +77,7 @@
         </section>
         <section>
             <h2>식당 공지</h2>
-            <div id="notice_area" style="height: 200px; overflow-x: hidden ; overflow-y: scroll; padding:4px">
+            <div id="notice_area" style="height: 200px; overflow-x: hidden; overflow-y: scroll; padding:4px">
                 <div id="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; margin:3px; overflow: hidden; overflow-wrap: break-word;">
                     <h3 th:text="${noticeVO.title}"></h3>
                     <span th:text="${noticeVO.content}"></span>
@@ -93,7 +90,7 @@
             <div id="map"></div>
         </section>
 
-        <input type="hidden" id="custno" th:value="${custno}" /> <!-- 숨겨진 필드 -->
+        <input type="hidden" id="custno" th:value="${custno}" />
         <input type="hidden" id="restno" th:value="${restaurantVO.restno}" />
 
         <script src="/js/restaurant/main_page/ImageSlide.js"></script>

@@ -43,5 +43,7 @@ public interface Review_likeDAOInter {
    * @return 한 리뷰의 내 좋아요 개수 
    */
   public int mylikes(Map<String, Object> map);
+  
+  public int delete_by_reviewno(int reviewno);
 
 }

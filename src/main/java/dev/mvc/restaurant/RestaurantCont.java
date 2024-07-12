@@ -32,6 +32,7 @@ import dev.mvc.notice.NoticeProcInter;
 import dev.mvc.notice.NoticeVO;
 import dev.mvc.restimg.RestImgProInter;
 import dev.mvc.restimg.RestimgVO;
+import dev.mvc.review.ReviewProcInter;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -49,6 +50,10 @@ public class RestaurantCont {
   @Autowired
   @Qualifier("dev.mvc.favorite.FavoriteProc")
   private FavoriteProcInter favoriteProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.review.ReviewProc")
+  private ReviewProcInter reviewProc;
 
 
   @Autowired
@@ -545,36 +550,45 @@ public class RestaurantCont {
   }
   
   @GetMapping("/main_page")
-  public String main_page(Model model, HttpSession session, 
-                          int restno, @RequestParam(defaultValue="2")int person, 
-                          String date) {
-    String accessType = (String) session.getAttribute("type");
-    
-    int custno = -1; //초기값 설정, 비로그인 상태
-    boolean isFavorited = false;
-    
-    if(accessType != null && accessType.equals("customer")) {
-      custno = (int) session.getAttribute("custno");
+  public String mainPage(Model model, HttpSession session, 
+                        int restno, @RequestParam(defaultValue="2")int person, 
+                        String date) {
+      String accessType = (String) session.getAttribute("type");
       
-      isFavorited = favoriteProc.isFavorited(custno, restno);
-      model.addAttribute("custno", custno);
-    }
-   
-    RestFullData restFullData = this.restaurantProc.readFullData(restno);
-    System.out.println(restFullData.getName());
-    model.addAttribute("restaurantVO", restFullData);
-    
-    ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
-    model.addAttribute("noticeList", noticeList);
-    
-    model.addAttribute("accessType", accessType);
-    model.addAttribute("restno", restno);
-    model.addAttribute("person", person);
-    model.addAttribute("date", date);
-    
-    model.addAttribute("isFavorited", isFavorited); 
-    
-    return "/restaurant_page";
+      int custno = -1; // 초기값 설정, 비로그인 상태
+      boolean isFavorited = false;
+      
+      if (accessType != null && accessType.equals("customer")) {
+          custno = (int) session.getAttribute("custno");
+          isFavorited = favoriteProc.isFavorited(custno, restno);
+          model.addAttribute("custno", custno);
+      }
+
+      RestFullData restFullData = this.restaurantProc.readFullData(restno);
+      Float averageRate = reviewProc.avg_Rate(restno);
+      String rateDisplay = (averageRate == 0) ? "식당 미평가" : String.format("%.1f", averageRate);
+      
+      model.addAttribute("restaurantVO", restFullData);
+      model.addAttribute("rateDisplay", rateDisplay);
+
+      ArrayList<NoticeVO> noticeList = this.noticeProc.list_by_restno(restno);
+      model.addAttribute("noticeList", noticeList);
+      
+      model.addAttribute("accessType", accessType);
+      model.addAttribute("restno", restno);
+      model.addAttribute("person", person);
+      model.addAttribute("date", date);
+      model.addAttribute("isFavorited", isFavorited); 
+      
+      return "restaurant_page";
+  }
+  
+  @GetMapping("/list_by_owner")
+  public String listByOwner(HttpSession session, Model model) {
+    int ownerno = (int) session.getAttribute("ownerno");
+    ArrayList<RestDTO> restaurantList = restaurantProc.list_by_ownerno(ownerno);
+    model.addAttribute("restaurantList", restaurantList);
+    return "restaurant/list_by_owner";
   }
 
 

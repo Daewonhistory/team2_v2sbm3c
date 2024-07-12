@@ -2,7 +2,6 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.reserve.ReserveDAOInter">
-  
     <!-- 예약 등록 -->
     <insert id="create" parameterType="dev.mvc.reserve.ReserveVO">
         INSERT INTO reserve (reserveno, sub_date, person, custno, admitpersonno)
@@ -14,8 +13,7 @@
         SELECT reserveno, sub_date, person, custno, admitpersonno
         FROM reserve
     </select>
-    
-    
+
     <!-- 특정 reserve_date의 예약 조회 -->
     <select id="list_search_by_reserve_date" parameterType="map" resultType="dev.mvc.reserve.ReserveVO">
         SELECT reserveno, sub_date, person, custno, admitpersonno
@@ -28,18 +26,26 @@
         )
     </select>
     
+    <!-- 특정 식당의 예약 수 조회 -->
+    <select id="count_by_restno" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM reserve r
+        JOIN admitperson a ON r.admitpersonno = a.admitpersonno
+        WHERE a.restno = #{restno}
+    </select>
+    
     <!-- 로그인한 사람의 예약 조회 -->
-   <select id="list_search_by_custno" parameterType="int" resultType="dev.mvc.reserve.ReserveVO">
-    SELECT reserveno, sub_date, person, custno, admitpersonno
-    FROM reserve
-    WHERE custno = #{custno}
-   </select>
+    <select id="list_search_by_custno" parameterType="int" resultType="dev.mvc.reserve.ReserveVO">
+        SELECT reserveno, sub_date, person, custno, admitpersonno
+        FROM reserve
+        WHERE custno = #{custno}
+    </select>
    
-   <!-- 예약 취소 -->
-   <delete id="delete" parameterType ="int">
-     DELETE FROM reserve 
-     WHERE reserveno = #{reserveno} 
-   </delete>
+    <!-- 예약 취소 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM reserve 
+        WHERE reserveno = #{reserveno}
+    </delete>
    
     <!-- 페이징을 적용한 예약 조회 -->
     <select id="list_reserve_paging" resultType="dev.mvc.dto.ReserveDTO">
@@ -57,7 +63,45 @@
         WHERE rnum >= #{start_num}
     ]]>
     </select>
+    
+    <!-- 특정 사업자의 식당 예약 조회 (페이징) -->
+    <select id="list_owner_paging" parameterType="map" resultType="dev.mvc.dto.ReserveDTO">
+        SELECT * FROM (
+            SELECT ROWNUM AS rnum, r.reserveno, r.sub_date, r.person, r.custno, r.admitpersonno, 
+                   c.nickname AS nickname, rest.name AS restname, a.reserve_date AS reserveDate
+            FROM reserve r
+            LEFT JOIN customer c ON r.custno = c.custno
+            LEFT JOIN admitperson a ON r.admitpersonno = a.admitpersonno
+            LEFT JOIN restaurant rest ON a.restno = rest.restno
+            WHERE rest.ownerno = #{ownerno}
+            <if test="reserve_date != null and reserve_date != ''">
+                AND a.reserve_date = TO_DATE(#{reserve_date}, 'YYYY-MM-DD')
+            </if>
+            AND ROWNUM >= #{end_num}
+            ORDER BY r.reserveno DESC
+        )
+        WHERE rnum >= #{start_num}
+    </select>
 
+    <!-- 특정 사업자의 예약 수 조회 -->
+    <select id="count_by_owner" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM reserve r
+        JOIN admitperson a ON r.admitpersonno = a.admitpersonno
+        JOIN restaurant rest ON a.restno = rest.restno
+        WHERE rest.ownerno = #{ownerno}
+        <if test="reserve_date != null and reserve_date != ''">
+            AND a.reserve_date = TO_DATE(#{reserve_date}, 'YYYY-MM-DD')
+        </if>
+    </select>
+
+    
+    <select id="list_by_owner" parameterType="int" resultType="dev.mvc.restaurant.RestaurantVO">
+        SELECT * FROM restaurant WHERE ownerno = #{ownerno}
+    </select>
+
+
+    <!-- 전체 예약 수 조회 -->
     <select id="count_all" resultType="int">
         SELECT COUNT(*) FROM reserve
     </select>

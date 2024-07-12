@@ -47,6 +47,8 @@ public interface RestaurantProInter {
    */
 
   public int list_search_count(String word, String type);
+  
+  public ArrayList<RestDTO> list_by_ownerno(int ownerno);
 
   /**
    *
@@ -128,6 +130,9 @@ public interface RestaurantProInter {
    * @return
    */
   public int restaurantCount(Integer ownerno);
+  
+//updateRate 메서드 추가
+  public int updateRate(int restno, float avgRate);
 
   public RestFullData readFullDataOwner(Integer ownerno);
 

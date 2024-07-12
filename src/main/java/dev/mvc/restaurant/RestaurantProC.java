@@ -94,6 +94,11 @@ public class RestaurantProC implements RestaurantProInter {
     ArrayList<RestDTO> list = this.restDAO.list_search_paging(map);
     return list;
   }
+  
+  @Override
+  public ArrayList<RestDTO> list_by_ownerno(int ownerno) {
+      return restDAO.list_by_ownerno(ownerno);
+  }
 
   @Override
   public ArrayList<RestFullData> ranking_rate_select() {
@@ -191,6 +196,7 @@ public class RestaurantProC implements RestaurantProInter {
   public Integer foreign(int ownerno) {
     return this.restDAO.foreign(ownerno);
   }
+  
 
   @Override
   public int next(String businessno) {
@@ -268,6 +274,14 @@ public class RestaurantProC implements RestaurantProInter {
   @Override
   public int restaurantCount(Integer ownerno) {
     return this.restDAO.restaurantCount(ownerno);
+  }
+  
+  @Override
+  public int updateRate(int restno, float avgRate) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("restno", restno);
+      map.put("avg_rate", avgRate);
+      return restDAO.updateRate(map);
   }
 
   @Override

@@ -23,20 +23,25 @@ const CategoryShortcut = () => {
       <section id="cate_shortcut_section">
         <h2>카테고리 숏컷</h2>
         <div className="category-list">
-          {categories.map((category, index) => (
-              <div key={category.id} className="category-item">
-                {category.image && (
-                    <div className="category-image">
-                      <img
-                          src={`/category/storage/${category.image}`}
-                          alt={`Category ${category.name}`}
-                          style={{ width: '50px', height: '50px' }}
-                      />
-                    </div>
-                )}
-                <div className="category-name">{category.name}</div>
-              </div>
-          ))}
+          {categories.map((category) => {
+            const isLongText = category.name.length >= 5; // 글씨 길이 조건 설정
+            const className = isLongText ? 'category-name long-text' : 'category-name';
+
+            return (
+                <div key={category.id} className="category-item">
+                  {category.image && (
+                      <div className="category-image">
+                        <img
+                            src={`/category/storage/${category.image}`}
+                            alt={`Category ${category.name}`}
+                            style={{ width: '50px', height: '50px' }}
+                        />
+                      </div>
+                  )}
+                  <div className={className}>{category.name}</div>
+                </div>
+            );
+          })}
         </div>
       </section>
   );

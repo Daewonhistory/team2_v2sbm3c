@@ -10,7 +10,7 @@
     </insert>
     
     <delete id="delete_by_reviewno" parameterType="int">
-        DELETE FROM reviewimg 
+        DELETE FROM reviewimage
         WHERE reviewno = #{reviewno}
     </delete>
 
