@@ -139,6 +139,8 @@ public class ReserveCont {
       if (now_page < 1) {
           now_page = 1;
       }
+      
+      
 
       int ownerno = (int) session.getAttribute("ownerno");
       ArrayList<ReserveDTO> list = reserveProc.list_owner_paging(ownerno, reserve_date, now_page, Reserve.RECORD_PER_PAGE);
