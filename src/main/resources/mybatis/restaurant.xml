@@ -245,9 +245,9 @@
 	
 	
 	<select id="SearchRestaurantWithImg" parameterType="HashMap" resultType="dev.mvc.dto.RestFullData">
-		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, image1,image2,image3
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, botarea_name, image1,image2,image3
 		FROM(
-			SELECT re.restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
+			SELECT re.restno, re.name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, re.botareano, ba.name AS botarea_name, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
 			FROM restaurant re
 	    LEFT JOIN (
 	      SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
@@ -261,6 +261,10 @@
 	      SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
 	      FROM restimage
 	    ) ri3 ON re.restno = ri3.restno AND ri3.rn = 3
+	    LEFT JOIN (
+	     SELECT botareano, name
+	     FROM botarea
+	    ) ba ON ba.botareano = re.botareano
 			WHERE re.restno IN (
 				SELECT restno
 	  		FROM admitperson
@@ -271,10 +275,10 @@
 				AND categoryno = #{categoryno}
 			</if>
 			<if test="word != null and word != ''">
-        AND name LIKE '%' || #{word} || '%'
+        AND re.name LIKE '%' || #{word} || '%'
       </if>
 			<if test="botareanos.length > 0">
-				AND botareano IN
+				AND re.botareano IN
 				<foreach item="item" index="index" collection="botareanos" open="(" separator="," close=")">
 	            	#{item}
 	        	</foreach>
