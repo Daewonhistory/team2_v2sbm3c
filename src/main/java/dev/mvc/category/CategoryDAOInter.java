@@ -132,6 +132,9 @@ public interface CategoryDAOInter {
 
   public int list_search_count(Map<String, Object> search);
 
-  public int category_nextval();
+  public int category_currval();
+
+
+  public  int update_img(Map<String, Object>  map);
 }
 

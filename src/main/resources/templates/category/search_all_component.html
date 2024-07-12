@@ -8,7 +8,7 @@
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 15%;'/>
-      <col style='width: 15%;'/>
+      <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
       <col style='width: 10%;'/>
@@ -17,12 +17,13 @@
     <thead>
     <tr class="manager-header">
       <th class="th_bs">선택</th>
-      <th class="th_bs">번호</th>
-      <th class="th_bs">중분류</th>
-      <th class="th_bs">소분류</th>
-      <th class="th_bs">자료수</th>
-      <th class="th_bs">등록일</th>
+      <th class="th_bs">카테고리번호</th>
       <th class="th_bs">순서</th>
+
+      <th class="th_bs">이름</th>
+      <th class="th_bs">이미지</th>
+      <th class="th_bs">순서</th>
+      <th class="th_bs">d</th>
       <th class="th_bs">기타</th>
     </tr>
     </thead>
@@ -34,12 +35,18 @@
     <!-- Iterate over your data -->
     <tr class="manager-data" th:each="categoryVO,status : ${searchlist}">
       <td class="td_bs"><input type="checkbox" name="selectedCategories" th:value="${categoryVO.categoryno}"></td>
+
+      <td  class="td_bs" th:text="${categoryVO.categoryno}" id="categoryno"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
-      <td hidden="hidden" class="td_bs" th:text="${categoryVO.categoryno}" id="categoryno"></td>
       <td class="td_bs"><a th:href="@{|/cate/read/${categoryVO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
                            th:text="${categoryVO.name}"></a></td>
 
-    
+    <td class="td_bs" th:if="${categoryVO.image != null and (categoryVO.image.endsWith('jpg') or categoryVO.image.endsWith('JPG') or categoryVO.image.endsWith('png') or categoryVO.image.endsWith('PNG') or categoryVO.image.endsWith('gif'))}">
+      <!--/*@thymesVar id="certifi_image" type=""*/-->
+      <img th:src="@{|/category/storage/${categoryVO.image}|}" style="width: 50px; height: 50px;" >
+    </td>
+      <td class="td_bs" th:text="${categoryVO.seq}"></td>
+      <td class="td_bs" th:text="${categoryVO.visible}"></td>
 
       <td class="td_bs">
 

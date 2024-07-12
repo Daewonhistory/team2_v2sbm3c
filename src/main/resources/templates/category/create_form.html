@@ -1,0 +1,134 @@
+<div th:fragment="create_fragment">
+  <div th:text="${fail}"></div>
+
+  <div class="custom-container">
+    <div class="custom-form-container">
+      <div class="title_line">카테고리 등록(<span class="required">*</span>는 필수)</div>
+      <form id="frm" name="frm" enctype="multipart/form-data" method="post" action="/category/create">
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <div class="form-group custom-inline-group">
+            <input type="text" class="form-control" name="name" id="name" placeholder="카테고리 이름">
+          </div>
+
+          <div style="width: 25%; margin-left: 10px;" class="form-group custom-inline-group">
+            <select class="form-control" name="visible" id="visible">
+              <option value="Y">노출</option>
+              <option value="N">비노출</option>
+            </select>
+          </div>
+
+          <div class="form-group custom-inline-group">
+            <input type="file" class="form-control" name="file1MF" id="image" placeholder="이미지 선택" style="display: none">
+          </div>
+
+          <div style="margin-left: 10px;" class="custom-drop-zone" id="drop-zone">
+            이미지
+          </div>
+          <div style="margin-left: 10px;" class="custom-preview" id="preview"></div>
+
+          <div style="margin-left: 10px;" class="form-group buttons">
+            <button type="submit" class="btn btn-primary" id="btn_send">등록</button>
+            <button type="button" class="btn btn-secondary" onclick="back()" id="btn_cancel">취소</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('image');
+      const preview = document.getElementById('preview');
+      const form = document.getElementById('frm');
+      let currentFile = null;
+      const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+
+      dropZone.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      dropZone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+
+      dropZone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = Array.from(event.dataTransfer.files);
+        handleFile(files[0]);
+      });
+
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        handleFile(file);
+      });
+
+      function handleFile(file) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+          alert('PNG, JPG, JPEG, GIF 파일만 업로드할 수 있습니다!');
+          return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+          alert('이미지 파일만 업로드할 수 있습니다!');
+          return;
+        }
+
+        currentFile = file;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          preview.innerHTML = '';
+          const previewItem = document.createElement('div');
+          previewItem.classList.add('custom-preview-item');
+          const img = document.createElement('img');
+          img.src = event.target.result;
+
+          const removeBtn = document.createElement('button');
+          removeBtn.classList.add('remove-btn');
+          removeBtn.textContent = 'X';
+          removeBtn.addEventListener('click', () => {
+            preview.removeChild(previewItem);
+            currentFile = null;
+            updateFileInput();
+          });
+
+          previewItem.appendChild(img);
+          previewItem.appendChild(removeBtn);
+          preview.appendChild(previewItem);
+        };
+        reader.readAsDataURL(file);
+        updateFileInput();
+      }
+
+      function updateFileInput() {
+        const dataTransfer = new DataTransfer();
+        if (currentFile) {
+          dataTransfer.items.add(currentFile);
+        }
+        fileInput.files = dataTransfer.files;
+      }
+
+      form.addEventListener('submit', (event) => {
+        const nameInput = document.getElementById('name').value.trim();
+        if (!nameInput) {
+          alert('이름을 입력해야 합니다!');
+          event.preventDefault();
+          return;
+        }
+        if (!currentFile) {
+          alert('이미지를 업로드해야 합니다!');
+          event.preventDefault();
+        }
+      });
+
+      function back() {
+        history.back();
+      }
+    </script>
+  </div>
+</div>

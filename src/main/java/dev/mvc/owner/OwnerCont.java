@@ -107,7 +107,7 @@ public class OwnerCont {
     model.addAttribute("restno", restno);
 
     if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") ||  publicTools.isOwner(type).equals("ready")) {
-      return "/ownerIndex";
+      return "layout";
     } else {
       return "redirect:/";
     }

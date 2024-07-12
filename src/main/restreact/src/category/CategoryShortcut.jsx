@@ -1,30 +1,29 @@
-// frontend/src/components/CategoryShortcut.js
-
 import React, { useState, useEffect } from 'react';
 import { fetchCategories } from '../backend/categoryProc.js';
-import './CategoryShortcut.css'; // CSS 파일 임포트
+import './CategoryShortcut.css';
 
 const CategoryShortcut = () => {
   const [categories, setCategories] = useState([]);
 
+  const fetchData = async () => {
+    try {
+      const data = await fetchCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchCategories();
-        setCategories(data); // 카테고리 데이터를 상태에 저장
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
     fetchData();
-  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+  }, [categories]); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
 
   return (
       <section id="cate_shortcut_section">
         <h2>카테고리 숏컷</h2>
         <div className="category-list">
           {categories.map((category) => {
-            const isLongText = category.name.length >= 5; // 글씨 길이 조건 설정
+            const isLongText = category.name.length >= 5;
             const className = isLongText ? 'category-name long-text' : 'category-name';
 
             return (

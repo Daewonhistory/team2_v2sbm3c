@@ -44,8 +44,8 @@ public class CategoryProc implements CategoryProcInter {
   }
 
   @Override
-  public int category_nextval() {
-    return this.categoryDAO.category_nextval();
+  public int category_currval() {
+    return this.categoryDAO.category_currval();
   }
 
   @Override
@@ -298,6 +298,11 @@ public class CategoryProc implements CategoryProcInter {
     str.append("</ul>");
     str.append("</nav>");
     return str.toString();
+  }
+
+  @Override
+  public int update_img(Map<String, Object>  map) {
+    return this.categoryDAO.update_img(map);
   }
 
 }
