@@ -1,48 +1,76 @@
 package dev.mvc.notice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.menu.Menu;
+import dev.mvc.menu.MenuVO;
+
 @Service("dev.mvc.notice.NoticeProc")
 public class NoticeProc implements NoticeProcInter {
 	@Autowired
-	NoticeDAOInter noticeDAOInter;
+	NoticeDAOInter noticeDAO;
 	
 	@Override
 	public int create(NoticeVO noticeVO) {
-		int cnt = this.noticeDAOInter.create(noticeVO);
+		int cnt = this.noticeDAO.create(noticeVO);
 		return cnt;
 	}
 
 	@Override
 	public NoticeVO read(int noticeno) {
-		NoticeVO noticeVO = this.noticeDAOInter.read(noticeno);
+		NoticeVO noticeVO = this.noticeDAO.read(noticeno);
 		return noticeVO;
 	}
 
 	@Override
 	public ArrayList<NoticeVO> list_all() {
-		ArrayList<NoticeVO> list = this.noticeDAOInter.list_all();
+		ArrayList<NoticeVO> list = this.noticeDAO.list_all();
 		return list;
 	}
 
 	@Override
 	public ArrayList<NoticeVO> list_by_restno(int restno) {
-		ArrayList<NoticeVO> list = this.noticeDAOInter.list_by_restno(restno);
+		ArrayList<NoticeVO> list = this.noticeDAO.list_by_restno(restno);
 		return list;
 	}
-
+	
+	@Override
+    public ArrayList<NoticeVO> list_search_paging(HashMap<String, Object> map){
+	  int begin_of_page = ((int) map.get("now_page") - 1) * Notice.RECORD_PER_PAGE;
+      
+      
+      int start_num = begin_of_page + 1;
+      
+      
+      int end_num = begin_of_page + Notice.RECORD_PER_PAGE;   
+      
+      map.put("start_num", start_num);
+      map.put("end_num", end_num);
+      
+      ArrayList<NoticeVO> list = this.noticeDAO.list_search_paging(map);
+      
+      return list;
+    }
+	
+    @Override
+    public int list_by_restno_search_count(HashMap<String, Object> map) {
+      int cnt = this.noticeDAO.list_by_restno_search_count(map);
+      return cnt;
+    }
+	
 	@Override
 	public int update(NoticeVO noticeVO) {
-		int cnt = this.noticeDAOInter.update(noticeVO);
+		int cnt = this.noticeDAO.update(noticeVO);
 		return cnt;
 	}
 
 	@Override
 	public int delete(int noticenno) {
-		int cnt = this.noticeDAOInter.delete(noticenno);
+		int cnt = this.noticeDAO.delete(noticenno);
 		return cnt;
 	}
 	

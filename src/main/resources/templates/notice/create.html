@@ -17,7 +17,7 @@
   <form name='frm' method='post' th:object="${noticeVO}" action='./create' enctype="multipart/form-data">
     <div>
       <select name="restno">
-        <option value="0">전체 식당</option>
+        <option th:if="${accessType == null}" value="0" >전체 식당</option>
         <option
           th:each="restaurantVO, status : ${restList}"
           th:value="${restaurantVO.restno}"
@@ -35,7 +35,8 @@
        <label>공지 내용</label><br>
        <textarea name='content' class="form-control" style='width: 100%;'></textarea>
     </div>
-    
+    <button type="submit" class='btn btn-secondary btn-sm'>공지 등록</button>
+    <button type="button" onclick="location.href='/notice/list'" class='btn btn-secondary btn-sm'>목록으로 돌아가기</button>
   </form>
 </div>
 </html>

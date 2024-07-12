@@ -54,8 +54,8 @@
 		
 		<div style="text-align: right; clear:both;">
     
-      <input type="date" name="start_date" id="start_date" onchange="send()">
-      <input type="date" name="end_date" id="end_date" onchange="send()">
+      <input type="date" name="start_date" id="start_date" onchange="search()">
+      <input type="date" name="end_date" id="end_date" onchange="search()">
       <input type="hidden" name="now_page" th:value="${now_page}">
       <button type='button' onclick="search()" class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>  
       <button type='button' th:onclick="|location.href='/admitperson/list|"class='btn btn-secondary btn-sm' style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색 취소</button>
@@ -64,7 +64,7 @@
   	<div class="menu_line"></div>
   	<div>
       <form name="frm">
-        <select id="restno" onchange="send()">
+        <select id="restno" onchange="search()">
           <option th:if="${accessType == null}" value="0">전체 식당</option>
           <option
             th:each="restaurantVO, status : ${restaurantList}"
@@ -114,6 +114,18 @@
         end_date.value = getTodayDate();
         send();
       };
+      $(document).ready(function () {
+        // Select2 초기화
+        $('#restno').select2({
+          placeholder: '검색해주세요',
+          allowClear: false,
+          language: {
+            noResults: function () {
+              return '결과가 없습니다'; // 결과가 없을 때 표시할 메시지
+            }
+          }
+        })
+      });
       function search() {
         now_page_value = 1;
         send();

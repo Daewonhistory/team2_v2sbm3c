@@ -45,8 +45,7 @@ public class NoticeController {
 			int restno = 0;
 			System.out.println("size=>" + restList.size());
 			if(restList.size() >= 1) {
-				restno = restList.get(0).getRestno();
-				model.addAttribute("restno", restno);
+				model.addAttribute("restList", restList);
 			}else {
 				model.addAttribute("code", "not_created_restaurant");
 				return "/notice/msg";
@@ -76,54 +75,53 @@ public class NoticeController {
 	  String accessType = (String) session.getAttribute("type");
       
       int restno = 0;
-      ArrayList<RestaurantVO> RestList = null;
+      ArrayList<RestaurantVO> restList = null;
       int ownerno = 0;
       if (accessType == null) { // 관리자 접속
           System.out.println("admin");
-          RestList = this.restaurantProc.list_all();
+          restList = this.restaurantProc.list_all();
           ownerno = 0;
-          
       }else if(accessType.equals("owner")) {  // 사업자 접속
           ownerno = (int)session.getAttribute("ownerno");
           System.out.println("Owner" + ownerno);
-          RestList = this.restaurantProc.findByOwnerR(ownerno);
-          System.out.println("ownerRestList"+ RestList.size());
+          restList = this.restaurantProc.findByOwnerR(ownerno);
+          System.out.println("ownerRestList"+ restList.size());
       }else {
           return "redirect:/";
       }
       model.addAttribute("accessType", accessType);
-      model.addAttribute("RestList", RestList);
+      model.addAttribute("restList", restList);
 
       return "/notice/list";
 	}
 	
-//	@PostMapping("/list")
-//	@ResponseBody
-//	public ResponseEntity<Map<String, Object>> list(@RequestBody Map<String, Object> requestBody){
-//	  String word = ((String) requestBody.get("word")).trim();
-//      System.out.println("-> searchword:" + word);
-//      String strRestno = (String) requestBody.get("restno");
-//      int restno = Integer.parseInt(strRestno);
-//      System.out.println("-> restno:" + restno);
-//      int nowPage = (int)requestBody.get("now_page");
-//      System.out.println("-> nowPage:" + nowPage);
-//      
-//      HashMap<String, Object> map = new HashMap<String, Object>();
-//      map.put("word", word);
-//      map.put("restno", restno);
-//      map.put("now_page", nowPage);
-//      ArrayList<NoticeVO> list = this.noticeProc.list_search_paging(map);
-//
-//      int search_count = this.noticeProc.list_by_restno_search_count(map);
-//      System.out.println("search_count:" + search_count);
-//      Map<String,Object> response = new HashMap<String, Object>();
-//      String paging = this.noticeProc.pagingBox(nowPage, word, search_count, Notice.RECORD_PER_PAGE, Notice.PAGE_PER_BLOCK);
-//      response.put("noticeList", list);
-//      response.put("paging", paging);
-//
-//	  
-//	  return new ResponseEntity<>(response, HttpStatus.OK);
-//	}
+	@PostMapping("/list")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> list(@RequestBody Map<String, Object> requestBody){
+	  String word = ((String) requestBody.get("word")).trim();
+      System.out.println("-> searchword:" + word);
+      String strRestno = (String) requestBody.get("restno");
+      int restno = Integer.parseInt(strRestno);
+      System.out.println("-> restno:" + restno);
+      int nowPage = (int)requestBody.get("now_page");
+      System.out.println("-> nowPage:" + nowPage);
+      
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("word", word);
+      map.put("restno", restno);
+      map.put("now_page", nowPage);
+      ArrayList<NoticeVO> list = this.noticeProc.list_search_paging(map);
+
+      int search_count = this.noticeProc.list_by_restno_search_count(map);
+      System.out.println("search_count:" + search_count);
+      Map<String,Object> response = new HashMap<String, Object>();
+      String paging = this.noticeProc.pagingBox(nowPage, word, search_count, Notice.RECORD_PER_PAGE, Notice.PAGE_PER_BLOCK);
+      response.put("noticeList", list);
+      response.put("paging", paging);
+
+	  
+	  return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	
 	@GetMapping("/read")
 	public String read(Model model, int noticeno) {

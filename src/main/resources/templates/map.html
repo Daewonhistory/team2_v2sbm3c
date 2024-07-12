@@ -15,21 +15,15 @@
 	<script>
 	window.onload = () => {
 		if (navigator.geolocation) {
-	   alert('위치조회에 성공했습니다.')
 			// GeoLocation을 이용해서 접속 위치를 얻어옵니다
 			navigator.geolocation.getCurrentPosition(function(position) {
 				
 				currentLat = position.coords.latitude; // 위도
 				currentLng = position.coords.longitude; // 경도
-				const test = document.createElement('span');
-				test.innerHTML = currentLat + ' ' + currentLng;
-				document.querySelector('#rest-container').appendChild(test);
 				map.setCenter(new kakao.maps.LatLng(currentLat, currentLng));
 			},
       function(error) {
         // 오류 처리
-        
-        alert('위치 정보를 가져오는데 실패했습니다.');
       },
       {
         enableHighAccuracy: true, // 높은 정확도 요청

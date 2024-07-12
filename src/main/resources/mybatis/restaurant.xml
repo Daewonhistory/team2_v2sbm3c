@@ -230,6 +230,7 @@
 		<if test="categoryno != ''">
 			AND categoryno = #{categoryno}
 		</if>
+		
 		<if test="botareanos.length > 0">
 			AND botareano IN
 			<foreach item="item" index="index" collection="botareanos" open="(" separator="," close=")">
@@ -269,6 +270,9 @@
 			<if test="categoryno != ''">
 				AND categoryno = #{categoryno}
 			</if>
+			<if test="word != null and word != ''">
+        AND name LIKE '%' || #{word} || '%'
+      </if>
 			<if test="botareanos.length > 0">
 				AND botareano IN
 				<foreach item="item" index="index" collection="botareanos" open="(" separator="," close=")">

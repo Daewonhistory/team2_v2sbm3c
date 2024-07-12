@@ -23,7 +23,7 @@
 		ORDER BY noticeno ASC
 	</select>
 	
-	<select id="list_search_paging" resultType="dev.mvc.menu.MenuVO" parameterType="HashMap">
+	<select id="list_search_paging" resultType="dev.mvc.notice.NoticeVO" parameterType="HashMap">
     SELECT noticeno, title, content, restno, restname, r
     FROM (
         SELECT noticeno, title, content, restno, restname, rownum as r
@@ -31,14 +31,14 @@
           SELECT noticeno, title, content, notice.restno as restno, rest.name as restname
           FROM notice
           INNER JOIN restaurant rest
-          ON menu.restno = rest.restno
+          ON notice.restno = rest.restno
           <if test="restno != 0">
           AND rest.restno = #{restno}
           </if>
           <if test="word != null and word != ''">
-          WHERE UPPER(menu.name) LIKE '%' || UPPER(#{word}) || '%'
+          WHERE UPPER(notice.title) LIKE '%' || UPPER(#{word}) || '%'
           </if>
-          ORDER BY menuno DESC
+          ORDER BY noticeno DESC
       )
   )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>

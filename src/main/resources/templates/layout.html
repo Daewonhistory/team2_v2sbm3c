@@ -121,7 +121,7 @@
 </div>
 
 <!-- 사업자 -->
-<div class="owner-container">
+<div class="owner-container" th:if="${accessType!=null && accessType == 'owner'}">
   <div class="owner-side">
     <div class="owner-title"><a style="font-size: 20px;" href="/owner">Eay Days 사업자</a></div>
     <ul class="owner-menu-list">
@@ -145,6 +145,7 @@
         </a>
         <ul class="sub-menu" id="reservation-sub-menu" style="display: none;">
           <li><a href="/reservation/list/all">전체 예약 </a></li>
+          <li><a href="/admitperson/list">예약인원 관리 </a></li>
         </ul>
       </li>
       <li class="owner-menu">

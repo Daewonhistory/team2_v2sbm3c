@@ -203,22 +203,112 @@ public class RestaurantCont {
 
 
   @GetMapping("/update_img")
-  public String update_img(Model model, String word, int now_page, int restno) {
+  public String update_img(Model model, HttpSession session, String word, int now_page, int restno) {
     // 메뉴 정보
-
+    
 
     RestFullData restFullData = this.restaurantProc.readFullData(restno);
     model.addAttribute("restFullData", restFullData);
     // 메뉴의 재료 목록
 
-
+    String accessType = (String) session.getAttribute("type");
+    model.addAttribute("accessType", accessType);
     model.addAttribute("word", word);
     model.addAttribute("now_page", now_page);
     return "restaurant/update_img";
   }
 
 
+  @PostMapping("/update_img")
+  public String updateRestaurant(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestFullData restFullData, RestimgVO restimgVO, @RequestParam("deletedImageFiles") String deletedImageFiles) {
+    Integer ownerno = restFullData.getOwnerno();
+    restFullData.setOwnerno(ownerno);
+    String upDir = Restaurant.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
 
+
+
+
+    int restno = restFullData.getRestno();  // 업데이트할 식당 번호
+
+    // 삭제할 이미지 처리
+    if (deletedImageFiles != null && !deletedImageFiles.isEmpty()) {
+      String[] deletedFileNames = deletedImageFiles.split(",");
+      for (String fileName : deletedFileNames) {
+        if (!fileName.isEmpty()) {
+          List<RestimgVO> imagesToDelete = this.restimgproc.findByFileName(fileName.trim());
+
+          for (RestimgVO imageToDelete : imagesToDelete) {
+            System.out.println("->"+imageToDelete.getImagefile());
+            String fileToDelete = imageToDelete.getImagefile(); // Assuming this is the file name
+
+            System.out.println("이미지 이름->" + fileToDelete);
+            int dotIndex = fileToDelete.lastIndexOf(".");
+            if (dotIndex > 0 && dotIndex < fileToDelete.length() - 1) {
+              String baseName = fileToDelete.substring(0, dotIndex);
+              String extension = fileToDelete.substring(dotIndex);
+
+              // 확장자 앞에 '_t'를 추가합니다.
+              String modifiedFileName = baseName + "_t" + extension;
+
+              Tool.deleteFile(upDir, fileToDelete); // 원본 파일 삭제
+              Tool.deleteFile(upDir, modifiedFileName); // '_t'가 추가된 파일 이름으로 삭제
+              int delete = this.restimgproc.delete(imageToDelete.getRest_imgno());
+              System.out.println("delete:" + delete);
+            } else {
+              System.out.println("-> 유효하지 않은 파일 이름: " + fileToDelete);
+            }
+          }
+        }
+      }
+    }
+
+
+
+    MultipartFile mf1 = restimgVO.getFile1MF();
+    MultipartFile mf2 = restimgVO.getFile2MF();
+    MultipartFile mf3 = restimgVO.getFile3MF(); // 파일 3 추가
+
+    String[] fileNames = {mf1.getOriginalFilename(), mf2.getOriginalFilename(), mf3.getOriginalFilename()};
+    MultipartFile[] files = {mf1, mf2, mf3};
+
+    for (int i = 0; i < files.length; i++) {
+      if (!fileNames[i].isEmpty()) {
+        if (Tool.checkUploadFile(fileNames[i])) {
+          long size = files[i].getSize();
+
+          if (size > 0) {
+            String exe = fileNames[i].split("\\.")[1];
+            String newFileName = "rest_" + restFullData.getOwnerno() + "_" + (i + 1) + "." + exe;
+            String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
+
+            if (Tool.isImage(fileSaved)) {
+              String thumb = Tool.preview(upDir, fileSaved, 200, 150);
+
+              restimgVO.setRestno(restno);
+              restimgVO.setImagefile(fileSaved); // 저장된 파일명 설정
+              restimgVO.setThumbfile(thumb); // 저장된 썸네일 파일명 설정
+
+              int saved = this.restimgproc.create(restimgVO);
+              if (saved != 1) {
+                return "redirect:/owner/restread?restno="+restno;
+              }
+            } else {
+              return "redirect:/owner/restread?restno="+restno;
+            }
+          } else {
+            return "redirect:/owner/restread?restno="+restno;
+          }
+        } else {
+          redirectAttributes.addFlashAttribute("cnt", 0);
+          redirectAttributes.addFlashAttribute("code", "check_upload_file_fail");
+          redirectAttributes.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
+          return "redirect:/owner/msg";
+        }
+      }
+    }
+
+    return "redirect:/owner/restread?restno="+restno;
+  }
 
 
 
@@ -227,8 +317,8 @@ public class RestaurantCont {
   @GetMapping("/search_b")
   public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
           categoryVO, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-
-    model.addAttribute("accessType", type);
+    String accessType = (String) session.getAttribute("type");
+    model.addAttribute("accessType", accessType);
     String id = (String) session.getAttribute("id");
     String grade = (String) session.getAttribute("grade");
 
@@ -350,7 +440,8 @@ public class RestaurantCont {
 					        @RequestParam(defaultValue = "0") int categoryno,
 					        @RequestParam(defaultValue = "") String botarea,
 					        @RequestParam(name = "min_price", defaultValue = "0") int minPrice,
-					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice) {
+					        @RequestParam(name = "max_price", defaultValue = "40") int maxPrice,
+					        @RequestParam(name = "word", defaultValue = "") String word) {
 	  model.addAttribute("person", person);
 	  model.addAttribute("reserve_date", date);
 	  model.addAttribute("time", time);
@@ -358,7 +449,7 @@ public class RestaurantCont {
 	  model.addAttribute("botarea", botarea);
 	  model.addAttribute("min_price", minPrice);
 	  model.addAttribute("max_price", maxPrice);
-	  
+	  model.addAttribute("word", word);
 	  return "/search_list";
   }
 
@@ -406,6 +497,8 @@ public class RestaurantCont {
       String date = (String) requestBody.get("date");
       int time = Integer.parseInt((String) requestBody.get("time"));
       int categoryno = 0;
+      String word = (String) requestBody.get("word");
+      System.out.println("word:" + word);
       if(!((String) requestBody.get("categoryno")).equals("")) {
     	  categoryno = Integer.parseInt((String) requestBody.get("categoryno"));
       }
@@ -436,6 +529,7 @@ public class RestaurantCont {
       map.put("botareanos", botareanos);
       map.put("min_price", minPrice);
       map.put("max_price", maxPrice);
+      map.put("word", word);
       System.out.println("person:" + person);
       System.out.println("date:" + date);
       System.out.println("time:" + time);
@@ -445,6 +539,7 @@ public class RestaurantCont {
       System.out.println("max_price:" + maxPrice);
 
       ArrayList<RestFullData> list = this.restaurantProc.SearchRestaurantWithImg(map);
+      System.out.println(list.get(0).getImage1());
       System.out.println("=>listSize" + list.size());
 	  return new ResponseEntity<>(list, HttpStatus.OK);
   }
