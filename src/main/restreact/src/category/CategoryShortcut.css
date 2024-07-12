@@ -7,7 +7,7 @@
 }
 
 .category-item {
-  width: 20%; /* 한 줄에 5개씩 배치하므로 20%로 설정 */
+  width: 15%; /* 한 줄에 5개씩 배치하므로 20%로 설정 */
   padding: 10px;
   text-align: center;
 }
@@ -18,4 +18,13 @@
 
 .category-name {
   font-size: 12px;
+  font-weight: 700;
+}
+
+/* 긴 글씨를 작게 하고, 굵게 설정 */
+.category-name.long-text {
+  font-size: 9px; /* 폰트 사이즈를 원래 크기로 유지 */
+  font-weight: 700; /* 더 진하게 설정 */
+
+
 }

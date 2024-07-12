@@ -425,3 +425,90 @@ a.btns:hover  {
   line-height: 20px;
   color: #000; /* "X" 표시를 검은색으로 설정 */
 }
+
+
+
+/* App.css */
+.custom-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.custom-form-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.title_line {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.custom-inline-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.custom-inline-group label {
+  min-width: 100px;
+  margin-right: 10px;
+}
+
+.custom-inline-group .form-control {
+  flex: 1;
+}
+
+.custom-drop-zone {
+  width: 50px;
+  height: 50px;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+
+}
+
+.custom-drop-zone.dragover {
+  background-color: #f0f0f0;
+}
+
+.custom-preview {
+  margin-top: 10px;
+}
+
+.custom-preview-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.custom-preview-item img {
+  max-width: 50px;
+  max-height: 50px;
+  margin-right: 10px;
+}
+
+.remove-btn {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}

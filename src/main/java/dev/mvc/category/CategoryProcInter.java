@@ -2,6 +2,7 @@ package dev.mvc.category;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,7 +31,7 @@ public interface CategoryProcInter {
   public ArrayList<CategoryVO> list_by_categoryno(Integer categoryno );
 
 
-  public int category_nextval();
+  public int category_currval();
 
   /**
    * 기능:카테고리 ID를 기준으로 카테고리를 검색합니다.
@@ -142,5 +143,6 @@ public interface CategoryProcInter {
 
   public String pagingBox(int now_page, String word,String type, String list_file, int search_count,int record_per_page, int page_per_block);
 
+  public  int update_img(Map<String, Object> map);
 
 }

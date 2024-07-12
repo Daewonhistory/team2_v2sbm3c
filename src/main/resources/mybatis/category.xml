@@ -8,7 +8,7 @@
     <!--  C - 생성   -->
     <insert id="create" parameterType="dev.mvc.category.CategoryVO">
         INSERT INTO category (categoryno, name,image,seq,visible,reg_date)
-        VALUES (category_seq.nextval, #{name},#{image},1,#{visible},sysdate)
+        VALUES (category_seq.nextval, #{name},'-',1,#{visible},sysdate)
 
     </insert>
 
@@ -18,11 +18,18 @@
         FROM category
     </select>
 
-    <select id="category_nextval">
+    <select id="category_currval">
         SELECT category_seq.CURRVAL
         FROM DUAL
 
     </select>
+
+
+    <update id="update_img">
+        UPDATE category
+        SET image = #{image}
+        WHERE categoryno =  #{categoryno}
+    </update>
 
     <select id="list_by_categoryno" resultType="dev.mvc.category.CategoryVO">
         SELECT categoryno, name,image,seq,visible,reg_date
@@ -204,13 +211,13 @@
         <if test="word == null or word == ''">
             <!-- 전체 결과를 가져오는 쿼리 -->
             <![CDATA[
-        SELECT categoryno, name, r
+        SELECT categoryno, name,image,seq,visible,reg_date, r
         FROM (
-                 SELECT categoryno, name, ROWNUM as r
+                 SELECT categoryno, name,image,seq,visible,reg_date, ROWNUM as r
                  FROM (
-                          SELECT categoryno, name
+                          SELECT categoryno, name,image,seq,visible,reg_date
                           FROM category
-
+                          ORDER BY seq
                       )
                  WHERE ROWNUM <= #{end_num}
              )
@@ -219,14 +226,14 @@
                   <if test="word != null and word != ''">
             <!-- name으로 조회 -->
                       <![CDATA[
-        SELECT categoryno, name, r
+        SELECT categoryno, name,image,seq,visible,reg_date, r
         FROM (
-                 SELECT categoryno, name, ROWNUM as r
+                 SELECT categoryno, name,image,seq,visible,reg_date, ROWNUM as r
                  FROM (
-                          SELECT categoryno, name
+                          SELECT categoryno, name,image,seq,visible,reg_date
                           FROM category
                           WHERE name LIKE '%' || #{word} || '%'
-
+                          ORDER BY seq
                       )
                  WHERE ROWNUM <= #{end_num}
              )

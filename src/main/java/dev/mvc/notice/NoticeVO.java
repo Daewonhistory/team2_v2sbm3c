@@ -9,4 +9,5 @@ public class NoticeVO {
 	private String title;
 	private String content;
 	private int restno;
+	private String restname;
 }

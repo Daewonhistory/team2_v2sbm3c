@@ -52,6 +52,7 @@
           <li><a href="/owner/liste">리뷰 등록</a></li>
           <li><a href="/owner/liste">예약 등록</a></li>
           <li><a href="/owner/liste">메뉴 등록</a></li>
+          <li><a href="/notice/create">공지 등록</a></li>
         </ul>
       </li>
       <li class="manager-menu">
@@ -120,7 +121,7 @@
 </div>
 
 <!-- 사업자 -->
-<div class="owner-container" th:if="${accessType!=null && accessType.equals('owner')}">
+<div class="owner-container" th:if="${accessType!=null && accessType == 'owner'}">
   <div class="owner-side">
     <div class="owner-title"><a style="font-size: 20px;" href="/owner">Eay Days 사업자</a></div>
     <ul class="owner-menu-list">
@@ -130,11 +131,12 @@
           <span id="create-arrow" class="arrow right"></span> 식당 관련
         </a>
         <ul class="sub-menu" id="create-sub-menu" style="display: none;">
-          <li><a href="/restaurant/create">식당 등록</a></li>
-          <li><a href="/restaurant/create">식당 관리</a></li>
-          <li><a href="/restaurant/create">식당 수정</a></li>
-          <li><a th:href="@{|/schedule/update?restno=${restno}|}">스케줄 관리</a></li>
+          <li th:if="${session.type == 'Norest' }"><a href="/owner/rest_create">식당 등록</a></li>
+          <li><a href="/owner/restaurant">식당 관리</a></li>
 
+          <li><a th:href="@{|/schedule/update|}">스케줄 관리</a></li>
+          <li><a th:href="@{|/menu/list|}">메뉴 관리</a></li>
+          <li><a href="/notice/list">공지 등록</a></li>
         </ul>
       </li>
       <li class="owner-menu">
@@ -143,6 +145,7 @@
         </a>
         <ul class="sub-menu" id="reservation-sub-menu" style="display: none;">
           <li><a href="/reservation/list/all">전체 예약 </a></li>
+          <li><a href="/admitperson/list">예약인원 관리 </a></li>
         </ul>
       </li>
       <li class="owner-menu">
@@ -151,11 +154,15 @@
         </a>
         <ul class="sub-menu" id="restaurant-sub-menu" style="display: none;">
           <li><a href="/restaurant/search_b">식당 목록</a></li>
-          <li><a href="/restaurant/create">식당 등록</a></li>
-					<li th:if="${accessType.equals('owner')}">testtest</li>
+          <li><a href="/owner/rest_create">식당 등록</a></li>
         </ul>
       </li>
+      <li th:if="${session.id != null}"class="owner-menu">
+        <a  class="owner-menu-a" onclick="logout()">
+          <span style="margin-left: 50px;" ></span> 로그아웃
+        </a>
 
+      </li>
     </ul>
   </div>
   <div class="owner-main">
@@ -165,6 +172,10 @@
     </div>
   </div>
 </div>
+<form id="postForm" action="/owner/logout" method="post" style="display: none;">
+  <!-- This form will be submitted when the logout button is clicked -->
+</form>
+
 <script>
   function toggleSubMenu(menuId, arrowId) {
     var subMenu = document.getElementById(menuId);
@@ -203,6 +214,9 @@
     alert([[${Abnormal}]]);
   }
   /*]]>*/
+  function logout() {
+    document.getElementById('postForm').submit();
+  }
 </script>
 </body>
 </html>

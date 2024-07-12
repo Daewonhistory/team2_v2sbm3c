@@ -35,6 +35,8 @@ public class RestFullData {
   
   private int botareano;
   
+  private String botarea_name;
+  
   private double rate;
 
   private String image1;

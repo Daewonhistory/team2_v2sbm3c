@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{ownerIndex}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <div th:text="${fail}"></div>
 
@@ -37,7 +37,9 @@
         <input type="hidden" th:value="${now_page}" name="now_page">
         <input type="hidden" th:value="${word}" name="word">
         <input type="hidden" th:value="${restFullData.restno}" name="restno">
-
+        <input type="hidden" th:value="${restFullData.ownerno}" name="ownerno">
+        <input type="hidden" id="deletedImageFiles" name="deletedImageFiles">
+        
         <div class="form-group buttons">
           <button type="submit" class="btn btn-primary" id="btn_send">이미지 수정</button>
           <button type="button" class="btn btn-secondary" onclick="back()" id="btn_cancel">취소</button>
@@ -131,6 +133,14 @@
           const previewItems = document.querySelectorAll('.preview-item[data-existing="true"]');
           const itemToRemove = Array.from(previewItems).find(item => item.getAttribute('data-index') == index);
           if (itemToRemove) {
+            const imageUrl = itemToRemove.querySelector('img').src;
+            const imageFile = imageUrl.split('/').pop(); // 파일 이름 추출
+            const deletedImageFilesInput = document.getElementById('deletedImageFiles');
+            if (deletedImageFilesInput.value) {
+              deletedImageFilesInput.value += "," + imageFile;
+            } else {
+              deletedImageFilesInput.value = imageFile;
+            }
             itemToRemove.parentElement.removeChild(itemToRemove);
             existingImagesCount--;
           }

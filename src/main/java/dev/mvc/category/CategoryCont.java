@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -484,6 +483,8 @@ public class CategoryCont {
     model.addAttribute("type", type);
     model.addAttribute("searchlist", catelist);
 
+    System.out.println("이미지"+catelist.get(0).getImage());
+
 
     return "category/search_all"; // Assuming "search_result" is the name of the view to display the search results
 
@@ -505,46 +506,60 @@ public class CategoryCont {
    */
   @PostMapping("/create")
   public String createProc(Model model, HttpSession session, RedirectAttributes redirectAttributes, CategoryVO categoryVO, RedirectAttributes ra) {
+    // 카테고리 먼저 생성
+    int count = this.categoryProc.create(categoryVO);
+    if (count == 0) {
+      return "redirect:/category/create"; // 생성 실패 시 리다이렉트
+    }
 
+    // 생성된 카테고리의 ID 가져오기
+    int categoryno = this.categoryProc.category_currval(); // 생성된 카테고리 ID를 가져오는 방법은 환경에 따라 다를 수 있음
 
+    // 파일 업로드 처리
+    String upDir = Category.getUploadDir(); // 파일을 업로드할 폴더 준비
+    System.out.println("-> upDir: " + upDir);
 
-      String upDir = Category.getUploadDir(); // 파일을 업로드할 폴더 준비
-      System.out.println("-> upDir: " + upDir);
+    MultipartFile file = categoryVO.getFile1MF(); // 단일 파일만 처리
 
-      MultipartFile file = categoryVO.getFile1MF(); // 단일 파일만 처리
+    if (!file.isEmpty()) {
+      String originalFilename = file.getOriginalFilename();
+      if (Tool.checkUploadFile(originalFilename)) {
+        long size = file.getSize();
 
-      if (!file.isEmpty()) {
-        String originalFilename = file.getOriginalFilename();
-        if (Tool.checkUploadFile(originalFilename)) {
-          long size = file.getSize();
+        if (size > 0) {
+          String exe = originalFilename.split("\\.")[1];
+          String newFileName = "category_" + categoryno + "." + exe;
+          String fileSaved = Upload.saveFileSpring(file, upDir, newFileName);
 
-          if (size > 0) {
-            String exe = originalFilename.split("\\.")[1];
-            int next_val = this.categoryProc.category_nextval();
-            String newFileName = "category_" +next_val + "." + exe;
-            String fileSaved = Upload.saveFileSpring(file, upDir, newFileName);
-
-            if (Tool.isImage(fileSaved)) {
-
-              categoryVO.setImage(fileSaved); // 저장된 파일명 설정
-              int count = this.categoryProc.create(categoryVO);
-              return "redirect:/category/list";
+          if (Tool.isImage(fileSaved)) {
+            categoryVO.setImage(fileSaved); // 저장된 파일명 설정
+            categoryVO.setCategoryno(categoryno); // 카테고리 ID 설정
+            String image = categoryVO.getImage();
+            HashMap<String,Object> map = new HashMap<String,Object>();
+            map.put("image", image);
+            map.put("categoryno", categoryno);
+            // 파일명 업데이트
+            int updateCount = this.categoryProc.update_img(map);
+            if (updateCount > 0) {
+              return "redirect:/category/list"; // 성공 시 리다이렉트
             } else {
-              return "redirect:/category/create"; // 파일이 이미지가 아닐 경우 리다이렉트
+              return "redirect:/category/create"; // 업데이트 실패 시 리다이렉트
             }
           } else {
-            return "redirect:/category/create"; // 파일 크기가 0일 경우 리다이렉트
+            return "redirect:/category/create"; // 파일이 이미지가 아닐 경우 리다이렉트
           }
         } else {
-          ra.addFlashAttribute("cnt", 0);
-          ra.addFlashAttribute("code", "check_upload_file_fail");
-          ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
-          return "redirect:/category/msg";
+          return "redirect:/category/create"; // 파일 크기가 0일 경우 리다이렉트
         }
+      } else {
+        ra.addFlashAttribute("cnt", 0);
+        ra.addFlashAttribute("code", "check_upload_file_fail");
+        ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
+        return "redirect:/category/msg";
       }
+    }
 
-      return "redirect:/category/list";
-
+    return "redirect:/category/list"; // 파일이 없더라도 카테고리 생성 성공 시 리다이렉트
   }
 
 

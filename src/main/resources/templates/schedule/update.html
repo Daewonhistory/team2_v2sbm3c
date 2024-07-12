@@ -9,6 +9,7 @@
 			margin-top: 10px;
 			margin-bottom: 10px;
 			align-items: center;
+			justify-content: space-evenly;
 		}
 		.form-control{
 			width:auto;
@@ -21,7 +22,7 @@
         <input type="hidden" name="restno" th:value="${restaurantVO.restno}">
         <label for="restname">식당 이름: </label>
         <span id="restname" th:text="${restaurantVO.name}"></span>
-      	<div id="schedule-div" class="form-group">
+      	<div id="schedule-div" class="form-group" >
       		<div class="schedule-condition" th:each="scheduleVO, status:${scheduleList}">
       			<input type="hidden" name="schedulenos" th:value=${scheduleVO.scheduleno}>
       			<label>시각:</label>

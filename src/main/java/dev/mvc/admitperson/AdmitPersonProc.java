@@ -126,7 +126,10 @@ public class AdmitPersonProc implements AdmitPersonProcInter{
 	     
 	    return str.toString(); 
 	}
-
+	
+	/**
+	 * 스케줄 생성시 예약기간에 맞춰 허용인원 생성
+	 */
 	@Override
 	public int createBeginning(int restno, int reserveRange, ArrayList<ScheduleVO> scheduleVOList) {
 		for(int i=0;i<reserveRange;i++) {
