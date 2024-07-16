@@ -135,19 +135,17 @@ public class ReserveCont {
   @GetMapping("/list_owner_paging")
   public String list_owner_paging(HttpSession session, Model model,
                                   @RequestParam(name = "now_page", defaultValue = "1") int now_page,
-                                  @RequestParam(name = "reserve_date", required = false, defaultValue = "") String reserve_date) {
+                                  @RequestParam(name = "sub_date", required = false, defaultValue = "") String sub_date) {
       if (now_page < 1) {
           now_page = 1;
       }
-      
-      
 
       int ownerno = (int) session.getAttribute("ownerno");
-      ArrayList<ReserveDTO> list = reserveProc.list_owner_paging(ownerno, reserve_date, now_page, Reserve.RECORD_PER_PAGE);
+      ArrayList<ReserveDTO> list = reserveProc.list_owner_paging(ownerno, sub_date, now_page, Reserve.RECORD_PER_PAGE);
       model.addAttribute("list", list);
-      model.addAttribute("reserve_date", reserve_date); // 검색 날짜를 모델에 추가
+      model.addAttribute("sub_date", sub_date); // 검색 날짜를 모델에 추가
 
-      int count = reserveProc.count_by_owner(ownerno, reserve_date);
+      int count = reserveProc.count_by_owner(ownerno, sub_date);
       model.addAttribute("count", count);
 
       if (list.isEmpty()) {

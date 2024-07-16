@@ -74,8 +74,11 @@
                 <img id="favorite-img" th:data-is-favorited="${isFavorited}" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" class="favorite-icon" />
             </div>
             <div>
-                <img src="star" alt="별이미지">
-                <span id="avg_rate" th:text="${rateDisplay}"></span>
+                <span id="avg_rate" style="display: flex; align-items: center;">
+                   <img src="/images/star.png" alt="별 이미지" style="width: 20px; height: 20px; margin-left: 5px;">
+                   <span th:text="${rateDisplay}"></span>
+                   
+                </span>
             </div>
         </section>
         <section id="sec_reserve_condition">

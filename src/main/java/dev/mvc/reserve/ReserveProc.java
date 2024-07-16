@@ -58,14 +58,14 @@ public class ReserveProc implements ReserveProcInter {
     }
     
     @Override
-    public ArrayList<ReserveDTO> list_owner_paging(int ownerno, String reserve_date, int now_page, int record_per_page) {
+    public ArrayList<ReserveDTO> list_owner_paging(int ownerno, String sub_date, int now_page, int record_per_page) {
         int begin_of_page = (now_page - 1) * record_per_page;
         int start_num = begin_of_page + 1;
         int end_num = begin_of_page + record_per_page;
 
         Map<String, Object> map = new HashMap<>();
         map.put("ownerno", ownerno);
-        map.put("reserve_date", reserve_date);
+        map.put("sub_date", sub_date);
         map.put("start_num", start_num);
         map.put("end_num", end_num);
 

@@ -109,11 +109,7 @@
         <div class='menu_line'></div>
         
         <div class="max-w-xl mx-auto">
-            <div>
-                <span>평균 평점:</span>
-                <span id="average-rating" th:text="${averageRating}">0.0</span>
-                <div class="small-star-icon"></div>
-            </div>
+
             <div th:each="reviewDTO : ${list}" class="bg-white p-4 mb-4 rounded-lg shadow-md">
                 <div class="flex items-center mb-4">
                     <img th:src="@{|/customer/storage/${reviewDTO.user_image}|}" class="w-12 h-12 bg-gray-300 rounded-full" alt="Avatar">
