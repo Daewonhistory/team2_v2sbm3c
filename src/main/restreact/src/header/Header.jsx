@@ -1,29 +1,15 @@
 import React from "react";
+import './Header.css';  // Import the CSS file
 
 const Header = () => (
-    <header>
-      <h1
-          style={{
-            margin: 0,
-            textAlign: "center",
-            flexGrow: 1,
-            backgroundColor: "#4CAF50",
-            padding: "10px",
-            color: "#fff",
-          }}
-      >
+    <header className="header">
+      <h1 className="header-title">
         EAT DAYS
       </h1>
       <a href="/chatbot">
         <img
             src="/images/icon/chatbot.png"
-            style={{
-              width: "50px",
-              position: "absolute",
-              right: "10px",
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
+            className="chatbot-icon"
             alt="Chatbot"
         />
       </a>

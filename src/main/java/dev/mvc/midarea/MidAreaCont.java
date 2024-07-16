@@ -30,7 +30,7 @@ public class MidAreaCont {
 	public String create(Model model, HttpSession session) {
 		String accessType = (String) session.getAttribute("type");
 		
-		if(accessType == null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			model.addAttribute("accessType", accessType);
 			return "/midarea/create";
 		}else {
@@ -54,7 +54,7 @@ public class MidAreaCont {
 		String accessType = (String) session.getAttribute("type");
 		
 		// 관리자 확인
-		if(accessType == null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			model.addAttribute("accessType", accessType);
 			model.addAttribute("now_page", now_page);
 			return "/midarea/list";

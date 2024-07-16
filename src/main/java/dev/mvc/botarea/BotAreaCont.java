@@ -41,7 +41,7 @@ public class BotAreaCont{
 		String accessType = (String) session.getAttribute("type");
 		
 		// 관리자 확인
-		if(accessType != null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			return "redirect:/manager";
 		}else {
 			int cnt = this.botAreaProc.create(botAreaVO);
@@ -55,7 +55,7 @@ public class BotAreaCont{
 		String accessType = (String) session.getAttribute("type");
 		
 		// 관리자 확인
-		if(accessType != null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			return "redirect:/manager";
 		}else {
 			System.out.println("bot:"+botareano);
@@ -76,7 +76,7 @@ public class BotAreaCont{
 		String accessType = (String) session.getAttribute("type");
 		
 		// 관리자 확인
-		if(accessType != null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			return "redirect:/manager";
 		}else {
 			int cnt = this.botAreaProc.update(botAreaVO);
@@ -89,7 +89,7 @@ public class BotAreaCont{
 		String accessType = (String) session.getAttribute("type");
 		
 		// 관리자 확인
-		if(accessType != null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			return "redirect:/manager";
 		}else {
 			int cnt = this.botAreaProc.delete(botareano);
@@ -104,7 +104,7 @@ public class BotAreaCont{
 		String accessType = (String) session.getAttribute("type");
 		
 		// 관리자 확인
-		if(accessType != null) {
+		if(accessType != "Master" && accessType != "Admin" && accessType == "Manager") {
 			return "redierect:/";
 		}else{
 			ArrayList<MidAreaVO> midAreaList = this.midAreaProc.list_all();

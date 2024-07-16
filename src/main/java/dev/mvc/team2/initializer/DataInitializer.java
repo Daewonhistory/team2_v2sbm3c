@@ -24,7 +24,6 @@ public class DataInitializer implements CommandLineRunner {
             AllowIps ip2 = new AllowIps();
             ip2.setId(2L);
 
-
             allowIpsRepository.saveAll(Arrays.asList(ip1, ip2));
         }
     }

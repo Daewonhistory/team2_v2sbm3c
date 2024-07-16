@@ -241,45 +241,17 @@ public class ManagerCont {
 
       switch (manager.getGrade()) {
         case 1:
-          type = "SuperManager"; //최고 관리자
-          grade = "SuperManager";
+          type = "Master"; //최고 관리자
+          grade = "Master";
           break;
         case 10:
-          type = "Cmanager"; // 회원 관리자
-          grade = "Cmanager";
+          type = "Admin"; // 회원 관리자
+          grade = "Admin";
           break;
         case 20:
-          type = "Catemanager"; // 카테고리 관리자
-          grade = "Catemanager";
+          type = "Manager"; // 카테고리 관리자
+          grade = "Manager";
           break;
-        case 30:
-          type = "Memanager"; // 메뉴 관리자
-          grade = "Memanager";
-          break;
-        case 40:
-          type = "Rmanager"; // 예약 관리자
-          grade = "Rmanager";
-          break;
-        case 50:
-          type = "Restmanager";  // 식당 관리자
-          grade = "Restmanager";
-          break;
-        case 60:
-          type = "Omanager"; // 사업자 관리자//
-          grade = "Omanager";
-          break;
-        case 70:
-          type = "Imanager"; // 재료 관리자
-          grade = "Imanager";
-          break;
-        case 80:
-          type = "RVmanager"; // 리뷰 관리자
-          grade = "RVmanager";
-          break;
-        case 90:
-          type = "Amanager";
-          grade = "Amanager";
-
         case 99:
           type = "Stop"; // 정지 관리자
           grade = "Stop";

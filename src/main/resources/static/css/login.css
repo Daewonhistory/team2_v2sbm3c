@@ -34,7 +34,7 @@ h3 {
 
 .login-wrapper > h2 {
   font-size: 24px;
-  color: #4CAF50;
+  color: #FFA07A;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -42,7 +42,7 @@ h3 {
 
 .h2 {
   font-size: 24px;
-  color: #4CAF50;
+  color: #FFA07A;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -157,7 +157,7 @@ h3 {
 #login-form > input[type="submit"] {
   color: #fff;
   font-size: 16px;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   margin-top: 20px;
   border: none;
   cursor: pointer;
@@ -176,7 +176,7 @@ h3 {
   border: 1px solid #F8F8F8;
   color: #fff;
   font-size: 0.8em;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   margin-top: 20px;
   border: none;
   cursor: pointer;
@@ -194,7 +194,7 @@ h3 {
   border: 1px solid #F8F8F8;
   color: #fff;
   font-size: 0.8em;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   margin-top: 20px;
   border: none;
   cursor: pointer;
@@ -211,7 +211,7 @@ h3 {
   border: 1px solid #F8F8F8;
   color: #fff;
   font-size: 0.8em;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   margin-top: 20px;
   border: none;
   cursor: pointer;
@@ -228,7 +228,7 @@ h3 {
   border: 1px solid #F8F8F8;
   color: #fff;
   font-size: 0.8em;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   margin-top: 20px;
   border: none;
   cursor: pointer;
@@ -426,7 +426,7 @@ h3 {
 .edit-button {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   color: white;
   border: none;
   border-radius: 5px;
