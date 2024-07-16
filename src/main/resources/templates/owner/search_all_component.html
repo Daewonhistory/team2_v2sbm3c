@@ -80,7 +80,9 @@
 
         <a style="text-decoration: none" th:href="@{'/owner/read?ownerno=' + ${ownerVO.ownerno}+ '&word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
           <img src="/images/update.png" class="icon">
-        </a>
+        </a>  <a style="text-decoration: none" th:href="@{'/owner/update_grade?ownerno=' + ${ownerVO.ownerno}+ '&word='+${word} + '&now_page='+${now_page}+'&type='+${type}}">
+        <img src="/etc/images/grade.png" class="icon">
+      </a>
 
         <a style="text-decoration: none" href="#" th:attr="onclick=|deleterest('${ownerVO.ownerno}','${ownerVO.oname}','${word}','${type}','${now_page}' ,'${num - status.index}')|">
           <img src="/images/delete.png" class="icon">
