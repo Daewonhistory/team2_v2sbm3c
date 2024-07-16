@@ -94,13 +94,13 @@ public class CategoryCont {
 
     return "/category/create";
   }
-  @GetMapping("/read/{cateno}")
-  public String read(Model model, @PathVariable int cateno, @RequestParam(name = "word", defaultValue = "") String word, @RequestParam(name = "type") String type, @RequestParam(defaultValue = "1") int now_page, HttpSession session) {
+  @GetMapping("/read/{categoryno}")
+  public String read(Model model, @PathVariable int categoryno, @RequestParam(name = "word", defaultValue = "") String word, @RequestParam(name = "type") String type, @RequestParam(defaultValue = "1") int now_page, HttpSession session) {
     String id = (String) session.getAttribute("id");
     String grade = (String) session.getAttribute("grade");
 
 
-    Optional<CategoryVO> read = this.categoryProc.read(cateno);
+    Optional<CategoryVO> read = this.categoryProc.read(categoryno);
 
     type = Tool.typecheckNull(type);
 
@@ -119,32 +119,12 @@ public class CategoryCont {
       model.addAttribute("categoryVO", read.get());
       return "category/read";
     } else {
-      return "redirect:/category/list_all";
+      return "redirect:/category/list";
     }
 
 
   }
 
-  @GetMapping("/read_y/{cateno}")
-  public String read_y(Model model, @PathVariable int cateno) {
-
-    Optional<CategoryVO> read = this.categoryProc.read(cateno);
-
-    ArrayList<CategoryVO> list = this.categoryProc.list();
-
-
-    model.addAttribute("catelist", list);
-
-    if (read.isPresent()) {
-
-      model.addAttribute("categoryVO", read.get());
-      return "cate/read_y"; // 적절한 뷰 이름을 반환합니다.
-    } else {
-      return "redirect:/category/list_y";
-    }
-
-
-  }
 
   // 수정 폼
   @GetMapping("/update/{cateno}")

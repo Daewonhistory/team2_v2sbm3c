@@ -16,7 +16,7 @@ const CategoryShortcut = () => {
 
   useEffect(() => {
     fetchData();
-  }, [categories]); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
 
   return (
       <section id="cate_shortcut_section">

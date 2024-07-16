@@ -38,7 +38,7 @@
 
       <td  class="td_bs" th:text="${categoryVO.categoryno}" id="categoryno"></td>
       <td class="td_bs" th:text="${num - status.index}"></td>
-      <td class="td_bs"><a th:href="@{|/cate/read/${categoryVO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
+      <td class="td_bs"><a th:href="@{|/category/read/${categoryVO.categoryno}?word=${word}&type=${type}&now_page=${now_page}|}" style="display: block;"
                            th:text="${categoryVO.name}"></a></td>
 
     <td class="td_bs" th:if="${categoryVO.image != null and (categoryVO.image.endsWith('jpg') or categoryVO.image.endsWith('JPG') or categoryVO.image.endsWith('png') or categoryVO.image.endsWith('PNG') or categoryVO.image.endsWith('gif'))}">

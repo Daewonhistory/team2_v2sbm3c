@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -15,7 +16,11 @@ public interface ManagerRepository extends JpaRepository<Manager, Integer> {
 
   @Query("SELECT COUNT(m.id) FROM Manager m WHERE m.id = :id AND m.passwd = :passwd")
   Integer login(@Param("id") String id, @Param("passwd") String passwd);
-
   // rdate로 검색
 
+
+  public Manager readById(String id);
+
+  @Query("SELECT COUNT(m.id) FROM Manager m where m.id = :id")
+  public int checkId(@Param("id") String id);
 }
