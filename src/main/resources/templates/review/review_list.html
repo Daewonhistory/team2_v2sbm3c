@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Review</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -88,11 +87,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body>
     <div layout:fragment="content" style="padding:0">
-        <c:import url="/menu/top.do" />
-        <div class='title_line'>리뷰</div>
-        <nav class="nav-bar">
+        <nav>
             <ul>
                 <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
                 <li><a th:href="|/menu/menuAllList?restno=${restaurantVO != null ? restaurantVO.restno : restno}&person=${person}&date=${date}|">메뉴</a></li>

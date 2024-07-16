@@ -20,7 +20,7 @@
 </head>
 <body>
 <!-- 관리자 -->
-<div class="manager-container" th:if="${session.type == 'SuperManager' || session.type == 'Cmanager' || session.type == 'Catemanager' || session.type == 'Memanager' || session.type == 'Rmanager' || session.type == 'Restmanager' || session.type == 'Omanager' || session.type == 'Imanager' || session.type == 'RVmanager' || session.type == 'Amanager' || session.type == null} ">
+<div class="manager-container" th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager' || session.type == null} ">
   <div class="manager-side">
     <div class="manager-title"><a style="font-size: 20px;" href="/manager">Eay Days 관리자</a></div>
     <ul class="manager-menu-list">
@@ -49,7 +49,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Cmanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('customer-sub-menu', 'customer-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin'}" class="manager-menu-a" onclick="toggleSubMenu('customer-sub-menu', 'customer-arrow')">
           <span id="customer-arrow" class="arrow right"></span> 회원 목록 관련
         </a>
         <ul class="sub-menu" id="customer-sub-menu" style="display: none;">
@@ -57,7 +57,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Omanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('owner-sub-menu', 'owner-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin'}" class="manager-menu-a" onclick="toggleSubMenu('owner-sub-menu', 'owner-arrow')">
           <span id="owner-arrow" class="arrow right"></span> 사업자 목록 관련
         </a>
         <ul class="sub-menu" id="owner-sub-menu" style="display: none;">
@@ -65,7 +65,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Rmanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" " class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
           <span id="reservation-arrow" class="arrow right"></span> 예약 목록
         </a>
         <ul class="sub-menu" id="reservation-sub-menu">
@@ -73,7 +73,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Restmanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('restaurant-sub-menu', 'restaurant-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('restaurant-sub-menu', 'restaurant-arrow')">
           <span id="restaurant-arrow" class="arrow right"></span> 식당 관련
         </a>
         <ul class="sub-menu" id="restaurant-sub-menu" style="display: none;">
@@ -82,7 +82,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'RVmanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('review-sub-menu', 'review-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('review-sub-menu', 'review-arrow')">
           <span id="review-arrow" class="arrow right"></span> 리뷰 목록
         </a>
         <ul class="sub-menu" id="review-sub-menu" style="display: none;">
@@ -92,7 +92,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Memanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('menu-sub-menu', 'menu-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('menu-sub-menu', 'menu-arrow')">
           <span id="menu-arrow" class="arrow right"></span> 메뉴 관련
         </a>
         <ul class="sub-menu" id="menu-sub-menu" style="display: none;">
@@ -101,7 +101,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Amanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('area-sub-menu', 'area-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('area-sub-menu', 'area-arrow')">
           <span id="area-arrow" class="arrow right"></span> 지역 관련
         </a>
         <ul class="sub-menu" id="area-sub-menu" style="display: none;">
@@ -110,7 +110,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Catemanager' || session.type == 'SuperManager'}" class="manager-menu-a" onclick="toggleSubMenu('category-sub-menu', 'area-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('category-sub-menu', 'area-arrow')">
           <span id="category-arrow" class="arrow right"></span> 카테고리
         </a>
         <ul class="sub-menu" id="category-sub-menu" style="display: none;">

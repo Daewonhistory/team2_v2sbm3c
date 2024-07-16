@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{mobile_layout}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>레스토랑 페이지</title>
+  <head>
+    <title th:text="${restaurantVO.name}"></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -41,9 +39,10 @@
           color: #FFFFFF;
         }
     </style>
-</head>
-<body class="bg-gray-100">
+  </head>
     <div layout:fragment="content" style="padding:0">
+    
+    
         <nav>
             <ul>
                 <li><a th:href="|/restaurant/main_page?restno=${restno}&person=${person}&date=${date}|">홈</a></li>
@@ -51,9 +50,6 @@
                 <li><a th:href="|/review/reviewAllList?restno=${restno}&person=${person}&date=${date}|">리뷰</a></li>
             </ul>
         </nav>
-        <div>
-            <span class="page_name">레스토랑</span>
-        </div>
 
         <section id="home" style="height: 300px; margin:0; padding:0">
             <div class="slider" id="slider">
@@ -69,13 +65,13 @@
         </section>
         <section id="restaurant_info_section">
             <div>
-                <span id="rest_name" th:text="${restaurantVO.name}"></span>
+                <span id="rest_name" th:text="${restaurantVO.name}" style="font-size: 30px; font-weight: bold;"></span>
                 <button type="button" id="favorite-btn" onclick="checkLoginAndAddFavorite()">즐겨찾기</button>
                 <img id="favorite-img" th:data-is-favorited="${isFavorited}" th:src="@{/images/favorite_up.png}" alt="즐겨찾기 이미지" class="favorite-icon" />
             </div>
             <div>
-                <img src="star" alt="별이미지">
-                <span id="avg_rate" th:text="${rateDisplay}"></span>
+                <span style="font-size:25px;">평점: </span>
+                <span style="font-size:25px;" id="avg_rate" th:text="${rateDisplay}"></span>
             </div>
         </section>
         <section id="sec_reserve_condition">
@@ -91,6 +87,10 @@
         <section>
             <h2>식당 공지</h2>
             <div id="notice_area" style="height: 200px; overflow-x: hidden; overflow-y: scroll; padding:4px">
+                <div class="notice_info" th:if="${noticeList.size == 0}" style="width:100%; overflow: hidden; overflow-wrap: break-word;">
+                  <h2 style="font-size: 30px;">공지가 없습니다.</h2>
+                  <span> 작성된 공지가 없습니다.</span>
+                </div>
                 <div class="notice_info" th:each="noticeVO, status: ${noticeList}" style="width:100%; overflow: hidden; overflow-wrap: break-word;">
                     <h2 th:text="${noticeVO.title}" style="font-size: 30px;"></h2>
                     <span th:text="${noticeVO.content}"></span>
