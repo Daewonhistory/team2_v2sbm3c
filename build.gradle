@@ -83,7 +83,7 @@ tasks.withType(JavaCompile) {
 //}
 //
 //processResources { dependsOn "copyReactBuildFiles" }
-
+//
 //
 //task installReact(type: Exec) {
 //	workingDir "$frontendDir"

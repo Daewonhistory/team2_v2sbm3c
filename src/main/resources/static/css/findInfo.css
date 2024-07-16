@@ -34,7 +34,7 @@
 
 .auth-button {
   cursor: pointer; /* 커서를 포인터로 변경하여 사용자가 클릭할 수 있음을 나타냄 */
-  background-color: #4CAF50; /* 초록색 배경 */
+  background-color: #FFA07A; /* 초록색 배경 */
   color: white; /* 흰색 텍스트 */
   width: 25%;
   font-size: 14px;
@@ -94,7 +94,7 @@
 
 #next-phone button {
   cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   color: white;
   width: 25%;
   font-size: 14px;
@@ -117,7 +117,7 @@
 
 #next-email button {
   cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #FFA07A;
   color: white;
   width: 25%;
   font-size: 14px;
