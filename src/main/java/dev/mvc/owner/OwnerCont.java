@@ -69,7 +69,7 @@ public class OwnerCont {
 
   @Autowired
   private Security security;
-  
+
   @Autowired
   private SmsToolO smsTool;
 
@@ -86,9 +86,9 @@ public class OwnerCont {
   }
 
   @GetMapping()
-  public String owner(Model model,HttpSession session) {
+  public String owner(Model model, HttpSession session) {
     String type = (String) session.getAttribute("type");
-    System.out.println("type-> "+ type);
+    System.out.println("type-> " + type);
 
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     System.out.println("owner ownerno ->" + ownerno);
@@ -106,10 +106,10 @@ public class OwnerCont {
 
     model.addAttribute("restno", restno);
 
-    if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") ||  publicTools.isOwner(type).equals("ready")) {
+    if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") || publicTools.isOwner(type).equals("ready")) {
       return "layout";
     } else {
-      return "redirect:/";
+      return "redirect:/owner/login";
     }
 
   }
@@ -152,13 +152,11 @@ public class OwnerCont {
     String type = (String) session.getAttribute("type");
 
 
-
-
     if (type.equals("Norest")) {
       model.addAttribute("accessType", type);
 
       ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
-      model.addAttribute("midAreaList",midAreaVOS);
+      model.addAttribute("midAreaList", midAreaVOS);
       return "owner/rest_create";
 
     } else {
@@ -174,7 +172,7 @@ public class OwnerCont {
    */
 
   @PostMapping("/rest_create")
-  public String restaurant(Model model, HttpSession session,RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
+  public String restaurant(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     restaurantVO.setOwnerno(ownerno);
 
@@ -203,7 +201,7 @@ public class OwnerCont {
 
             if (size > 0) {
               String exe = fileNames[i].split("\\.")[1];
-              String newFileName = "rest_" +restaurantVO.getOwnerno()+"_"+(i + 1) + "." + exe;
+              String newFileName = "rest_" + restaurantVO.getOwnerno() + "_" + (i + 1) + "." + exe;
               String fileSaved = Upload.saveFileSpring(files[i], upDir, newFileName);
 
               if (Tool.isImage(fileSaved)) {
@@ -341,7 +339,7 @@ public class OwnerCont {
     if (id == null) {
       return "/owner/login_cookie";
     } else {
-      return "redirect:/";
+      return "redirect:/owner/login";
     }
 
     //-------------------------------------------------------------------
@@ -365,7 +363,6 @@ public class OwnerCont {
    * @return
    */
   @PostMapping("/login")
-
   public String login(Model model,
                       String id, String passwd,
                       @RequestParam(value = "id_save", defaultValue = "") String id_save,
@@ -374,11 +371,9 @@ public class OwnerCont {
                       HttpServletResponse response,
                       HttpServletRequest request,
                       RedirectAttributes rttr,
-                      OwnerHistoryVO historyVO
-  ) {
+                      OwnerHistoryVO historyVO) {
 
-
-    HashMap<String, Object> map = new HashMap<String, Object>();
+    HashMap<String, Object> map = new HashMap<>();
     map.put("id", id);
     map.put("passwd", this.security.aesEncode(passwd));
 
@@ -387,132 +382,126 @@ public class OwnerCont {
     if (cnt == 1) {
       OwnerVO ownerVO = this.ownerProc.readById(id);
 
-
       historyVO.setOwnerno(ownerVO.getOwnerno());
 
-
       String ipAddress = ClientUtils.getRemoteIP(request);
-
       System.out.println(ipAddress);
       historyVO.setIp(ipAddress);
-
-
       historyVO.setLogininfo(request.getHeader("User-Agent"));
-      IpLocationService ipLocationService = new IpLocationService();
 
+      IpLocationService ipLocationService = new IpLocationService();
       Map<String, Object> location = ipLocationService.getLocation(ipAddress);
       String city = (String) location.get("city");
 
-
       CityUtils cityUtils = new CityUtils();
-
-
       String cityConvert = cityUtils.cityConvert(city);
-
 
       historyVO.setCity(cityConvert);
       int history = ownerhisProc.create(historyVO);
-      if (id_save.equals("Y")) { // id를 저장할 경우, Checkbox를 체크한 경우
+
+      if (id_save.equals("Y")) {
         Cookie ck_id = new Cookie("ck_id", id);
-        ck_id.setPath("/");  // root 폴더에 쿠키를 기록함으로 모든 경로에서 쿠기 접근 가능
-        ck_id.setMaxAge(60 * 60 * 24 * 30); // 30 day, 초단위
-        response.addCookie(ck_id); // id 저장
-      } else { // N, id를 저장하지 않는 경우, Checkbox를 체크 해제한 경우
+        ck_id.setPath("/");
+        ck_id.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(ck_id);
+      } else {
         Cookie ck_id = new Cookie("ck_id", "");
         ck_id.setPath("/");
         ck_id.setMaxAge(0);
-        response.addCookie(ck_id); // id 저장
+        response.addCookie(ck_id);
       }
 
-      // id를 저장할지 선택하는  CheckBox 체크 여부
       Cookie ck_id_save = new Cookie("ck_id_save", id_save);
       ck_id_save.setPath("/");
-      ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
+      ck_id_save.setMaxAge(60 * 60 * 24 * 30);
       response.addCookie(ck_id_save);
-      // -------------------------------------------------------------------
 
-      // -------------------------------------------------------------------
-      // Password 관련 쿠기 저장
-      // -------------------------------------------------------------------
-      if (passwd_save.equals("Y")) { // 패스워드 저장할 경우
+      if (passwd_save.equals("Y")) {
         Cookie ck_passwd = new Cookie("ck_passwd", passwd);
         ck_passwd.setPath("/");
-        ck_passwd.setMaxAge(60 * 60 * 24 * 30); // 30 day
+        ck_passwd.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(ck_passwd);
-      } else { // N, 패스워드를 저장하지 않을 경우
+      } else {
         Cookie ck_passwd = new Cookie("ck_passwd", "");
         ck_passwd.setPath("/");
         ck_passwd.setMaxAge(0);
         response.addCookie(ck_passwd);
       }
-      // passwd를 저장할지 선택하는  CheckBox 체크 여부
+
       Cookie ck_passwd_save = new Cookie("ck_passwd_save", passwd_save);
       ck_passwd_save.setPath("/");
-      ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
+      ck_passwd_save.setMaxAge(60 * 60 * 24 * 30);
       response.addCookie(ck_passwd_save);
-      // -------------------------------------------------------------------
-      // id를 이용하여 회원 정보 조회
-
-      // session.setAttribute("grade", memverVO.getGrade());
-
 
       System.out.println("->" + ownerVO.getGrade());
 
-
-      if (ownerVO.getGrade() == 1) {
-        session.setAttribute("restcount", this.restaurantProc.restaurantCount(ownerVO.getOwnerno()));
-        Integer restcount = this.restaurantProc.restaurantCount(ownerVO.getOwnerno());
-        if (restcount == 0) {
-          session.setAttribute("type", "Norest");
+      switch (ownerVO.getGrade()) {
+        case 1:
+          session.setAttribute("restcount", this.restaurantProc.restaurantCount(ownerVO.getOwnerno()));
+          Integer restcount = this.restaurantProc.restaurantCount(ownerVO.getOwnerno());
+          if (restcount == 0) {
+            session.setAttribute("type", "Norest");
+            session.setAttribute("ownerno", ownerVO.getOwnerno());
+            session.setAttribute("id", ownerVO.getId());
+            session.setAttribute("oname", ownerVO.getOname());
+            session.setAttribute("grade", "Norest");
+            session.setAttribute("ownerVO", ownerVO);
+            return "redirect:/";
+          } else {
+            session.setAttribute("type", "owner");
+            System.out.println("ownerno" + ownerVO.getOwnerno());
+            session.setAttribute("ownerno", ownerVO.getOwnerno());
+            session.setAttribute("id", ownerVO.getId());
+            session.setAttribute("oname", ownerVO.getOname());
+            session.setAttribute("grade", "owner");
+            session.setAttribute("ownerVO", ownerVO);
+            return "redirect:/";
+          }
+        case 10:
+          session.setAttribute("ownerno", ownerVO.getOwnerno());
+          System.out.println("ownerno" + ownerVO.getOwnerno());
+          session.setAttribute("id", ownerVO.getId());
+          session.setAttribute("oname", ownerVO.getOname());
+          session.setAttribute("grade", "ready");
+          session.setAttribute("type", "ready");
+          session.setAttribute("ownerVO", ownerVO);
+          rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자 인증 대기중입니다.");
+          return "redirect:/owner";
+        case 20:
+          session.setAttribute("type", "NotCerti");
+          System.out.println("ownerno" + ownerVO.getOwnerno());
           session.setAttribute("ownerno", ownerVO.getOwnerno());
           session.setAttribute("id", ownerVO.getId());
           session.setAttribute("oname", ownerVO.getOname());
-          session.setAttribute("grade", "Norest");
+          session.setAttribute("grade", "NotCerti");
           session.setAttribute("ownerVO", ownerVO);
-          return "redirect:/";
-        }else {
-          session.setAttribute("type", "owner");
-          System.out.println("ownerno"+ownerVO.getOwnerno());
+          rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 식당을 생성할 수 있습니다.");
+          return "redirect:/owner";
+        case 30:
+          session.setAttribute("type", "Unauth");
+          System.out.println("ownerno" + ownerVO.getOwnerno());
           session.setAttribute("ownerno", ownerVO.getOwnerno());
           session.setAttribute("id", ownerVO.getId());
           session.setAttribute("oname", ownerVO.getOname());
-          session.setAttribute("grade", "owner");
+          session.setAttribute("grade", "Unauth");
           session.setAttribute("ownerVO", ownerVO);
-          return "redirect:/";
-        }
-
-
-
-      } else if (ownerVO.getGrade() == 10)  {
-        session.setAttribute("ownerno", ownerVO.getOwnerno());
-        System.out.println("ownerno"+ownerVO.getOwnerno());
-
-        session.setAttribute("id", ownerVO.getId());
-        session.setAttribute("oname", ownerVO.getOname());
-        session.setAttribute("grade", "ready");
-        session.setAttribute("type", "ready");
-        session.setAttribute("ownerVO", ownerVO);
-        rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자 인증 대기중입니다.");
-
-        return "redirect:/owner";
-      } else {
-        session.setAttribute("type", "NotCerti");
-        System.out.println("ownerno"+ownerVO.getOwnerno());
-
-        session.setAttribute("ownerno", ownerVO.getOwnerno());
-        session.setAttribute("id", ownerVO.getId());
-        session.setAttribute("oname", ownerVO.getOname());
-        session.setAttribute("grade", "NotCerti");
-        session.setAttribute("ownerVO", ownerVO);
-        rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 인증되면 컨텐츠에 접근할 수 있습니다");
-        return "redirect:/owner/certifi";
-
+          rttr.addFlashAttribute("login", ownerVO.getOname() + "님 안녕하세요 사업자가 심사에서 반려되었습니다");
+          return "redirect:/owner";
+        default:
+          session.setAttribute("type", "?");
+          System.out.println("ownerno" + ownerVO.getOwnerno());
+          session.setAttribute("ownerno", ownerVO.getOwnerno());
+          session.setAttribute("id", ownerVO.getId());
+          session.setAttribute("oname", ownerVO.getOname());
+          session.setAttribute("grade", "?");
+          session.setAttribute("ownerVO", ownerVO);
+          rttr.addFlashAttribute("login", ownerVO.getOname() + "님 알 수 없는 정보입니다.");
+          return "redirect:/owner";
       }
     } else {
       rttr.addFlashAttribute("error", "아이디 또는 비밀번호 오류입니다.");
       return "redirect:/owner/login";
     }
-
   }
 
 
@@ -558,6 +547,7 @@ public class OwnerCont {
 
   /**
    * 프로필 업데이트 처리 메서드
+   *
    * @param session
    * @param ra
    * @param ownerVO
@@ -565,7 +555,7 @@ public class OwnerCont {
    */
 
   @PostMapping("/update_profile")
-  public String updateProfile(HttpSession session, RedirectAttributes ra,OwnerVO ownerVO) {
+  public String updateProfile(HttpSession session, RedirectAttributes ra, OwnerVO ownerVO) {
 
 
     String id = (String) session.getAttribute("id");
@@ -607,13 +597,13 @@ public class OwnerCont {
       // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
       String exe = file1.split("\\.")[1];
       String newFileName = "owner_" + owner_old.getOwnerno() + "." + exe;
-      file1saved = Upload.saveFileSpring(mf, upDir,newFileName);
+      file1saved = Upload.saveFileSpring(mf, upDir, newFileName);
 
       if (Tool.isImage(file1saved)) { // 이미지인지 검사
         // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
         file1 = Tool.preview(upDir, file1saved, 150, 150);
-      }  else {
-        ra.addFlashAttribute("success","이미지가 아닙니다!");
+      } else {
+        ra.addFlashAttribute("success", "이미지가 아닙니다!");
         return "redirect:/owner/my_page";
       }
 
@@ -631,19 +621,20 @@ public class OwnerCont {
 
     int count = this.ownerProc.updateProfile(ownerVO);// Oracle 처리
 
-    if (count ==1 ){
-      ra.addFlashAttribute("success","프로필 수정이 완료되었습니다.");
+    if (count == 1) {
+      ra.addFlashAttribute("success", "프로필 수정이 완료되었습니다.");
       return "redirect:/owner/my_page";
     } else {
       return "redirect:/";
     }
   }
+
   @GetMapping("/restread")
-  public String restread(HttpSession session,Model model) {
+  public String restread(HttpSession session, Model model) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
     Integer ownerno = (Integer) session.getAttribute("ownerno");
-    if (type == "owner" ) {
+    if (type == "owner") {
       model.addAttribute("accessType", type);
       RestFullData restFullData = this.restaurantProc.readFullDataOwner(ownerno);
       model.addAttribute("restFullData", restFullData);
@@ -657,32 +648,32 @@ public class OwnerCont {
 
 
   @GetMapping("/update_map")
-  public String update_map(Model model,HttpSession session) {
+  public String update_map(Model model, HttpSession session) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
     Integer ownerno = (Integer) session.getAttribute("ownerno");
-    if (type == "owner" ) {
+    if (type == "owner") {
       model.addAttribute("accessType", type);
       ArrayList<MidAreaVO> midAreaVOS = midAreaProc.list_all();
-      model.addAttribute("midAreaList",midAreaVOS);
+      model.addAttribute("midAreaList", midAreaVOS);
       RestFullData restFullData = this.restaurantProc.readFullDataOwner(ownerno);
       model.addAttribute("restFullData", restFullData);
       // 메뉴의 재료 목록
 
 
-
       return "owner/update_map";
-    } else{
+    } else {
       return "redirect:/";
 
     }
 
   }
+
   @PostMapping("/update_map")
-  public String update_map(RestFullData restFullData, RedirectAttributes ra ,String restno,HttpSession session) {
+  public String update_map(RestFullData restFullData, RedirectAttributes ra, String restno, HttpSession session) {
 
     String type = (String) session.getAttribute("type");
-    if (type == "owner" ) {
+    if (type == "owner") {
       int count = restaurantProc.update_map(restFullData);
 
       if (count == 1) {
@@ -697,13 +688,10 @@ public class OwnerCont {
     }
 
 
-
-
-
   }
 
   @GetMapping("/update_imgs")
-  public String update_imgs(Model model,HttpSession session) {
+  public String update_imgs(Model model, HttpSession session) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
     Integer ownerno = (Integer) session.getAttribute("ownerno");
@@ -719,13 +707,12 @@ public class OwnerCont {
 
     return "owner/update_imgs";
   }
+
   @PostMapping("/update_imgs")
   public String updateRestaurant(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestFullData restFullData, RestimgVO restimgVO, @RequestParam("deletedImageFiles") String deletedImageFiles) {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     restFullData.setOwnerno(ownerno);
     String upDir = Restaurant.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
-
-
 
 
     int restno = restFullData.getRestno();  // 업데이트할 식당 번호
@@ -738,7 +725,7 @@ public class OwnerCont {
           List<RestimgVO> imagesToDelete = this.restimgproc.findByFileName(fileName.trim());
 
           for (RestimgVO imageToDelete : imagesToDelete) {
-            System.out.println("->"+imageToDelete.getImagefile());
+            System.out.println("->" + imageToDelete.getImagefile());
             String fileToDelete = imageToDelete.getImagefile(); // Assuming this is the file name
 
             System.out.println("이미지 이름->" + fileToDelete);
@@ -761,7 +748,6 @@ public class OwnerCont {
         }
       }
     }
-
 
 
     MultipartFile mf1 = restimgVO.getFile1MF();
@@ -790,13 +776,13 @@ public class OwnerCont {
 
               int saved = this.restimgproc.create(restimgVO);
               if (saved != 1) {
-                return "redirect:/owner/restread?restno="+restno;
+                return "redirect:/owner/restread?restno=" + restno;
               }
             } else {
-              return "redirect:/owner/restread?restno="+restno;
+              return "redirect:/owner/restread?restno=" + restno;
             }
           } else {
-            return "redirect:/owner/restread?restno="+restno;
+            return "redirect:/owner/restread?restno=" + restno;
           }
         } else {
           redirectAttributes.addFlashAttribute("cnt", 0);
@@ -807,7 +793,7 @@ public class OwnerCont {
       }
     }
 
-    return "redirect:/owner/restread?restno="+restno;
+    return "redirect:/owner/restread?restno=" + restno;
   }
 
 
@@ -825,7 +811,7 @@ public class OwnerCont {
     if (type == null) {
       return "redirect:/owner/login";
     }
-    model.addAttribute("accessType",type);
+    model.addAttribute("accessType", type);
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     RestDTO restDTO = this.restaurantProc.restaurant_ownerno(ownerno);
     model.addAttribute("searchlist", restDTO);
@@ -1110,18 +1096,21 @@ public class OwnerCont {
 
     String id = (String) session.getAttribute("id");
     String grade = (String) session.getAttribute("grade");
+    String type = (String) session.getAttribute("type");
+
+    model.addAttribute("accessType", type);
 
     if (id != null && grade.equals("NotCerti")) {
 
-    OwnerVO read = this.ownerProc.readById(id);
-    if (read != null) {
-      model.addAttribute("ownerVO", read);
+      OwnerVO read = this.ownerProc.readById(id);
+      if (read != null) {
+        model.addAttribute("ownerVO", read);
 
-      return "owner/certifi";
-    } else {
-      return "redirect:/";
+        return "owner/certifi";
+      } else {
+        return "redirect:/";
 
-    }
+      }
 
 
     } else {
@@ -1141,7 +1130,7 @@ public class OwnerCont {
    */
   @PostMapping("/certifi")
 
-  public String certicreate(Model model, OwnerVO ownerVO, RedirectAttributes ra,HttpSession session) {
+  public String certicreate(Model model, OwnerVO ownerVO, RedirectAttributes ra, HttpSession session) {
     String file1 = ""; // 원본 파일명 image
     String file1saved = ""; // 저장된 파일명, image
     String thumb1 = ""; // preview image
@@ -1190,9 +1179,9 @@ public class OwnerCont {
             ownerVO.setCertifi_image(file1saved); // 저장된 파일명 설정
             ownerVO.setIdenti_card_image(file2saved); // 저장된 파일명 설정
             Integer ownerno = (Integer) session.getAttribute("ownerno");
-            session.setAttribute("grade","ready");
-            session.setAttribute("type","ready");
-            HashMap<String,Object> map = new HashMap<String,Object>();
+            session.setAttribute("grade", "ready");
+            session.setAttribute("type", "ready");
+            HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("ownerno", ownerno);
             map.put("grade", 10);
             ownerProc.update_grade(map);
@@ -1224,41 +1213,44 @@ public class OwnerCont {
       return "redirect:/";
     }
   }
+
   @PostMapping("/send_phone")
 
   public ResponseEntity<CompletableFuture<Boolean>> PhoneAuth(@RequestBody PhoneAuthVO phoneVO) throws NurigoMessageNotReceivedException, NurigoEmptyResponseException, NurigoUnknownException {
 
-    System.out.println("phone ->"+ phoneVO.getPhone());
+    System.out.println("phone ->" + phoneVO.getPhone());
     return ResponseEntity.ok((smsTool.send_message((java.lang.String) phoneVO.getPhone())));
   }
 
   @PostMapping("/send_email")
 
-  public  ResponseEntity<CompletableFuture<Boolean>> EmailAuth(@RequestBody EmailAuthVO emailAuthVO) throws Exception {
+  public ResponseEntity<CompletableFuture<Boolean>> EmailAuth(@RequestBody EmailAuthVO emailAuthVO) throws Exception {
 
-    System.out.println("->"+emailAuthVO.getEmail());
+    System.out.println("->" + emailAuthVO.getEmail());
     return ResponseEntity.ok((emailTool.sendAuthenticationCode(emailAuthVO.getEmail())));
   }
-  @PostMapping("/check_phone")
-  public  ResponseEntity<HashMap<String,Object>> auth_phone_check(@RequestBody PhoneAuthVO phoneVO) throws Exception {
 
-    return ResponseEntity.ok((smsTool.checkAuthentication(phoneVO.getPhone(),phoneVO.getAuth())));
+  @PostMapping("/check_phone")
+  public ResponseEntity<HashMap<String, Object>> auth_phone_check(@RequestBody PhoneAuthVO phoneVO) throws Exception {
+
+    return ResponseEntity.ok((smsTool.checkAuthentication(phoneVO.getPhone(), phoneVO.getAuth())));
 
   }
 
 
   @PostMapping("/check_email")
-  public  ResponseEntity<HashMap<String,Object>> auth_email_check(@RequestBody EmailAuthVO emailAuthVO) throws Exception {
+  public ResponseEntity<HashMap<String, Object>> auth_email_check(@RequestBody EmailAuthVO emailAuthVO) throws Exception {
 
-    return ResponseEntity.ok((emailTool.checkAuthentication(emailAuthVO.getEmail(),emailAuthVO.getAuth())));
+    return ResponseEntity.ok((emailTool.checkAuthentication(emailAuthVO.getEmail(), emailAuthVO.getAuth())));
 
   }
+
   @PostMapping("/delete_rest")
-  public String delete_rest(HttpSession session,RedirectAttributes ra) {
+  public String delete_rest(HttpSession session, RedirectAttributes ra) {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     if (ownerno == null) {
       return "redirect:/";
-    }else  {
+    } else {
       int count = this.restaurantProc.delete_rest(ownerno);
 
       if (count == 1) {

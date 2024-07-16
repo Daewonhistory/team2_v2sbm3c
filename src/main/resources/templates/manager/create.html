@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+  <div layout:fragment="content" class="form-container">
+
+    <div class="form-wrapper">
+      <h2 class="form-title">관리자 회원가입</h2>
+      <div class="fail-message" th:text="${fail}"></div>
+
+      <form name="frm" id="signup-form" method="POST" action="/manager/create">
+        <label class="form-label">아이디 <span class="required"> * </span> </label>
+        <div style="display: flex; align-items: center;">
+          <input type="text" class="form-input" name="id" id="id" placeholder="아이디 입력">
+          <button type='button' id="btn_checkID" onclick="checkID()" class="btn-check-id">중복확인</button>
+        </div>
+        <div id="id_msg" class="form-msg"></div>
+
+        <label class="form-label" style="margin-top: 10px;">비밀번호 <span class="required"> * </span> </label>
+        <input type="password" class="form-input" name="passwd" id="passwd" placeholder="비밀번호 입력">
+        <div id="passwd_msg" class="form-msg"></div>
+
+        <label class="form-label" style="margin-top: 10px;">성명 <span class="required"> * </span> </label>
+        <input type="text" class="form-input" name="mname" id="mname" placeholder="성명">
+        <div id="mname_msg" class="form-msg"></div>
+
+        <label class="form-label" style="margin-top: 10px;">권한 선택 <span class="required"> * </span> </label>
+        <select name="grade" id="grade" class="form-select">
+          <option value="10">회원 관리자</option>
+          <option value="20">카테고리 관리자</option>
+          <option value="30">메뉴 관리자</option>
+          <option value="40">예약 관리자</option>
+          <option value="50">식당 관리자</option>
+          <option value="60">사업자 승인 관리자</option>
+          <option value="70">재료 관리자</option>
+          <option value="80">리뷰 관리자</option>
+          <option value="99">정지</option>
+        </select>
+
+        <div class="form-buttons" style="margin-top: 10px;">
+          <button type="submit" id="btn_send" class="btn-submit" disabled>회원가입</button>
+          <button type="button" onclick="location.href = '/';" id="btn_cancel" class="btn-cancel">취소</button>
+        </div>
+      </form>
+    </div>
+    <script>
+      let isIDChecked = false;
+
+      function checkID() {
+        const id = document.getElementById('id').value;
+
+        if (id.length < 4) {
+          alert('아이디는 4자 이상이어야 합니다.');
+          return;
+        }
+
+        fetch('/manager/check_id', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `id=${encodeURIComponent(id)}`
+        })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              if (data.cnt == 0) {
+                document.getElementById('id_msg').innerText = '사용할 수 없는 아이디입니다.';
+                isIDChecked = false;
+              } else {
+                document.getElementById('id_msg').style.color = "green";
+                document.getElementById('id_msg').innerText = '사용 가능한 아이디입니다.';
+
+                isIDChecked = true;
+                checkFormValidity();
+              }
+            })
+            .catch(error => console.error('Error:', error));
+      }
+
+      function checkFormValidity() {
+        const id = document.getElementById('id').value;
+        const passwd = document.getElementById('passwd').value;
+        const mname = document.getElementById('mname').value;
+
+        document.getElementById('btn_send').disabled = !(isIDChecked && id.length >= 4 && passwd.length >= 4 && mname.length >= 2);
+      }
+
+      document.getElementById('id').addEventListener('input', checkFormValidity);
+      document.getElementById('passwd').addEventListener('input', checkFormValidity);
+      document.getElementById('mname').addEventListener('input', checkFormValidity);
+    </script>
+  </div>
+
+
+
+</html>
