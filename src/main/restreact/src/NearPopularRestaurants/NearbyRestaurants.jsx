@@ -40,7 +40,7 @@ function NearbyRestaurants() {
                   </div>
                   <div>
                   <span className="restaurant-area">{firstLine}</span><br/> {/* 첫 번째 줄 주소 */}
-                  <span className="restaurant-area">{secondLine}</span> {/* 두 번째 줄 주소 */}
+                  <span className="restaurant-area">{secondLine}</span><br/> {/* 두 번째 줄 주소 */}
                   <span className="rest_rate"> {index + 1} 위 </span>
                   </div>
                 </div>

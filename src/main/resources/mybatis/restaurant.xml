@@ -383,10 +383,10 @@
     WHERE ownerno = #{ownerno}
   </select>
 
-
+<!-- 근처 최고식당 찾기 -->
 	<select id="NearBestRestaurant" parameterType="HashMap" resultType="dev.mvc.dto.RestFullData">
 		SELECT restno, name, tel, grade, SUBSTR(address, 1, INSTR(address, ' ', 1, 2) - 1) AS address,
-					 lat, lng, reserve_range, ownerno, categoryno, botareano, image1, rate
+					 , botareano, image1, rate
 		FROM (
 					 SELECT re.restno, name, tel, grade, address, lat, lng, reserve_range,
 									re.ownerno, categoryno, botareano, ri1.imagefile AS image1,
@@ -402,6 +402,44 @@
 				 )
 		ORDER BY rate DESC
 	</select>
+	<select id="IngreBestRestaurant">
+		<![CDATA[
+		SELECT restno, name, tel, grade,
+		        SUBSTR(address, 1, INSTR(address, ' ', 1, 2) - 1) AS address,
+		        lat, lng, botareano, image1, rate
+		FROM (
+	      SELECT re.restno, name, tel, grade, address,
+									lat, lng, reserve_range, ownerno, categoryno,
+									botareano, ri1.imagefile AS image1, re.rate,
+									ROWNUM AS rnum
+					FROM restaurant re
+					LEFT JOIN (
+							SELECT restno, imagefile,
+											ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						FROM restimage
+				) ri1 ON re.restno = ri1.restno AND ri1.rn = 1
+						WHERE re.restno NOT IN (
+		SELECT DISTINCT restno
+		FROM menu
+		WHERE menuno IN (
+		SELECT menuno
+		FROM menuingred
+		WHERE ingredno IN (
+		SELECT ingredno
+		FROM allergy
+		WHERE custno = #{custno}
+		)
+		)
+		AND restno IS NOT NULL
+		)
+		AND re.restno IS NOT NULL
+		AND re.rate > 0  -- Exclude restaurants with rate 0
+		ORDER BY re.rate DESC
+		)
+		WHERE ROWNUM <= 10
+		]]>
+	</select>
+
 
 	<update id="update_map">
 		UPDATE restaurant
