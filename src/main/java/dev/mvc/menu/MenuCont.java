@@ -78,7 +78,7 @@ public class MenuCont {
 		String accessType = (String) session.getAttribute("type");
 		System.out.println("=>accessType:" + accessType);
 		int restno = 0;
-		if (accessType == null) {
+		if(accessType == "Master" || accessType == "Admin" || accessType == "Manager") {
 			ArrayList<RestaurantVO> restaurantList = this.restaurantProc.list_all();
 			model.addAttribute("restaurantList", restaurantList);
 		} else if (accessType.equals("owner")) {
@@ -199,7 +199,7 @@ public class MenuCont {
 	public String read(Model model, HttpSession session, String word, int now_page, int menuno) {
 		String accessType = (String) session.getAttribute("type");
 		
-		if(accessType != null && !accessType.equals("owner")) {
+		if((accessType == "Master" || accessType == "Admin" || accessType == "Manager") && !accessType.equals("owner")) {
 			return "redirect:/owner";
 		}
 		
@@ -231,7 +231,7 @@ public class MenuCont {
 		int restno = 0;
 		ArrayList<RestaurantVO> RestList = null;
 		int ownerno = 0;
-		if (accessType == null) { // 관리자 접속
+		if(accessType == "Master" || accessType == "Admin" || accessType == "Manager") { // 관리자 접속
 			System.out.println("admin");
 			RestList = this.restaurantProc.list_all();
 			ownerno = 0;
@@ -260,27 +260,28 @@ public class MenuCont {
 	 * @return
 	 */
 	@GetMapping("update")
-	public String update(Model model, int menuno, String word, int now_page) {
-		MenuVO menuVO = this.menuProc.read(menuno);
-		model.addAttribute(menuVO);
+	public String update(Model model, HttpSession session, int menuno, String word, int now_page) {
+	  String accessType = (String) session.getAttribute("type");
+	  MenuVO menuVO = this.menuProc.read(menuno);
+	  model.addAttribute(menuVO);
 
-		ArrayList<IngredientVO> list = this.ingredientProc.list_all();
-		model.addAttribute("list", list);
-
-		// 메뉴의 재료 목록
-		ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuno);
+	  ArrayList<IngredientVO> list = this.ingredientProc.list_all();
+	  model.addAttribute("list", list);
+		
+	  if((accessType == "Master" || accessType == "Admin" || accessType == "Manager") || accessType == "owner") {
+	    // 메뉴의 재료 목록
+	    ArrayList<MenuIngredVO> menuIngredList = this.menuIngredProc.list_by_menuno(menuno);
 		ArrayList<IngredientVO> IngredList = new ArrayList<IngredientVO>();
 		for (MenuIngredVO menuIngredVO : menuIngredList) {
-			IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
-			IngredList.add(ingredientVO);
+		  IngredientVO ingredientVO = this.ingredientProc.read(menuIngredVO.getIngredno());
+		  IngredList.add(ingredientVO);
 		}
 		model.addAttribute("IngredNameList", IngredList);
-
-		model.addAttribute("word", word);
-		model.addAttribute("now_page", now_page);
-		return "menu/update";
+	  }
+	  model.addAttribute("word", word);
+      model.addAttribute("now_page", now_page);
+      return "menu/update";
 	}
-
 	/**
 	 * 메뉴 수정 (내용, 이미지)POST
 	 *
