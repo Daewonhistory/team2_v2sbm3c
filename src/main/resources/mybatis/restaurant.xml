@@ -245,9 +245,9 @@
 	
 	
 	<select id="SearchRestaurantWithImg" parameterType="HashMap" resultType="dev.mvc.dto.RestFullData">
-		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, botarea_name, image1,image2,image3
+		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, botarea_name, rate, image1,image2,image3
 		FROM(
-			SELECT re.restno, re.name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, re.botareano, ba.name AS botarea_name, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
+			SELECT re.restno, re.name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, re.botareano, ba.name AS botarea_name, rate, ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, ROWNUM AS rnum
 			FROM restaurant re
 	    LEFT JOIN (
 	      SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
@@ -288,6 +288,7 @@
 			    FROM menu
 			    WHERE price BETWEEN #{min_price} * 10000 AND #{max_price} * 10000)
 		)
+		ORDER BY rate DESC
 	</select>
 	
 	<select id = "test">

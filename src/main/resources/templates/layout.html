@@ -49,7 +49,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Master' || session.type == 'Admin'}" class="manager-menu-a" onclick="toggleSubMenu('customer-sub-menu', 'customer-arrow')">
+        <a th:if="${accessType == 'Master' || session.type == 'Admin'}" class="manager-menu-a" onclick="toggleSubMenu('customer-sub-menu', 'customer-arrow')">
           <span id="customer-arrow" class="arrow right"></span> 회원 목록 관련
         </a>
         <ul class="sub-menu" id="customer-sub-menu" style="display: none;">
@@ -65,7 +65,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}"  class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
           <span id="reservation-arrow" class="arrow right"></span> 예약 목록
         </a>
         <ul class="sub-menu" id="reservation-sub-menu">
@@ -151,10 +151,10 @@
       </li>
       <li class="owner-menu">
         <a class="owner-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
-          <span id="reserve-arrow" class="arrow right"></span> 예약 관련
+          <span id="reservation-arrow" class="arrow right"></span> 예약 관련
         </a>
         <ul class="sub-menu" id="reservation-sub-menu" style="display: none;">
-          <li><a href="/reservation/list_owner_paging">전체 예약 </a></li>
+          <li><a href="/reservation/list/all">전체 예약 </a></li>
           <li><a href="/admitperson/list">예약인원 관리 </a></li>
         </ul>
       </li>
@@ -168,12 +168,12 @@
         </ul>
       </li>
 
-      <li class="owner-menu">
+      <li class="owner-menu" >
         <a class="owner-menu-a" onclick="toggleSubMenu('owners-sub-menu', 'owners-arrow')">
           <span id="owners-arrow" class="arrow right"></span> 사업자 관련
         </a>
-        <ul class="sub-menu" id="owners-sub-menu" style="display: none;">
-          <li><a href="/owner/certifi">사업자 정보 등록</a></li>
+        <ul class="sub-menu" id="owners-sub-menu" style="display: none;" >
+          <li th:if="${session.type=='NotCerti'}"><a href="/owner/certifi">사업자 정보 등록</a></li>
 
         </ul>
       </li>
@@ -240,11 +240,7 @@
 
           function submitForm() {
             const analysisType = document.getElementById('analysis_type').value;
-
-            // 로딩 스피너 표시
-            document.getElementById('loading-spinner').style.display = 'block';
-
-            fetch('http://192.168.2.12:5000/generate_chart', {
+            fetch('http://192.168.12.165:5000/generate_chart', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
