@@ -118,6 +118,7 @@ public class FavoriteCont {
       }
       return "favorite/favorite_list_mobile"; // 해당 HTML 파일 경로
   }
+  
   @GetMapping("/check_login")
   @ResponseBody
   public ResponseEntity<?> checkLogin(HttpSession session) {
