@@ -2,7 +2,7 @@ function searchPossibleTime(){
 	const reserveDate = document.getElementById("reserve_date");
 	const personnel = document.getElementById("personnel");
 	const restno = document.getElementById("restno");
-	const accessType=document.getElementById("access-type");
+	const custno = document.getElementById('custno').value;
 	console.log(reserveDate.value + " " + personnel.value + " " + restno.value);
 	
 	fetch(
@@ -31,7 +31,7 @@ function searchPossibleTime(){
 					  timeButton.classList.add('btn_botarea');
             
             timeButton.addEventListener('click', function() {
-							if(accessType.value != "customer"){
+							if(!custno){
 								alert("로그인후 예약기능을 사용해주세요.");
 							}else{
 								const admitpersonno = this.dataset.admitpersonno;
