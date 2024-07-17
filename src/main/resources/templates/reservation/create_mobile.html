@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html layout:decorate="~{mobile_layout}"> <!-- layout.html 상속-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,13 +43,7 @@
         }
     </style>
 </head>
-<body>
-<div id="wrapper">
-    <header>
-        <h1>EAT DAYS</h1>
-    </header>
-    <main>
-        <div layout:fragment="content">
+    <div layout:fragment="content">
             <div class='title_line'>
                 > 예약 정보 조회
             </div>
@@ -87,24 +81,6 @@
                 </div>
             </form>
         </div>
-    </main>
-    <aside id="dock">
-        <nav class="bottom-nav">
-            <a href="/mobile" class="nav-item">
-                <img src="/images/icon/active_home.svg" alt="Home" class="icon">
-            </a>
-            <a href="/search" class="nav-item">
-                <img src="/images/icon/home.svg" alt="Search" class="icon">
-            </a>
-            <a href="#likes" class="nav-item">
-                <img src="/images/icon/favorite.svg" alt="Likes" class="icon">
-            </a>
-            <a href="/customer/my_page" class="nav-item">
-                <img src="/images/icon/Profile.svg" alt="Profile" class="icon">
-            </a>
-        </nav>
-    </aside>
-    <div id="filter_toggle"><img src="/images/home.png" style="width:100%;height: 100%;opacity: 0.4;"></div>
 </div>
 </body>
 </html>

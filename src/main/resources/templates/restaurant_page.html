@@ -81,7 +81,6 @@
             <label>인원:</label><input type="number" id="personnel" name="person" th:value="${person}" onchange="searchPossibleTime()" min="1">명<br>
             <label>날짜:</label><input type="date" id="reserve_date" onchange="searchPossibleTime()" name="date" th:value="${date}"><br>
             <input type="hidden" name="time" value="2">
-            <input type="text" th:value="${accessType}" id="access-type">
             <div class="vertical_scroll" id="scrollContainer"></div>
         </section>
         <section>
@@ -112,6 +111,11 @@
         <script src="/js/today.js"></script>
         <script>
             window.onload = () => {
+              const reserve_date = document.querySelector("#reserve_date");
+              if(reserve_date.value == ''){
+                console.log('aa');
+                reserve_date.value = getTodayDate();
+              }
                 searchPossibleTime();
                 document.getElementById('reserve_date').setAttribute('min', getTodayDate());
 

@@ -27,7 +27,7 @@ const CategoryShortcut = () => {
             const className = isLongText ? 'category-name long-text' : 'category-name';
 
             return (
-                <div key={category.id} className="category-item">
+                <div key={category.id} className="category-item" onclick={selectCategory(category.categoryno)}>
                   {category.image && (
                       <div className="category-image">
                         <img
