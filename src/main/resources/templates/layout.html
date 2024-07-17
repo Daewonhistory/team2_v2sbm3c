@@ -199,6 +199,7 @@
           </form>
         </div>
         <div id="chart-container" class="mt-4" style="width: 900px; height: 500px;"></div>
+        <div id="loading-spinner"></div> <!-- 로딩 스피너 추가 -->
 
         <script type="text/javascript">
           google.charts.load("current", {
@@ -248,15 +249,20 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                  // 로딩 스피너 숨김
+                  document.getElementById('loading-spinner').style.display = 'none';
+
                   if (data.error) {
                     document.getElementById('chart-container').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
                   } else {
                     drawChart(data.chart_data);
                   }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                  // 로딩 스피너 숨김
+                  document.getElementById('loading-spinner').style.display = 'none';
+                });
           }
-
           document.addEventListener('DOMContentLoaded', function() {
             submitForm();
           });

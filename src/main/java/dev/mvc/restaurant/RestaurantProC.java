@@ -230,8 +230,16 @@ public class RestaurantProC implements RestaurantProInter {
 		ArrayList<RestaurantVO> list = this.restDAO.condition_search_list(map);
 		return list;
 	}
-	
-	@Override
+
+  @Override
+  public ArrayList<RestFullData> NearBestRestaurant(double currentLat, double currentLng) {
+    HashMap<String,Object> map = new HashMap<String,Object>();
+    map.put("currentLat", currentLat);
+    map.put("currentLng", currentLng);
+    return this.restDAO.NearBestRestaurant(map);
+  }
+
+  @Override
 	public String test(String date1) {
 		String date = this.restDAO.test(date1);
 		return date;

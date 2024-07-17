@@ -611,3 +611,21 @@ a.btns:hover  {
   border-radius: 4px;
   cursor: pointer;
 }
+
+
+/* 로딩 스피너 스타일 */
+#loading-spinner {
+  display: none; /* 기본적으로 숨김 */
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3; /* 배경색 */
+  border-top: 5px solid #FFA07A; /* 스피너 색상 */
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* 애니메이션 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

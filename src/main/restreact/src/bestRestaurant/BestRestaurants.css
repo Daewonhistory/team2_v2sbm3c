@@ -26,11 +26,24 @@
   scroll-snap-align: start;
 }
 
-.restinfo {
-  margin-top: 10px;
-  text-align: center;
+.rest-area{
+  font-size: 12px ;
 }
-
+.restinfo {
+  position: absolute;
+  bottom: 10px; /* 약간 위로 올림 */
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0);
+  color: white;
+  font-size: 0.8rem;
+  padding: 3px;
+  box-sizing: border-box;
+  text-align: center; /* 텍스트를 가운데 정렬 */
+}
+.restinfo > span {
+  color: #FFFFFF;
+}
 .stars {
   position: relative;
   display: inline-block;
@@ -60,4 +73,16 @@
 .rest-area {
   display: block;
   margin-top: 5px;
+}
+.image-container {
+  position: relative;
+  margin-right: 10px;
+}
+
+.image-container img {
+  filter: brightness(0.7);
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  object-fit: cover;
 }

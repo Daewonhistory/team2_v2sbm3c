@@ -71,7 +71,7 @@ public class RestaurantContR {
 
 
   /*
-   * 식당 등록 폼 메서드
+   * 최고 식당 리스트
    *
    *
    */
@@ -79,6 +79,19 @@ public class RestaurantContR {
   @GetMapping("/Best_Restaurant_list")
   public ResponseEntity<ArrayList<RestFullData>> bestRestaurantList() {
     return new ResponseEntity<>(restaurantProc.ranking_rate_select(), HttpStatus.OK);
+  }
+
+
+  @ResponseBody
+  @PostMapping("/Near_Best_Restaurant_list")
+  public ResponseEntity<ArrayList<RestFullData>> bestRestaurantList(@RequestBody Map<String, Object> coordinates) {
+    for (Map.Entry<String, Object> entry : coordinates.entrySet()) {
+      System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+    }
+    double currentLat = (double) coordinates.get("currentLat");
+    double currentLng = (double) coordinates.get("currentLng");
+    System.out.println(currentLat + " " + currentLng);
+    return new ResponseEntity<>(this.restaurantProc.NearBestRestaurant(currentLat, currentLng), HttpStatus.OK);
   }
 
 }

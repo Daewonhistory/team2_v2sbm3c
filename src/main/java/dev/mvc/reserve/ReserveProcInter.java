@@ -56,7 +56,7 @@ public interface ReserveProcInter {
      * @param record_per_page
      * @return
      */
-    ArrayList<ReserveDTO> list_owner_paging(int ownerno, String reserve_date,int now_page, int record_per_page);
+    ArrayList<ReserveDTO> list_owner_paging(int ownerno, String sub_date, int now_page, int record_per_page);
     
     int count_by_owner(int ownerno,String reserve_date);
 
