@@ -115,29 +115,7 @@ main {
     overflow-x: auto;
 }
 
-.image-container {
-    position: relative;
-    margin-right: 10px;
-}
 
-.image-container img {
-    width: 100px;
-    height: 100px;
-    border-radius: 5px;
-    object-fit: cover;
-}
-
-.restinfo {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    font-size: 0.8rem;
-    padding: 5px;
-    box-sizing: border-box;
-}
 
 .bottom-nav {
     display: flex;
