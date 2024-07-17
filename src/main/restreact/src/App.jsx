@@ -5,7 +5,7 @@ import Slider from "./slider/Slider";
 import CategoryShortcut from "./category/CategoryShortcut";
 import LocationShortcut from "./location/LocationShortcut";
 import BestRestaurants from "./bestRestaurant/BestRestaurants";
-import PopularRestaurants from "./popular/PopularRestaurants";
+import NearPopularRestaurants from "./NearPopularRestaurants/NearbyRestaurants";
 import IngredientRestaurants from "./ingredientRest/IngredientRestaurants";
 import Nav from "./nav/Nav";
 import FilterToggle from "./filter/FilterToggle";
@@ -55,7 +55,7 @@ const App = () => {
           <CategoryShortcut />
           <LocationShortcut />
           <BestRestaurants />
-          <PopularRestaurants />
+          <NearPopularRestaurants />
           <IngredientRestaurants />
         </main>
         <div style={{ height: "80px" }}></div>

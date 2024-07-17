@@ -102,7 +102,7 @@ main {
     right: 10px;
 }
 
-#cate_shortcut_section, #loca_shortcut_section, #section_best, #section1 {
+#cate_shortcut_section, #loca_shortcut_section, #section_best, #section1,#section_nearby {
     margin-top: 20px;
     background-color: #fff;
     padding: 20px;

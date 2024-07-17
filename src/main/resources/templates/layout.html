@@ -65,7 +65,7 @@
         </ul>
       </li>
       <li class="manager-menu">
-        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" " class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
+        <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}"  class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
           <span id="reservation-arrow" class="arrow right"></span> 예약 목록
         </a>
         <ul class="sub-menu" id="reservation-sub-menu">
@@ -199,6 +199,7 @@
           </form>
         </div>
         <div id="chart-container" class="mt-4" style="width: 900px; height: 500px;"></div>
+        <div id="loading-spinner"></div> <!-- 로딩 스피너 추가 -->
 
         <script type="text/javascript">
           google.charts.load("current", {
@@ -239,7 +240,11 @@
 
           function submitForm() {
             const analysisType = document.getElementById('analysis_type').value;
-            fetch('http://192.168.12.169:5000/generate_chart', {
+
+            // 로딩 스피너 표시
+            document.getElementById('loading-spinner').style.display = 'block';
+
+            fetch('http://192.168.2.12:5000/generate_chart', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -248,15 +253,20 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                  // 로딩 스피너 숨김
+                  document.getElementById('loading-spinner').style.display = 'none';
+
                   if (data.error) {
                     document.getElementById('chart-container').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
                   } else {
                     drawChart(data.chart_data);
                   }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                  // 로딩 스피너 숨김
+                  document.getElementById('loading-spinner').style.display = 'none';
+                });
           }
-
           document.addEventListener('DOMContentLoaded', function() {
             submitForm();
           });

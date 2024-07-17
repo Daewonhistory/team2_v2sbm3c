@@ -1,6 +1,7 @@
 package dev.mvc.restaurant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.repository.query.Param;
@@ -99,6 +100,16 @@ public interface RestaurantDAOInter {
    * @return
    */
   public ArrayList<RestFullData> coordinateSearchList(Map<String, Object> map);
+
+
+  /**
+   * 메인 근처 인기식당
+   * @param map
+   * @return
+   */
+
+  public ArrayList<RestFullData> NearBestRestaurant(HashMap<String, Object> map);
+
 
   public int update(RestFullData restFullData);
 
