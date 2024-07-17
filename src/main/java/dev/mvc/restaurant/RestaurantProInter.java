@@ -95,7 +95,15 @@ public interface RestaurantProInter {
    * @return
    */
   public ArrayList<RestaurantVO> condition_search_list(Map<String, Object> map);
-  
+
+
+  /**
+   * 메인 근처 인기식당
+   * @param map
+   * @return
+   */
+
+  public ArrayList<RestFullData> NearBestRestaurant(double currentLat, double currentLng);
   /**
    * 조건을 통한 식당 검색 이미지 포함
    * @param map

@@ -67,21 +67,31 @@ const BestRestaurants = () => {
         <h2>최고 인기 순위 식당</h2>
         <div id="wrap-horizontal">
           {bestRestaurants.length > 0 ? (
-              bestRestaurants.map((restFullData, index) => (
-                  <div key={index} className="image-container">
-                    {restFullData.image1 && (restFullData.image1.endsWith('jpg') || restFullData.image1.endsWith('JPG') || restFullData.image1.endsWith('png') || restFullData.image1.endsWith('PNG') || restFullData.image1.endsWith('gif')) ? (
-                        <img src={`/restaurant/storage/${restFullData.image1}`} style={{ width: '120px', height: '100px' }} alt={restFullData.name} />
-                    ) : null}
-                    <div className="restinfo">
-                      <span>{restFullData.name}</span><br />
-                      <div className="stars">
-                        <div className="full-stars" style={{ width: `calc(${restFullData.rate} * 20%)` }}></div>
+              bestRestaurants.map((restFullData, index) => {
+                const addressParts = restFullData.address.split(' ', 2);
+                const firstLine = addressParts[0];
+                const secondLine = addressParts.slice(1).join(' ');
+
+                return (
+                    <div key={index} className="image-container">
+                      {restFullData.image1 && (restFullData.image1.endsWith('jpg') || restFullData.image1.endsWith('JPG') || restFullData.image1.endsWith('png') || restFullData.image1.endsWith('PNG') || restFullData.image1.endsWith('gif')) ? (
+                          <img src={`/restaurant/storage/${restFullData.image1}`} style={{ width: '150px', height: '150px' }}  alt={restFullData.name} />
+                      ) : null}
+                      <div className="restinfo">
+                        <br/>
+                        <br/>
+                        <span>{restFullData.name}</span><br/>
+                        <br/>
+                        <div className="stars">
+                          <div className="full-stars" style={{width: `calc(${restFullData.rate} * 20%)`}}></div>
+                        </div>
+                        <span className="rest-area">{firstLine}</span>
+                        <span className="rest-area">{secondLine}</span><br/>
+                        <span className="ranking">{` ${index + 1}위`}</span>
                       </div>
-                      <span className="rest-area">서울시 강남구</span><br />
-                      <span className="ranking">{` ${index + 1}위`}</span>
                     </div>
-                  </div>
-              ))
+                );
+              })
           ) : (
               <p>인기 식당 데이터를 불러오는 중입니다...</p>
           )}

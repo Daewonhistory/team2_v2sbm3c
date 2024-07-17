@@ -361,28 +361,21 @@
 	</select>
   <!--	랭킹 조회 -->
 	<select id="ranking_rate_select">
-		SELECT restno, name, tel, grade, address, lat, lng, reserve_range, ownerno, categoryno, botareano, image1, image2, image3,rate
+		SELECT restno, name, tel, grade, SUBSTR(address, 1, INSTR(address, ' ', 1, 2) - 1) AS address
+				 , lat, lng, reserve_range, ownerno, categoryno, botareano, image1, rate
 		FROM (
 					 SELECT re.restno, name, tel, grade, address, lat, lng, reserve_range, re.ownerno, categoryno, botareano,
-									ri1.imagefile AS image1, ri2.imagefile AS image2, ri3.imagefile AS image3, re.rate,
+									ri1.imagefile AS image1, re.rate,
 									ROWNUM AS rnum
 					 FROM restaurant re
 									LEFT JOIN (
 						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
 						 FROM restimage
 					 ) ri1 ON re.restno = ri1.restno AND ri1.rn = 1
-									LEFT JOIN (
-						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
-						 FROM restimage
-					 ) ri2 ON re.restno = ri2.restno AND ri2.rn = 2
-									LEFT JOIN (
-						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
-						 FROM restimage
-					 ) ri3 ON re.restno = ri3.restno AND ri3.rn = 3
+
 					 WHERE re.rate > 0
 					 ORDER BY re.rate DESC
 				 )
-
 	</select>	<!-- 특정 소유자의 식당 목록 조회 -->
 	 <select id="list_by_ownerno" parameterType="int" resultType="dev.mvc.dto.RestDTO">
     SELECT restno, name, tel, categoryno, ownerno
@@ -390,6 +383,25 @@
     WHERE ownerno = #{ownerno}
   </select>
 
+
+	<select id="NearBestRestaurant" parameterType="HashMap" resultType="dev.mvc.dto.RestFullData">
+		SELECT restno, name, tel, grade, SUBSTR(address, 1, INSTR(address, ' ', 1, 2) - 1) AS address,
+					 lat, lng, reserve_range, ownerno, categoryno, botareano, image1, rate
+		FROM (
+					 SELECT re.restno, name, tel, grade, address, lat, lng, reserve_range,
+									re.ownerno, categoryno, botareano, ri1.imagefile AS image1,
+									re.rate, ROWNUM AS rnum
+					 FROM restaurant re
+									LEFT JOIN (
+						 SELECT restno, imagefile, ROW_NUMBER() OVER (PARTITION BY restno ORDER BY rest_imgno) AS rn
+						 FROM restimage
+					 ) ri1 ON re.restno = ri1.restno AND ri1.rn = 1
+					 WHERE re.rate > 0
+						 AND lat BETWEEN #{currentLat} - 0.015 AND #{currentLat} + 0.015
+						 AND lng BETWEEN #{currentLng} - 0.015 AND #{currentLng} + 0.015
+				 )
+		ORDER BY rate DESC
+	</select>
 
 	<update id="update_map">
 		UPDATE restaurant
