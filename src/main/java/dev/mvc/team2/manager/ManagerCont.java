@@ -94,7 +94,7 @@ public class ManagerCont {
     String type = (String) session.getAttribute("type");
     model.addAttribute("accessType", type);
 
-    if (type.equals("owner") ) {
+    if (type != null && type.equals("owner") ) {
       Integer ownerno = (Integer) session.getAttribute("ownerno");
       Integer restno = this.restaurantProc.foreign(ownerno);
 
@@ -121,6 +121,22 @@ public class ManagerCont {
 
     return "/manager/create";
   }
+
+
+
+  @GetMapping("/create_ip")
+
+  public String createIps(Model model) {
+
+    // 알러지 재료명 목록 추가
+
+
+
+    return "/manager/create_ip";
+  }
+
+
+
 
 
   @PostMapping("/create")

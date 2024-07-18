@@ -11,7 +11,7 @@ public class AllowIps {
 
     @Id
     private Long id;
-    private String ipAddress;
+    private String ip;
 
     // getters and setters
     public Long getId() {
@@ -22,11 +22,11 @@ public class AllowIps {
         this.id = id;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public String getIp() {
+        return ip;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

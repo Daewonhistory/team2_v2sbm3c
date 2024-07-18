@@ -15,7 +15,7 @@ public class IpService {
     public List<String> getAllowedIps() {
         return allowIpsRepository.findAll()
                                   .stream()
-                                  .map(AllowIps::getIpAddress)
+                                  .map(AllowIps::getIp)
                                   .collect(Collectors.toList());
     }
 }
