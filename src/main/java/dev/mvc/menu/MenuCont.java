@@ -277,6 +277,8 @@ public class MenuCont {
 		  IngredList.add(ingredientVO);
 		}
 		model.addAttribute("IngredNameList", IngredList);
+	  }else {
+	    return "redirect:/owner";
 	  }
 	  model.addAttribute("word", word);
       model.addAttribute("now_page", now_page);
@@ -384,7 +386,7 @@ public class MenuCont {
 			}
 			ra.addAttribute("word", word);
 			ra.addAttribute("now_page", now_page);
-			return "redirect:/menu/list_search_paging"; // ra.addAttribute 사용시 url에 직접 작성 안함
+			return "redirect:/menu/list"; // ra.addAttribute 사용시 url에 직접 작성 안함
 		}
 	}
 

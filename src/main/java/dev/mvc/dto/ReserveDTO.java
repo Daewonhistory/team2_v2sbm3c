@@ -34,6 +34,8 @@ public class ReserveDTO {
   /** 예약 날짜 */
   private String reserveDate;  // 추가된 필드
   
+  /** 예약 시간 */
+  private String reserveTime;  // 추가된 필드
   
   
 

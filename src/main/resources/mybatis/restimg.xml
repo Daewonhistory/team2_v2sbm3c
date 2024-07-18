@@ -29,6 +29,12 @@
         FROM restimage
         WHERE rest_imgno =#{rest_imgno}
     </delete>
+    
+    <select id="favorite_img" parameterType="int" resultType="dev.mvc.dto.RestFullData">
+        SELECT rest_imgno, imagefile, thumbfile, restno
+        FROM restimage
+        WHERE restno = #{restno}
+    </select>
 
 
 
