@@ -139,7 +139,8 @@ public interface CustomerProInter {
   public int updateProfile(CustomerVO customerVO);
 
   public String pagingBox(int now_page, String word,String type, String list_file, int search_count,int record_per_page, int page_per_block);
-
+  
+  public int currval();
 
 }
 

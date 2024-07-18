@@ -33,14 +33,29 @@
 } 
 .chatting_pannel { 
     padding: 5px;
-    height: 70%;
+    height: 700px;
+    overflow-x: hidden;
 }
 .chatting_pannel p {
     font-size: 16px;
     border-radius: 10px;
     display: inline-block;
-    padding: 2px 5px;
+    padding: 8px 8px;
 }
+
+.chatting_pannel img {
+    border-radius: 10px;
+    margin: 4px 4px auto;
+}
+
+.chatting_pannel div {
+    text-align: center;
+    background-color: white;
+    padding: 4px;
+    border-radius: 10px;
+    margin: 5px auto;
+}
+
 input {
     width: 60%;
     height: 25px;
@@ -73,11 +88,16 @@ a:active {
     text-decoration: underline; /* 밑줄 출력 */
     color: #FFFFFF;
 }
+.chatting_pannel a {
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+}
 </style>
 <script type="text/javascript">
     window.onload = () => {
         // 키이벤트 처리
-        document.getElementById('question').addEventListener('keydown', function(key) {
+        document.getElementById('message').addEventListener('keydown', function(key) {
             if (key.keyCode == 13) { // Enter
                 send();
             }
@@ -92,7 +112,7 @@ a:active {
     // 스크롤을 채팅창의 맨아래로 이동
     function scroll() {
         let chatting_pannel = document.getElementById('chatting_pannel');
-        let question = document.getElementById('question');
+        let question = document.getElementById('message');
 
         // 스크롤을 채팅창의 맨 아래로 이동
         chatting_pannel.scrollTop = chatting_pannel.scrollHeight;
@@ -102,14 +122,23 @@ a:active {
     }
 
     function send() {
-        let question = document.getElementById('question').value;
+        let message = document.getElementById('message').value;
         let chatting_pannel = document.getElementById('chatting_pannel');
         let newMessage = document.createElement('div');
         newMessage.style.textAlign = 'right';
-        newMessage.innerHTML = "<p class='send_msg'>" + question + "</p>";
+        newMessage.innerHTML = "<p class='send_msg'>" + message + "</p>";
         chatting_pannel.appendChild(newMessage);
-
-        document.getElementById('question').value = "";
+        const allQuestion = document.querySelectorAll('.send_msg');
+        let allQuestionSum = "";
+        for(let question of allQuestion){
+          allQuestionSum += "\\n" + question.innerText;
+        }
+        const allAnswer = document.querySelectorAll('.receive_msg');
+        let allAnswerSum = "";
+        for(let answer of allAnswer){
+          allAnswerSum += "\\n" + answer.innerText;
+        }
+        document.getElementById('message').value = "";
         const chatContainer = document.querySelector('.chat-container');
 
         fetch(
@@ -117,7 +146,7 @@ a:active {
             {
                 "method": "POST",
                 "headers": {"Content-Type": "application/json"},
-                "body": JSON.stringify({question})
+                "body": JSON.stringify({"question": message})
             }
         )
         .then((response) => response.json())
@@ -140,7 +169,7 @@ a:active {
         </div>
         <div class="d-flex justify-content-center">
             <span style='margin-top: 3px; margin-right: 5px;'>메시지</span>
-            <input id="question" name='question' placeholder="보내실 메시지를 입력하세요."
+            <input id="message" name='question' placeholder="보내실 메시지를 입력하세요."
                    style='margin-right: 5px; margin-top: 3px;'>
             <button id="sendBtn" class="btn btn-info btn-sm" 
                     style='padding: 0px 5px; margin-top: 3px; margin-right: 5px; height: 24px;'>보내기</button>
