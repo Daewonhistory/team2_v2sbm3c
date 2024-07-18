@@ -29,7 +29,7 @@ function openModal(type) {
     checkInput.type = "text";
     checkInput.style.width = "35%";
     checkInput.value = '';
-    sendButton.textContent = "휴대폰 인증번호 전송";
+    sendButton.textContent = "전송";
 
     if (verificationSent) {
       sendButton.style.display = "none";
@@ -65,7 +65,7 @@ function openModal(type) {
     checkInput.style.width = "35%";
     checkInput.type = "text";
     checkInput.value = '';
-    sendButton.textContent = "이메일 인증번호 전송";
+    sendButton.textContent = "전송";
 
     if (verificationSent) {
       sendButton.style.display = "none";

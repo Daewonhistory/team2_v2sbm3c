@@ -500,3 +500,52 @@ height: 400px;
   font-weight: bold;
   color: red; /* 순위 색상 */
 }
+
+#sendButton {
+  width: 20%;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  border-radius: 8px;
+
+  color: #fff;
+  font-size: 0.8em;
+  background-color: #FFA07A;
+  margin-top: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+#resendButton {
+  width: 20%;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  border-radius: 8px;
+
+  color: #fff;
+  font-size: 0.8em;
+  background-color: #FFA07A;
+  margin-top: 20px;
+  border: none;
+  cursor: pointer;
+
+}
+
+#verifyButton{
+  width: 20%;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  margin-left: 15px;
+  color: #fff;
+  font-size: 0.8em;
+  background-color: lightgreen;
+  margin-top: 20px;
+  border: none;
+  cursor: pointer;
+}

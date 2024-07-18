@@ -137,6 +137,7 @@ const Slider = () => {
                     checked={currentIndex === index}
                     onChange={() => showSlide(index)}
                     style={{
+                      marginTop : '4px';
                       appearance: 'none',
                       width: '10px',
                       height: '10px',

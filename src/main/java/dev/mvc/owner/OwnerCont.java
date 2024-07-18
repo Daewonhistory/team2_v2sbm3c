@@ -1131,6 +1131,38 @@ public class OwnerCont {
 
   }
 
+  @GetMapping("/certi_info_update")
+  public String certi_update(HttpSession session, OwnerVO ownerVO, Model model) {
+
+
+    String id = (String) session.getAttribute("id");
+    String grade = (String) session.getAttribute("grade");
+    String type = (String) session.getAttribute("type");
+
+    model.addAttribute("accessType", type);
+
+    if (id != null && grade.equals("NotCerti")) {
+
+      OwnerVO read = this.ownerProc.readById(id);
+      if (read != null) {
+        model.addAttribute("ownerVO", read);
+
+        return "owner/certifi";
+      } else {
+        return "redirect:/";
+
+      }
+
+
+    } else {
+      return "redirect:/";
+    }
+
+
+  }
+
+
+
   /**
    * 사업자 등록 처리 메서드
    *
@@ -1197,10 +1229,10 @@ public class OwnerCont {
             map.put("grade", 10);
             ownerProc.update_grade(map);
           } else {
-            return "redirect:/"; // 파일이 이미지가 아닐 경우 리다이렉트
+            return "redirect:/owner"; // 파일이 이미지가 아닐 경우 리다이렉트
           }
         } else {
-          return "redirect:/"; // 파일 크기가 0일 경우 리다이렉트
+          return "redirect:/owner"; // 파일 크기가 0일 경우 리다이렉트
         }
       } else {
         // 업로드가 불가능한 파일일 경우 리다이렉트
@@ -1210,7 +1242,7 @@ public class OwnerCont {
         return "redirect:/contents/msg";
       }
     } else {
-      return "redirect:/"; // 전송된 파일이 없을 경우 리다이렉트
+      return "redirect:/owner"; // 전송된 파일이 없을 경우 리다이렉트
     }
 
     int cnt = this.ownerProc.updateCertifi(ownerVO);

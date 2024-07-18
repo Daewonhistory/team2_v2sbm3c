@@ -66,9 +66,9 @@
       </li>
       <li class="manager-menu">
         <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
-          <span id="reservation-arrow" class="arrow right"></span> 예약 목록
+          <span id="reser-arrow" class="arrow right"></span> 예약 목록
         </a>
-        <ul class="sub-menu" id="reservation-sub-menu">
+        <ul class="sub-menu" id="reser-sub-menu">
           <li><a href="/reservation/list_reserve_paging"> 전체 예약</a></li>
         </ul>
       </li>
@@ -174,6 +174,9 @@
         </a>
         <ul class="sub-menu" id="owners-sub-menu" style="display: none;" >
           <li th:if="${session.type=='NotCerti'}"><a href="/owner/certifi">사업자 정보 등록</a></li>
+          <li ><a href="/owner/my_info_update">사업자 정보 수정</a></li>
+          <li ><a href="/owner/certi_info_update">사업자 인증 정보 수정</a></li>
+
 
         </ul>
       </li>
@@ -193,10 +196,16 @@
           <h2 class="mb-4">데이터 분석</h2>
           <form id="analysis-form" class="d-inline-block">
             <select name="analysis_type" id="analysis_type" onchange="submitForm()" class="form-select">
-              <option value="weekday">요일별 분석</option>
+              <option th:if="${session.type == 'owner'}" value="weekday">요일별 분석</option>
               <option value="allergy">알러지 분석</option>
             </select>
           </form>
+          <div th:if="${session.type== 'NotCerti'}"> 사업자 인증이 되지않았습니다</div>
+          <div th:if="${session.type== 'Unauth'}"> 사업자 인증이 반려되었습니다</div>
+          <div th:if="${session.type== 'Norest'}"> 식당이 없습니다 등록 해주세요</div>
+          <div th:if="${session.type== 'owner'}"> 사업자님 안녕하세요</div>
+
+          <div th:if="${session.type== 'ready'}"> 사업자 인증  대기중입니다</div>
           <div id="chart-container"  class="mt-4" style="width: 900px; height: 500px; "></div>
           <div id="loading-spinner" style="display: none;"></div> <!-- 로딩 스피너 추가 -->
 

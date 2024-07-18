@@ -1,68 +1,73 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-<div th:text="${fail}">
+  <script>
+    function submitForm() {
+      // 필수 입력 항목 확인
+      let businessNo = document.getElementById('businessno').value.trim();
+      let certifiImage = document.getElementById('certifi_image').value.trim();
+      let identiCardImage = document.getElementById('identi_card_image').value.trim();
 
+      if (!businessNo) {
+        alert('사업자 번호를 입력해주세요.');
+        return false;
+      }
+
+      if (!isValidImage(certifiImage)) {
+        alert('사업자 등록증 이미지를 jpg 또는 png 형식으로 선택해주세요.');
+        return false;
+      }
+
+      if (!isValidImage(identiCardImage)) {
+        alert('신분증 이미지를 jpg 또는 png 형식으로 선택해주세요.');
+        return false;
+      }
+
+      // 모든 필수 입력 항목이 입력되었으면 폼 제출
+      document.getElementById('frm').submit();
+    }
+
+    function isValidImage(fileInput) {
+      // 파일 확장자 검사
+      let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+      return allowedExtensions.exec(fileInput);
+    }
+  </script>
+  <div th:text="${fail}"></div>
+
+  <div class='menu_line'></div>
+
+  <div style="width: 60%; margin: 0px auto">
+    <div class="title_line">사업자 인증 절차 (<span class="required">* </span>는 필수 )</div>
+    <form id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/certifi" enctype="multipart/form-data">
+
+      <div style="align-items: center;">
+        <input type="hidden" class="form-control form-control-sm" id="ownerno" name="ownerno" th:value="${ownerVO.ownerno}" style=" width: 27%;" readonly>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <label>사업자 번호</label>
+        <input type='text' name='businessno' id='businessno' value='' placeholder="사업자 번호" class="form-control form-control-sm" style="width: 27%;">
+        <span id="businessno_msg">사업자 번호는 필수 입니다</span>
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <label>사업자 등록증 이미지 (jpg 또는 png)</label>
+        <input type='file' class="form-control" name='file1MF' id='certifi_image' value='' accept=".jpg, .jpeg, .png" placeholder="파일 선택">
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <label>신분증 이미지 (jpg 또는 png)</label>
+        <input type='file' class="form-control" name='file2MF' id='identi_card_image' value='' accept=".jpg, .jpeg, .png" placeholder="파일 선택">
+      </div>
+
+      <div class="form-group" style="margin-top: 10px;">
+        <button type="button" class="btn btn-primary" onclick="submitForm();" id="btn_send">사업자 등록증 완료</button>
+        <button type="button" class="btn btn-primary" onclick="location.href = '/';" id="btn_cancel">취소</button>
+      </div>
+
+    </form>
+  </div>
 </div>
 
-
-
-
-
-
-<div class='menu_line'></div>
-
-<div style="width: 60%; margin: 0px auto ">
-  <div class="title_line">사업자 인증 절차  (<span class="required">* </span>는 필수 )</div>
-  <form   id="frm" name="frm" th:object="${ownerVO}" method="post" action="/owner/certifi"  enctype="multipart/form-data">
-
-
-
-
-
-    <div style="align-items: center;">
-
-      <input class="form-control form-control-sm"  id="ownerno" name="ownerno"  th:value="${ownerVO.ownerno}" style=" width: 27%;" readonly></input>
-
-    </div>
-
-
-    <div class="form-group" style="margin-top: 10px;">
-      <label>사업자 번호</label>
-      <input type='text' name='businessno' id='businessno' value=''
-             placeholder="전화번호" class="form-control form-control-sm" style="width: 27%;">
-
-
-      <span id="businessno_msg">사업자 번호는 필수 입니다</span>
-    </div>
-    <div class="form-group" style="margin-top: 10px;">
-      <label>사업자 등록증 이미지</label>
-      <input type='file' class="form-control" name='file1MF' id='certifi_image' value='' placeholder="파일 선택">
-    </div>
-
-    <div class="form-group" style="margin-top: 10px;">
-      <label>신분증 이미지</label>
-      <input type='file' class="form-control" name='file2MF' id='identi_card_image' value='' placeholder="파일 선택">
-    </div>
-
-
-
-
-
-
-
-
-
-    <div class="form-group" style="margin-top: 10px;">
-      <button type="submit" class="btn btn-primary"  id="btn_send">사업자 등록증 완료</button>
-      <button type="button" class="btn btn-primary" onclick="location.href = '/';" id="btn_cancel">취소</button>
-    </div>
-
-  </form>
-</div>
-</div>
 </html>
-
-
-
-

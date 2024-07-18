@@ -612,17 +612,29 @@ a.btns:hover  {
   cursor: pointer;
 }
 
-
-/* 로딩 스피너 스타일 */
 #loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px; /* 스피너의 너비 */
+  height: 50px; /* 스피너의 높이 */
+  background-color: rgba(255, 255, 255, 0.7); /* 배경색 및 투명도 조정 */
+  border-radius: 50%;
   display: none; /* 기본적으로 숨김 */
-  width: 50px;
-  height: 50px;
+  z-index: 1000; /* 다른 요소보다 위로 겹치도록 설정 */
+  transform: translate(-50%, -50%);
+}
+
+#loading-spinner::after {
+  content: "";
+  display: block;
+  width: 30px; /* 내부 스피너의 너비 */
+  height: 30px; /* 내부 스피너의 높이 */
   border: 5px solid #f3f3f3; /* 배경색 */
   border-top: 5px solid #FFA07A; /* 스피너 색상 */
   border-radius: 50%;
   animation: spin 1s linear infinite; /* 애니메이션 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
+  margin: auto; /* 가운데 정렬 */
 }
 
 @keyframes spin {
