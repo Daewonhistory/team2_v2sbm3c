@@ -69,7 +69,12 @@ public class ReserveProc implements ReserveProcInter {
         map.put("start_num", start_num);
         map.put("end_num", end_num);
 
-        return reserveDAO.list_owner_paging(map);
+        ArrayList<ReserveDTO> list = reserveDAO.list_owner_paging(map);
+        for (ReserveDTO reserve : list) {
+            System.out.println("Reserve: " + reserve);
+        }
+
+        return list;
     }
 
     @Override
