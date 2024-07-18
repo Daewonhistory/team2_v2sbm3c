@@ -147,6 +147,16 @@ public class OwnerCont {
     return "/owner/create";
   }
 
+  @PostMapping("/checkNickName")  //http:localhost:9091/owner/checkId?id=admin
+  @ResponseBody
+  public String checkNickname(String nickname) {
+    System.out.println("-> nickname  " + nickname);
+
+    int cnt = this.ownerProc.checkNickName(nickname);
+
+    //{"cnt": cnt}
+    return "{\"cnt\":" + cnt + "}";
+  }
 
   @GetMapping("/rest_create")
   public String create(Model model, RestaurantVO restaurantVO, HttpSession session) {
