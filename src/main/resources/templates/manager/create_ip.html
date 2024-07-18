@@ -4,14 +4,13 @@
   <div layout:fragment="content" class="form-container">
 
     <div class="form-wrapper">
-      <h2 class="form-title">관리자 회원가입</h2>
+      <h2 class="form-title">관리자 허용 아이피 추가</h2>
       <div class="fail-message" th:text="${fail}"></div>
 
-      <form name="frm" id="signup-form" method="POST" action="/manager/create">
-        <label class="form-label">허용 아이디 <span class="required"> * </span> </label>
+      <form name="frm" id="signup-form" method="POST" action="/manager/create_ip">
+        <label class="form-label">허용 아이피 <span class="required"> * </span> </label>
         <div style="display: flex; align-items: center;">
-          <input type="text" class="form-input" name="ip" id="id" placeholder="허용아이피  입력">
-          <button type='button' id="btn_checkID" onclick="checkID()" class="btn-check-id">중복확인</button>
+          <input type="text" class="form-input" name="ip" id="id" placeholder="허용아이피 입력">
         </div>
         <div id="id_msg" class="form-msg"></div>
 

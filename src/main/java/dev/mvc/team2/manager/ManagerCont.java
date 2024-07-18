@@ -126,16 +126,38 @@ public class ManagerCont {
 
   @GetMapping("/create_ip")
 
-  public String createIps(Model model) {
+  public String createIps(Model model,HttpSession session) {
+    String type = (String) session.getAttribute("type");
 
-    // 알러지 재료명 목록 추가
+    if (type != null && type.equals("Master")) {
+      return "/manager/create_ip";
+    } else {
+      return "redirect:/";
+    }
 
 
 
-    return "/manager/create_ip";
   }
 
 
+
+  @PostMapping("/create_ip")
+
+  public String createProc(Model model,HttpSession session) {
+    String type = (String) session.getAttribute("type");
+
+    if (type != null && type.equals("Master")) {
+      return "/manager/create_ip";
+
+
+
+    } else {
+      return "redirect:/";
+    }
+
+
+
+  }
 
 
 

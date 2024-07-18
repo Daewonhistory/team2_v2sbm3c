@@ -81,6 +81,16 @@
           <li><a href="/restaurant/create">식당 등록</a></li>
         </ul>
       </li>
+
+      <li class="manager-menu">
+        <a th:if="${session.type == 'Master'}" class="manager-menu-a" onclick="toggleSubMenu('ip-sub-menu', 'ip-arrow')">
+          <span id="ip-arrow" class="arrow right"></span> 접속 관련?
+        </a>
+        <ul class="sub-menu" id="ip-sub-menu" style="display: none;">
+          <li><a href="/manager/create_ip">허용 아이피 등록</a></li>
+
+        </ul>
+      </li>
       <li class="manager-menu">
         <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('review-sub-menu', 'review-arrow')">
           <span id="review-arrow" class="arrow right"></span> 리뷰 목록

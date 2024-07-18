@@ -1,5 +1,7 @@
 package dev.mvc.team2.manager;
 
+import dev.mvc.team2.allowips.AllowIps;
+import dev.mvc.team2.allowips.AllowIpsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,9 +13,17 @@ public class ManagerService {
   @Autowired
   private final ManagerRepository repository;
 
+
+
   public ManagerService(ManagerRepository repository) {
     this.repository = repository;
+
+
   }
+
+
+
+
 
   /** 생성자 */
 
@@ -43,4 +53,6 @@ public class ManagerService {
       return 0; // 실패 시 0 반환
     }
   }
+
+
 }
