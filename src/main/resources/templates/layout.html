@@ -66,9 +66,9 @@
       </li>
       <li class="manager-menu">
         <a th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" class="manager-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
-          <span id="reser-arrow" class="arrow right"></span> 예약 목록
+          <span id="reservation-arrow" class="arrow right"></span> 예약 목록
         </a>
-        <ul class="sub-menu" id="reser-sub-menu">
+        <ul class="sub-menu" id="reservation-sub-menu">
           <li><a href="/reservation/list_reserve_paging"> 전체 예약</a></li>
         </ul>
       </li>
