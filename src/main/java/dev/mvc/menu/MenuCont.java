@@ -199,8 +199,8 @@ public class MenuCont {
 	public String read(Model model, HttpSession session, String word, int now_page, int menuno) {
 		String accessType = (String) session.getAttribute("type");
 		
-		if((accessType == "Master" || accessType == "Admin" || accessType == "Manager") && !accessType.equals("owner")) {
-			return "redirect:/owner";
+		if(!(accessType == "Master" || accessType == "Admin" || accessType == "Manager") && !accessType.equals("owner")) {
+			return "redirect:/manager";
 		}
 		
 		MenuVO menuVO = this.menuProc.read(menuno);
@@ -400,7 +400,7 @@ public class MenuCont {
 
 			ra.addAttribute("word", word);
 			ra.addAttribute("now_page", now_page);
-			return "redirect:/menu/list_search_paging";
+			return "redirect:/menu/list";
 		} else {
 			ra.addAttribute("code", "delete_fail");
 			return "redirect:/menu/msg";
