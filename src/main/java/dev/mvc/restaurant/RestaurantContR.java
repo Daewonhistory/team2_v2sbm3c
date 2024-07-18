@@ -94,6 +94,22 @@ public class RestaurantContR {
     return new ResponseEntity<>(this.restaurantProc.NearBestRestaurant(currentLat, currentLng), HttpStatus.OK);
   }
 
+  @ResponseBody
+  @PostMapping("/IngreBestRestaurant")
+  public ResponseEntity<ArrayList<RestFullData>> IngreBestRestaurant(HttpSession session) {
+
+    Integer custno = (Integer) session.getAttribute("custno");
+
+    if (custno == null) {
+      return new ResponseEntity<>(this.restaurantProc.ranking_rate_select(), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(this.restaurantProc.IngreBestRestaurant(custno), HttpStatus.OK);
+
+    }
+
+
+  }
+
 }
 
 

@@ -22,6 +22,8 @@ public interface RestImgProInter {
   public int delete(int rest_imgno);
 
   public List<RestimgVO> findByFileName(String fileName);
+  
+  public List<RestFullData> favorite_img(int restno);
 
 
 }

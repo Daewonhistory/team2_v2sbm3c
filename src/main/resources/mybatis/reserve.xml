@@ -68,19 +68,18 @@
     <select id="list_owner_paging" parameterType="map" resultType="dev.mvc.dto.ReserveDTO">
         SELECT * FROM (
             SELECT ROWNUM AS rnum, r.reserveno, r.sub_date, r.person, r.custno, r.admitpersonno, 
-                   c.nickname AS nickname, rest.name AS restname, r.sub_date AS reserveDate
+                   c.nickname AS nickname, rest.name AS restname, a.reserve_date AS reserveDate, a.time AS reserveTime
             FROM reserve r
             LEFT JOIN customer c ON r.custno = c.custno
             LEFT JOIN admitperson a ON r.admitpersonno = a.admitpersonno
             LEFT JOIN restaurant rest ON a.restno = rest.restno
             WHERE rest.ownerno = #{ownerno}
             <if test="sub_date != null and sub_date != ''">
-                AND r.sub_date = TO_DATE(#{sub_date}, 'YYYY-MM-DD')
+                AND a.reserve_date = TO_DATE(#{sub_date}, 'YYYY-MM-DD')
             </if>
-            AND ROWNUM >= #{end_num}
             ORDER BY r.reserveno DESC
         )
-        WHERE rnum >= #{start_num}
+        WHERE rnum BETWEEN #{start_num} AND #{end_num}
     </select>
 
     <!-- 특정 사업자의 예약 수 조회 -->

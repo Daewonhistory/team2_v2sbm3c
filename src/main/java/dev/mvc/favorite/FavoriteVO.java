@@ -1,5 +1,7 @@
 package dev.mvc.favorite;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,4 +34,5 @@ public class FavoriteVO {
   /** 식당 이름 */
   private String restname;
   
+  private List<String> photoUrls;  // 사진 URL 목록 추가
 }

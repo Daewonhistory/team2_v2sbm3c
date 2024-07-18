@@ -23,9 +23,14 @@
         <div class="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-2">
             <div class="p-4">
                 <div th:each="favorite : ${list}" class="mb-4">
-                    <h2 class="text-lg font-semibold">
+                    <h2 class="text-lg font-semibold mb-2">
                         <a th:href="@{|/restaurant/main_page?restno=${favorite.restno}&person=2&date=2024-06-24&time=1|}" th:text="${favorite.restname}"></a>
                     </h2>
+                    <div class="grid grid-cols-3 gap-2 mt-2">
+                        <div th:each="photoUrl : ${favorite.photoUrls}">
+                            <img th:src="@{${photoUrl}}" alt="Place Image" class="w-full h-24 object-cover rounded">
+                        </div>
+                    </div>
                 </div>
                 <div th:if="${list.size() == 0}">
                     <p class="text-center text-gray-500">즐겨찾기가 등록되지 않았습니다.</p>

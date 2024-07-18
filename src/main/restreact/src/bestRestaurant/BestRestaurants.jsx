@@ -68,9 +68,7 @@ const BestRestaurants = () => {
         <div id="wrap-horizontal">
           {bestRestaurants.length > 0 ? (
               bestRestaurants.map((restFullData, index) => {
-                const addressParts = restFullData.address.split(' ', 2);
-                const firstLine = addressParts[0];
-                const secondLine = addressParts.slice(1).join(' ');
+
 
                 return (
                     <div key={index} className="image-container">
@@ -85,8 +83,8 @@ const BestRestaurants = () => {
                         <div className="stars">
                           <div className="full-stars" style={{width: `calc(${restFullData.rate} * 20%)`}}></div>
                         </div>
-                        <span className="rest-area">{firstLine}</span>
-                        <span className="rest-area">{secondLine}</span><br/>
+                        <span className="rest-area">{restFullData.address}</span>
+                        <span className="rest-area">{restFullData.address1}</span><br/>
                         <span className="ranking">{` ${index + 1}위`}</span>
                       </div>
                     </div>

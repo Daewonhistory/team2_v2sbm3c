@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Nav.css";
+import { Link, useLocation } from 'react-router-dom';
+
 
 const Nav = () => {
+  const location = useLocation();
+
+  // 현재 경로를 가져옵니다.
+  const currentPath = location.pathname;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(false);
 
@@ -26,9 +32,13 @@ const Nav = () => {
   return (
       <aside id="dock">
         <nav className="bottom-nav">
-          <a href="/" className="nav-item home">
-            <img src="/images/icon/home.svg" alt="Home" className="icon" />
-          </a>
+          <Link to="/" className={`nav-item ${currentPath === '/' ? 'home active' : ''}`}>
+            {currentPath === '/' ? (
+                <img src="/images/icon/active_home.svg" alt="Home" className="icon" />
+            ) : (
+                <img src="/images/icon/home.svg" alt="Home" className="icon" />
+            )}
+          </Link>
           <a href="/restaurant/search" className="nav-item search">
             <img src="/images/icon/search.svg" alt="Search" className="icon" />
           </a>

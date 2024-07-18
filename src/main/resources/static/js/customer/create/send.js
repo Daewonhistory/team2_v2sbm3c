@@ -97,6 +97,16 @@ function send() {
     return false;
   }
 
+  if (document.getElementById('btn_checkEmail').disabled == false) {
+    alert('이메일 인증을 완료해주세요.');
+    return false;
+  }
+
+  if (document.getElementById('btn_checkNickname').disabled == false) {
+    alert('닉네임  인증을 완료해주세요.');
+    return false;
+  }
+
   if (document.getElementById('openModalButton').disabled == false) {
     alert('휴대폰 인증을 완료해주세요.');
     return false;

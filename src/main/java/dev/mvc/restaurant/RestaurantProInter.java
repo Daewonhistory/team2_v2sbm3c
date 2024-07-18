@@ -104,6 +104,14 @@ public interface RestaurantProInter {
    */
 
   public ArrayList<RestFullData> NearBestRestaurant(double currentLat, double currentLng);
+
+  /**
+   * 알러지 식당
+   * @param custno
+   * @return
+   */
+  public ArrayList<RestFullData> IngreBestRestaurant(Integer custno);
+
   /**
    * 조건을 통한 식당 검색 이미지 포함
    * @param map

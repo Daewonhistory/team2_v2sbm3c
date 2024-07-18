@@ -52,6 +52,11 @@ public class RestImgProC implements RestImgProInter {
   public List<RestimgVO> findByFileName(String fileName) {
     return this.restimgDAO.findByFileName(fileName);
   }
+  
+  @Override
+  public List<RestFullData> favorite_img(int restno) {
+    return this.restimgDAO.favorite_img(restno);
+  }
 
 
 }
