@@ -22,27 +22,29 @@
                     <col style='width: 10%;'/>
                     <col style='width: 20%;'/>
                     <col style='width: 10%;'/>
+                    <col style='width: 10%;'/>
                     <col style='width: 20%;'/>
                     <col style='width: 20%;'/>
-                    <col style='width: 20%;'/>
+                    <col style='width: 10%;'/>
                 </colgroup>
                 <tr class="manager-header">
                     <th class='th_bs'>예약 번호</th>
                     <th class='th_bs'>예약 날짜</th>
+                    <th class='th_bs'>예약 시간</th> <!-- 추가된 부분 -->
                     <th class='th_bs'>인원수</th>
                     <th class='th_bs'>고객 이름</th>
                     <th class='th_bs'>식당 이름</th>
                     <th class='th_bs'>수정/삭제</th>
                 </tr>
                 <tr th:if="${list.isEmpty()}" class="no-reservations-message">
-                    <td colspan="6" class="td_basic" style="text-align:center; font-size:20px; padding:20px;">
+                    <td colspan="7" class="td_basic" style="text-align:center; font-size:20px; padding:20px;">
                         예약된 일정이 없습니다
                     </td>
                 </tr>
                 <tr class="manager-data" th:each="reserve : ${list}">
                     <td class='td_basic' th:text="${reserve.reserveno}"></td>
-                    <td class='td_basic' th:text="${reserve.reserveDate}"></td> <!-- 수정된 부분 -->
-                    
+                    <td class='td_basic' th:text="${reserve.formattedReserveDate}"></td> <!-- 포맷 적용 -->
+                    <td class='td_basic' th:text="${reserve.formattedReserveTime}"></td> <!-- 시간 정보를 출력 -->
                     <td class='td_basic' th:text="${reserve.person}"></td>
                     <td class='td_basic' th:text="${reserve.nickname}"></td>
                     <td class='td_basic' th:text="${reserve.restname}"></td>
@@ -70,7 +72,7 @@
                 f.appendChild(obj1);
                 f.appendChild(obj2);
                 f.setAttribute('method', 'post');
-                f.setAttribute('action', '/reservation/delete_owner_site'); // 올바른 URL로 설정
+                f.setAttribute('action', '/reservation/delete_site');
                 document.body.appendChild(f);
                 f.submit();
             } else { // 취소
