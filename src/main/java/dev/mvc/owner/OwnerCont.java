@@ -97,7 +97,7 @@ public class OwnerCont {
 
 
     if (type == null || ownerno == null) {
-      return "redirect:/";
+      return "redirect:/owner/login";
     }
 
 
@@ -106,7 +106,8 @@ public class OwnerCont {
 
     model.addAttribute("restno", restno);
 
-    if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") || publicTools.isOwner(type).equals("ready")) {
+    if (publicTools.isOwner(type).equals("owner") || publicTools.isOwner(type).equals("NotCerti") || publicTools.isOwner(type).equals("ready") || publicTools.isOwner(type).equals("Norest")) {
+
       return "layout";
     } else {
       return "redirect:/owner/login";

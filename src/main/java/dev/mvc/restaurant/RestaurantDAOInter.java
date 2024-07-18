@@ -115,6 +115,12 @@ public interface RestaurantDAOInter {
 
   public int update_map(RestFullData restFullData);
 
+  /**
+   * 알러지 식당
+   * @param custno
+   * @return
+   */
+
   public ArrayList<RestFullData> IngreBestRestaurant(Integer custno);
   /**
    * 사업자 식당 여부 메소드

@@ -190,83 +190,168 @@
     <div class="owner-main-detail">
       <th:block layout:fragment="content">
         <div class="text-center mt-4">
-          <h2 class="mb-4">예약 분석</h2>
+          <h2 class="mb-4">데이터 분석</h2>
           <form id="analysis-form" class="d-inline-block">
             <select name="analysis_type" id="analysis_type" onchange="submitForm()" class="form-select">
-              <option value="요일별 분석">요일별 분석</option>
-              <option value="시간 분석">시간 분석</option>
+              <option value="weekday">요일별 분석</option>
+              <option value="allergy">알러지 분석</option>
             </select>
           </form>
-        </div>
-        <div id="chart-container" class="mt-4" style="width: 900px; height: 500px;"></div>
-        <div id="loading-spinner"></div> <!-- 로딩 스피너 추가 -->
+          <div id="chart-container"  class="mt-4" style="width: 900px; height: 500px; "></div>
+          <div id="loading-spinner" style="display: none;"></div> <!-- 로딩 스피너 추가 -->
 
-        <script type="text/javascript">
-          google.charts.load("current", {
-            packages: ["corechart"]
-          });
-          google.charts.setOnLoadCallback(drawChart);
+          <script type="text/javascript">
+            google.charts.load("current", {
+              packages: ["corechart", "bar"]
+            });
+            google.charts.setOnLoadCallback(submitForm);
 
-          function drawChart(chartData = null) {
-            const data = new google.visualization.DataTable();
-            data.addColumn('string', '요일');
-            data.addColumn('number', '예약 수');
+            let controller = new AbortController();
+            let signal = controller.signal;
 
-            if (chartData) {
-              data.addRows(chartData);
-            } else {
-              data.addRows([
-                ['월요일', 0],
-                ['화요일', 0],
-                ['수요일', 0],
-                ['목요일', 0],
-                ['금요일', 0],
-                ['토요일', 0],
-                ['일요일', 0]
-              ]);
+            function submitForm() {
+              // Abort previous fetch request if it exists
+              controller.abort();
+              controller = new AbortController();
+              signal = controller.signal;
+
+              const analysisType = document.getElementById('analysis_type').value;
+              fetchChartData(analysisType);
             }
 
-            const options = {
-              title: '요일별 예약 수',
-              is3D: true,
-              legend: {
-                position: 'right'
+            function fetchChartData(analysisType) {
+              let url = '';
+              if (analysisType === 'weekday') {
+                url = 'http://192.168.12.169:5000/weekday_summary';
+              } else if (analysisType === 'allergy') {
+                url = 'http://192.168.12.169:5000/allergy_data';
               }
-            };
 
-            const chart = new google.visualization.PieChart(document.getElementById('chart-container'));
-            chart.draw(data, options);
-          }
+              // Show loading spinner while fetching data
+              document.getElementById('loading-spinner').style.display = 'block';
 
-          function submitForm() {
-            const analysisType = document.getElementById('analysis_type').value;
-            fetch('http://192.168.12.165:5000/generate_chart', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              body: `analysis_type=${encodeURIComponent(analysisType)}`
-            })
-                .then(response => response.json())
-                .then(data => {
-                  // 로딩 스피너 숨김
-                  document.getElementById('loading-spinner').style.display = 'none';
+              fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({}),
+                signal: signal  // Pass signal to fetch request
+              })
+                  .then(response => response.json())
+                  .then(data => {
+                    console.log('Data received from server:', data);
 
-                  if (data.error) {
-                    document.getElementById('chart-container').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
-                  } else {
-                    drawChart(data.chart_data);
+                    // Transform the data into the required format
+                    const formattedData = data.chart_data.map(item => [item.name || item[0], item.count || item[1]]);
+                    drawChart(formattedData, data.title, data.legend);
+
+                    // Hide loading spinner after data is fetched
+                    document.getElementById('loading-spinner').style.display = 'none';
+
+                  })
+                  .catch(error => {
+                    if (error.name === 'AbortError') {
+                      console.log('Previous fetch request aborted');
+                    } else {
+                      console.error('Error fetching data:', error);
+                    }
+
+                    // Hide loading spinner on error
+                    document.getElementById('loading-spinner').style.display = 'none';
+                  });
+            }
+
+            function drawChart(chartData, title, legend) {
+              const data = new google.visualization.DataTable();
+
+              if (title === '요일별 예약 수') {
+                data.addColumn('string', '요일');
+                data.addColumn('number', '예약 수');
+
+                if (chartData && chartData.length > 0) {
+                  data.addRows(chartData);
+                } else {
+                  data.addRows([
+                    ['월요일', 0],
+                    ['화요일', 0],
+                    ['수요일', 0],
+                    ['목요일', 0],
+                    ['금요일', 0],
+                    ['토요일', 0],
+                    ['일요일', 0]
+                  ]);
+                }
+
+                const options = {
+                  title: title,
+                  is3D: true,
+                  legend: {
+                    position: 'right'
                   }
-                })
-                .catch(error => {
-                  // 로딩 스피너 숨김
-                  document.getElementById('loading-spinner').style.display = 'none';
-                });
-          }
-          document.addEventListener('DOMContentLoaded', function() {
-            submitForm();
-          });
-        </script>
+                };
+
+                const chart = new google.visualization.PieChart(document.getElementById('chart-container'));
+                chart.draw(data, options);
+
+              } else if (title === '알러지 분석') {
+                data.addColumn('string', '고객 알러지 현황');
+                data.addColumn('number', '인원수');
+
+                if (chartData && chartData.length > 0) {
+                  data.addRows(chartData);
+                } else {
+                  data.addRows([
+                    ['알러지1', 0],
+                    ['알러지2', 0],
+                    ['알러지3', 0],
+                    ['알러지4', 0],
+                    ['알러지5', 0],
+                    ['알러지6', 0],
+                    ['알러지7', 0],
+                    ['알러지8', 0],
+                    ['알러지9', 0],
+                    ['알러지10', 0]
+                  ]);
+                }
+
+                const options = {
+                  title: title,
+                  chartArea: {width: '50%'},
+                  hAxis: {
+                    title: '인원 수 ',
+                    minValue: 0
+                  },
+                  vAxis: {
+                    title: '고객 알러지 현황'
+                  },
+                  series: {
+                    0: { color: '#e0440e' },
+                    1: { color: '#e6693e' },
+                    2: { color: '#ec8f6e' },
+                    3: { color: '#f3b49f' },
+                    4: { color: '#f6c7b6' },
+                    5: { color: '#8e5ea2' },
+                    6: { color: '#3b5998' },
+                    7: { color: '#8e44ad' },
+                    8: { color: '#3498db' },
+                    9: { color: '#2980b9' }
+                  },
+                  legend: {
+                    position: 'right',
+                    textStyle: {color: 'black', fontSize: 12}
+                  }
+                };
+
+                const chart = new google.visualization.ColumnChart(document.getElementById('chart-container'));
+                chart.draw(data, options);
+              }
+            }
+          </script>
+
+
+
+
       </th:block>
     </div>
   </div>

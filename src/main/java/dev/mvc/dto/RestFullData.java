@@ -23,6 +23,8 @@ public class RestFullData {
 
   private String address;
 
+  private String address1;
+
   private double lat;
 
   private double lng;
