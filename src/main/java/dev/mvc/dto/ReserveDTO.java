@@ -35,7 +35,21 @@ public class ReserveDTO {
   private String reserveDate;  // 추가된 필드
   
   /** 예약 시간 */
-  private String reserveTime;  // 추가된 필드
+  private int reserveTime;  // 추가된 필드
+  
+  public String getFormattedReserveDate() {
+    // 시간 부분을 제거하고 날짜 부분만 반환
+    return reserveDate != null ? reserveDate.split(" ")[0] : "";
+}
+  
+  public String getFormattedReserveTime() {
+    // 시간 번호를 문자열로 변환
+    if (reserveTime >= 0 && reserveTime < 24) {
+        return String.format("%02d:00", reserveTime);
+    } else {
+        return "Invalid Time";
+    }
+}
   
   
 

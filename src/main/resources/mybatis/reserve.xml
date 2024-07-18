@@ -65,7 +65,7 @@
     </select>
     
     <!-- 특정 사업자의 식당 예약 조회 (페이징) -->
-    <select id="list_owner_paging" parameterType="map" resultType="dev.mvc.dto.ReserveDTO">
+     <select id="list_owner_paging" parameterType="map" resultType="dev.mvc.dto.ReserveDTO">
         SELECT * FROM (
             SELECT ROWNUM AS rnum, r.reserveno, r.sub_date, r.person, r.custno, r.admitpersonno, 
                    c.nickname AS nickname, rest.name AS restname, a.reserve_date AS reserveDate, a.time AS reserveTime
