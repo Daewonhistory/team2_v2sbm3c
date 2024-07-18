@@ -1,0 +1,112 @@
+#section_allergy {
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #FF0000;
+}
+
+.scroll-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.scroll-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.scroll-button:hover {
+  background-color: #0056b3;
+}
+
+#restaurant-wrap {
+  display: flex;
+  overflow-x: hidden; /* 스크롤바 숨기기 */
+  scroll-behavior: smooth;
+  gap: 20px;
+  white-space: nowrap; /* 줄 바꿈 방지 */
+  cursor: grab; /* 드래그 가능 커서 */
+}
+
+#restaurant-wrap:active {
+  cursor: grabbing; /* 드래그 중 커서 */
+}
+
+.restaurant-container {
+  flex: 0 0 auto;
+  width: 200px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.restaurant-image {
+  width: 100%;
+  height: 150px; /* 고정된 높이 */
+  object-fit: cover; /* 이미지가 컨테이너에 맞게 조정 */
+  border-radius: 5px;
+}
+
+.restaurant-info {
+  padding: 10px;
+  text-align: center;
+}
+
+.restaurant-name {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.rating-stars {
+  position: relative;
+  display: inline-block;
+  font-size: 20px;
+  color: #ddd;
+  margin-bottom: 5px; /* 별 아래에 공간 추가 */
+}
+
+.rating-stars::before {
+  content: '★★★★★';
+}
+
+.filled-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  font-size: 20px;
+  color: gold;
+  overflow: hidden; /* 필요없는 별 숨기기 */
+}
+
+.restaurant-area {
+  font-size: 14px;
+  color: #555;
+}
+
+.rest-rate {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+.filled-stars::before {
+  content: '★★★★★';
+  width: calc(${rest.rate} * 100%);
+  overflow: hidden;
+}
+.restaurant-container:hover {
+  transform: scale(1.05);
+}

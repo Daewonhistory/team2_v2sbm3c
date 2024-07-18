@@ -238,6 +238,15 @@ public class RestaurantProC implements RestaurantProInter {
     map.put("currentLng", currentLng);
     return this.restDAO.NearBestRestaurant(map);
   }
+  /**
+   * 알러지 식당
+   * @param custno
+   * @return
+   */
+  @Override
+  public ArrayList<RestFullData> IngreBestRestaurant(Integer custno) {
+    return this.restDAO.IngreBestRestaurant(custno);
+  }
 
   @Override
 	public String test(String date1) {
