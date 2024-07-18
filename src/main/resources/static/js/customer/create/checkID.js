@@ -32,7 +32,7 @@ function checkID() {
         .then(response => response.json())
         .then(rdata => {
           if (rdata.cnt > 0) {
-            id_msg.innerHTML = '이미 사용중인 ID(이메일) 입니다. 다른 ID(이메일)을 지정해주세요.';
+            id_msg.innerHTML = '이미 사용중인 ID입니다. 다른 ID를 지정해주세요.';
             id_msg.classList.add('span_warning');
             id.focus();
             setTimeout(function () {

@@ -52,8 +52,10 @@ function openModal(type) {
     };
 
   } else if (type === 'Email') {
-    const email = document.getElementById("email1").value + document.getElementById("email2").value;
-    if (!email.includes('@')) {
+    const email1 = document.getElementById("email1").value;
+    const email = email1 + document.getElementById("email2").value;
+
+    if (!email.includes('@') || email1 === '' || email1.length < 3) {
       alert("유효한 이메일 주소를 입력하세요.");
       return;
     }
@@ -91,13 +93,17 @@ function openModal(type) {
   const closeButton = document.querySelector(".modal-content .close");
   closeButton.onclick = function () {
     modal.style.display = "none";
-  }
+    // 모달이 닫힐 때 verificationSent 초기화
+    verificationSent = false;
+  };
 
   window.onclick = function (event) {
     if (event.target == modal) {
       modal.style.display = "none";
+      // 모달이 닫힐 때 verificationSent 초기화
+      verificationSent = false;
     }
-  }
+  };
 }
 
 // 인증번호 전송 함수
@@ -170,20 +176,9 @@ function verifyCode(contact, authCode) {
             document.getElementById("phone2").setAttribute("readonly", true);
             document.getElementById("phone3").setAttribute("readonly", true);
           } else if (currentType === 'Email') {
-            // 이메일 인증이 성공한 경우
             let btn_checkEmail = document.getElementById('btn_checkEmail');
-
             let email = document.getElementById('email');
-            let dot = document.getElementById('dot');
             email.readOnly = true;
-
-// 기존의 select 요소에서 선택된 값을 가져옵니다.
-
-
-// input 요소를 생성합니다.
-
-
-// 버튼을 비활성화합니다.
             btn_checkEmail.disabled = true;
           }
         } else {

@@ -1,50 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Email 인증</title>
-  <style>
-    /* 이메일 본문 스타일링 */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #f5d3d3;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .header h2 {
-      color: #333;
-    }
-    .welcome-message {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-    .code {
-      font-size: 24px;
-      color: #007bff;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Eay days</title>
 </head>
-<body>
-<div class="container">
-  <div class="header">
-    <h2>Email 인증</h2>
+<body style="font-family: Arial, sans-serif; background-color: #f3f3f3; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+<div style="background-color: white; border: 1px solid #ccc; padding: 20px; width: 400px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <div style="background-color: #FFA07A; padding: 15px; color: white; font-size: 24px; font-weight: bold; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+    Eay days
   </div>
-  <div class="welcome-message">
-    <span class="Authenti" th:text="${email}"></span>
-    <span class="Authenti" th:text="${authCode}"></span>
+  <div style="margin-top: 20px; line-height: 1.6;">
+    <span>Eay days에 오신 것을 환영합니다!!</span>
+    <br><br>
+    <span style="font-size: 16px; color: #333;" th:text="@{${email} + ' 님, ' + ${authCode} + ' 인증코드 입니다'}"></span>
+  </div>
+  <div style="margin-top: 20px; font-size: 12px; color: #666;">
+    <p>관련 리소스:</p>
+    <ul style="padding: 0; list-style-type: none;">
+      <li><a href="http://localhost:9093/owner/create/" style="color: #3498db; text-decoration: none;">Eay days 계정 회원 생성</a></li>
+      <li><a href="http://localhost:9093/owner/create" style="color: #3498db; text-decoration: none;">Eay days 계정 사업자 생성</a></li>
+    </ul>
   </div>
 </div>
 </body>

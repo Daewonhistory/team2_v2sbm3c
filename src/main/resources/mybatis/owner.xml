@@ -8,6 +8,11 @@
         FROM owner
         WHERE id=#{id}
     </select>
+    <select id="checkNickName" resultType="int" parameterType="String">
+        SELECT COUNT(nickname) as cnt
+        FROM owner
+        WHERE nickname = #{nickname}
+    </select>
 
     <select id="findNameEmail" resultType="String" >
         SELECT id as cnt
