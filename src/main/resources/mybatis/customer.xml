@@ -28,7 +28,10 @@
     WHERE cname = #{cname} AND phone = #{phone}
   </select>
 
-
+  <select id="currval">
+    SELECT customer_seq.nextval
+    FROM DUAL
+  </select>
 
   <select id="checkNameEmail" resultType="int" >
     SELECT COUNT(email) as cnt

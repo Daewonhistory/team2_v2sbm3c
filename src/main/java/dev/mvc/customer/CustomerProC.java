@@ -367,5 +367,10 @@ public class CustomerProC implements CustomerProInter {
     str.append("</nav>");
     return str.toString();
   }
+  
+  public int currval() {
+    int currval = this.customerDAO.currval();
+    return currval;
+  }
 
 }

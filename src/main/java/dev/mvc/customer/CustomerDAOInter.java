@@ -119,6 +119,6 @@ public interface CustomerDAOInter {
   public int list_search_count(HashMap<String,Object> map);
 
 
-
+  public int currval();
 
 }

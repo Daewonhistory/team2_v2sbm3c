@@ -180,15 +180,7 @@ public class CustomerCont {
       System.out.println("->" + customerVO.getId());
       System.out.println("닉네임->" + customerVO.getNickname());
 
-      if (ingrednoList != null) {
-          System.out.println("ingred : " + ingrednoList.size());
-          for (Integer ingredno : ingrednoList) {
-              AllergyVO allergyVO = new AllergyVO();
-              allergyVO.setCustno(customerVO.getCustno());
-              allergyVO.setIngredno(ingredno);
-              this.allergyProc.create(allergyVO);
-          }
-      }
+      
 
       System.out.println("check_ID -> " + check_ID);
       if (check_ID == 0) {
@@ -200,6 +192,15 @@ public class CustomerCont {
           int count = customerProc.create(customerVO);
           System.out.println("count -> " + count);
           if (count == 1) {
+            if (ingrednoList != null) {
+              System.out.println("ingred : " + ingrednoList.size());
+              for (Integer ingredno : ingrednoList) {
+                AllergyVO allergyVO = new AllergyVO();
+                allergyVO.setCustno(this.customerProc.currval() - 1);
+                allergyVO.setIngredno(ingredno);
+                this.allergyProc.create(allergyVO);
+              }
+            }
               rrtr.addFlashAttribute("success", 1);
               rrtr.addFlashAttribute("come", customerVO.getCname() + "님 회원가입 축하드립니다! ");
               return "redirect:/customer/login";
