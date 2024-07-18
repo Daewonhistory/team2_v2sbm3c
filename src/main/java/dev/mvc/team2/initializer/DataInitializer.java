@@ -19,10 +19,12 @@ public class DataInitializer implements CommandLineRunner {
         if (allowIpsRepository.count() == 0) {
             AllowIps ip1 = new AllowIps();
             ip1.setId(1L);
-            ip1.setIpAddress("127.0.0.1");
+            ip1.setIp("127.0.0.1");
 
             AllowIps ip2 = new AllowIps();
             ip2.setId(2L);
+            ip2.setIp("0:0:0:0:0:0:0:1");
+
 
             allowIpsRepository.saveAll(Arrays.asList(ip1, ip2));
         }

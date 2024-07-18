@@ -178,6 +178,7 @@
           <li ><a href="/owner/certi_info_update">사업자 인증 정보 수정</a></li>
 
 
+
         </ul>
       </li>
       <li th:if="${session.id != null}"class="owner-menu">
@@ -208,6 +209,10 @@
           <div th:if="${session.type== 'ready'}"> 사업자 인증  대기중입니다</div>
           <div id="chart-container"  class="mt-4" style="width: 900px; height: 500px; "></div>
           <div id="loading-spinner" style="display: none;"></div> <!-- 로딩 스피너 추가 -->
+          <input type="hidden" id="restno" th:if="${session.type=='owner'}" th:value="${restno}">
+
+
+
 
           <script type="text/javascript">
             google.charts.load("current", {
@@ -230,8 +235,13 @@
 
             function fetchChartData(analysisType) {
               let url = '';
+              let requestBody = {};
+
               if (analysisType === 'weekday') {
                 url = 'http://192.168.12.169:5000/weekday_summary';
+                requestBody = {
+                  restno: document.getElementById('restno').value
+                };
               } else if (analysisType === 'allergy') {
                 url = 'http://192.168.12.169:5000/allergy_data';
               }
@@ -244,7 +254,7 @@
                 headers: {
                   'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({}),
+                body: JSON.stringify(requestBody),
                 signal: signal  // Pass signal to fetch request
               })
                   .then(response => response.json())
@@ -326,9 +336,9 @@
 
                 const options = {
                   title: title,
-                  chartArea: {width: '50%'},
+                  chartArea: { width: '50%' },
                   hAxis: {
-                    title: '인원 수 ',
+                    title: '인원 수',
                     minValue: 0
                   },
                   vAxis: {
@@ -348,7 +358,7 @@
                   },
                   legend: {
                     position: 'right',
-                    textStyle: {color: 'black', fontSize: 12}
+                    textStyle: { color: 'black', fontSize: 12 }
                   }
                 };
 

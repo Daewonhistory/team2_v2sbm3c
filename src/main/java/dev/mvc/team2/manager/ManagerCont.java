@@ -123,6 +123,22 @@ public class ManagerCont {
   }
 
 
+
+  @GetMapping("/create_ip")
+
+  public String createIps(Model model) {
+
+    // 알러지 재료명 목록 추가
+
+
+
+    return "/manager/create_ip";
+  }
+
+
+
+
+
   @PostMapping("/create")
   public String createcustomer(Model model, Manager manager,
                                @RequestParam(name = "ingredno[]", required = false) ArrayList<Integer> ingrednoList, RedirectAttributes rrtr) {
