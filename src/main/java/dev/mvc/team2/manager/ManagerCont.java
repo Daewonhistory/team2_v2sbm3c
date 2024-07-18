@@ -94,7 +94,7 @@ public class ManagerCont {
     String type = (String) session.getAttribute("type");
     model.addAttribute("accessType", type);
 
-    if (type.equals("owner") ) {
+    if (type != null && type.equals("owner") ) {
       Integer ownerno = (Integer) session.getAttribute("ownerno");
       Integer restno = this.restaurantProc.foreign(ownerno);
 

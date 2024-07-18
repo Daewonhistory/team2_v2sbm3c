@@ -162,9 +162,10 @@ public class ReserveCont {
   
   @PostMapping("/delete")
   public String delete(@RequestParam("reserveno") int reserveno) {
-      int cnt = reserveProc.delete(reserveno);
+      int cnt = this.reserveProc.delete(reserveno);
       if (cnt == 1) {
           // 성공적으로 삭제된 경우 처리
+//          this.admitPersonProc.update_curr_person(); 
           return "redirect:/reservation/list_all";
       } else {
           // 실패한 경우 처리
