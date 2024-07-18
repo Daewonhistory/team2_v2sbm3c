@@ -175,6 +175,8 @@ function verifyCode(contact, authCode) {
           if (currentType === 'Phone') {
             document.getElementById("phone2").setAttribute("readonly", true);
             document.getElementById("phone3").setAttribute("readonly", true);
+            document.getElementById('openModalButton').disabled = true;
+
           } else if (currentType === 'Email') {
             let btn_checkEmail = document.getElementById('btn_checkEmail');
             let email = document.getElementById('email');

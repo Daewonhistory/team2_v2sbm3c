@@ -101,6 +101,8 @@ public class OwnerCont {
     }
 
 
+
+
     Integer restno = this.restproC.foreign(ownerno);
 
 
@@ -457,7 +459,7 @@ public class OwnerCont {
             session.setAttribute("oname", ownerVO.getOname());
             session.setAttribute("grade", "Norest");
             session.setAttribute("ownerVO", ownerVO);
-            return "redirect:/";
+            return "redirect:/owner";
           } else {
             session.setAttribute("type", "owner");
             System.out.println("ownerno" + ownerVO.getOwnerno());
@@ -466,7 +468,7 @@ public class OwnerCont {
             session.setAttribute("oname", ownerVO.getOname());
             session.setAttribute("grade", "owner");
             session.setAttribute("ownerVO", ownerVO);
-            return "redirect:/";
+            return "redirect:/owner";
           }
         case 10:
           session.setAttribute("ownerno", ownerVO.getOwnerno());
