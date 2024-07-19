@@ -10,7 +10,7 @@
 
   <div style="width: 60%; margin: 0px auto "  th:object="${restFullData}">
   <div class="title_line"  th:text="@{|${restFullData.name} 식당 정보 조회 수정 (*는 필수)|}">  </div>
-  <form   id="frm" name="frm" method="post" action="/restaurant/update">
+  <form   id="frm" name="frm" method="post" action="/owner/restupdate">
     <div style="align-items: center; display: none;">
 
       <input class="form-control form-control-sm"  id="restno" name="restno" th:value="${restFullData.restno}" style=" width: 50%;" readonly></input>
