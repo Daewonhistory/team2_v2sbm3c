@@ -39,7 +39,7 @@ public class ScheduleCont {
 	public String create(Model model, HttpSession session, @RequestParam(defaultValue = "0") int restno) {
 	  String accessType = (String) session.getAttribute("type");
 	  System.out.println("=> accessType:" + accessType);
-	  if(accessType == null) { // 관리자 접속
+	  if(accessType.equals("Master") || accessType.equals("Admin") || accessType.equals("Manager")) { // 관리자 접속
 	    RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 		model.addAttribute("restaurantVO", restaurantVO);
 		model.addAttribute("accessType", accessType);

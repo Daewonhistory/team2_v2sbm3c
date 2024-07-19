@@ -33,17 +33,25 @@ public class AdmitPersonCont {
   @Autowired
   @Qualifier("dev.mvc.restaurant.RestaurantProc")
   private RestaurantProInter restaurantProc;
-
+  
+  /**
+   * 허용인원 생성페이지
+   * @param model
+   * @param session
+   * @return
+   */
   @GetMapping("/create")
   public String create(Model model, HttpSession session) {
     String accessType = (String) session.getAttribute("type");
 	ArrayList<RestaurantVO> restaurantList = null;
 	
-	if(accessType == null) {
+	if(accessType.equals("Master") || accessType.equals("Admin") || accessType.equals("Manager")) {
 	  restaurantList = this.restaurantProc.list_all();
 	}else if(accessType.equals("owner")) {
 	  int accessOwnerno = (int) session.getAttribute("ownerno");
+	  System.out.println("access owner" + accessOwnerno);
 	  restaurantList = this.restaurantProc.findByOwnerR(accessOwnerno);
+	  System.out.println("레스토랑사이즈: " + restaurantList.size());
 	}else {
 	  System.out.println("not allowed user acess");
 	  return "redirect:/";
@@ -56,12 +64,8 @@ public class AdmitPersonCont {
 	
   @PostMapping("/create")
   public String createProc(HttpSession session, AdmitPersonVO admitPersonVO) {
-    String accessType = (String) session.getAttribute("type");
+    
 	
-	if(accessType != null || !accessType.equals("owner")) {
-	  System.out.println("not allowed user access");
-	  return "redirect:/";
-	}
 	int cnt = this.admitPersonProc.create(admitPersonVO);
 	return "redirect:/admitperson/list";
   }

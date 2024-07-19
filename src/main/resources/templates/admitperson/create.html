@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+	메뉴 등록
+  </div>
+  
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide'>│</span>
+    <a>목록</a>    
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='frm' method='post' th:object="${admitPersonVO}" action='./create' enctype="multipart/form-data">
+    <div>
+      <select name="restno">
+        <option th:if="${session.type == 'Master' || session.type == 'Admin' || session.type == 'Manager'}" value="0" >전체 식당</option>
+        <option
+          th:each="restaurantVO, status : ${restaurantList}"
+          th:value="${restaurantVO.restno}"
+          th:text="${restaurantVO.name}"
+        ></option>
+      </select>
+    	
+    </div>
+    <label>날짜:</label>
+   
+       
+    <input type='date' name='reserve_date' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    <div>
+       <label>시각:</label>
+       <input type="number" name="time" class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+       <label>허용인원:</label>
+       <input type="number" name="admit_person" class="form-control" style='width: 100%;'>
+    </div>
+    <button type="submit" class='btn btn-secondary btn-sm'>공지 등록</button>
+    <button type="button" onclick="location.href='/notice/list'" class='btn btn-secondary btn-sm'>목록으로 돌아가기</button>
+  </form>
+</div>
+</html>
+
+  

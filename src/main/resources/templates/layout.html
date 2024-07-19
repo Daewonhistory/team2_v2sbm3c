@@ -156,7 +156,7 @@
 
           <li th:if="${session.type == 'owner' }"><a th:href="@{|/schedule/update|}">스케줄 관리</a></li>
           <li th:if="${session.type == 'owner' }"><a th:href="@{|/menu/list|}">메뉴 관리</a></li>
-          <li th:if="${session.type == 'owner' }"><a href="/notice/list">공지 등록</a></li>
+          <li th:if="${session.type == 'owner' }"><a href="/notice/list">공지 관리</a></li>
         </ul>
       </li>
       <li th:if="${session.type == 'owner' }" class="owner-menu">
