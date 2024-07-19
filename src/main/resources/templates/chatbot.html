@@ -11,8 +11,8 @@
     height: 100%;
     overflow: auto;
     border: 1px solid #ccc;
-    background-image: linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.6)), url("/static/images/background.jpg"); 
-    background-size: 100%;
+    background-image: linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.6)), url("/icon/eat.png"); 
+    background-size: 10%;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
@@ -129,24 +129,24 @@ a:active {
         newMessage.innerHTML = "<p class='send_msg'>" + message + "</p>";
         chatting_pannel.appendChild(newMessage);
         const allQuestion = document.querySelectorAll('.send_msg');
-        let allQuestionSum = "";
+        let allQuestionList = [];
         for(let question of allQuestion){
-          allQuestionSum += "\\n" + question.innerText;
+          allQuestionList.push(question.innerText);
         }
         const allAnswer = document.querySelectorAll('.receive_msg');
-        let allAnswerSum = "";
+        let allAnswerList = [];
         for(let answer of allAnswer){
-          allAnswerSum += "\\n" + answer.innerText;
+          allAnswerList.push(answer.innerText);
         }
         document.getElementById('message').value = "";
         const chatContainer = document.querySelector('.chat-container');
-
+        // aws에 올릴시 아이피 수정해야함 
         fetch(
             'http://192.168.12.165:5000/chatbot',
             {
                 "method": "POST",
                 "headers": {"Content-Type": "application/json"},
-                "body": JSON.stringify({"question": message})
+                "body": JSON.stringify({"question": message, "allQuestionList": allQuestionList, "allAnswerList": allAnswerList})
             }
         )
         .then((response) => response.json())
