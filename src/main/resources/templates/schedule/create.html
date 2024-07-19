@@ -4,10 +4,19 @@
 
 	<style>
 		.schedule-condition {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-evenly;
-		}
+      display: flex;
+      flex-direction: row;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+    .form-control{
+      width:auto;
+    }
+    .form-container{
+      display:block;
+    }
 	</style>
   <div class="container">
     <div class="form-container">
@@ -16,14 +25,153 @@
         <input type="hidden" name="restno" th:value="${restaurantVO.restno}">
         <label for="restname">식당 이름: </label>
         <span id="restname" th:text="${restaurantVO.name}"></span>
-        <button type="button" onclick="addClock()">예약 시각 추가</button>
-      	<div id="schedule-div" class="form-group">
-      		<div class="schedule-condition">
-        		<input type="number" class="form-control times" name="times" min="0" max="23" placeholder="예약 시각">
-        		<input type="number" class="form-control" name="admit_persons" min="0" placeholder="예약 허용 인원">
-        	</div>
-      	</div>
         
+        <div id="schedule-div" class="form-group" >
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="0" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="1" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="2" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="3" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="4" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="5" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="6" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="7" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="8" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="9" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="10" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="11" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="12" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="13" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="14" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="15" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="16" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="17" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="18" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="19" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="20" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="21" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="22" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+          <div class="schedule-condition">
+            <label>시각:</label>
+            <input type="number" class="form-control times" name="times" value="23" min="0" max="23" readonly>
+            <label>허용인원:</label>
+            <input type="number" class="form-control " name="admit_persons" value="0" min="0" placeholder="예약 허용 인원">
+          </div>
+        </div>
 
         <div class="form-group buttons">
           <button type="button" class="btn btn-primary" id="btn_send" onclick="send()">등록</button>

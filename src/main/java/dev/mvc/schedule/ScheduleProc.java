@@ -17,18 +17,14 @@ public class ScheduleProc implements ScheduleProcInter {
 	}
 	
 	@Override
-	public int createFullSchedule(int[] admitPersons, int[] times, int restno) {
+	public int createFullSchedule(int[] admitPersons, int restno) {
 		int cnt = 0;
 		for(int i=0; i<=23; i++) {
 			ScheduleVO scheduleVO = new ScheduleVO();
 			scheduleVO.setTime(i);
 			scheduleVO.setRestno(restno);
-			scheduleVO.setAdmit_person(0);
+			scheduleVO.setAdmit_person(admitPersons[i]);
 			// 허용인원이 직접 지정된 시각의 허용인원 추가 default는 0;
-			for(int j=0; j<times.length; j++) {
-				if(i==times[j])
-					scheduleVO.setAdmit_person(admitPersons[j]);
-			}
 			
 			
 			cnt = this.scheduleDAO.create(scheduleVO);

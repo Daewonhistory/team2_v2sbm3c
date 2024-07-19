@@ -23,9 +23,6 @@
               <input type="hidden" th:value="${details.reserve.custno}" name="custno">
             </div>
             <div class="reservation-actions">
-              <a th:href="@{|/reservation/update?reserveno=${details.reserve.reserveno}|}">
-                <img src="/cate/images/update.png" class="icon">
-              </a>
               <a th:attr="onclick=|delete_check(${details.reserve.reserveno})|">
                 <img src="/cate/images/delete.png" class="icon">
               </a>

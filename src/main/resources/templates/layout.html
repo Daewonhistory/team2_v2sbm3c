@@ -146,7 +146,7 @@
     <div class="owner-title"><a style="font-size: 20px;" href="/owner">Eay Days 사업자</a></div>
     <ul class="owner-menu-list">
 
-      <li class="owner-menu">
+      <li th:if="${session.type == 'owner' || session.type == 'Norest' }" class="owner-menu">
         <a class="owner-menu-a" onclick="toggleSubMenu('rest-sub-menu', 'rest-arrow')">
           <span id="rest-arrow" class="arrow right"></span> 식당 관련
         </a>
@@ -154,12 +154,12 @@
           <li th:if="${session.type == 'Norest' }"><a href="/owner/rest_create">식당 등록</a></li>
           <li th:if="${session.type == 'owner' }"><a href="/owner/restaurant">식당 관리</a></li>
 
-          <li><a th:href="@{|/schedule/update|}">스케줄 관리</a></li>
-          <li><a th:href="@{|/menu/list|}">메뉴 관리</a></li>
-          <li><a href="/notice/list">공지 등록</a></li>
+          <li th:if="${session.type == 'owner' }"><a th:href="@{|/schedule/update|}">스케줄 관리</a></li>
+          <li th:if="${session.type == 'owner' }"><a th:href="@{|/menu/list|}">메뉴 관리</a></li>
+          <li th:if="${session.type == 'owner' }"><a href="/notice/list">공지 관리</a></li>
         </ul>
       </li>
-      <li class="owner-menu">
+      <li th:if="${session.type == 'owner' }" class="owner-menu">
         <a class="owner-menu-a" onclick="toggleSubMenu('reservation-sub-menu', 'reservation-arrow')">
           <span id="reservation-arrow" class="arrow right"></span> 예약 관련
         </a>
@@ -168,7 +168,7 @@
           <li><a href="/admitperson/list">예약인원 관리 </a></li>
         </ul>
       </li>
-      <li class="owner-menu">
+      <li th:if="${session.type == 'owner' }" class="owner-menu">
         <a class="owner-menu-a" onclick="toggleSubMenu('reviews-sub-menu', 'reviews-arrow')">
           <span id="reviews-arrow" class="arrow right"></span> 리뷰 관련
         </a>
@@ -204,6 +204,14 @@
     <div class="owner-main-detail">
       <th:block layout:fragment="content">
         <div class="text-center mt-4">
+        <div style="display:flex; justify-content: space-evenly;margin-bottom:50px;">
+            <div th:if="${session.type== 'NotCerti'}" class="alert alert-danger" role="alert" style="width: 300px;"> 사업자 인증이 되지않았습니다</div>
+            <div th:if="${session.type== 'Unauth'}" class="alert alert-warning" role="alert" style="width: 300px;"> 사업자 인증이 반려되었습니다</div>
+            <div th:if="${session.type== 'Norest'}" class="alert alert-info" role="alert" style="width: 300px;"> 식당이 없습니다 등록 해주세요</div>
+            <div th:if="${session.type== 'owner'}" class="alert alert-success" role="alert" style="width: 300px;"> 사업자님 안녕하세요</div>
+  
+            <div th:if="${session.type== 'ready'}" class="alert alert-dark" role="alert"> 사업자 인증  대기중입니다</div>
+          </div>
           <h2 class="mb-4">데이터 분석</h2>
           <form id="analysis-form" class="d-inline-block">
             <select name="analysis_type" id="analysis_type" onchange="submitForm()" class="form-select">
@@ -211,12 +219,7 @@
               <option value="allergy">알러지 분석</option>
             </select>
           </form>
-          <div th:if="${session.type== 'NotCerti'}"> 사업자 인증이 되지않았습니다</div>
-          <div th:if="${session.type== 'Unauth'}"> 사업자 인증이 반려되었습니다</div>
-          <div th:if="${session.type== 'Norest'}"> 식당이 없습니다 등록 해주세요</div>
-          <div th:if="${session.type== 'owner'}"> 사업자님 안녕하세요</div>
-
-          <div th:if="${session.type== 'ready'}"> 사업자 인증  대기중입니다</div>
+          
           <div id="chart-container"  class="mt-4" style="width: 900px; height: 500px; "></div>
           <div id="loading-spinner" style="display: none;"></div> <!-- 로딩 스피너 추가 -->
           <input type="hidden" id="restno" th:if="${session.type=='owner'}" th:value="${restno}">

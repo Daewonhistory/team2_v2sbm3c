@@ -274,15 +274,16 @@
 			<if test="categoryno != ''">
 				AND categoryno = #{categoryno}
 			</if>
-			<if test="word != null and word != ''">
-        AND re.name LIKE '%' || #{word} || '%'
-      </if>
+			
 			<if test="botareanos.length > 0">
 				AND re.botareano IN
 				<foreach item="item" index="index" collection="botareanos" open="(" separator="," close=")">
 	            	#{item}
 	        	</foreach>
 			</if>
+			 <if test="word != null and word != ''">
+        AND re.name LIKE '%' || #{word} || '%'
+      </if>
 				AND re.restno IN (
 			    SELECT restno 
 			    FROM menu

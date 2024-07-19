@@ -1391,7 +1391,7 @@ public class OwnerCont {
 
 
     } else {
-      return "redirect:/";
+      return "redirect:/manager";
     }
 
 
