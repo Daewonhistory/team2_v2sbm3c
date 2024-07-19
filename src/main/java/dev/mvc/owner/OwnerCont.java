@@ -86,7 +86,7 @@ public class OwnerCont {
   }
 
   @GetMapping()
-  public String owner(Model model, HttpSession session) {
+  public String ownerForm(Model model, HttpSession session) {
     String type = (String) session.getAttribute("type");
     System.out.println("type-> " + type);
 
@@ -133,22 +133,11 @@ public class OwnerCont {
     return "{\"cnt\":" + cnt + "}";
   }
 
-
   /**
-   * 회원 가입 폼 메서드
-   *
-   * @param model
-   * @param ownerVO
+   * 닉네임 체크 메서드
+   * @param nickname
    * @return
    */
-  @GetMapping("/create")
-
-  public String createForm(Model model, OwnerVO ownerVO) {
-
-
-    return "/owner/create";
-  }
-
   @PostMapping("/checkNickName")  //http:localhost:9091/owner/checkId?id=admin
   @ResponseBody
   public String checkNickname(String nickname) {
@@ -160,8 +149,76 @@ public class OwnerCont {
     return "{\"cnt\":" + cnt + "}";
   }
 
+
+  /**
+   * 회원 가입 폼 메서드
+   *
+   * @param model
+   * @param ownerVO
+   * @return
+   */
+  @GetMapping("/create")
+
+  public String create_OwnerForm(Model model, OwnerVO ownerVO) {
+
+
+    return "/owner/create";
+  }
+
+
+
+  /**
+   * 사업자 회원가입 처리 메서드
+   *
+   * @param model
+   * @param ownerVO
+   * @param rrtr
+   * @return
+   */
+  @PostMapping("/create")
+
+  public String create_Owner_Proc(Model model, OwnerVO ownerVO, RedirectAttributes rrtr) {
+
+
+    int check_ID = this.ownerProc.checkID(ownerVO.getId());
+
+
+    System.out.println("check_ID -> " + check_ID);
+    if (check_ID == 0) {
+      Random random = new Random();
+      int randomNumber = random.nextInt(5) + 1; // 1부터 5까지의 랜덤한 숫자 생성
+      String imageName = "ownerbasic" + randomNumber + ".jpg";
+      ownerVO.setImage(imageName);
+
+      ownerVO.setGrade(20);
+      int count = ownerProc.create(ownerVO);
+      System.out.println("count -> " + count);
+      if (count == 1) {
+
+        rrtr.addFlashAttribute("success", 1);
+        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 회원가입 축하드립니다! 사업자가 인증 완료되면 식당 관리 이용 가능합니다 ");
+        return "redirect:/owner/login";
+      } else {
+        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+        return "redirect:/owner/create";
+      }
+    } else {
+      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+      return "redirect:/owner/create";
+    }
+
+  }
+
+  /**
+   * 식당 생성 폼
+   * @param model
+   * @param restaurantVO
+   * @param session
+   * @return
+   */
+
   @GetMapping("/rest_create")
-  public String create(Model model, RestaurantVO restaurantVO, HttpSession session) {
+  public String rest_create_form(Model model, RestaurantVO restaurantVO, HttpSession session) {
     String type = (String) session.getAttribute("type");
 
 
@@ -185,7 +242,7 @@ public class OwnerCont {
    */
 
   @PostMapping("/rest_create")
-  public String restaurant(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
+  public String create_restaurant_Proc(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestaurantVO restaurantVO, RestimgVO restimgVO, RedirectAttributes ra) {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     restaurantVO.setOwnerno(ownerno);
 
@@ -251,47 +308,7 @@ public class OwnerCont {
 
   }
 
-  /**
-   * 사업자 회원가입 처리 메서드
-   *
-   * @param model
-   * @param ownerVO
-   * @param rrtr
-   * @return
-   */
-  @PostMapping("/create")
 
-  public String createowner(Model model, OwnerVO ownerVO, RedirectAttributes rrtr) {
-
-
-    int check_ID = this.ownerProc.checkID(ownerVO.getId());
-
-
-    System.out.println("check_ID -> " + check_ID);
-    if (check_ID == 0) {
-      Random random = new Random();
-      int randomNumber = random.nextInt(5) + 1; // 1부터 5까지의 랜덤한 숫자 생성
-      String imageName = "ownerbasic" + randomNumber + ".jpg";
-      ownerVO.setImage(imageName);
-
-      ownerVO.setGrade(20);
-      int count = ownerProc.create(ownerVO);
-      System.out.println("count -> " + count);
-      if (count == 1) {
-
-        rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 회원가입 축하드립니다! 사업자가 인증 완료되면 식당 관리 이용 가능합니다 ");
-        return "redirect:/owner/login";
-      } else {
-        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-        return "redirect:/owner/create";
-      }
-    } else {
-      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/owner/create";
-    }
-
-  }
 
 
   /**
@@ -376,7 +393,7 @@ public class OwnerCont {
    * @return
    */
   @PostMapping("/login")
-  public String login(Model model,
+  public String login_Proc(Model model,
                       String id, String passwd,
                       @RequestParam(value = "id_save", defaultValue = "") String id_save,
                       @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save,
@@ -517,9 +534,15 @@ public class OwnerCont {
     }
   }
 
-
+  /**
+   * 마이페이지 폼
+   * @param model
+   * @param session
+   * @param rttr
+   * @return
+   */
   @GetMapping("/my_page")
-  public String mypage(Model model, HttpSession session, RedirectAttributes rttr) {
+  public String mypageForm(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
     String id = (String) session.getAttribute("id");
@@ -540,17 +563,41 @@ public class OwnerCont {
     }
   }
 
+  /**
+   * 마이페이지 정보 수정 폼
+   * @param model
+   * @param session
+   * @param rttr
+   * @return
+   */
+
+  /**
+   * 마이페이지 업데이트 처리
+   * @param model
+   * @param ownerVO
+   * @param rrtr
+   * @param session
+   * @return
+   */
   @GetMapping("/my_info_update")
-  public String myinfo(Model model, HttpSession session, RedirectAttributes rttr) {
+  public String myinfo_update_Form(Model model, HttpSession session, RedirectAttributes rttr) {
 
 
 //    if (this.customerProc.isCustomer(session)) {
     String id = (String) session.getAttribute("id");
+    if (id == null) {
+      return "redirect:/";
+    }
     OwnerVO ownerVO = this.ownerProc.readById(id);
 
-    model.addAttribute("ownerVO", ownerVO);
+    if (ownerVO == null) {
+      return "redirect:/";
+    } else {
+      model.addAttribute("ownerVO", ownerVO);
+      return "/owner/my_info_update";
+    }
 
-    return "/owner/my_info_update";
+
 
 //    } else {
 //      rttr.addFlashAttribute("Abnormal", "비정상적인 접근입니다 홈으로 돌아갑니다");
@@ -558,6 +605,86 @@ public class OwnerCont {
 //    }
   }
 
+  /**
+   * 마이페이지 업데이트 처리
+   * @param model
+   * @param ownerVO
+   * @param rrtr
+   * @param session
+   * @return
+   */
+
+  @PostMapping("/update-mypage")
+
+  public String update_Mypage_info_ProC(Model model, OwnerVO ownerVO, RedirectAttributes rrtr, HttpSession session) {
+
+
+    int check_ID = this.ownerProc.checkID(ownerVO.getId());
+
+
+    int count = ownerProc.update(ownerVO);
+    System.out.println(check_ID);
+    System.out.println(ownerVO.getId());
+    if (check_ID == 1) {
+      if (count == 1) {
+
+
+        rrtr.addFlashAttribute("success", 1);
+        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 수정 완료 되었습니다! ");
+
+        return "redirect:/owner/my_page";
+      } else {
+        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+
+        return "redirect:/owner/my_page";
+      }
+    } else {
+      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+      return "redirect:/owner/create";
+    }
+  }
+
+
+
+
+
+  @PostMapping("/update")
+
+  public String updateowner(Model model, OwnerVO ownerVO, RedirectAttributes rrtr, HttpSession session) {
+
+
+    int check_ID = this.ownerProc.checkID(ownerVO.getId());
+
+
+    int count = this.ownerProc.update(ownerVO);
+    System.out.println(check_ID);
+    System.out.println(ownerVO.getId());
+    if (check_ID == 1) {
+      if (count == 1) {
+
+
+        rrtr.addFlashAttribute("success", 1);
+        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 수정 완료 되었습니다! ");
+        session.setAttribute("cname", ownerVO.getOname());
+        return "redirect:/owner/read?ownerno=" + ownerVO.getOwnerno();
+      } else {
+        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
+
+
+        return "redirect:/owner/read?ownerno=" + ownerVO.getOwnerno();
+      }
+    } else {
+      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
+      return "redirect:/owner/create";
+    }
+
+
+  }
+
+
+
+
+  
   /**
    * 프로필 업데이트 처리 메서드
    *
@@ -568,7 +695,7 @@ public class OwnerCont {
    */
 
   @PostMapping("/update_profile")
-  public String updateProfile(HttpSession session, RedirectAttributes ra, OwnerVO ownerVO) {
+  public String updateProfile_Proc(HttpSession session, RedirectAttributes ra, OwnerVO ownerVO) {
 
 
     String id = (String) session.getAttribute("id");
@@ -642,8 +769,37 @@ public class OwnerCont {
     }
   }
 
+
+  /**
+   * 로그인  접속 기록 메서드
+   *
+   * @param model
+   * @param session
+   * @param session
+   * @return
+   */
+  @GetMapping("/restaurant")
+  public String rest_view_Form(HttpSession session, Model model) {
+    String type = (String) session.getAttribute("type");
+    if (type == null) {
+      return "redirect:/owner/login";
+    }
+    model.addAttribute("accessType", type);
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    RestDTO restDTO = this.restaurantProc.restaurant_ownerno(ownerno);
+    model.addAttribute("searchlist", restDTO);
+    return "owner/restaurant_by_owner";
+
+
+  }
+  /**
+   * 식당 정보 보는 폼
+   * @param session
+   * @param model
+   * @return
+   */
   @GetMapping("/restread")
-  public String restread(HttpSession session, Model model) {
+  public String rest_owner_read_form(HttpSession session, Model model) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
     Integer ownerno = (Integer) session.getAttribute("ownerno");
@@ -659,9 +815,58 @@ public class OwnerCont {
 
   }
 
+  @PostMapping("/restupdate")
+  public String update_rest_owner_proC(HttpSession session,RestFullData restFullData, RedirectAttributes ra ,String restno, String word,  String now_page) {
+
+
+
+
+
+    int count = restaurantProc.update(restFullData);
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+
+
+    if (ownerno == null) {
+      return "redirect:/owner/login";
+    } else if (ownerno != null && count == 1) {
+      return "redirect:/owner/restread";
+    } else {
+      return "redirect:/owner/restread";
+    }
+
+
+
+
+  }
+
+  /**
+   * 식당 삭제 처리
+   * @param session
+   * @param ra
+   * @return
+   */
+  @PostMapping("/delete_rest")
+  public String delete_rest_proC(HttpSession session, RedirectAttributes ra) {
+    Integer ownerno = (Integer) session.getAttribute("ownerno");
+    if (ownerno == null) {
+      return "redirect:/";
+    } else {
+      int count = this.restaurantProc.delete_rest(ownerno);
+
+      if (count == 1) {
+        session.setAttribute("type", "Norest");
+
+        ra.addFlashAttribute("cnt", 1);
+        return "redirect:/owner/restaurant";
+      } else {
+        return "redirect:/owner/restaurant";
+      }
+    }
+  }
+
 
   @GetMapping("/update_map")
-  public String update_map(Model model, HttpSession session) {
+  public String update_Form_map(Model model, HttpSession session) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
     Integer ownerno = (Integer) session.getAttribute("ownerno");
@@ -682,8 +887,16 @@ public class OwnerCont {
 
   }
 
+  /**
+   * 업데이트 처리
+   * @param restFullData
+   * @param ra
+   * @param restno
+   * @param session
+   * @return
+   */
   @PostMapping("/update_map")
-  public String update_map(RestFullData restFullData, RedirectAttributes ra, String restno, HttpSession session) {
+  public String update_map_Proc(RestFullData restFullData, RedirectAttributes ra, String restno, HttpSession session) {
 
     String type = (String) session.getAttribute("type");
     if (type == "owner") {
@@ -703,8 +916,15 @@ public class OwnerCont {
 
   }
 
+  /**
+   * 업데이트 이미지 폼
+   * @param model
+   * @param session
+   * @return
+   */
+
   @GetMapping("/update_imgs")
-  public String update_imgs(Model model, HttpSession session) {
+  public String update_imgs_From(Model model, HttpSession session) {
     // 메뉴 정보
     String type = (String) session.getAttribute("type");
     Integer ownerno = (Integer) session.getAttribute("ownerno");
@@ -721,8 +941,20 @@ public class OwnerCont {
     return "owner/update_imgs";
   }
 
+
+  /**
+   *
+   * 업데이트 이미지 처리
+   * @param model
+   * @param session
+   * @param redirectAttributes
+   * @param restFullData
+   * @param restimgVO
+   * @param deletedImageFiles
+   * @return
+   */
   @PostMapping("/update_imgs")
-  public String updateRestaurant(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestFullData restFullData, RestimgVO restimgVO, @RequestParam("deletedImageFiles") String deletedImageFiles) {
+  public String update_imgs_ProC(Model model, HttpSession session, RedirectAttributes redirectAttributes, RestFullData restFullData, RestimgVO restimgVO, @RequestParam("deletedImageFiles") String deletedImageFiles) {
     Integer ownerno = (Integer) session.getAttribute("ownerno");
     restFullData.setOwnerno(ownerno);
     String upDir = Restaurant.getUploadDir(); // C:/kd/deploy/resort_v2sbm3c/contents/storage/
@@ -810,36 +1042,15 @@ public class OwnerCont {
   }
 
 
-  /**
-   * 로그인  접속 기록 메서드
-   *
-   * @param model
-   * @param loginHistoryVO
-   * @param session
-   * @return
-   */
-  @GetMapping("/restaurant")
-  public String byOwner(HttpSession session, Model model) {
-    String type = (String) session.getAttribute("type");
-    if (type == null) {
-      return "redirect:/owner/login";
-    }
-    model.addAttribute("accessType", type);
-    Integer ownerno = (Integer) session.getAttribute("ownerno");
-    RestDTO restDTO = this.restaurantProc.restaurant_ownerno(ownerno);
-    model.addAttribute("searchlist", restDTO);
-    return "owner/restaurant_by_owner";
 
-
-  }
 
   @GetMapping("/logininfo")
-  public String moble(Model model, OwnerHistoryVO loginHistoryVO, HttpSession session) {
+  public String logininfo_form(Model model, OwnerHistoryVO loginHistoryVO, HttpSession session) {
 
     Integer ownerno = (Integer) session.getAttribute("ownerno");
 
     if (ownerno == null) {
-      ownerno = 15;
+      return "redirect:/owner/login";
     }
     ArrayList<HistoryDTO> selecthistory = this.ownerhisProc.selecthistory(ownerno);
 
@@ -857,82 +1068,7 @@ public class OwnerCont {
   }
 
 
-  @PostMapping("/logout")
-  public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-    // 세션을 무효화합니다.
-    session.invalidate();
 
-    // 로그아웃 성공 메시지(선택 사항)
-    redirectAttributes.addFlashAttribute("logout", "로그아웃 되었습니다.");
-
-    // 홈 페이지로 리다이렉트합니다.
-    return "redirect:/";
-
-  }
-
-
-  @PostMapping("/update")
-
-  public String updateowner(Model model, OwnerVO ownerVO, RedirectAttributes rrtr, HttpSession session) {
-
-
-    int check_ID = this.ownerProc.checkID(ownerVO.getId());
-
-
-    int count = this.ownerProc.update(ownerVO);
-    System.out.println(check_ID);
-    System.out.println(ownerVO.getId());
-    if (check_ID == 1) {
-      if (count == 1) {
-
-
-        rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 수정 완료 되었습니다! ");
-        session.setAttribute("cname", ownerVO.getOname());
-        return "redirect:/owner/read?ownerno=" + ownerVO.getOwnerno();
-      } else {
-        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-
-
-        return "redirect:/owner/read?ownerno=" + ownerVO.getOwnerno();
-      }
-    } else {
-      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/owner/create";
-    }
-
-
-  }
-
-  @PostMapping("/update-mypage")
-
-  public String updateMypage(Model model, OwnerVO ownerVO, RedirectAttributes rrtr, HttpSession session) {
-
-
-    int check_ID = this.ownerProc.checkID(ownerVO.getId());
-
-
-    int count = ownerProc.update(ownerVO);
-    System.out.println(check_ID);
-    System.out.println(ownerVO.getId());
-    if (check_ID == 1) {
-      if (count == 1) {
-
-
-        rrtr.addFlashAttribute("success", 1);
-        rrtr.addFlashAttribute("come", ownerVO.getOname() + "님 수정 완료 되었습니다! ");
-
-        return "redirect:/owner/my_page";
-      } else {
-        rrtr.addFlashAttribute("fail", "다시 시도해주세요 ");
-
-        return "redirect:/owner/my_page";
-      }
-    } else {
-      rrtr.addFlashAttribute("fail", "아이디 중복입니다 다시 만들어주세요 ");
-      return "redirect:/owner/create";
-    }
-  }
 
   @GetMapping("/list")
   public String searchownerno(HttpSession session, Model model, @RequestParam(name = "type", defaultValue = "100") String type, String word, CategoryVO
@@ -1066,7 +1202,7 @@ public class OwnerCont {
 
 
   @PostMapping("update_grade")
-  public String updategrade(Model model, OwnerVO ownerVO,
+  public String updategrade_Prc(Model model, OwnerVO ownerVO,
                             Integer grade, Integer ownerno,
 
                             RedirectAttributes rrtr,
@@ -1104,7 +1240,7 @@ public class OwnerCont {
    * @return
    */
   @GetMapping("/certifi")
-  public String certi(HttpSession session, OwnerVO ownerVO, Model model) {
+  public String certiForm(HttpSession session, OwnerVO ownerVO, Model model) {
 
 
     String id = (String) session.getAttribute("id");
@@ -1121,48 +1257,17 @@ public class OwnerCont {
 
         return "owner/certifi";
       } else {
-        return "redirect:/";
+        return "redirect:/owner/login";
 
       }
 
 
     } else {
-      return "redirect:/";
+      return "redirect:/owner/login";
     }
 
 
   }
-
-  @GetMapping("/certi_info_update")
-  public String certi_update(HttpSession session, OwnerVO ownerVO, Model model) {
-
-
-    String id = (String) session.getAttribute("id");
-    String grade = (String) session.getAttribute("grade");
-    String type = (String) session.getAttribute("type");
-
-    model.addAttribute("accessType", type);
-
-    if (id != null && grade.equals("NotCerti")) {
-
-      OwnerVO read = this.ownerProc.readById(id);
-      if (read != null) {
-        model.addAttribute("ownerVO", read);
-
-        return "owner/certifi";
-      } else {
-        return "redirect:/";
-
-      }
-
-
-    } else {
-      return "redirect:/";
-    }
-
-
-  }
-
 
 
   /**
@@ -1175,7 +1280,7 @@ public class OwnerCont {
    */
   @PostMapping("/certifi")
 
-  public String certicreate(Model model, OwnerVO ownerVO, RedirectAttributes ra, HttpSession session) {
+  public String certicreate_Proc(Model model, OwnerVO ownerVO, RedirectAttributes ra, HttpSession session) {
     String file1 = ""; // 원본 파일명 image
     String file1saved = ""; // 저장된 파일명, image
     String thumb1 = ""; // preview image
@@ -1241,7 +1346,7 @@ public class OwnerCont {
         ra.addFlashAttribute("cnt", 0);
         ra.addFlashAttribute("code", "check_upload_file_fail");
         ra.addFlashAttribute("url", "/contents/msg"); // 메시지 페이지 URL 설정
-        return "redirect:/contents/msg";
+        return "redirect:/owner";
       }
     } else {
       return "redirect:/owner"; // 전송된 파일이 없을 경우 리다이렉트
@@ -1253,11 +1358,47 @@ public class OwnerCont {
     if (cnt == 0) {
       model.addAttribute("cnt", cnt);
       model.addAttribute("code", "create_fail");
-      return "content/msg";
+      return "redirect:/owner";
+    } else {
+      return "redirect:/owner";
+    }
+  }
+
+
+
+
+  @GetMapping("/certi_info_update")
+  public String certi_update(HttpSession session, OwnerVO ownerVO, Model model) {
+
+
+    String id = (String) session.getAttribute("id");
+    String grade = (String) session.getAttribute("grade");
+    String type = (String) session.getAttribute("type");
+
+    model.addAttribute("accessType", type);
+
+    if (id != null && grade.equals("NotCerti")) {
+
+      OwnerVO read = this.ownerProc.readById(id);
+      if (read != null) {
+        model.addAttribute("ownerVO", read);
+
+        return "owner/certifi";
+      } else {
+        return "redirect:/";
+
+      }
+
+
     } else {
       return "redirect:/";
     }
+
+
   }
+
+
+
 
   @PostMapping("/send_phone")
 
@@ -1290,24 +1431,29 @@ public class OwnerCont {
 
   }
 
-  @PostMapping("/delete_rest")
-  public String delete_rest(HttpSession session, RedirectAttributes ra) {
-    Integer ownerno = (Integer) session.getAttribute("ownerno");
-    if (ownerno == null) {
-      return "redirect:/";
-    } else {
-      int count = this.restaurantProc.delete_rest(ownerno);
 
-      if (count == 1) {
-        session.setAttribute("type", "Norest");
 
-        ra.addFlashAttribute("cnt", 1);
-        return "redirect:/owner/restaurant";
-      } else {
-        return "redirect:/owner/restaurant";
-      }
-    }
+  /**
+   * 로그아웃 처리
+   * @param session
+   * @param redirectAttributes
+   * @return
+   */
+  @PostMapping("/logout")
+  public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+    // 세션을 무효화합니다.
+    session.invalidate();
+
+    // 로그아웃 성공 메시지(선택 사항)
+    redirectAttributes.addFlashAttribute("logout", "로그아웃 되었습니다.");
+
+    // 홈 페이지로 리다이렉트합니다.
+    return "redirect:/";
+
   }
+
+
+
 }
 
 

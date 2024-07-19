@@ -5,9 +5,7 @@ import dev.mvc.owner.OwnerVO;
 import dev.mvc.emailAuth.EmailAuthVO;
 import dev.mvc.ownerhistory.OwnerHistoryProcInter;
 import dev.mvc.phoneAuth.PhoneAuthVO;
-import dev.mvc.tool.EmailTool;
-import dev.mvc.tool.Security;
-import dev.mvc.tool.SmsTool;
+import dev.mvc.tool.*;
 import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.exception.NurigoUnknownException;
@@ -37,10 +35,10 @@ public class OwnerContS {
   private OwnerHistoryProcInter historyproc;
 
   @Autowired
-  private SmsTool smsTool;
+  private SmsToolO smsTool;
 
   @Autowired
-  private EmailTool emailTool;
+  private EmailToolO emailTool;
 
   @Autowired
   private Security security;
