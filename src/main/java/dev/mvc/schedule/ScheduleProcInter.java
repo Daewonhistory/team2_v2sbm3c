@@ -15,7 +15,7 @@ public interface ScheduleProcInter {
 	 * @param scheduleList
 	 * @return
 	 */
-	public int createFullSchedule(int[] admitPersons, int[] times, int restno);
+	public int createFullSchedule(int[] admitPersons, int restno);
 	/**
 	 * 모든 스케줄 조회
 	 * @return

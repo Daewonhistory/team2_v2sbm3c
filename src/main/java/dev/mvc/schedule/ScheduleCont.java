@@ -74,7 +74,7 @@ public class ScheduleCont {
 	  System.out.println("시각 갯수:" + times.length);
 	  RestaurantVO restaurantVO = this.restaurantProc.read(restno);
 	  if(accessType == null) { // 관리자 접속
-	    int cnt = this.scheduleProc.createFullSchedule(admit_persons, times ,restno);
+	    int cnt = this.scheduleProc.createFullSchedule(admit_persons, restno);
 	    
 	    System.out.println(cnt);
 	    if(cnt == 1) {
@@ -92,7 +92,7 @@ public class ScheduleCont {
 	      return "redirect:/manager";
 	    }
 			
-	    int cnt = this.scheduleProc.createFullSchedule(admit_persons, times, restno);
+	    int cnt = this.scheduleProc.createFullSchedule(admit_persons, restno);
 	    System.out.println(cnt);
 	    if(cnt == 1) {
 	      System.out.println("허용인원 생성");

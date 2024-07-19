@@ -1255,7 +1255,7 @@ public class OwnerCont {
       model.addAttribute("code", "create_fail");
       return "content/msg";
     } else {
-      return "redirect:/";
+      return "redirect:/manager";
     }
   }
 

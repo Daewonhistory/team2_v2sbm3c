@@ -544,7 +544,6 @@ public class RestaurantCont {
       System.out.println("max_price:" + maxPrice);
 
       ArrayList<RestFullData> list = this.restaurantProc. SearchRestaurantWithImg(map);
-      System.out.println(list.get(0).getImage1());
       System.out.println("=>listSize" + list.size());
 	  return new ResponseEntity<>(list, HttpStatus.OK);
   }
